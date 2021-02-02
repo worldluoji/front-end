@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<title>并列布局</title>
+	</head>
+	<body>
+	    <div class="parent">
+			<div class="child">
+				1
+			</div>
+			<div class="child">
+				2
+			</div>
+			<div class="child">
+				3
+			</div>
+		</div>
+	</body>
+	<style type="text/css">
+		.parent {
+			display: flex;
+			flex-wrap: wrap;
+			/* width: 300px;  //设置300px,1行放不下两个child则会换行*/
+		}
+
+		.child {
+			flex: 0 1 300px;
+			/* flex: 1 1 300px; //将占满一行*/
+			border: 1px solid red;
+			background: lightpink;
+			font-size: 2rem;
+			text-align: center;
+		}
+		/*
+		flex的三个属性：
+			flex-grow：指定如果有多余宽度，项目是否可以扩大。
+			flex-shrink：指定如果宽度不足，项目是否可以缩小。
+			flex-basis：项目的初始宽度。
+		即初始宽度为300px,宽度不足不能扩大，但可以缩小
+		*/
+	</style>
+</html>

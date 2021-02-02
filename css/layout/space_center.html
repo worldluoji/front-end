@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<title>空间居中布局</title>
+	</head>
+	<body>
+	    <div class="parent">
+			<!-- contenteditable让该段落可以编辑 -->
+			<div class="child" contenteditable>
+				:)
+			</div>
+		</div>
+	</body>
+	<style type="text/css">
+		.parent {
+			display: grid;
+			place-items: center;
+			background: lightblue;
+			resize: both;
+			overflow: auto;
+			width: 500px;
+			height: 500px;
+		}
+		/* 
+			place-items: <align-items> <justify-items>;  垂直位置 水平位置，只写一个两个都是center，
+			还可以取值start, end...
+			resize: both + overflow: auto 可以让用户拖动框的大小
+		*/
+
+		.child {
+			padding: 0.5rem;
+  			border-radius: 10px;
+			border: 1px solid red;
+			background: lightpink;
+			font-size: 2rem;
+			text-align: center;
+		}
+	</style>
+</html>

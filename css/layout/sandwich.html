@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<title>三明治布局</title>
+	</head>
+	<body>
+        <header>Hello Html5</header>
+        <main></main>
+        <footer>
+            xxxx有限公司版权所有——2021
+        </footer>
+	</body>
+	<style type="text/css">
+		body {
+            display: grid;
+            height: 100vh; /*视口单位100%*/
+            grid-template-rows: auto 1fr auto;
+        }
+        /* 核心代码是grid-template-rows那一行，指定垂直高度怎么划分，这里是从上到下分成三部分。
+        第一部分（页眉）和第三部分（页脚）的高度都为auto，即本来的内容高度；
+        第二部分（内容区）的高度为1fr，即剩余的所有高度，这可以保证页脚始终在容器的底部。 */
+
+        header {
+            background: lightpink;
+            padding: 2rem;
+        }
+
+        main {
+            background: coral;
+        }
+
+        footer {
+            background: wheat;
+            padding: 2rem;
+            text-align: center;
+        }
+		
+	</style>
+</html>

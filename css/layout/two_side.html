@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>两栏布局</title>
+	</head>
+	<body>
+	    <div class="sidebar" contenteditable>
+			25% max
+			min 150px
+		</div>
+		<p class="content">
+			Hello，CSS!!!
+		</p>
+	</body>
+	<style type="text/css">
+		body {
+			display: grid;
+			grid-template-columns: minmax(150px, 25%) 1fr;
+			padding: 0;
+			margin: 0;
+		}
+		/* grid-template-columns指定页面分成两列。
+		第一列的宽度是minmax(150px, 25%)，即最小宽度为150px，最大宽度为总宽度的25%；
+		第二列为1fr，即所有剩余宽度。 */
+
+		.sidebar {
+			height: 100vh;
+			background: lightpink;
+			font-size: 2rem; /* rem是以父节点的默认字体为基准的相对字体， 如果没有父组件，就以浏览器默认字体为准*/
+			text-align: center;
+		}
+
+		.content {
+			padding: 2rem;
+		}
+	</style>
+</html>

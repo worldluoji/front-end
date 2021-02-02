@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<title>圣杯布局</title>
+	</head>
+	<body>
+        <header>Hello Html5</header>
+        <div class="left-sidebar">left</div>
+        <main contenteditable>Hello JavaScript</main>
+        <div class="right-sidebar">right</div>
+        <footer>
+            xxxx有限公司版权所有——2021
+        </footer>
+	</body>
+	<style type="text/css">
+		body {
+            display: grid;
+            height: 100vh;
+            grid-template: auto 1fr auto / auto 1fr auto;
+        }
+        /* 核心代码是grid-template属性那一行，它是两个属性grid-template-rows（垂直方向）和grid-template-columns（水平方向）的简写形式。
+        grid-template-rows和grid-template-columns都是auto 1fr auto，就表示页面在垂直方向和水平方向上，都分成三个部分。
+        第一部分（页眉和左边栏）和第三部分（页脚和右边栏）都是本来的内容高度（或宽度），第二部分（内容区和主栏）占满剩余的高度（或宽度）。*/
+
+        header {
+            background: lightpink;
+            padding: 2rem;
+            grid-column: 1 / 4;
+        }
+
+        .left-sidebar {
+            background: lightblue;
+            grid-column: 1 / 2;
+        }
+
+        main {
+            background: coral;
+            grid-column: 2 / 3;
+        }
+
+        .right-sidebar {
+            background: yellow;
+            grid-column: 3 / 4;
+        }
+
+        footer {
+            background: wheat;
+            padding: 2rem;
+            text-align: center;
+            grid-column: 1 / 4;
+        }
+
+        /* grid-column属性是grid-column-start和grid-column-end的合并简写形式，
+           grid-row属性是grid-row-start属性和grid-row-end的合并简写形式。 
+            grid-column-start属性：左边框所在的垂直网格线
+            grid-column-end属性：右边框所在的垂直网格线
+            grid-row-start属性：上边框所在的水平网格线
+            grid-row-end属性：下边框所在的水平网格线
+        */
+
+        .left-sidebar,
+        .right-sidebar {
+            padding: 1rem;
+        }
+		
+	</style>
+</html>
