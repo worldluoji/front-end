@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<title>image adaptive</title>
+	</head>
+	<body>
+        <p>让大图片自适应小容器</p>
+	    <div class=container>
+            <img src="./images/test.jpg" />
+        </div>
+	</body>
+	<style>
+        .container {
+            width: 25vw;
+            height: 10vh;
+        }
+
+		img {
+            max-width: 100%;
+        }
+        /* 
+            IE6以下：img {width: 100%} ，因为它们不支持max-width
+        */
+	</style>
+</html>
