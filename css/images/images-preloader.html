@@ -31,10 +31,12 @@
                     if (typeof window.onload != 'function') {
                         window.onload = f
                     } else {
-                        if (oldOnload) {
-                            oldOnload()
+                        window.onload = () => {
+                            if (oldOnload) {
+                                oldOnload()
+                            }
+                            f()
                         }
-                        f()
                     }
                 }
 

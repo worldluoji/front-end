@@ -1,0 +1,110 @@
+<html>
+	<head>
+		<title>images lazyloader</title>
+	</head>
+	<body>
+        <p>图片懒加载</p>
+	    <div class=container>
+            <img id="img1" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img2" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img3" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img4" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img5" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img6" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img7" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img8" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img9" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img10" data-src="./test.jpg" />
+        </div>
+        <div class=container>
+            <img id="img11" data-src="./test.jpg" />
+        </div>
+        <div class="hidden">
+            <script>
+                let images = document.querySelectorAll("img")
+                function imageCansee(el) {
+                    // getBoundingClientRect()方法，获取元素到左边和顶部视口的距离
+                    let bound = el.getBoundingClientRect()
+                    let clientHeight = window.innerHeight
+                    // 如果元素上边到上面视口的距离 < 可视高度，则认为在可视范围内
+                    return bound.top < clientHeight
+                }
+                
+                function load() {
+                    Array.from(images).forEach(e => {
+                        if (imageCansee(e)) {
+                            if (!e.src) {
+                                // h5新特性，只要以 data- 开头即添加了自定义属性之后，可以通过元素的 dataset 属性来访问自定义属性的值
+                                e.src = e.dataset.src
+                            }
+                        }
+                    });
+                }
+
+                function addOnloadEvent(f) {
+                    let oldOnload = window.onload
+                    if (typeof oldOnload !== 'function') {
+                        window.onload = f
+                    } else {
+                        window.onload = () => {
+                            if (oldOnload) {
+                                oldOnload()
+                            }
+                            f()
+                        }
+                    }
+                }
+
+                function addScrollEvent(f) {
+                    let oldScroll = window.scroll
+                    if (typeof oldScroll !== 'function') {
+                        window.onscroll = f
+                    } else {
+                        window.onscroll = () => {
+                            if (oldScroll) {
+                                oldScroll()
+                            }
+                            f()
+                        }
+                    }
+                }
+
+                addOnloadEvent(load)
+                addScrollEvent(load)
+            </script>
+        </div>
+    </body>
+    <style>
+        .container {
+            width: 25vw;
+            margin-top: 10px;
+        }
+
+		img {
+            max-width: 100%;
+            min-height:25vh;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</html>
