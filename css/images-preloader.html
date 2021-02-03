@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>image preloader</title>
+	</head>
+	<body>
+        <p>图片预加载</p>
+	    <div class=container>
+            <img id="img1" src="" />
+        </div>
+        <div class=container>
+            <img id="img2" src="" />
+        </div>
+        <div class=container>
+            <img id="img3" src="" />
+        </div>
+        <div class="hidden">
+            <script>
+                function preload() {
+                    if (document.images) {
+                        let img1 = document.getElementById('img1')
+                        let img2 = document.getElementById('img2')
+                        let img3 = document.getElementById('img3')
+		                img1.src = "https://tse1-mm.cn.bing.net/th/id/OIP.mYBs-T9BgY4bSS17ezfI4QHaE8?w=251&h=180&c=7&o=5&dpr=2&pid=1.7"
+		                img2.src = "https://tse1-mm.cn.bing.net/th/id/OIP.mYBs-T9BgY4bSS17ezfI4QHaE8?w=251&h=180&c=7&o=5&dpr=2&pid=1.7"
+		                img3.src = "https://tse1-mm.cn.bing.net/th/id/OIP.mYBs-T9BgY4bSS17ezfI4QHaE8?w=251&h=180&c=7&o=5&dpr=2&pid=1.7"
+                    }
+                }
+
+                function addLoadEvent(f) {
+                    let oldOnload = window.onload
+                    if (typeof window.onload != 'function') {
+                        window.onload = f
+                    } else {
+                        if (oldOnload) {
+                            oldOnload()
+                        }
+                        f()
+                    }
+                }
+
+                addLoadEvent(preload)
+            </script>
+        </div>
+    </body>
+    <style>
+        .container {
+            width: 25vw;
+        }
+
+		img {
+            max-width: 100%;
+            min-height:25vh;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</html>
