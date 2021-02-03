@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<title>3D Button</title>
+	</head>
+	<body>
+	    <div>
+	    	<button class="btn-3d">点我</button>
+	    </div>
+	</body>
+	<style>
+		.btn-3d {
+            background: rgb(14, 127, 233);
+            border: 1px solid;
+            /* 左上为浅色，右下为深色 */
+            border-color: rgb(150, 183, 214) rgb(1, 99, 179) rgb(1, 99, 179) rgb(150, 183, 214);
+            border-radius: 5px;
+            font-size: 25px;
+            color: rgb(128, 226, 226);
+            padding: 3px 5px 3px 5px;
+            /* 设置边框阴影： 水平扩展 垂直扩展  模糊度 颜色  如果设置inset表示阴影网内 */
+            box-shadow: 1px 1px 3px black;
+            /* 防止点击后带边框 */
+            outline: none;
+		}
+
+        .btn-3d:hover {
+            border-color: rgb(150, 183, 214) rgb(1, 99, 179) rgb(1, 99, 179) rgb(150, 183, 214);
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px inset;
+        }
+	</style>
+</html>
