@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<title>inline-flex-dmeo</title>
+	</head>
+	<body>
+        <p>    Hello
+            Fisrt    </p>
+        <!-- 保留空格可以用下面两种方法，其中pre会保存原始信息-->
+        <pre>    Hello 
+            pre    </pre>
+        
+        <!-- 文本内换行是无效的 -->
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;Hello 
+            nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;
+        </p>
+        
+        <p class="normal">    Hello
+            white-space normal    </p>
+        
+        <p class="nowrap">    Hello
+            white-space nowrap    </p>
+        
+        <p class="pres">    Hello
+            white-space pres    </p>
+
+        <p class="pre-wraps">    Hello white-space pre-wraps    </p>
+
+        <p class="pre-line">    Hello white-space
+            pre-wraps    </p>
+    </body>
+    <style>
+        /* normal首尾空格被去掉了，一行放得下则换行符变成了空格, 一行放不下才会换行,也是默认值*/
+        .normal {
+            width: 10px;
+            white-space: normal;
+        }
+
+        /*  不会因为超出容器宽度而换行 */
+        .nowrap {
+            width: 10px;
+            white-space: nowrap;
+        }
+
+         /*  按照pre标签处理 */
+        .pres {
+            white-space: pre;
+        }
+
+        /* 与pre一样，但超出容器会换行 */
+        .pre-wraps {
+            width: 100px;
+            white-space: pre-wrap;
+        }
+
+        /* 保留换行符，其它与normal保持一致*/
+        .pre-line {
+            white-space: pre-line;
+        }
+
+    </style>
+</html>
