@@ -1,0 +1,190 @@
+1. flex-direction
+You do this by adding the flex-direction property to the parent item and setting it to row or column. 
+Creating a row will align the children horizontally, and creating a column will align the children vertically.
+row
+column
+row-reverse 
+column-reverse
+默认主轴是row,交叉轴是column.
+
+2. justify-content
+There are several options for how to space the flex items along the line that is the main axis
+.One of the most commonly used is justify-content: center;, 
+which aligns all the flex items to the center inside the flex container. Other options include:
+1) flex-start: aligns items to the start of the flex container. 
+For a row, this pushes the items to the left of the container. 
+For a column, this pushes the items to the top of the container. 
+This is the default alignment if no justify-content is specified.
+2) flex-end: aligns items to the end of the flex container. 
+For a row, this pushes the items to the right of the container. 
+For a column, this pushes the items to the bottom of the container.
+3) space-between: aligns items to the center of the main axis, with extra space placed between the items. 
+The first and last items are pushed to the very edge of the flex container. 
+For example, in a row the first item is against the left side of the container, 
+the last item is against the right side of the container, then the remaining space 
+is distributed evenly among the other items.
+4) space-around: similar to space-between but the first and last items are not locked 
+to the edges of the container, the space is distributed around all the items with a half space 
+on either end of the flex container.
+5) space-evenly: Distributes space evenly between the flex items with a full space 
+at either end of the flex container.
+
+justify-content作用与主轴
+
+3. align-items
+Flex containers also have a cross axis which is the opposite of the main axis. 
+For rows, the cross axis is vertical and for columns, the cross axis is horizontal.
+CSS offers the align-items property to align flex items along the cross axis.
+The align-items property is similar to justify-content.
+
+The different values available for align-items include:
+1) flex-start: aligns items to the start of the flex container. 
+For rows, this aligns items to the top of the container. 
+For columns, this aligns items to the left of the container.
+2) flex-end: aligns items to the end of the flex container. 
+For rows, this aligns items to the bottom of the container. 
+For columns, this aligns items to the right of the container.
+3) center: align items to the center. 
+For rows, this vertically aligns items (equal space above and below the items). 
+For columns, this horizontally aligns them (equal space to the left and right of the items).
+4) stretch: stretch the items to fill the flex container. 
+For example, rows items are stretched to fill the flex container top-to-bottom. 
+This is the default value if no align-items value is specified.
+5) baseline: align items to their baselines. 
+Baseline is a text concept, think of it as the line that the letters sit on.
+
+align-items主要作用于交叉轴，作用与justify-content类似。
+
+4. flex-wrap 
+flex-wrap property tells CSS to wrap items. 
+This means extra items move into a new row or column. 
+The break point of where the wrapping happens depends on the size of the items 
+and the size of the container.
+
+CSS also has options for the direction of the wrap:
+1) nowrap: this is the default setting, and does not wrap items.
+2) wrap: wraps items onto multiple lines from top-to-bottom if they are in rows and left-to-right if they are in columns.
+3) wrap-reverse: wraps items onto multiple lines from bottom-to-top if they are in rows and right-to-left if they are in columns.
+wrap一行放不下会换行，而nowrap不会，会挤到一起。
+
+——————————————————————————————————————————————————————————————————————————————————————————————————————
+
+以下是一些使用频率没那么高的属性：
+5. flex-shrink
+it allows an item to shrink if the flex container is too small. 
+Items shrink when the width of the parent container is 
+smaller than the combined widths of all the flex items within it.
+
+<style>
+  #box-container {
+    display: flex;
+    height: 500px;
+  }
+  #box-1 {
+    background-color: dodgerblue;
+    width: 100%;
+    height: 200px;
+    flex-shrink: 1;
+  }
+
+  #box-2 {
+    background-color: orangered;
+    width: 100%;
+    height: 200px;
+    flex-shrink: 2;
+  }
+</style>
+
+<div id="box-container">
+  <div id="box-1"></div>
+  <div id="box-2"></div>
+</div>
+
+这样，box-1空间会是box-2空间的2倍。
+
+6. flex-grow
+The opposite of flex-shrink is the flex-grow property. 
+Recall that flex-shrink controls the size of the items when the container shrinks. 
+The flex-grow property controls the size of items when the parent container expands.
+即上面例子中，把flex-shrink改为flex-grow, 则box-2空间会是box-1空间的2倍.
+flex-grow相当于要去填满container, 而flex-shrink是container不够的时候，怎么缩小
+
+7. flex-basis
+The flex-basis property specifies the initial size of the item before CSS 
+makes adjustments with flex-shrink or flex-grow.
+The units used by the flex-basis property are the same as other size properties (px, em, %, etc.). 
+The value auto sizes items based on the content.
+可以设置主轴上box-1, box-2的初始宽度。
+
+8. 联合使用
+flex: 1 0 10px; will set the item to flex-grow: 1;, flex-shrink: 0;, and flex-basis: 10px;
+The default property settings are flex: 0 1 auto;.
+<style>
+  #box-container {
+    display: flex;
+    height: 500px;
+  }
+  #box-1 {
+    background-color: dodgerblue;
+    order: 2;
+    flex: 2 2 150px;
+    height: 200px;
+  }
+
+  #box-2 {
+    background-color: orangered;
+    order: 1;
+    flex: 1 1 150px;
+    height: 200px;
+  }
+</style>
+
+<div id="box-container">
+  <div id="box-1"></div>
+  <div id="box-2"></div>
+</div>
+
+These values will cause #box-1 to grow to fill the extra space at twice the rate of #box-2 
+when the container is greater than 300px 
+and shrink at twice the rate of #box-2 when the container is less than 300px. 
+300px is the combined size of the flex-basis values of the two boxes.
+
+
+9. order
+调整顺序, 比如上面例子中，box-2在box-1前面。
+
+10. align-self
+This property allows you to adjust each item's alignment individually, 
+instead of setting them all at once. 
+This is useful since other common adjustment techniques using the CSS properties 
+float, clear, and vertical-align do not work on flex items.
+
+align-self accepts the same values as align-items and will override any value set by the align-items property.
+
+<style>
+  #box-container {
+    display: flex;
+    height: 500px;
+  }
+  #box-1 {
+    background-color: dodgerblue;
+    align-self: center;
+    height: 200px;
+    width: 200px;
+  }
+
+  #box-2 {
+    background-color: orangered;
+    align-self: flex-end;
+    height: 200px;
+    width: 200px;
+  }
+</style>
+
+<div id="box-container">
+  <div id="box-1"></div>
+  <div id="box-2"></div>
+</div>
+
+即align-self可以为flex布局中，单个item，设置对应的交叉轴位置属性，
+类似于align-items，不过align-items是设置所有的。
