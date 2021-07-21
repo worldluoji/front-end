@@ -1,0 +1,38 @@
+1. Media Queries
+Media Queries are a new technique introduced in CSS3 that change the presentation of content 
+based on different viewport sizes. The viewport is a user's visible area of a web page, 
+and is different depending on the device used to access the site.
+
+when the device's width is less than or equal to 100px:
+@media (max-width: 100px) { /* CSS Rules */ }
+
+and the following media query returns the content when the device's height is more than or equal to 350px:
+@media (min-height: 350px) { /* CSS Rules */ }
+
+Remember, the CSS inside the media query is applied only if the media type matches that of the device being used.
+
+2. max-width
+img {
+  max-width: 100%;
+  height: auto;
+}
+The max-width of 100% will make sure the image is never wider than the container it is in, 
+and the height of auto will make the image keep its original aspect ratio.
+
+3. Use a Retina Image for Higher Resolution Displays
+The simplest way to make your images properly appear on High-Resolution Displays, 
+such as the MacBook Pros "retina display" is to define their width and height values as only half of what the original file is. 
+Here is an example of an image that is only using half of the original height and width:
+<style>
+  img { height: 250px; width: 250px; }
+</style>
+<img src="coolPic500x500" alt="A most excellent picture">
+
+4. viewport
+Instead of using em or px to size text, you can use viewport units for responsive typography. 
+Viewport units, like percentages, are relative units, but they are based off different item.
+
+vw (viewport width): 10vw would be 10% of the viewport's width.
+vh (viewport height): 3vh would be 3% of the viewport's height.
+vmin (viewport minimum): 70vmin would be 70% of the viewport's smaller dimension (height or width).
+vmax (viewport maximum): 100vmax would be 100% of the viewport's bigger dimension (height or width).
