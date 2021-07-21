@@ -1,0 +1,104 @@
+1. text-align
+text-align: justify; causes all lines of text except the last line to meet the left and right edges of the line box.
+text-align: center; centers the text
+text-align: right; right-aligns the text
+And text-align: left; (the default) left-aligns the text.
+
+2. u tag
+<u>Ph.D. students</u>
+With the u tag, the browser applies the CSS of text-decoration: underline; to the element.
+Note: Try to avoid using the u tag when it could be confused for a link. 
+Anchor tags also have a default underlined formatting.
+
+3. strong 和 em
+strong会加粗
+em更多是强调：This displays text as italicized, as the browser applies the CSS of font-style: italic; to the element
+
+4. s tag
+With the s tag, the browser applies the CSS of text-decoration: line-through; to the element.
+
+5. hr tag 
+add a horizontal line across the width of its containing element.
+
+6. rgba
+you can add a background-color to the element holding the text you want to emphasize. 
+rgba stands for:
+  r = red
+  g = green
+  b = blue
+  a = alpha/level of opacity
+The RGB values can range from 0 to 255. The alpha value can range from 1, 
+which is fully opaque or a solid color, to 0, which is fully transparent or clear. 
+rgba() is great to use in this case, as it allows you to adjust the opacity. 
+This means you don't have to completely block out the background.
+
+7. box-shadow 
+The box-shadow property applies one or more shadows to an element.
+The box-shadow property takes values for
+
+offset-x (how far to push the shadow horizontally from the element),
+offset-y (how far to push the shadow vertically from the element),
+blur-radius,
+spread-radius and
+color, in that order.
+The blur-radius and spread-radius values are optional.
+
+Multiple box-shadows can be created by using commas to separate properties of each box-shadow element:
+box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+
+
+8. opacity 
+this property in CSS is used to adjust the opacity, or conversely, the transparency for an item.
+A value of 1 is opaque, which isn't transparent at all.
+A value of 0.5 is half see-through.
+A value of 0 is completely transparent.
+
+9. text-transform
+The text-transform property in CSS is used to change the appearance of text. 
+It's a convenient way to make sure text on a webpage appears consistently, without having to change the text content of the actual HTML elements.
+The following table shows how the different text-transformvalues change the example text "Transform me".
+
+Value	Result
+lowercase	"transform me"
+uppercase	"TRANSFORM ME"
+capitalize	"Transform Me"
+initial	Use the default value
+inherit	Use the text-transform value from the parent element
+none	Default: Use the original text
+
+10. font-size and font-weight
+字体大小和粗细
+
+11. line-height 
+this property to change the height of each line in a block of text.
+
+12. :hover
+a:hover {
+    color: blue;
+}
+鼠标放上去显示蓝色
+
+13. relative
+When the position of an element is set to relative, it allows you to specify how CSS should move it relative 
+to its current position in the normal flow of the page. It pairs with the CSS offset properties of left or right, 
+and top or bottom. These say how many pixels, percentages, or ems to move the item away from where 
+it is normally positioned. The following example moves the paragraph 10 pixels away from the bottom:
+p {
+    position: relative;
+    bottom: 10px;
+}
+
+14. absolute
+absolute, which locks the element in place relative to its parent container.
+Unlike the relative position, this removes the element from the normal flow of the document, 
+so surrounding items ignore it.
+
+15. fixed
+fixed position, which is a type of absolute positioning that locks an element relative to the browser window.
+
+16. z-index
+When elements are positioned to overlap (i.e. using position: absolute | relative | fixed | sticky), 
+the element coming later in the HTML markup will, by default, appear on the top of the other elements. 
+However, the z-index property can specify the order of how elements are stacked on top of one another. 
+It must be an integer (i.e. a whole number and not a decimal), 
+and higher values for the z-index property of an element move it higher in the stack than those with lower values.
