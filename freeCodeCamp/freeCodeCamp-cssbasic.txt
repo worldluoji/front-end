@@ -1,5 +1,7 @@
 1.  导入三方字体
-To import a Google Font, you can copy the font's URL from the Google Fonts library and then paste it in your HTML. For this challenge, we'll import the Lobster font. To do this, copy the following code snippet and paste it into the top of your code editor (before the opening style element):
+To import a Google Font, you can copy the font's URL from the Google Fonts library and then paste it in your HTML. 
+For this challenge, we'll import the Lobster font. 
+To do this, copy the following code snippet and paste it into the top of your code editor (before the opening style element):
 
 <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
 Now you can use the Lobster font in your CSS by using Lobster as the FAMILY_NAME as in the following example:
@@ -7,10 +9,12 @@ Now you can use the Lobster font in your CSS by using Lobster as the FAMILY_NAME
 font-family: FAMILY_NAME, GENERIC_NAME;
 
 2. font "degrade" 
-There are several default fonts that are available in all browsers. These generic font families include monospace, serif and sans-serif
+There are several default fonts that are available in all browsers. 
+These generic font families include monospace, serif and sans-serif
 When one font isn't available, you can tell the browser to "degrade" to another font.
 
-For example, if you wanted an element to use the Helvetica font, but degrade to the sans-serif font when Helvetica isn't available, you will specify it as follows:
+For example, if you wanted an element to use the Helvetica font, 
+but degrade to the sans-serif font when Helvetica isn't available, you will specify it as follows:
 
 p {
   font-family: Helvetica, sans-serif;
@@ -27,5 +31,16 @@ Generic font family names are not case-sensitive. Also, they do not need quotes 
  }
 
 
-4. There are several benefits to using id attributes: You can use an id to style a single element and later you'll learn that you can use them to select and modify specific elements with JavaScript.
-id attributes should be unique. Browsers won't enforce this, but it is a widely agreed upon best practice. So please don't give more than one element the same id attribute.
+4. id
+There are several benefits to using id attributes: You can use an id to style a single element 
+and later you'll learn that you can use them to select and modify specific elements with JavaScript.
+id attributes should be unique. Browsers won't enforce this, but it is a widely agreed upon best practice. 
+So please don't give more than one element the same id attribute.
+
+5. padding
+An element's padding controls the amount of space between the element's content and its border.
+padding: 40px 20px 20px 40px; 顺时针，第一个是top
+
+6. margin
+an element's margin controls the amount of space between an element's border and surrounding elements.
+用法和padding一致
