@@ -151,3 +151,82 @@ even if it's informally or colloquially written in the text.
 
 例子：
 <time datetime="2016-09-15">Thursday, September 15<sup>th</sup></time>
+
+10) CSS's magic can also improve accessibility on your page when you want to visually hide content meant
+only for screen readers.
+
+This happens when information is in a visual format (like a chart), but screen reader users need an 
+alternative presentation (like a table) to access the data. 
+CSS is used to position the screen reader-only elements off the visual area of the browser window.
+
+.sr-only {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    top: auto;
+    overflow: hidden;
+}
+
+Note: The following CSS approaches will NOT do the same thing:
+display: none; or visibility: hidden; hides content for everyone, including screen reader users;
+Zero values for pixel sizes, such as width: 0px; height: 0px; removes that element from the flow of your document,
+meaning screen readers will ignore it.
+
+11) Improve Readability with High Contrast Text
+The Web Content Accessibility Guidelines (WCAG) recommend at least a 4.5 to 1 contrast ratio for normal text. 
+The ratio is calculated by comparing the relative luminance(相对亮度) values of two colors. 
+This ranges from 1:1 for the same color, or no contrast, to 21:1 for white against black, the most substantial contrast. 
+There are many contrast checking tools available online that calculate this ratio for you.
+
+12) Avoid Colorblindness Issues by Using Sufficient Contrast
+First, color alone should not be used as the only way to convey important information because screen reader users won't see it. 
+Second, foreground and background colors need sufficient contrast so colorblind users can distinguish them.
+背景色和内容颜色要分明，不要把颜色作为唯一传递重要信息的途径。
+
+The WCAG-recommended contrast ratio of 4.5:1 applies for color use as well as gray-scale combinations.
+
+In practice, the 4.5:1 contrast ratio can be reached by shading (adding black to) the darker color 
+and tinting (adding white to) the lighter color. 
+Darker shades on the color wheel are considered to be shades（色调） of blues, violets（紫罗兰）, magentas（洋红色）, and reds, 
+whereas lighter tinted colors are oranges, yellows, greens, and blue-greens.
+
+深色背景+浅色文字  vs 浅色背景+深色文字
+
+13) Carefully Choosing Colors that Convey Information
+The most common form is a reduced sensitivity to detect greens. 因为要考虑红绿色盲用户。
+Note: Some online color picking tools include visual simulations of how colors appear for different types of colorblindness. 
+These are great resources in addition to online contrast checking calculators.
+
+14) Give Links Meaning by Using Descriptive Link Text
+Having a list of "click here" or "read more" links isn't helpful. 
+Instead, use brief but descriptive text within the a tags to provide more meaning for these users.
+
+15) accesskey
+HTML offers the accesskey attribute to specify a shortcut key to activate or bring focus to an element. 
+Adding an accesskey attribute can make navigation more efficient for keyboard-only users.
+Here's an example:
+<button accesskey="b">Important Button</button>
+也可以用于a标签等
+
+15) tabindex
+The HTML tabindex attribute has three distinct functions relating to an element's keyboard focus. 
+When it's on a tag, it indicates that the element can be focused on. 
+The value (an integer that's positive, negative, or zero) determines the behavior.
+
+Certain elements, such as links and form controls, automatically receive keyboard focus when a user tabs through a page. 
+It's in the same order as the elements come in the HTML source markup. 
+This same functionality can be given to other elements, such as div, span, and p, by placing a tabindex="0" attribute on them. 
+Here's an example:
+
+<style>
+p:focus {
+  background-color: yellow;
+}
+</style>
+<p tabindex="0">Instructions: Fill in ALL your information then click <b>Submit</b></p>
+你按键盘的Tab建的时候，就会foucs上去。数值越低，优先级越高。
+
+Note: A negative tabindex value (typically -1) indicates that an element is focusable, but is not reachable by the keyboard. 
+This method is generally used to bring focus to content programmatically 
+(like when a div used for a pop-up window is activated), and is beyond the scope of these challenges.
