@@ -93,3 +93,61 @@ example 2:
 </body>
 
 5) figure
+HTML5 introduced the figure element and the related figcaption. Used together, 
+these items wrap a visual representation (like an image, diagram, or chart) along with its caption.
+
+Wrapping these elements together gives a two-fold accessibility boost by semantically grouping related content 
+and providing a text alternative(可选择的、备选的、可替代的) explaining the figure.
+
+example:
+<figure>
+  <img src="roundhouseDestruction.jpeg" alt="Photo of Camper Cat executing a roundhouse kick">
+  <br>
+  <figcaption>
+    Master Camper Cat demonstrates proper form of a roundhouse kick.
+  </figcaption>
+</figure>
+
+6) label for
+<form>
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name">
+</form>
+label的for关联input的id
+
+7) fieldset
+The fieldset tag surrounds the entire grouping of radio buttons to achieve this. 
+It often uses a legend tag to provide a description for the grouping, which screen readers read for each choice
+in the fieldset element.
+
+The fieldset wrapper and legend tag are not necessary when the choices are self-explanatory, like a gender selection.
+Using a label with the for attribute for each radio button is sufficient.
+
+Here's an example:
+
+<form>
+  <fieldset>
+    <legend>Choose one of these three items:</legend>
+    <input id="one" type="radio" name="items" value="one">
+    <label for="one">Choice One</label><br>
+    <input id="two" type="radio" name="items" value="two">
+    <label for="two">Choice Two</label><br>
+    <input id="three" type="radio" name="items" value="three">
+    <label for="three">Choice Three</label>
+  </fieldset>
+</form>
+
+8) date
+<input type="date" id="pickdate" name="date">
+可用于选择日期
+
+9) time
+HTML5 also introduced the time element along with a datetime attribute to standardize times. 
+The time element is an inline element that can wrap a date or time on a page. 
+
+A datetime attribute holds a valid format of that date. This is the value accessed by assistive devices. 
+It helps avoid confusion by stating a standardized version of a time, 
+even if it's informally or colloquially written in the text.
+
+例子：
+<time datetime="2016-09-15">Thursday, September 15<sup>th</sup></time>
