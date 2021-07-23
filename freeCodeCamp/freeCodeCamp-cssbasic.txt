@@ -44,3 +44,170 @@ padding: 40px 20px 20px 40px; 顺时针，第一个是top
 6. margin
 an element's margin controls the amount of space between an element's border and surrounding elements.
 用法和padding一致
+
+7. type selector
+[type='radio'] {
+  margin: 20px 0px 20px 0px;
+}
+
+id selector : #xxx
+class selector : .xxx
+
+8. unit
+1) px:
+Pixels are a type of length unit, which is what tells the browser how to size or space an item.
+
+2) relative units:
+such as em or rem, are relative to another length value. 
+For example, em is based on the size of an element's font. 
+If you use it to set the font-size property itself, 
+it's relative to the parent's font-size.
+rem是基于html元素的字体大小来决定，而em则根据使用它的元素的大小决定。
+
+3) in and mm refer to inches and millimeters, respectively. 这种绝对单位已经不再使用
+
+4) 视口单位：vh、vw 推荐使用
+
+5) body
+you can style your body element just like any other HTML element, 
+and all your other elements will inherit your body element's styles.
+
+example:
+<style>
+  body {
+    background-color: black;
+    color: green;
+    font-family: monospace;
+  }
+
+</style>
+<body>
+  <h1>Hello World</h1>
+</body>
+由于h1没有显示指定color和font-family，h1会继承color: green和font-family: monospace两个属性。
+
+6) multipla css
+example1:
+<style>
+  body {
+    background-color: black;
+    font-family: monospace;
+    color: green;
+  }
+  .pink-text {
+    color: pink;
+  }
+
+  .blue-text {
+    color: blue;
+  }
+</style>
+<h1 class="pink-text blue-text">Hello World!</h1>
+这时,blue覆盖pink,与css中定义的顺序有关，与class中哪个在前哪个在后无关。
+
+example2:
+
+<style>
+  body {
+    background-color: black;
+    font-family: monospace;
+    color: green;
+  }
+  .pink-text {
+    color: pink;
+  }
+
+  #orange-text {
+    color: orange;
+  }
+  
+  .blue-text {
+    color: blue;
+  }
+
+  
+</style>
+<h1 id="orange-text" class="pink-text blue-text">Hello World!</h1>
+这时候颜色为orange, id selector优先级高。
+
+example3:
+In many situations, you will use CSS libraries. These may accidentally override your own CSS. 
+So when you absolutely need to be sure that an element has specific CSS, you can use !important.
+
+<style>
+  body {
+    background-color: black;
+    font-family: monospace;
+    color: green;
+  }
+  #orange-text {
+    color: orange;
+  }
+  .pink-text {
+    color: pink !important;
+  }
+  .blue-text {
+    color: blue;
+  }
+</style>
+<h1 id="orange-text" class="pink-text blue-text" style="color: white">Hello World!</h1>
+通过!important， pink-text优先级最高。
+
+总结：!important > style="xxx" > id selector > class selector
+
+7) color的16进制表示有时候可以简写
+red's hex code #FF0000 can be shortened to #F00. 
+This shortened form gives one digit for red, one digit for green, and one digit for blue.
+
+8) css定义和使用变量
+To create a CSS variable, you just need to give it a name with two hyphens in front of it and assign it a value like this:
+定义：
+--penguin-skin: gray;
+使用：
+background: var(--penguin-skin);
+
+fallback: 当找不到变量-penguin-skin时，使用black
+background: var(--penguin-skin, black);
+
+9) Improve Compatibility with Browser Fallbacks
+example1:
+<style>
+  :root {
+    --red-color: red;
+  }
+  .red-box {
+    background: red;
+    background: var(--red-color);
+    height: 200px;
+    width:200px;
+  }
+</style>
+<div class="red-box"></div>
+如果有的浏览器不支持css变量定义，就会回退到background: red;
+
+10) Inherit CSS Variables
+To make use of inheritance, CSS variables are often defined in the :root element.
+example:
+:root {
+  --penguin-belly: pink;
+}
+
+11) media query
+
+:root {
+  --penguin-size: 300px;
+  --penguin-skin: gray;
+  --penguin-belly: white;
+  --penguin-beak: orange;
+}
+
+@media (max-width: 350px) {
+  :root {
+    /* Only change code below this line */
+    --penguin-size: 200px;
+    --penguin-skin: black;
+    /* Only change code above this line */
+  }
+}
+
+当最大宽度为350px时，大小变为200px,且颜色变为黑色
