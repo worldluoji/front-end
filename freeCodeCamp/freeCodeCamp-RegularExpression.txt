@@ -1,0 +1,140 @@
+1. test
+let myString = "Hello, World!";
+let myRegex = /Hello/;
+let result = myRegex.test(myString); 
+
+2. 或
+let petString = "James has a pet cat.";
+let petRegex = /dog|cat|bird|fish/;
+let result = petRegex.test(petString);
+
+/(a|b)c/ 匹配ac或bc
+
+3. 忽略大小写
+let myString = "freeCodeCamp";
+let fccRegex = /freeCodeCamp/i; // Change this line
+let result = fccRegex.test(myString);
+
+4. match
+test只是check ture or false, match可以返回匹配的字符串
+let extractStr = "Extract the word 'coding' from this string.";
+let codingRegex = /coding/; // Change this line
+let result = extractStr.match(codingRegex); 
+注意，是“字符串.match(正则)”，而“正则.test(字符串)”
+这两个是反的。
+
+let twinkleStar = "Twinkle, twinkle, little star";
+let starRegex = /Twinkle/gi; // Change this line
+let result = twinkleStar.match(starRegex); // Change this line
+/i忽略大小写，/g则表示搜索不止一个
+
+5. 常用符号
+.      任意1个字符
+[abc]  a、b、c其中一个, [a-e] a到e其中一个，同理[2-6]表示2-6中其中一个, 
+[^abc] 不能是abc其中一个
+^在[]外的另一个用法：
+以Cal开头
+let rickyAndCal = "Cal and Ricky both like racing.";
+let calRegex = /^Cal/; // Change this line
+let result = calRegex.test(rickyAndCal);
+$      Cal$  以Cal结尾 
++      出现1次或多次
+*      0次或多次，使用+和*一定要注意回溯问题，使用不当，会造成cpu飙升100%
+
+6. 正则的贪婪和懒惰
+In regular expressions, a greedy match finds the longest possible part of a string 
+that fits the regex pattern and returns it as a match. The alternative is called a lazy match, 
+which finds the smallest possible part of the string that satisfies the regex pattern.
+说白了贪婪就是默认找最长的，懒惰就找最短的。
+使用?转为懒惰模式
+let text = "<h1>Winter is coming</h1>";
+let myRegex = /<.*?>/; // Change this line
+let result = text.match(myRegex);
+返回<h1>
+
+?也还有另一个功能表示0个或1个
+You can specify the possible existence of an element with a question mark, ?. 
+This checks for zero or one of the preceding element. 
+You can think of this symbol as saying the previous element is optional.
+let american = "color";
+let british = "colour";
+let rainbowRegex= /colou?r/;
+rainbowRegex.test(american);
+rainbowRegex.test(british);
+
+7. 简写
+\w This shortcut is equal to [A-Za-z0-9_]
+\W not equal to [A-Za-z0-9_]
+\d [0-9]
+\D not equalt to [0-9]
+\s
+You can search for whitespace using \s, which is a lowercase s. 
+This pattern not only matches whitespace, but also carriage return, tab, form feed, and new line characters. 
+You can think of it as similar to the character class [ \r\t\f\n\v].
+\S 非\s
+
+8. exercise 1
+Usernames can only use alpha-numeric characters.
+The only numbers in the username have to be at the end. There can be zero or more of them at the end. Username cannot start with the number.
+Username letters can be lowercase and uppercase.
+Usernames have to be at least two characters long. A two-character username can only use alphabet letters as characters.
+let username = "JackOfAllTrades";
+let userCheck = /^[a-z]{2}$|^[a-z]{2,}\d*$|^[a-z]{1,}\d{2,}$/i; 
+let result = userCheck.test(username);
+{2,}至少出现2次， {2,5}出现2到5次
+
+9. Lookaheads
+Lookaheads are patterns that tell JavaScript to look-ahead in your string to check for patterns further along. 
+This can be useful when you want to search for multiple patterns over the same string.
+There are two kinds of lookaheads: positive lookahead and negative lookahead.
+
+A positive lookahead will look to make sure the element in the search pattern is there, but won't actually match it. 
+A positive lookahead is used as (?=...) where the ... is the required part that is not matched.
+
+On the other hand, a negative lookahead will look to make sure the element in the search pattern is not there. 
+A negative lookahead is used as (?!...) where the ... is the pattern that you do not want to be there. 
+The rest of the pattern is returned if the negative lookahead part is not present.
+
+example:
+match passwords that are greater than 5 characters long, and have two consecutive digits:
+let sampleWord = "astronaut";
+let pwRegex = /(?=\w{5,})(?=\D+\d{2,}|\d{2,}\D+)/;
+let result = pwRegex.test(sampleWord);
+表示至少有5个，并且至少有1个非数字、2个连续数字即可。
+
+10. capture groups
+You can search for repeat substrings using capture groups. Parentheses, ( and ), are used to find repeat substrings. 
+You put the regex of the pattern that will repeat in between the parentheses.
+
+To specify where that repeat string will appear, you use a backslash (\) and then a number. 
+This number starts at 1 and increases with each additional capture group you use. 
+An example would be \1 to match the first group.
+
+The example below matches any word that occurs twice separated by a space:
+
+let repeatStr = "regex regex";
+let repeatRegex = /(\w+)\s\1/;
+repeatRegex.test(repeatStr);
+repeatStr.match(repeatRegex);
+The test call would return true, and the match call would return ["regex regex", "regex"].
+上面表示括号（）里的东东重复2次，则返回匹配的字符串，和（）里的东东。
+
+exercise2 : repeat 3 times
+let repeatNum = "42 42 42";
+let reRegex = /^(\d+)\s\1\s\1$/;
+let result = reRegex.test(repeatNum);
+连续使用两个\1则表示重复3次
+
+11. replace
+let wrongText = "The sky is silver.";
+let silverRegex = /silver/;
+wrongText.replace(silverRegex, "blue");
+
+The replace call would return the string The sky is blue..
+
+You can also access capture groups in the replacement string with dollar signs ($).
+
+"Code Camp".replace(/(\w+)\s(\w+)/, '$2 $1');
+The replace call would return the string Camp Code.
+
+12 exercise3: 用正则表达式实现String.prototype.trim()，去掉前后空格
