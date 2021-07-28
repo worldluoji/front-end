@@ -117,7 +117,8 @@ let repeatRegex = /(\w+)\s\1/;
 repeatRegex.test(repeatStr);
 repeatStr.match(repeatRegex);
 The test call would return true, and the match call would return ["regex regex", "regex"].
-上面表示括号（）里的东东重复2次，则返回匹配的字符串，和（）里的东东。
+上面表示括号（）里的东东重复2次，match返回匹配的字符串，和（）里的东东。
+因为(\w+)在第一个括号里(第一个group)，所以后面\1就代表了\w+。
 
 exercise2 : repeat 3 times
 let repeatNum = "42 42 42";
