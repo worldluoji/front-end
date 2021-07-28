@@ -138,3 +138,6 @@ You can also access capture groups in the replacement string with dollar signs (
 The replace call would return the string Camp Code.
 
 12 exercise3: 用正则表达式实现String.prototype.trim()，去掉前后空格
+let wsRegex = /^\s+|\s+$/; // Change this line
+let result = hello.replace(wsRegex, "").replace(wsRegex, "");
+注意replace一次只会替换掉满足的一个
