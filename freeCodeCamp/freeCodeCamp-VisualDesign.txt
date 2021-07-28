@@ -87,6 +87,7 @@ p {
     position: relative;
     bottom: 10px;
 }
+相对于它本来应该在的位置，
 
 14. absolute
 absolute, which locks the element in place relative to its parent container.
