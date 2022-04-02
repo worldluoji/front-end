@@ -1,8 +1,0 @@
-1. 8分钟深入浅出nginx
-https://zhuanlan.zhihu.com/p/34943332     
-
-2. 连前端都看得懂的《Nginx 入门指南》
-https://juejin.cn/post/6844904129987526663
-
-3. nginx官网
-https://www.nginx.com/
