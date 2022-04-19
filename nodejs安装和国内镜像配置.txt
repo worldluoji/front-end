@@ -5,6 +5,9 @@ node -v查看是否安装成功，如果出现版本号则说明安装成功
 2. 国内镜像配置
 为了速度快，国内可以使用淘宝的npm镜像，称为cnpm：
 https://developer.aliyun.com/mirror/NPM?from=tnpm
+cnpm如果报错：cnpm : 无法加载文件 C:\Users\12345\AppData\Roaming\npm\cnpm.ps1，因为在此系统上禁止 运行脚本。
+则用管理员身份打开windows powershell, 输入命令 set-ExecutionPolicy RemoteSigned (Y 确认) 更改执行策略。
+
 
 3. nodejs使用npm来管理包，类似于python的pip工具
 npm常用命令：
