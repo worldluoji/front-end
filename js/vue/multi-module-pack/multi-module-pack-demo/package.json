@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "build:button" : "vue-cli-service serve --open cards/button/main.js"
+    "serve:button" : "vue-cli-service serve --open cards/button/main.js",
+    "build:button" : "vue-cli-service build --target lib --name index cards/button/lib/index.js --dest dist/button"
   },
   "dependencies": {
     "core-js": "^3.8.3",
