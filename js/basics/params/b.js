@@ -11,3 +11,6 @@ console.log('end')
 
 // https://github.com/substack/minimist
 // node b.js --name=jole
+
+// 如果使用npm, npm scripts参数传递的命令行分割符是'--'。
+// npm run build -- --name hello，即可将后续参数添加到process.argv数组中。
