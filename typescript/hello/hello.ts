@@ -18,3 +18,10 @@ let pikachu: Pokemon = {
 
 
 console.log(pikachu, typeof pikachu)
+
+let newPokemonName1: string = 'FireDragon'
+
+// 可以省略类型，但是一经确认后，类型不可更改
+let newPokemonName2 = 'WaterGui' 
+
+console.log(newPokemonName1, newPokemonName2)

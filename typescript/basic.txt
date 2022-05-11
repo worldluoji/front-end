@@ -3,6 +3,19 @@
 JavaScript的动态类型简单、灵活，写起来很爽，但是不适用于大型项目，代码一多会难以维护，尤其是看别人的代码。
 而TypeScript则采用了静态类型，写法上虽然麻烦点，但是换来了更稳固的结构和清晰的逻辑。
 
+Types increase your agility when doing refactoring. 
+It's better for the compiler to catch errors than to have things fail at runtime.
+
+Types are one of the best forms of documentation you can have. 
+The function signature is a theorem and the function body is the proof.
+
+TypeScript provides compile time type safety for your JavaScript code. 
+This is no surprise given its name. 
+The great thing is that the types are completely optional. 
+Your JavaScript code .js file can be renamed to a .ts file and TypeScript will 
+still give you back valid .js equivalent to the original JavaScript file. 
+TypeScript is intentionally and strictly a superset of JavaScript with optional Type checking.
+
 2) 微软发明，Google背书，有较好的前景
 
 2. typescript 命令
@@ -13,6 +26,9 @@ npm install -g typescript
 tsc hello.ts
 编译后会生成.js文件
 
+3) 插件（可选）
+JavaScript and TypeScript Nightly
+Enables typescript@next to power VS Code's built-in JavaScript and TypeScript support
 
 3. 类型
 
@@ -69,7 +85,7 @@ function awsome(): void{
 
 //参数后面有？则是可以跳过
 function buildName(firstName: string, lastName?: string, age: number = 18) {
-	  if (!lastName) {
+	if (!lastName) {
         console.log(firstName)
         return
     }
