@@ -96,3 +96,7 @@ function buildName(firstName: string, lastName?: string, age: number = 18) {
 在使用第三方库时，必须引入它的声明文件才能获得代码补全和提示，
 可以使用@types来管理声明文件，比如要使用Puppeteer，要引入它的声明文件需要：
 npn install @types/Puppeteer
+
+
+7. typescript免费书籍
+https://basarat.gitbook.io/typescript/
