@@ -1,0 +1,171 @@
+鼠标事件
+
+click 当用户点击某个对象时调用的事件句柄。
+
+contextmenu 在用户点击鼠标右键打开上下文菜单时触发
+
+dblclick 当用户双击某个对象时调用的事件句柄。
+
+mousedown 鼠标按钮被按下。
+
+mouseenter 当鼠标指针移动到元素上时触发。
+
+mouseleave 当鼠标指针移出元素时触发
+
+mousemove 鼠标被移动。
+
+mouseover 鼠标移到某元素之上。
+
+mouseout 鼠标从某元素移开。
+
+mouseup 鼠标按键被松开。
+
+键盘事件
+
+属性 描述 DOM
+
+keydown 某个键盘按键被按下。
+
+keypress 某个键盘按键被按下并松开。
+
+keyup 某个键盘按键被松开。
+
+框架/对象（Frame/Object）事件
+
+abort 图像的加载被中断。 ( )
+
+beforeunload 该事件在即将离开页面（刷新或关闭）时触发
+
+error 在加载文档或图像时发生错误。 ( , 和 )
+
+hashchange 该事件在当前 URL 的锚部分发生修改时触发。
+
+load 一张页面或一幅图像完成加载。
+
+pageshow 该事件在用户访问页面时触发
+
+pagehide 该事件在用户离开当前网页跳转到另外一个页面时触发
+
+resize 窗口或框架被重新调整大小。
+
+scroll 当文档被滚动时发生的事件。
+
+unload 用户退出页面。 ( 和 )
+
+表单事件
+
+blur 元素失去焦点时触发
+
+change 该事件在表单元素的内容改变时触发( , , , 和 )
+
+focus 元素获取焦点时触发
+
+focusin 元素即将获取焦点是触发
+
+focusout 元素即将失去焦点是触发
+
+input 元素获取用户输入是触发
+
+reset 表单重置时触发
+
+search 用户向搜索域输入文本时触发 (
+
+剪贴板事件
+
+copy 该事件在用户拷贝元素内容时触发
+
+cut 该事件在用户剪切元素内容时触发
+
+paste 该事件在用户粘贴元素内容时触发
+
+打印事件
+
+afterprint 该事件在页面已经开始打印，或者打印窗口已经关闭时触发
+
+beforeprint 该事件在页面即将开始打印时触发
+
+拖动事件
+
+drag 该事件在元素正在拖动时触发
+
+dragend 该事件在用户完成元素的拖动时触发
+
+dragenter 该事件在拖动的元素进入放置目标时触发
+
+dragleave 该事件在拖动元素离开放置目标时触发
+
+dragover 该事件在拖动元素在放置目标上时触发
+
+dragstart 该事件在用户开始拖动元素时触发
+
+drop 该事件在拖动元素放置在目标区域时触发
+
+多媒体（Media）事件
+
+abort 事件在视频/音频（audio/video）终止加载时触发。
+
+canplay 事件在用户可以开始播放视频/音频（audio/video）时触发。
+
+canplaythrough 事件在视频/音频（audio/video）可以正常播放且无需停顿和缓冲时触发。
+
+durationchange 事件在视频/音频（audio/video）的时长发生变化时触发。
+
+emptied The event occurs when the current playlist is empty
+
+ended 事件在视频/音频（audio/video）播放结束时触发。
+
+error 事件在视频/音频（audio/video）数据加载期间发生错误时触发。
+
+loadeddata 事件在浏览器加载视频/音频（audio/video）当前帧时触发触发。
+
+loadedmetadata 事件在指定视频/音频（audio/video）的元数据加载后触发。
+
+loadstart 事件在浏览器开始寻找指定视频/音频（audio/video）触发。
+
+pause 事件在视频/音频（audio/video）暂停时触发。
+
+play 事件在视频/音频（audio/video）开始播放时触发。
+
+playing 事件在视频/音频（audio/video）暂停或者在缓冲后准备重新开始播放时触发。
+
+progress 事件在浏览器下载指定的视频/音频（audio/video）时触发。
+
+ratechange 事件在视频/音频（audio/video）的播放速度发送改变时触发。
+
+seeked 事件在用户重新定位视频/音频（audio/video）的播放位置后触发。
+
+seeking 事件在用户开始重新定位视频/音频（audio/video）时触发。
+
+stalled 事件在浏览器获取媒体数据，但媒体数据不可用时触发。
+
+suspend 事件在浏览器读取媒体数据中止时触发。
+
+timeupdate 事件在当前的播放位置发送改变时触发。
+
+volumechange 事件在音量发生改变时触发。
+
+waiting 事件在视频由于要播放下一帧而需要缓冲时触发。
+
+动画事件
+
+animationend 该事件在 CSS 动画结束播放时触发
+
+animationiteration 该事件在 CSS 动画重复播放时触发
+
+animationstart 该事件在 CSS 动画开始播放时触发
+
+过渡事件
+
+transitionend 该事件在 CSS 完成过渡后触发。
+
+其他事件
+
+message 该事件通过或者从对象(WebSocket, Web Worker, Event Source 或者子 frame 或父窗口)接收到消息时触发
+
+online 该事件在浏览器开始在线工作时触发。
+
+offline 该事件在浏览器开始离线工作时触发。
+
+popstate 该事件在窗口的浏览历史（history 对象）发生改变时触发。 event occurs when the window’s history changes
+
+show 该事件当
