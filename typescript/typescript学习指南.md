@@ -1,8 +1,10 @@
-1. 为什么使用typescript?
-1) typeScript解决了JavaScript的一大痛点，那就是动态类型。
+# typescript学习指南
+
+## 1. 为什么使用typescript?
+- typeScript解决了JavaScript的一大痛点，那就是动态类型。
 JavaScript的动态类型简单、灵活，写起来很爽，但是不适用于大型项目，代码一多会难以维护，尤其是看别人的代码。
 而TypeScript则采用了静态类型，写法上虽然麻烦点，但是换来了更稳固的结构和清晰的逻辑。
-
+```
 Types increase your agility when doing refactoring. 
 It's better for the compiler to catch errors than to have things fail at runtime.
 
@@ -15,23 +17,30 @@ The great thing is that the types are completely optional.
 Your JavaScript code .js file can be renamed to a .ts file and TypeScript will 
 still give you back valid .js equivalent to the original JavaScript file. 
 TypeScript is intentionally and strictly a superset of JavaScript with optional Type checking.
+```
 
-2) 微软发明，Google背书，有较好的前景
+- 微软发明，Google背书，有较好的前景
 
-2. typescript 命令
-1) 安装typescript
+## 2. 安装和使用typescript
+- 安装typescript
+```
 npm install -g typescript
+```
 
-2) 编译
+- 编译
+```
 tsc hello.ts
+```
 编译后会生成.js文件
 
-3) 插件（可选）
+- 插件（可选）
+```
 JavaScript and TypeScript Nightly
 Enables typescript@next to power VS Code's built-in JavaScript and TypeScript support
+```
 
-3. 类型
-
+## 3. 类型
+```
 //布尔值
 let isDone: boolean = false
 
@@ -52,11 +61,12 @@ let numandstring: number | string;
 let list: number[] = [1,2,3]
 let listString: string[] = ['1','2','3']
 let numandString: (number | string)[] = ['1',2,3]
-
+```
 TypeScript还有类型推论，如果在创建一个变量的时候没有指定类型，那么会根据赋值类型来决定，
 如果只是创建了一个变量但是没有赋值，会默认为any。
 
-4. 接口
+## 4. 接口
+```
 interface Person {
     //只读属性，只能在创建实例的时候赋值，之后不可以更改
     readonly id: number;
@@ -76,8 +86,10 @@ let tom: Person = {
     name: 'Tom',
     age: 18,
 }
+```
 
-5. function
+## 5. function
+```
 //空白值函数
 function awsome(): void{
 	console.log('do something')
@@ -91,12 +103,14 @@ function buildName(firstName: string, lastName?: string, age: number = 18) {
     }
     console.log(firstName + lastName)
 }
+```
 
-6. 声明文件
+## 6. 声明文件
 在使用第三方库时，必须引入它的声明文件才能获得代码补全和提示，
 可以使用@types来管理声明文件，比如要使用Puppeteer，要引入它的声明文件需要：
 npn install @types/Puppeteer
 
 
-7. typescript免费书籍
-https://basarat.gitbook.io/typescript/
+## 7. typescript免费教程
+- https://basarat.gitbook.io/typescript/
+- https://www.tslang.cn/docs/handbook/typescript-in-5-minutes.html
