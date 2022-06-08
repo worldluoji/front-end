@@ -32,6 +32,7 @@ npm view @vue/cli versions 查看@vue/cli所有的版本
 ```
 npm install --g yarn
 yarn --version
+yarn config set registry https://registry.npm.taobao.org
 ```
 Yarn和npm命令对比:
 ```
