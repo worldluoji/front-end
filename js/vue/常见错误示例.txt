@@ -3,7 +3,8 @@
 因为箭头函数并没有 this，this 会作为变量一直向上级词法作用域查找，直至找到为止。
 经常导致 Uncaught TypeError: Cannot read property of undefined 或 Uncaught TypeError: this.myMethod is not a function 之类的错误。
 
-2. 在vue中，arr[3] = 1是非响应式的，即此时不会更新试图。arr.push(1)则是响应式的。对于对象更复杂的对象也是如此。
+2. 在vue2中，arr[3] = 1是非响应式的，即此时不会更新试图。arr.push(1)则是响应式的。对于对象更复杂的对象也是如此。
+vue3已经优化了这个问题。
 
 3. vue中如果async created()，即在created()声明周期函数前加了async, 那么不会等created里执行完，就会继续往后执行beforeMount、mounted。
 而执行完Mounted视图就真正渲染完成了。
