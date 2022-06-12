@@ -168,3 +168,36 @@ let rejectedPromise = new Promise(function(resolve, reject) {
 let fulfilledPromise = Promise.resolve(42);
 let rejectedPromise = Promise.reject('fail');
 ```
+
+## 8. this
+this闭坑原则：
+- 当函数作为对象的方法调用时，函数中的 this 就是该对象；
+- 当函数被正常调用时，在严格模式下，this 值是 undefined，非严格模式下 this 指向的是全局对象 window；
+- 嵌套函数中的 this 不会继承外层函数的 this 值
+```
+var myObj = {
+  name : "luoji", 
+  showThis: function(){
+    console.log(this)
+    function bar(){console.log(this)}
+    bar()
+  }
+}
+myObj.showThis()
+```
+上面代码会返回undefined
+
+- 因为箭头函数没有自己的执行上下文，所以箭头函数的 this 就是它外层函数的 this。
+```
+var myObj = {
+  name : "luoji", 
+  showThis: function () {
+    console.log(1, this)
+    let bar = () => {
+      console.log(this)
+    }
+    bar()
+  }
+}
+myObj.showThis()
+```
