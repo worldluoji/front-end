@@ -1,0 +1,19 @@
+<html>
+    <body>
+        <div>1</div>
+        <script>
+        let div1 = document.getElementsByTagName('div')[0]
+        div1.innerText = 'luoji1'
+
+        let div2 = document.getElementsByTagName('div')[1]
+        div2.innerText = 'luoji3'
+        </script>
+        <div>test</div>
+    </body>
+</html>
+<!--
+第一行是luoji1，第二行不会变，仍是test。
+原因就是浏览器是边加载边解析html的，而且遇到js会停止dom的解析执行js，js执行完毕后再接着解析dom。
+上面的代码，js执行时第2个div并未被解析为dom，所以js中获取不到，js会抛出错误TypeError，但js抛出错误并未影响html的继续解析。
+所以，第2个div保持原来的状态被解析出来。
+-->
