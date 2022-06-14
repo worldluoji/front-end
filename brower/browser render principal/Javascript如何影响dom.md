@@ -74,3 +74,12 @@ JavaScript 代码出现了 div1.style.color = ‘red' 的语句，它是用来�
 JavaScript 引擎在解析 JavaScript 之前，是不知道 JavaScript 是否操纵了 CSSOM 的，所以渲染引擎在遇到 JavaScript 脚本时，不管该脚本是否操纵了 CSSOM，都会执行 CSS 文件下载，解析操作，再执行 JavaScript 脚本。
 
 我们知道了 JavaScript 会阻塞 DOM 生成，而样式文件又会阻塞 JavaScript 的执行。
+
+## 补充
+DOMContentLoaded: 当页面的内容解析完成后，则触发该事件 
+- JS 会阻塞DOM的解析和渲染，所以DOMContentLoaded会在JS执行后触发
+- 因为CSS会阻塞JS执行
+       - 如果JS在CSS之前或只有CSS资源，则DOMContentLoaded事件不必等CSS加载完毕
+       - 如果页面同时存在JS和CSS且CSS在JS之前，那DOMContentLoaded事件需等待CSS加载完毕后触发
+
+onLoad: 等待页面的所有资源都加载完成才会触发，这些资源包括css、js、图片视频等
