@@ -1,3 +1,4 @@
+import './datatype'
 
 let s : string = "Hello TypeScript"
 console.log(document.querySelectorAll("app"))
