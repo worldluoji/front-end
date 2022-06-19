@@ -1,4 +1,6 @@
 import './datatype'
+import './enum'
+import './interface'
 
 let s : string = "Hello TypeScript"
 console.log(document.querySelectorAll("app"))
