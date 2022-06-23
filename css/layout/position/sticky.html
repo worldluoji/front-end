@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sticky position</title>
+    <style>
+        .outside{
+            width: 500px;
+            height: 200px;
+            border: 1px solid #000;
+            margin: 50px auto 0;
+        }
+
+        .outside div{
+            width: 200px;
+            height: 100px;
+        }
+
+        .box1{
+            background-color: green;
+            position: sticky;
+            left: 50px;
+            top: 20px;
+        }
+
+        .box2{
+            background-color: gold;
+            position: relative;
+            top: 80vw;
+        }
+    </style>
+</head>
+<body>
+    <div class="outside">
+        <div class="box1"></div>
+        <div class="box2"></div>
+    </div>
+</body>
+</html>
+
+<!--
+sticky生效的前提是，必须搭配top、bottom、left、right这四个属性一起使用，不能省略，否则等同于relative定位，不产生"动态固定"的效果。
+原因是这四个属性用来定义"偏移距离"，浏览器把它当作sticky的生效门槛。
+
+它的具体规则是，当页面滚动，父元素开始脱离视口时（即部分不可见），只要与sticky元素的距离达到生效门槛，
+relative定位自动切换为fixed定位；等到父元素完全脱离视口时（即完全不可见），fixed定位自动切换回relative定位。
+-->

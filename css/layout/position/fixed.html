@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>fiexed position</title>
+    <style>
+        .outside{
+            width: 500px;
+            height: 600px;
+            border: 1px solid #000;
+            margin: 50px auto 0;
+        }
+
+        .outside div{
+            width: 200px;
+            height: 100px;
+        }
+
+        .box1{
+            background-color: green;
+            position: fixed;
+            left: 20vw;
+            top: 30vh;
+        }
+
+        .box2{
+            background-color: gold;
+            position: fixed;
+            left: 20vw;
+            top: 70vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="outside">
+        <div class="box1"></div>
+        <div class="box2"></div>
+    </div>
+</body>
+</html>
+<!--
+    fixed表示，相对于视口（viewport，浏览器窗口）进行偏移，即定位基点是浏览器窗口。
+    这会导致元素的位置不随页面滚动而变化，好像固定在网页上一样。
+-->
