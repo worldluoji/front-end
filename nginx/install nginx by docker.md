@@ -1,5 +1,8 @@
+# install nginx by docker
+```
 docker pull nginx
 docker run -d -p 80:80  nginx:latest
+```
 浏览器访问 http://你的服务器地址，看到如下信息即安装成功：
 
 Welcome to nginx!

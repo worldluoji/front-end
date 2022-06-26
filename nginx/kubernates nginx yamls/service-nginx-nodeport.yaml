@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-node-port
+spec:
+  type: NodePort
+  ports:
+  - nodePort: 30080     #声明节点（宿主机）30080端口可以访问k8s内部Service8080端口
+    port: 8080          #Service 8080端口代理POD的80端口
+    targetPort: 80
+    protocol: TCP
+    name: http
+  - nodePort: 30088      #不指定targetPort,也是443
+    port: 443
+    protocol: TCP
+    name: https
+  selector:
+    app: nginx         #Service只管理携带app： nginx的pod
+
+#访问任何一个Service，你只需要使用“<任何一台宿主机的IP地址>:8080”进行访问
+#要运行k8s-deployment-demo/nginx-deployment.yaml把pod启动起来
