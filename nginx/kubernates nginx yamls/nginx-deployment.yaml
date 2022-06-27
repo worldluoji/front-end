@@ -15,6 +15,7 @@ spec:
       containers:    #容器相关配置
       - name: nginx
         image: nginx:1.23.0
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
         volumeMounts:
@@ -28,7 +29,7 @@ spec:
       volumes:                                 #宿主机中的路径
       - name: nginx-vol
         hostPath:
-          path: /usr/luoji/k8s/nginx/index
+          path: /usr/luoji/k8s/nginx/index    # nginx静态文件路径， for windows : "/d/jscssh5/js/nginx/kubernates nginx yamls/index"
           type: DirectoryOrCreate
       - name: nginx-config
         configMap:
@@ -38,7 +39,7 @@ spec:
               path: nginx.conf
       - name: cache
         hostPath:
-          path: /usr/luoji/k8s/nginx/cache # windows可以这样写，比如d盘 /d/jscssh5/js/nginx/kubernates nginx yamls
+          path: /usr/luoji/k8s/nginx/cache #缓存路径， windows可以这样写，比如f盘 /f/temp
           type: DirectoryOrCreate
 
 # 为此，我定义了一个 Pod 模版（spec.template），这个模版描述了我想要创建的 Pod 的细节。
