@@ -14,19 +14,41 @@ spec:
     spec:
       containers:    #容器相关配置
       - name: nginx
-        image: nginx:1.8  #从1.7.9改为1.8
+        image: nginx:1.23.0
         ports:
         - containerPort: 80
-        volumeMounts: 
+        volumeMounts:
         - mountPath: /usr/share/nginx/html   #配置镜像中挂载的路径
           name: nginx-vol
+        - mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+          name: nginx-config
+        - mountPath: /usr/local/nginx/cache
+          name: cache
       volumes:                                 #宿主机中的路径
       - name: nginx-vol
         hostPath:
-          path: /home/docker/nginx
+          path: /usr/luoji/k8s/nginx/index
           type: DirectoryOrCreate
-        # emptyDir: {} 这个是创建临时目录
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+      - name: cache
+        hostPath:
+          path: /usr/luoji/k8s/nginx/cache # windows可以这样写，比如d盘 /d/jscssh5/js/nginx/kubernates nginx yamls
+          type: DirectoryOrCreate
 
 # 为此，我定义了一个 Pod 模版（spec.template），这个模版描述了我想要创建的 Pod 的细节。
-# 在上面的例子里，这个 Pod 里只有一个容器，这个容器的镜像（spec.containers.image）是 nginx:1.7.9，
+# 在上面的例子里，这个 Pod 里只有一个容器，这个容器的镜像（spec.containers.image）是 nginx:1.23.0，
 # 这个容器监听端口（containerPort）是 80。
+
+# 如果使用minikube, 需要手动先mount 主机与minikube node文件目录的映射关系
+# For example, this would mount your home directory to appear as /host within the minikube VM:
+# minikube mount $HOME:/host
+
+# minikube ssh 可查看挂载的文件
+# minikube mount /usr/luoji/k8s/nginx:/usr/luoji/k8s/nginx
+# https://github.com/kubernetes/minikube/issues/8202
