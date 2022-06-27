@@ -3,6 +3,7 @@
 1. nginx官网下载安装包
 https://www.nginx.com/
 
+wget https://nginx.org/download/nginx-1.21.2.tar.gz
 
 2. 解压和安装
 ```

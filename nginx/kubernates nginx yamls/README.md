@@ -32,3 +32,12 @@ minikube service nginx-node-port --url
 kubectl delete configmap nginx-config
 kubectl delete -f nginx-deployment.yaml 
 kubectl delete -f service-nginx-nodeport.yaml
+
+
+## 验证
+```
+curl localhost:30080
+
+curl -X POST -H 'Content-Type: application/json' -d '{"context":{"username":"luoji"}, "subject": "users:manager","action" : "delete", "resource": "resources:users"}' http://localhost:30080/api/
+```
+
