@@ -12,8 +12,9 @@ tar -zxvf nginx-xxx.tar.gz
 make
 make install
 ```
+nginx会被安装在/usr/local/nginx目录下
 
-常用命令：
+3. 常用命令：
 ```
 cd /usr/local/nginx/sbin
 ./nginx -V 查看nginx版本
