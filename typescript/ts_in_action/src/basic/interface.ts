@@ -1,20 +1,26 @@
 
+// number类任意属性
+// [index: number]: string 的意思是，StringArray类型的数组可以有任意的数字下标，而且数组的成员的类型必须是 string。
 interface StringArray {
     [index: number]: string
 }
 
 let sa: StringArray = '123'
 let sa2: StringArray = ['123','456','789']
-console.log(sa)
-console.log(sa2)
+let sa3: StringArray = {1: '123', 2: '456'}
 
-
+// String类任意属性
 interface StringString {
     [key: string]: string,
-    // age: number , error 上main使用了任意属性为string,其它成员则必须为string
+    // age: number , error 使用了任意属性为string,其它成员则必须为string
     [index: number]: string
 }
 
+let ss: StringString = {
+    key1: 'value1',
+    2 : '3',
+    key2: 'value2'
+}
 
 interface User {
     readonly id: number,
@@ -28,9 +34,9 @@ interface Result {
 
 function Render(result: Result) {
     result.data.forEach(element => {
-        console.log(element.id, element.name)
+        // console.log(element.id, element.name)
         if (element.age) {
-            console.log(element.age)
+            // console.log(element.age)
         }
     });
 }
@@ -54,6 +60,7 @@ let res2: Result = {
 }
 Render(res2)
 
+//这种方式不建议，因为如果是react可能混淆
 let res3: Result = {
     data: [<User>{
         id: 1,

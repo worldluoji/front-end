@@ -1,5 +1,5 @@
 
-// 1. 数字枚举
+// 1. 数字枚举, developer=2, maintainer=3...
 enum Role {
     reportor = 1,
     developer,
@@ -8,7 +8,7 @@ enum Role {
 }
 
 // 枚举就是一个对象
-console.log(Role)
+// console.log(Role)
 
 // 2. 字符串枚举
 enum Message {
@@ -21,7 +21,7 @@ enum Ok {
     No,
     Yes = 'Yes'
 }
-console.log(Ok.No)
+// console.log(Ok.No)  0
 
 // 枚举是read-only的，不允许被修改
 // Ok.No = 'No'
@@ -40,4 +40,4 @@ enum EnType {
 
 // developer
 let r: Role = 2
-console.log(r)
+// console.log(r)

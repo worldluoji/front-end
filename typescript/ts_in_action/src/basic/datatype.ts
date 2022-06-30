@@ -1,4 +1,14 @@
 
+let id = 5; // TS knows it's a number
+let firstname = 'danny'; // TS knows it's a string
+let hasDog = true; // TS knows it's a boolean
+// hasDog = 'yes'; // ERROR
+
+// 赋值多个类型，一般不建议这么玩
+let age: string | number;
+age = 26;
+age = '26';
+
 // 1. array
 let arr: number[] = [1,2,3]
 let arr2: Array<number> = [4,5,6]
@@ -31,7 +41,7 @@ obj.x = 3
 // 5. symbol
 let s1 = Symbol()
 let s2: Symbol = Symbol()
-console.log(`s1 == s2 ? {}`, s1 == s2)
+// console.log(`s1 == s2 ? {}`, s1 == s2) false
 
 // 6. undefined and null
 let un: undefined = undefined
