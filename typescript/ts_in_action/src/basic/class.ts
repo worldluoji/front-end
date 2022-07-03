@@ -4,7 +4,7 @@ abstract class Animal {
     }
     abstract sleep(): void
 }
-// let animal = new Animal()
+// let animal = new Animal() 和Java一样，抽象类不能被实例化，但是ts的抽象类中可以有方法实现。
 
 class Dog extends Animal {
     constructor(name: string) {
@@ -54,6 +54,7 @@ animals.forEach(i => {
     i.sleep()
 })
 
+// 通过返回this实现链式调用
 class Workflow {
     step1() {
         return this
