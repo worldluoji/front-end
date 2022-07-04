@@ -55,7 +55,7 @@ let noReturn = () => {}
 
 // 8. any
 // ts中，不指定类型，就是any, 不建议使用any
-let a
+let an
 
 // 9. never
 // 跑出了异常，就没有返回值
