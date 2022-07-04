@@ -27,10 +27,14 @@ interface Obj {
     b: string;
 }
 
-// key 所代表的类型就是Obj对成员所代表的类型，这里就是 nunber | string 的联合类型
+// key 所代表的类型就是Obj对应员所代表的类型，这里等价于 'a' | 'b' 
 let key: keyof Obj
+key = 'a'
+key = 'b'
+// key = 'c' // error
 
 // T[K], 索引类型，value就代表了Obj的成员a的类型，即number
 let value: Obj['a']
-
+value = 3
+// value = '3' // error
 // T extends U 范型约束
