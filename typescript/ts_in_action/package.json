@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "basic project for typescript",
   "main": "./src/index.ts",
-  "dependencies": {},
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "moment": "^2.29.3"
+  },
   "devDependencies": {
+    "@types/jquery": "^3.5.14",
     "clean-webpack-plugin": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.3.0",
