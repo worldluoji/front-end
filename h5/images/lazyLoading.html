@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lazy loading</title>
+</head>
+<body>
+    <div class="photo-list">
+        <!-- 使用loading=lazy，不用再手动写下面的懒加载
+             运行后，浏览器控制台会显示 [Intervention]Images loaded lazily and replaced with placeholders.
+        -->
+        <img src="./getBoundingClientRect获取的属性示意图.PNG" loading="lazy" alt="" width="640" height="480" />
+        <img src="./getBoundingClientRect获取的属性示意图.PNG" loading="lazy" alt="" width="640" height="480" />
+        <img src="https://static001.geekbang.org/resource/image/90/44/900f44430300520aa9c5678b668f7344.jpg" loading="lazy" alt="" width="640" height="480" />
+    </div>
+</body>
+</html>
