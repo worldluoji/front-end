@@ -36,12 +36,12 @@ namespace Lib {
 console.log(Lib.version)
 
 // 命名空间与枚举进行声明合并，这样枚举会多一个mix方法
-enum Color {
+enum Colorm {
     Green,
     White,
     Blue
 }
-namespace Color {
+namespace Colorm {
     export function mix() {}
 }
-console.log(Color)
+console.log(Colorm)
