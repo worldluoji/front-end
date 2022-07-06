@@ -1,0 +1,5 @@
+1. vue-cli-service
+https://cli.vuejs.org/zh/guide/cli-service.htm
+
+2. vue3 动态组件
+https://staging-cn.vuejs.org/api/built-in-special-elements.html#component
