@@ -115,12 +115,12 @@ aac = ccc
 ccc = aac
 
 // 泛型兼容性
-interface Empty<T> {
-    // value: T
-}
-let obj1: Empty<number> = {};
-let obj2: Empty<string> = {};
-obj1 = obj2
+// interface Empty<T> {
+//     // =value: T
+// }
+// let obj1: Empty<number> = {};
+// let obj2: Empty<string> = {};
+// obj1 = obj2
 
 let logc1 = <T>(x: T): T => {
     console.log('x')

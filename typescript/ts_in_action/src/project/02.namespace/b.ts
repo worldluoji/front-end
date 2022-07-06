@@ -1,11 +1,15 @@
-/// <reference path="a.ts" />
+
+// Triple-slash reference directive comments should not be used anymore. Use import instead.
+// https://github.com/bradzacher/eslint-plugin-typescript/blob/master/docs/rules/no-triple-slash-reference.md
+
+/// <reference path="a.ts" /> 
 namespace Shape {
     export function square(x: number) {
         return x * x
     }
 }
 
-// circle方法在另外一个文件中，但都是namespace Shape，因此可以调用，但必须写第一行的refernce path
+// circle方法在另外一个文件中，但都是namespace Shape，因此可以调用，但必须写上面的refernce path
 console.log(Shape.cricle(2))
 console.log(Shape.square(2))
 

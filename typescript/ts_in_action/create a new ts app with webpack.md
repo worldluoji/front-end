@@ -118,8 +118,48 @@ Invalid configuration object. Webpack has been initialized using a configuration
    BREAKING CHANGE since webpack 5: The devtool option is more strict.
    Please strictly follow the order of the keywords in the pattern
 ```
-原因是webpack5, devtool更加严格了，必须按照上面的顺，改为：
+原因是webpack5, devtool更加严格了，必须按照上面的顺序，改为：
 ```
 eval-cheap-module-source-map,
 ```
 就可以正常运行了。
+
+## 10. 引入ESLint
+为什么要使用ESlint?
+- TypeScript官方已经决定放弃TSLint，转向ESlint
+- ESlint可以保持代码风格的统一，比如是否使用分号
+
+这需要安装依赖包：
+```
+npm install -g eslint // 之前没安装需要安装
+npm i eslint -D
+npm i @typescript-eslint/eslint-plugin -D
+npm i @typescript-eslint/parser -D
+```
+
+在vscode里安装eslint插件，可以通过eslint --init生成eslintrc.json，
+接下来需配置eslint配置文件eslintrc.json：
+```
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "parserOptions": {
+      "project": "./tsconfig.json"
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-inferrable-types": "off"
+  }
+}
+```
+这里指定了上面的插件，以及tsconfig.json的位置，通过extends里，加入了eslint官方推荐的插件 @typescript-eslint/recommended 用于默认规则检查， rule里可以单独配置规则。
+
+"@typescript-eslint/no-inferrable-types": "off" 表示：要使用类型推断，如果不使用则报错，这里就是把它关了。
+
+最后在package.json的脚本里，配置：
+```
+"lint": "eslint src --ext .js,.ts"
+```
+这样通过 npm run lint 即可进行eslint检查。

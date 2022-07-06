@@ -38,10 +38,11 @@ obj.x = 3
 let obj: {x: number, y: number} = {x: 1, y: 2}
 obj.x = 3
 
-// 5. symbol
-let s1 = Symbol()
-let s2: Symbol = Symbol()
-// console.log(`s1 == s2 ? {}`, s1 == s2) false
+// 5. symbol   
+// eslint Don't use `Symbol` as a type
+// let s1 = Symbol()
+// let s2: Symbol = Symbol()
+// console.log(`s1 == s2 ? {}`, s1 == s2)
 
 // 6. undefined and null
 let un: undefined = undefined

@@ -9,8 +9,11 @@
   },
   "devDependencies": {
     "@types/jquery": "^3.5.14",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
     "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^4.0.0",
+    "eslint": "^8.19.0",
     "fork-ts-checker-webpack-plugin": "^7.2.11",
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.3.0",
@@ -22,7 +25,8 @@
   },
   "scripts": {
     "start": "webpack-dev-server --mode=development --config ./build/webpack.config.js",
-    "build": "webpack --mode=production --config ./build/webpack.config.js"
+    "build": "webpack --mode=production --config ./build/webpack.config.js",
+    "lint": "eslint src --ext .js,.ts"
   },
   "author": "luoji",
   "license": "ISC"

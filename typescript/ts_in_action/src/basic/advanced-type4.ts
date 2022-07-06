@@ -3,12 +3,19 @@
 */
 // T extends U ? X : Y
 
+/** 
+* eslint 第18行
+* error  Don't use `Function` as a type. The `Function` type accepts any function-like value.
+* It provides no type safety when calling the function, which can be a common source of bugs.
+* It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
+* If you are expecting the function to accept certain arguments, you should explicitly define the function shape
+**/
 type TypeName<T> =
     T extends string ? "string" :
     T extends number ? "number" :
     T extends boolean ? "boolean" :
     T extends undefined ? "undefined" :
-    T extends Function ? "function" :
+    // T extends Function ? "function" :
     "object";
 type T1 = TypeName<string>
 type T2 = TypeName<string[]>

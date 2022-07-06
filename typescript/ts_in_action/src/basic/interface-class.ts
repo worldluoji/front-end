@@ -41,6 +41,8 @@ class Auto {
     // protected state3 = 3
 
 }
+
+// eslint: An interface declaring no members is equivalent to its supertype
 interface AutoInterface extends Auto {
 
 }
