@@ -11,6 +11,8 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
+    "noImplicitAny": false,
+    "allowJs": true,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [

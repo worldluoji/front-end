@@ -18,6 +18,14 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "dynamic" */ "../views/DynamicComponentView.vue"
       ),
   },
+  {
+    path: "/directive",
+    name: "directive",
+    component: () =>
+      import(
+        /* webpackChunkName: "directive" */ "../views/SelfDefinedDirectiveView.vue"
+      ),
+  },
 ];
 
 const router = createRouter({

@@ -1,7 +1,8 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
-    <router-link to="/dynamic">Dynamic</router-link>
+    <router-link to="/dynamic">Dynamic</router-link> |
+    <router-link to="/directive">Directive</router-link>
   </nav>
   <router-view />
 </template>
