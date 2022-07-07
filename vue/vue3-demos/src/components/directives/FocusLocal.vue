@@ -3,18 +3,13 @@
   <input v-focus />
 </template>
 
-<!-- <script lang="ts">
-import { Vue } from "vue-class-component";
-
-const focus = {
+<!-- 使用组合式代替下面声明式写法 -->
+<script lang="ts" setup>
+const vFocus = {
   mounted: (el) => el.focus(),
 };
-
-export default class Focus extends Vue {
-  public directives = { focus };
-}
-</script> -->
-<script>
+</script>
+<!-- <script>
 const focus = {
   mounted: (el) => el.focus(),
 };
@@ -25,4 +20,4 @@ export default {
     focus,
   },
 };
-</script>
+</script> -->
