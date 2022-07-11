@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear demo</title>
+</head>
+<body>
+    <div class="main">
+        <div class="float-left">
+            I'm left
+        </div>
+        <div class="float-right">
+            I'm right
+        </div>
+        <div class="content">
+            As much mud in the streets as if the waters had but newly retired from the face of the earth, and it would not be wonderful to meet a Megalosaurus, forty feet long or so, waddling like an elephantine lizard up Holborn Hill.
+        </div>
+    </div>
+</body>
+<style>
+    .main {
+        width: 300px;
+    }
+
+    .float-left {
+        float: left;
+        background-color: aqua;
+        border-width: 5px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .float-right {
+        float: right;
+        background-color:chocolate;
+        border-width: 5px;
+        width: 100px;
+        height: 100px;
+    }
+
+    .content {
+        clear: right; /* none, left, right, both*/
+    }
+
+</style>
+</html>
