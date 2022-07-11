@@ -1,4 +1,4 @@
-<!-- https://staging-cn.vuejs.org/guide/extras/render-function.html#jsx-tsx -->
+<!-- 使用vue create构建的项目本身支持JSX/TSX, 否则需要参考：https://staging-cn.vuejs.org/guide/extras/render-function.html#jsx-tsx -->
 <!-- 使用typescript，这里要用tsx -->
 <script lang="tsx">
 export default {

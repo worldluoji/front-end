@@ -1371,7 +1371,7 @@
   "resolved" "https://registry.npmmirror.com/@vue/babel-helper-vue-transform-on/-/babel-helper-vue-transform-on-1.0.2.tgz"
   "version" "1.0.2"
 
-"@vue/babel-plugin-jsx@^1.0.3", "@vue/babel-plugin-jsx@^1.1.1":
+"@vue/babel-plugin-jsx@^1.0.3":
   "integrity" "sha512-j2uVfZjnB5+zkcbc/zsOc0fSNGCMMjaEXP52wdwdIfn0qjFfEYpYZBFKFg+HHnQeJCVrjOeO0YxgaL7DMrym9w=="
   "resolved" "https://registry.npmmirror.com/@vue/babel-plugin-jsx/-/babel-plugin-jsx-1.1.1.tgz"
   "version" "1.1.1"
