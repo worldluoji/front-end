@@ -67,5 +67,33 @@ render: function (createElement) {
 ## 5. demo
 render_demo.html 展示了使用render可以避免一些情况下模板复杂的问题。
 
-## 6. 参考资料
-https://cn.vuejs.org/v2/guide/render-function.html
+## 6. Vue3中的渲染函数
+Vue3 提供了一个 h() 函数用于创建 vnodes，与Vue2中的createElement大同小异：
+
+```
+import { h } from 'vue'
+
+const vnode = h(
+  'div', // type
+  { id: 'foo', class: 'bar' }, // props
+  [
+    /* children */
+  ]
+)
+```
+h() 是 hyperscript 的简称——意思是“能生成 HTML (超文本标记语言) 的 JavaScript”。这个名字来源于许多虚拟 DOM 实现时共享的约定。一个更准确的名称应该是 createVnode()，但当你需要多次使用渲染函数时，一个简短的名字能更好地帮到你。
+
+```
+const vnode = h('div', { id: 'foo' }, [])
+
+vnode.type // 'div'
+vnode.props // { id: 'foo' }
+vnode.children // []
+vnode.key // null
+```
+
+<br>
+
+## 参考资料
+- https://cn.vuejs.org/v2/guide/render-function.html
+- https://staging-cn.vuejs.org/guide/extras/render-function.html

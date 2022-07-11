@@ -26,6 +26,12 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "directive" */ "../views/SelfDefinedDirectiveView.vue"
       ),
   },
+  {
+    path: "/h",
+    name: "h",
+    component: () =>
+      import(/* webpackChunkName: "h" */ "../views/RenderComponentView.vue"),
+  },
 ];
 
 const router = createRouter({
