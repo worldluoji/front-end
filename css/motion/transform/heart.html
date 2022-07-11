@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform heart</title>
+</head>
+<body>
+    <style>
+        .heart {
+          position: absolute;
+          margin: auto;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-color: pink;
+          height: 50px;
+          width: 50px;
+          transform: rotate(-45deg);
+        }
+        .heart::after {
+          background-color: pink;
+          content: "";
+          border-radius: 50%;
+          position: absolute;
+          width: 50px;
+          height: 50px;
+          top: 0px;
+          left: 25px;
+        }
+        .heart::before {
+          content: "";
+          background-color: pink;
+          border-radius: 50%;
+          position: absolute;
+          width: 50px;
+          height: 50px;
+          top: -25px;
+          left: 0px;
+        }
+      </style>
+    <div class="heart"></div>
+    <!-- heart其实一个矩形，进行了45度旋转。然后前后各弄了一个圆，通过移位变成两个半圆，最终组成了爱心。 -->
+</body>
+</html>

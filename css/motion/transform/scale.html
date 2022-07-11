@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform scale</title>
+</head>
+<body>
+    <p>Hello, transform</p>
+    <div class="ball"></div>
+    <div class="sk"></div>
+</body>
+<style>
+    p {
+        text-align: center;
+    }
+
+    p:hover {
+        transform: scale(2.1);
+        transition: all 1s linear;
+    }
+
+    .ball {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        background-color: aqua;
+        margin: auto;
+    }
+
+    .ball:hover {
+        transform: scale(1.5);
+        transition: all 1s linear;
+        background-color: aquamarine;
+    }
+
+    .sk {
+        width: 50px;
+        height: 50px;
+        background-color: darkorange;
+        margin: auto;
+    }
+
+    .sk:hover {
+        transform: skewX(24deg);
+        /* transform: skewY(-10deg); */
+        transition: all 1s linear;
+        background-color: tomato;
+    }
+</style>
+</html>

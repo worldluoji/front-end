@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation up and down</title>
+</head>
+<body>
+    <style>
+        #rect {
+          height: 40px;
+          width: 70%;
+          background: black;
+          margin: 50px auto;
+          border-radius: 5px;
+          animation-name: rainbow;
+          animation-duration: 6s;
+          position: relative;
+        }
+        
+        @keyframes rainbow {
+          0% {
+            background-color: blue;
+            top: 0px;
+          }
+        
+          50% {
+            background-color: green;
+            top: 100px;
+          }
+        
+          100% {
+            background-color: yellow;
+            top: -30px;
+          }
+        }
+        
+        </style>
+        <div id="rect"></div>
+</body>
+</html>
