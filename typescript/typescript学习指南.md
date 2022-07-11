@@ -114,3 +114,8 @@ npn install @types/Puppeteer
 ## 7. typescript免费教程
 - https://basarat.gitbook.io/typescript/
 - https://www.tslang.cn/docs/handbook/typescript-in-5-minutes.html
+
+## 8. Vue and React with typescript
+- https://github.com/Microsoft/TypeScript-Vue-Starter#typescript-vue-starter
+- https://github.com/Microsoft/TypeScript-React-Starter#typescript-react-starter
+- https://www.tslang.cn/samples/index.html
