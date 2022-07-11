@@ -30,3 +30,7 @@
 ## Web Component 和 VUE、React 的区别？
 - Web Component是通过浏览器引擎提供api接口进行操作，让后在dom，cssom生成过程中控制实现组件化的作用域/执行执行上下文的隔离； 
 - Vue/React 是在没有浏览器引擎支持的情况下，通过采取一些取巧的手法进行隔离（比如：js执行上下文的封装利用闭包；样式的封装利用文件hash值作为命名空间，在css选择的时候多套一层选择条件（hash值），本质上还是全局的只是不同组件css选择的时候只能选择到组件相应的css样式，实现的隔离）
+
+## Vue3 和 WebComponent
+Vue3提供了一套API支持WebComponent, 具体可参考:
+https://staging-cn.vuejs.org/guide/extras/web-components.html
