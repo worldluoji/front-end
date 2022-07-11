@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Margin merge</title>
+</head>
+<body>
+    <div class="up">我在上面</div>
+    <div class="down">我在下面</div>
+    <!--up margin-bottom是120， down margin top为 100 ，合并为最大的120 -->
+</body>
+<style>
+    .up {
+        width: 100px;
+        height: 100px;
+        border: 1px solid blue;
+        margin: 120px;
+    }
+    .down {
+        width: 100px;
+        height: 100px;
+        border: 1px solid red;
+        margin: 100px;
+        /* display: inline-block; up和down两个元素处于不同的BFC ，外边距不重合 */
+    }
+</style>
+</html>
