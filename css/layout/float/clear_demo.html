@@ -14,7 +14,7 @@
         <div class="float-right">
             I'm right
         </div>
-        <div class="content">
+        <div class="content clearfix">
             As much mud in the streets as if the waters had but newly retired from the face of the earth, and it would not be wonderful to meet a Megalosaurus, forty feet long or so, waddling like an elephantine lizard up Holborn Hill.
         </div>
     </div>
@@ -41,7 +41,24 @@
     }
 
     .content {
-        clear: right; /* none, left, right, both*/
+        /* clear: right; none, left, right, both  不推荐*/
+        font-weight: 500;
+    }
+
+    /* 以下是建议的做法，通过伪元素清除浮动，这样就不用在每个需要清除浮动的元素下，编写clear */
+    .clearfix::before,
+    .clearfix::after {
+        content:"";				/*设置内容为空*/
+        height:0;				/*高度为0*/
+        line-height:0;			/*行高为0*/
+        display:block;			/*将文本转为块级元素*/
+        visibility:hidden;		/*将元素隐藏*/
+        clear:both;				/*清除浮动*/
+    }
+
+    /* 以下是为了兼容ie */
+    .clearfix {
+        *zoom: 1;
     }
 
 </style>
