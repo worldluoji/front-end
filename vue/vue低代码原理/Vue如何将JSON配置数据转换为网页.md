@@ -117,6 +117,6 @@ JSON 里面包含了很多页面，每个页面里面包含了很多元素（多
 最终这个JSON 会传给 render(h) 进行解析渲染。
 
 ## 参考资料
-https://github.com/ly525/luban-h5/blob/dev/front-end/h5/src/components/core/models/element.js
-https://github.com/ly525/luban-h5/blob/dev/front-end/h5/src/components/core/models/page.js
-https://www.yuque.com/luban-h5/docs/ug7xg5
+- https://github.com/ly525/luban-h5/blob/dev/front-end/h5/src/components/core/models/element.js
+- https://github.com/ly525/luban-h5/blob/dev/front-end/h5/src/components/core/models/page.js
+- https://www.yuque.com/luban-h5/docs/ug7xg5
