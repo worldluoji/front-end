@@ -38,6 +38,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "built" */ "../views/BuiltPluginView.vue"),
   },
+  {
+    path: "/reactive",
+    name: "reactive",
+    component: () =>
+      import(/* webpackChunkName: "reactive" */ "../views/ReactiveView.vue"),
+  },
 ];
 
 const router = createRouter({
