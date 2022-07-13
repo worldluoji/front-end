@@ -5,7 +5,8 @@
     <router-link to="/directive">Directive</router-link> |
     <router-link to="/h">h</router-link> |
     <router-link to="/built">built</router-link> |
-    <router-link to="/reactive">reactive</router-link>
+    <router-link to="/reactive">reactive</router-link> |
+    <router-link to="/drag">drag</router-link>
   </nav>
   <router-view />
 </template>

@@ -44,6 +44,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "reactive" */ "../views/ReactiveView.vue"),
   },
+  {
+    path: "/drag",
+    name: "drag",
+    component: () =>
+      import(/* webpackChunkName: "drag" */ "../views/DraggableView.vue"),
+  },
 ];
 
 const router = createRouter({
