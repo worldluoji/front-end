@@ -1,4 +1,8 @@
-<!-- https://staging-cn.vuejs.org/guide/built-ins/teleport.html#basic-usage -->
+<!-- https://staging-cn.vuejs.org/guide/built-ins/teleport.html#basic-usage 
+<Teleport> 挂载时，传送门的 to 目标必须是已经存在于 DOM 之中。
+理想情况下，这应该是整个 Vue 应用程序之外的一个元素。
+如果目标是由 Vue 呈现的另一个元素，你需要确保在 <Teleport> 之前挂载该元素。
+-->
 <script setup lang="ts">
 import { ref } from "vue";
 
