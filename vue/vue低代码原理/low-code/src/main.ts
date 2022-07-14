@@ -27,7 +27,7 @@ app.directive('drag', {
         const mouseYEnd = e.clientY
         const moveX = mouseXEnd - mouseXStart + rectLeft
         const moveY = mouseYEnd - mouseYStart + rectTop
-        console.log(rectLeft, rectTop)
+        // console.log(rectLeft, rectTop)
         el.style.top = moveY + 'px'
         el.style.left = moveX + 'px'
       }
