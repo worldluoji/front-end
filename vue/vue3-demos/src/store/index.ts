@@ -1,9 +1,11 @@
-import { createStore } from "vuex";
+import { defineStore } from "pinia";
 
-export default createStore({
-  state: {},
+export const mainStore = defineStore("main", {
+  state: () => {
+    return {
+      msg: "Hello Vue3 with TypeScript!!!",
+    };
+  },
   getters: {},
-  mutations: {},
   actions: {},
-  modules: {},
 });
