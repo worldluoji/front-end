@@ -2,7 +2,7 @@
     <div class="re-left-side">
       <button class="btn" @click="send">Button</button>
       <div v-if="show">
-        <teleport to="main">
+        <teleport to="main > .editor">
           <JButton />
         </teleport>
       </div>

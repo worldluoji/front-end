@@ -5,7 +5,7 @@
             <LeftSide />
         </div>
         <main>
-            <slot name="main-content"></slot>
+            <BaseEditor />
         </main>
         <div class="right-sidebar">
             <RightSide />
@@ -19,13 +19,14 @@
 <script setup lang="ts">
 import LeftSide from './LeftSide.vue'
 import RightSide from './RightSide.vue'
+import BaseEditor from './BaseEditor.vue'
 </script>
 
 <style type="less" scoped>
     .main {
         display: grid;
         height: 100vh;
-        grid-template: auto 1fr auto / 15vw 1fr 15vw;
+        grid-template: 8vh 1fr 8vh / 15vw 1fr 15vw;
     }
 
     header {

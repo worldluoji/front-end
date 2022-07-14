@@ -1,5 +1,7 @@
 <template>
-    <el-button :type="type" :disabled="disable" @click="click">{{ name }}</el-button>
+    <div class="wrapper" v-drag draggable="true">
+        <el-button :type="type" :disabled="disable" @click="click" >{{ name }}</el-button>
+    </div>
     <Teleport :to="teleportTo" :disabled="teleportDisable">
         <div v-if="!teleportDisable">
             <el-select v-model="type" placeholder="请选择按钮类型">
@@ -44,3 +46,10 @@ const click = () => {
 }
 
 </script>
+
+<style type="less" scoped>
+    .wrapper {
+        position: relative;
+        display: inline-block;
+    }
+</style>
