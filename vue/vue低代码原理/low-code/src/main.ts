@@ -11,7 +11,7 @@ const app = createApp(App)
 app.directive('drag', {
   mounted (el: HTMLElement) {
     el.onmousedown = (ev) => {
-      console.log(ev)
+      // console.log(ev)
       // 鼠标按下的位置
       const mouseXStart = ev.clientX
       const mouseYStart = ev.clientY
