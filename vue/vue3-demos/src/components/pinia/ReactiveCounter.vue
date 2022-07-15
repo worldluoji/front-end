@@ -2,8 +2,11 @@
   <div>
     <h1>{{ msg }}</h1>
     <h2>{{ count }}</h2>
+    <h2>{{ store.getCountBuf }}</h2>
+    <h2>{{ store.getMsgWithThis }}</h2>
     <button @click="add">+</button>
-    <button @click="patchUpdate">++</button>
+    <button @click="patchUpdate">patchUpdate</button>
+    <button @click="changeByAction">changeByAction</button>
   </div>
 </template>
 
@@ -27,4 +30,6 @@ const patchUpdate = () => {
     state.count++;
   });
 };
+
+const changeByAction = () => store.changeState();
 </script>

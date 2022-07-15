@@ -7,6 +7,18 @@ export const mainStore = defineStore("main", {
       count: 0,
     };
   },
-  getters: {},
-  actions: {},
+  getters: {
+    getCountBuf(state) {
+      return `${state.msg}***${state.count}`;
+    },
+    getMsgWithThis(): string {
+      return `${this.msg}***${this.count}`;
+    },
+  },
+  actions: {
+    changeState() {
+      this.count++;
+      this.msg = "Hello Pinia with actions!!!";
+    },
+  },
 });
