@@ -16,6 +16,10 @@ yarn add pinia
 
 -> store/index.ts
 
+## 说明
+### 多条数据修改
+通过基础数据修改方式去修改多条数据也是可行的，但是在 pinia 官网中，已经明确表示$patch 的方式是经过优化的，会加快修改速度，对性能有很大好处，所以在进行多条数据修改的时候，更推荐使用 $patch。
+
 ## 参考文档
 - https://juejin.cn/post/7078281612013764616
 - https://pinia.web3doc.top/introduction.html
