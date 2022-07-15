@@ -4,6 +4,7 @@ export const mainStore = defineStore("main", {
   state: () => {
     return {
       msg: "Hello Vue3 with TypeScript!!!",
+      count: 0,
     };
   },
   getters: {},

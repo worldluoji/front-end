@@ -27,11 +27,8 @@
         >
       </li>
       <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex"
-          target="_blank"
-          rel="noopener"
-          >vuex</a
+        <a href="https://github.com/vuejs/pinia" target="_blank" rel="noopener"
+          >pinia</a
         >
       </li>
       <li>
@@ -83,7 +80,9 @@
         >
       </li>
       <li>
-        <a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a>
+        <a href="https://pinia.vuejs.org/" target="_blank" rel="noopener"
+          >pinia</a
+        >
       </li>
       <li>
         <a

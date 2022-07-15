@@ -50,6 +50,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "drag" */ "../views/DraggableView.vue"),
   },
+  {
+    path: "/pinia",
+    name: "pinia",
+    component: () =>
+      import(/* webpackChunkName: "pinia" */ "../views/PiniaView.vue"),
+  },
 ];
 
 const router = createRouter({
