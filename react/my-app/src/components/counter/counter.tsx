@@ -14,6 +14,7 @@ function CountLabel({ count }: Counter) {
 
 export default function Counter() {
   // 通过 useState 定义这样一个状态，让这个状态来保持计数器的数值，那么在值发生变化时，组件就会自动重新刷新
+  // 让函数组件具有维持状态的能力。也就是说，在一个函数组件的多次渲染之间，这个 state 是共享的。
   const [count, setCount] = React.useState(0);
   return (
     <div>
