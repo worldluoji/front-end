@@ -10,7 +10,9 @@ const useWindowSize = () => {
         const handler = () => {
             setSize(getSize())
         };
+        // 监听 resize 事件
         window.addEventListener('resize', handler);
+        // 返回一个 callback 在组件销毁时调用，这个机制就几乎等价于类组件中的 componentWillUnmount
         return () => {
             window.removeEventListener('resize', handler);
         };
