@@ -3,3 +3,6 @@ https://cli.vuejs.org/zh/guide/cli-service.htm
 
 2. vue3 动态组件
 https://staging-cn.vuejs.org/api/built-in-special-elements.html#component
+
+3. 单文件组件 <script setup>
+https://v3.cn.vuejs.org/api/sfc-script-setup.html
