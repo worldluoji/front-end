@@ -8,6 +8,8 @@
       ref="childExposed"
     />
     <br />
+    <MyButton @change="change" />
+    <br />
     <button @click="changeChild">change child border-radius</button>
   </div>
 </template>
@@ -23,7 +25,6 @@ const change = (content: string) => {
 
 const childExposed = ref();
 const changeChild = () => {
-  // eslint-disable-next-line
   childExposed.value.changeBorderRadius("20%");
 };
 </script>

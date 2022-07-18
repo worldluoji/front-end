@@ -8,12 +8,24 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, defineExpose, ref } from "vue";
-const props = defineProps<{
-  color: string;
-  text: string;
-}>();
-// props 是read only的
+import { defineProps, defineEmits, defineExpose, ref, withDefaults } from "vue";
+// const props = defineProps<{
+//   color: string;
+//   text: string;
+// }>();
+// // props 是read only的
+// console.log(props.color);
+
+// defineProps无法设置默认值，可以使用withDefaults包裹
+interface Props {
+  color?: string;
+  text?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  color: "red",
+  text: "Click Me",
+});
 console.log(props.color);
 
 // 子组件调用父组件的方法使用defineEmits
