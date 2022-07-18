@@ -8,15 +8,23 @@ Pinia是一个全新的Vue状态管理库，是Vuex的代替者:
 - 代码简洁，很好的代码自动分割
 
 ## 安装和使用pinia
+```
 npm i pinia
-
+```
+或者
+```
 yarn add pinia
+```
+
+demo参考：
 
 -> main.ts
 
 -> store/index.ts
 
-## 注意点
+<br>
+
+## 一些说明
 ### 1. 多条数据修改
 通过基础数据修改方式去修改多条数据也是可行的，但是在 pinia 官网中，已经明确表示$patch 的方式是经过优化的，会加快修改速度，对性能有很大好处，所以在进行多条数据修改的时候，更推荐使用 $patch。
 
@@ -27,6 +35,11 @@ actions 可以是异步的，您可以在其中await 任何 API 调用甚至其�
 getter 中的值有缓存特性，如果值没有改变，多次使用也只会调用一次。
 
 getter 中不仅可以传递 state 直接改变数据，还可以使用 this 来改变数据。
+
+### 4. 一个store可以调用另一个store
+pinia中，允许一个store调用另一个store
+
+<br>
 
 ## 参考文档
 - https://juejin.cn/post/7078281612013764616

@@ -7,6 +7,11 @@
     <button @click="add">+</button>
     <button @click="patchUpdate">patchUpdate</button>
     <button @click="changeByAction">changeByAction</button>
+    <ul>
+      <li v-for="(movie, index) in moviesList" :key="index">
+        {{ movie }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -32,4 +37,6 @@ const patchUpdate = () => {
 };
 
 const changeByAction = () => store.changeState();
+
+const moviesList = store.getMovies;
 </script>

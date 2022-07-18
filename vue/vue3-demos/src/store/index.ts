@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { movieStore } from "./movie";
 
 export const mainStore = defineStore("main", {
   state: () => {
@@ -13,6 +14,9 @@ export const mainStore = defineStore("main", {
     },
     getMsgWithThis(): string {
       return `${this.msg}***${this.count}`;
+    },
+    getMovies() {
+      return movieStore().movieList;
     },
   },
   actions: {
