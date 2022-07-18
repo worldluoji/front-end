@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Text</title>
+</head>
+<body>
+    <p class="boujee-text">Hello CSS</p>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            background: hsl(0 0% 20%);
+        }
+
+        .boujee-text {
+            --bg-size: 200%;
+            --color-one: hsl(15 90% 55%);
+            --color-two: hsl(40 95% 55%);
+            font-size: clamp(3rem, 25vmin, 8rem);
+            background: linear-gradient(
+                            90deg,
+                            var(--color-one),
+                            var(--color-two),
+                            var(--color-one)
+                        ) 0 0 / var(--bg-size) 100%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            animation: move-bg 8s infinite linear;
+            color: transparent;
+        }
+
+        @keyframes move-bg {
+            to {
+                background-position: var(--bg-size) 0;
+            }
+        }
+    </style>
+</body>
+</html>
