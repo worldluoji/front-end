@@ -7,7 +7,8 @@
     <router-link to="/built">built</router-link> |
     <router-link to="/reactive">reactive</router-link> |
     <router-link to="/drag">drag</router-link> |
-    <router-link to="/pinia">pinia</router-link>
+    <router-link to="/pinia">pinia</router-link> |
+    <router-link to="/setup">setup</router-link>
   </nav>
   <router-view />
 </template>
