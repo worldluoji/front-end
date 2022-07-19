@@ -78,3 +78,66 @@ background-color background-position / background-size
 ```
 
 参考资料：https://juejin.cn/post/6844903463273381901
+
+## 7. transform-style
+transform-style 设置元素的子元素是位于 3D 空间中还是平面中。
+```
+/* Keyword values */
+transform-style: flat;
+transform-style: preserve-3d;
+```
+默认是平面flat.
+
+参考：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-style
+
+
+## 8. filter
+filter表示滤镜，通常用于调整图像、背景和边框的渲染
+
+```
+/* <filter-function> values */
+filter: blur(5px);  高斯模糊
+filter: brightness(0.4); 明度
+filter: contrast(200%); 对比度
+filter: drop-shadow(16px 16px 20px blue); 输入图像应用阴影效果
+filter: grayscale(50%); 灰度，值为 100% 则完全转为灰度图像，值为 0% 图像无变化
+filter: hue-rotate(90deg); 色相旋转。angle 一值设定图像会被调整的色环角度值。值为 0deg，则图像无变化
+filter: invert(75%); 值为 100% 则图像完全反转
+filter: opacity(25%); 图像的透明程度
+filter: saturate(30%); 图像饱和度
+filter: sepia(60%); 图像转换为深褐色
+
+/* Multiple filters */
+filter: contrast(175%) brightness(3%);
+```
+参考：https://developer.mozilla.org/zh-CN/docs/Web/CSS/filter
+
+## 9. :nth-of-type  :nth-child(an+b)
+:nth-of-type(n) 针对具有一组兄弟节点的标签，用 n 来筛选出在一组兄弟节点的位置
+```
+/* 在每组兄弟元素中选择第四个 <p> 元素 */
+p:nth-of-type(4n) {
+  color: lime;
+}
+```
+:nth-child(an+b) 这个 CSS 伪类首先找到所有当前元素的兄弟元素，然后按照位置先后顺序从 1 开始排序，选择的结果为 CSS 伪类:nth-child 括号中表达式（an+b）匹配到的元素集合（n=0，1，2，3...）,
+例如：2n+1 匹配位置为 1、3、5、7...的元素。你可以使用关键字 odd 来替换此表达式。
+
+参考： 
+- https://developer.mozilla.org/zh-CN/docs/Web/CSS/:nth-of-type
+- https://developer.mozilla.org/zh-CN/docs/Web/CSS/:nth-child
+
+## 10. 关于transform
+tanslate 3d变换中的移动，z中的正方向面向用户,值越大，越靠近用户。
+
+translateZ（100px）离用户更近了。
+
+translateX 水平方向，translateY 垂直方向
+
+translate(tx) 等价于 translateX(tx)
+
+translate(tx, ty) 等价于 translateX(tx) translateX(ty)
+
+rotate 如果为正值，则运动将为顺时针，如果为负值，则为逆时针。180°的旋转称为点反射 (point reflection)。
+
+参考： https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function
