@@ -8,6 +8,7 @@ import Resize from '../components/resize/resize';
 import Blog from '../components/blogdata/blogdata';
 import Timer from '../components/counter/timer';
 import ThemeContext from '../components/context/themecontext';
+import Carousel from '../components/carousel/carousel';
 
 const Root = () => (
     <BrowserRouter>
@@ -18,6 +19,7 @@ const Root = () => (
             <Route path="/blog" element={<Blog />} />
             <Route path="/timer" element={<Timer />} />
             <Route path="/context" element={<ThemeContext />} />
+            <Route path="/carousel" element={<Carousel />} />
             {/* v6 router之前的老版本： <Route path=".*" component={ App }/>, 且不需要Routes包裹 */}
          </Routes>
     </BrowserRouter>
