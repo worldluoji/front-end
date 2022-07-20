@@ -24,6 +24,8 @@ const Carousel = ({ children }) => {
             
             { React.Children.map(children, (child, i) => (
                 // --active, --offset这些变量会传入到css中生效
+                // Math.sign 小于0为 -1，大于0为1，否则为0
+                // pointer-events: auto|none; 默认值auto。元素对指针事件做出反应，比如 :hover 和 click。
                 <div className='card-container' style={{
                     '--active': i === active ? 1 : 0,
                     '--offset': (active - i) / 3,
