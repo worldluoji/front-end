@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>transform translate</title>
+</head>
+<body>
+    <div class="rect1">123</div>
+    <div class="rect2">456</div>
+    <div class="rect3">789</div>
+    <div class="rect4">000</div>
+</body>
+<style>
+    /* translateX 水平方向移动，正为右； translateY 垂直方向移动，正为下； translateZ 往电脑屏幕方向 
+    *  translate(x,y) = translate(x) translate(y)
+    *  translate3D(x,y,z) = translate(x) translate(y) translate(z)
+    */
+    .rect1 {
+      width: 200px;
+      height: 200px;
+      background-color: aqua;
+      transform: translateX(100px) translateY(20px);
+    }
+
+    .rect2 {
+      width: 200px;
+      height: 200px;
+      background-color: darkorange;
+      transform: rotateY(45deg) translateY(20px) translateZ(5px);
+      border: 1px solid;
+    }
+
+    .rect3 {
+      width: 200px;
+      height: 200px;
+      background-color: greenyellow;
+      transform: translate(200px, 200px);
+      border: 3px solid;
+    }
+
+    .rect4 {
+      width: 200px;
+      height: 200px;
+      background-color: greenyellow;
+      transform: translate3D(100px, 200px, 100px) rotateX(45deg);
+      border: 3px solid;
+    }
+</style>
+</html>
