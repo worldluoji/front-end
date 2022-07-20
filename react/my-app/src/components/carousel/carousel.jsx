@@ -48,7 +48,7 @@ const Carousel = ({ children }) => {
 
 const App = () => (
     // 进行组件遍历的时候需要加一个key来区分每个组件, 这样能提升 dom diff 对比的性能，否则会有warning
-    <div className='app'>
+    <div className='carousel-app'>
         <Carousel>
             {[...new Array(CARDS)].map((_, i) => (
                 <Card key={ i + 1} title={'Card' + (i + 1)} content='testLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' />
