@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>transform rotate</title>
+</head>
+<body>
+    <div class="rect1">123</div>
+    <div class="rect2">456</div>
+    <div class="rect3">789</div>
+    <div class="rect4">000</div>
+    <div class="rect5">666</div>
+    <div class="rect6">333</div>
+</body>
+<style>
+    /* rotateX 水平轴转动， routateY 垂直轴转动， routateZ 穿透屏幕的线转动， 
+     * rotate 配合着transform-origin属性，transform-origin 是设置旋转点的。(没有设置transform-origin 属性也则默认根据该元素的中心点旋转 */
+    .rect1 {
+      width: 200px;
+      height: 200px;
+      background-color: aqua;
+      transform: rotateX(45deg);
+    }
+
+    .rect2 {
+      width: 200px;
+      height: 200px;
+      background-color: darkorange;
+      transform: rotateY(45deg);
+      border: 1px solid;
+    }
+
+    .rect3 {
+      width: 200px;
+      height: 200px;
+      background-color: greenyellow;
+      transform: rotateZ(45deg);
+      border: 3px solid;
+    }
+
+    .rect4 {
+      width: 200px;
+      height: 200px;
+      background-color: firebrick;
+      transform: rotate(45deg);
+      border: 3px solid;
+    }
+
+    .rect5 {
+      width: 200px;
+      height: 200px;
+      background-color: blueviolet;
+      transform: rotateX(45deg) rotateY(45deg);
+      border: 3px solid;
+    }
+
+    .rect6 {
+      width: 200px;
+      height: 200px;
+      background-color: blueviolet;
+      transform: rotate3d(1, 1, 1, 45deg);/* 前三个分别为是否绕x，y，z旋转，1为是，0为否 */
+      border: 3px solid;
+    }
+</style>
+</html>
