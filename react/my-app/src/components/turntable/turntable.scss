@@ -1,0 +1,223 @@
+$font-size: 14px;
+$color_white: #fff;
+$turntable_bg: #0080C0;
+$turntable_btn: #FFB10F;
+
+@keyframes shiny {
+  0% {
+    fill: lighten($turntable_btn, 50%);
+  }
+  50% {
+    fill: lighten($turntable_btn, 10%);
+  }
+  100% {
+    fill: lighten($turntable_btn, 50%);
+  }
+}
+
+@keyframes go {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+  max-width: 1000px;
+  min-width: 400px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+section.turntable {
+  position: relative;
+  max-width: 1000px;
+  max-height: 1000px;
+}
+
+// 中间的button go 按钮
+section.turntable button.turntable_btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: none;
+  border: none;
+  outline: none;
+  font-weight: 900;
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  font-size: $font-size*5;
+  color: $turntable_bg;
+  background-color: lighten($turntable_btn,5%);
+  cursor: pointer;
+  &:active, &:disable {
+    cursor: default;
+    &::after {
+      box-shadow: none;
+      margin-top: 2px;
+      background-color: lighten($turntable_btn,25%);
+    }
+  };
+
+  &::after {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    content: "";
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background-color: lighten($turntable_btn,30%);
+    z-index: -1;
+    box-shadow: 1px 2px 4px darken($turntable_btn,30%); 
+  }
+}
+
+@media screen and (max-width: 767px) {
+  section.turntable button.turntable_btn {
+    font-size: $font-size*3;
+  }
+}
+
+// 8个选项盘
+section.turntable div.list {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  width: 70%;
+  height: 70%;
+  text-align: center;
+  ul {
+    list-style: none;
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg);
+    .go {
+        animation: go 0.8s linear 4;
+        -webkit-animation: go 0.8s linear 4;
+    }
+    li {
+        color: #fff;
+        font-size: 22.4px;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        &:nth-child(2) {
+          transform: rotate(315deg);
+        }
+        &:nth-child(3) {
+          transform: rotate(270deg);
+        }
+        &:nth-child(4) {
+          transform: rotate(225deg);
+        }
+        &:nth-child(5) {
+            transform: rotate(180deg);
+        }
+        &:nth-child(6) {
+            transform: rotate(135deg);
+        }
+        &:nth-child(7) {
+            transform: rotate(90deg);
+        }
+        &:nth-child(8) {
+            transform: rotate(45deg);
+        }
+        img {
+            width: 70px;
+            margin-top: 5px;
+        }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  section.turntable div.list ul li {
+    font-size: $font-size;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  section.turntable div.list ul li img {
+    width: 40px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  section.turntable div.list ul li img {
+    display: none;
+  }
+}
+
+// 矢量图美化, lighten: 比前面的浅色更浅，darken: 比前面的颜色更深
+section.turntable svg > circle {
+  fill: none;
+  stroke: darken($turntable_bg,5%);
+  stroke-width: 5px;
+}
+
+section.turntable svg g.polyline.go {
+  animation: go 0.8s linear 4;
+  -webkit-animation: go 0.8s linear 4;
+}
+
+section.turntable svg g.polyline polyline {
+  fill: $turntable_bg;
+  &:nth-child(odd) {
+    fill: lighten($turntable_bg,10%);
+  }
+}
+
+section.turntable svg g.circle circle {
+  fill: $color_white;
+  stroke: none;
+  box-shadow: 0px 2px 5px #ccc;
+  &:nth-child(odd) {
+    animation: shiny 0.8s linear infinite;
+    -webkit-animation: shiny 0.8s linear infinite;
+    &.go {
+      animation: go 0.8s linear 4, shiny 0.8s linear infinite;
+      -webkit-animation: go 0.8s linear 4, shiny 0.8s linear infinite;
+    }
+  }
+
+  &:nth-child(even) {
+    animation: shiny 0.8s 0.5s linear infinite;
+    -webkit-animation: shiny 0.8s 0.5s linear infinite;
+    &.go {
+      animation: go 0.8s 0.8s linear 4, shiny 0.8s 0.5s linear infinite;
+      -webkit-animation: go 0.8s linear 4, shiny 0.8s 0.5s linear infinite;
+    }
+  }
+}
+
+
+section.turntable svg g.mark circle {
+  fill: $turntable_btn;
+  &.round {
+    fill: none;
+    stroke: lighten($turntable_btn, 35%);
+  }
+}
+
+section.turntable svg g.mark polyline {
+  fill: $turntable_btn;
+  stroke: none;
+}
+
+section.turntable svg g.bottom {
+  fill: rgba(0, 0, 0, 0.4);
+}
