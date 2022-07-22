@@ -116,7 +116,7 @@ ccc = aac
 
 // 泛型兼容性
 // interface Empty<T> {
-//     // =value: T
+//     value: T
 // }
 // let obj1: Empty<number> = {};
 // let obj2: Empty<string> = {};
