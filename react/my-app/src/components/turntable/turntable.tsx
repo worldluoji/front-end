@@ -48,23 +48,37 @@ const Prize = ( {prizeName, url}:TypePrize) => (
     </li>
 )
 
-const PrizeList = () => {
-    const list = prizeItems.map(item => <Prize prizeName={item.name} url={item.img} />);
-    return <ul>{ list }</ul>
-}
 
-const Turntable = () => (
+const Turntable = () => {
+  const [going, setGoing] = React.useState(false);
+  const [rotateStyle, setRotateStyle] = React.useState({transform: "rotate(0deg)"});
+
+  const getLottery = () => {
+    console.log('开始抽奖');
+   
+    // 这里用随机数模拟，实际应该根据后端的返回来做
+    const iEnd = Math.floor(Math.random() * 8);
+    const prizeName = prizeItems[iEnd];
+    const rotateDeg = {transform: `rotate(${iEnd * 45}deg)`};
+    setGoing(true);
+    setTimeout(()=>{
+      setRotateStyle(rotateDeg);
+      setGoing(false);
+    }, 3000);
+  }
+
+  return (
     <div className="container">
     <section className="turntable">
         <div className="list">
-          <PrizeList />
+          <ul className={going ? "go": ""} style={rotateStyle}>{ prizeItems.map(item => <Prize prizeName={item.name} url={item.img} />) }</ul>
         </div>
-        <button className="turntable_btn" type="button">GO</button>
+        <button className="turntable_btn" type="button" onClick={ getLottery }>GO</button>
         <svg viewBox="-50 -50 100 100">
             <g className="bottom">
                 <ellipse cx="0" cy="40" rx="30" ry="4"></ellipse>
             </g>
-            <g className="polyline">
+            <g className={going ? "polyline go": "polyline"} style={rotateStyle}>
                 <polyline points="-16,-38 16,-38 0,0"></polyline>
                 <polyline points="16,-38 38,-16 0,0"></polyline>
                 <polyline points="38,-16 38,16 0,0"></polyline>
@@ -76,22 +90,22 @@ const Turntable = () => (
             </g>
             <circle cx="0" cy="0" r="40"></circle>
             <g className="circle">
-                <circle cx="0" cy="-40" r="0.8"></circle>
-                <circle cx="15.6" cy="-36.8" r="0.8"></circle>
-                <circle cx="28.5" cy="-28" r="0.8"></circle>
-                <circle cx="36.8" cy="-15.6" r="0.8"></circle>
-                <circle cx="40" cy="0" r="0.8"></circle>
-                <circle cx="36.8" cy="15.6" r="0.8"></circle>
-                <circle cx="28.5" cy="28" r="0.8"></circle>
-                <circle cx="15.6" cy="36.8" r="0.8"></circle>
-                <circle cx="0" cy="40" r="0.8"></circle>
-                <circle cx="-36.8" cy="15.6" r="0.8"></circle>
-                <circle cx="-28.5" cy="28" r="0.8"></circle>
-                <circle cx="-15.6" cy="36.8" r="0.8"></circle>
-                <circle cx="-40" cy="0" r="0.8"></circle>
-                <circle cx="-36.8" cy="-15.6" r="0.8"></circle>
-                <circle cx="-28.5" cy="-28" r="0.8"></circle>
-                <circle cx="-15.6" cy="-36.8" r="0.8"></circle>
+                <circle cx="0" cy="-40" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="15.6" cy="-36.8" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="28.5" cy="-28" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="36.8" cy="-15.6" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="40" cy="0" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="36.8" cy="15.6" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="28.5" cy="28" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="15.6" cy="36.8" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="0" cy="40" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="-36.8" cy="15.6" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="-28.5" cy="28" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="-15.6" cy="36.8" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="-40" cy="0" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="-36.8" cy="-15.6" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="-28.5" cy="-28" r="0.8" className={going ? "go": ""}></circle>
+                <circle cx="-15.6" cy="-36.8" r="0.8" className={going ? "go": ""}></circle>
             </g>
             <g className="mark">
                 <circle cx="0" cy="-43" r="4"></circle>
@@ -101,6 +115,6 @@ const Turntable = () => (
         </svg>
     </section>
     </div>
-)
+  )}
 
 export default Turntable;
