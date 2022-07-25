@@ -9,6 +9,15 @@ webpack是一个模块打包器（module bundler），webpack视html，JS，CSS�
 - 可以将代码切割成不同的chunk，实现按需加载，降低了初始化时间
 - 具有强大的Plugin（插件）接口，大多是内部插件，使用起来比较灵活
 
+## webpack原理
+webpack 的核心原理就是通过分析 JavaScript 中的 require 语句，分析出当前 JavaScript 文件所有的依赖文件，
+然后递归分析之后，就得到了整个项目的一个依赖图。
+对图中不同格式的文件执行不同的 loader，比如会把 CSS 文件解析成加载 CSS 标签的 JavaScript 代码，
+最后基于这个依赖图获取所有的文件。
+
+进行打包处理之后，放在内存中提供给浏览器使用，然后 dev-server 会启动一个测试服务器打开页面，
+并且在代码文件修改之后可以通过 WebSocket 通知前端自动更新页面，也就是我们熟悉的热更新功能。
+
 ## webpack的核心概念
 webpack的核心概念分为: 入口(Entry)、加载器(Loader)、插件(Plugins)、出口(Output);​
 - 入口(Entry)：入口起点告诉 webpack 从哪里开始，并根据依赖关系图确定需要打包的文件内容
