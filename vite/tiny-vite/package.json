@@ -2,14 +2,19 @@
   "name": "tiny-vite",
   "version": "1.0.0",
   "description": "demo to lern vite principals",
-  "main": "./main.js",
+  "main": "./src/main.js",
   "scripts": {
+    "dev": "node ./koa-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "luoji",
   "license": "ISC",
   "dependencies": {
+    "@vue/compiler-dom": "^3.2.37",
     "koa": "^2.13.4",
     "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.2.37"
   }
 }
