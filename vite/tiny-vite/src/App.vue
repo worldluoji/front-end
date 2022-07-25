@@ -2,6 +2,7 @@
   <h1>Hello Tiny Vite</h1>
   <h2>
     <span>count is {{ count }} *2={{ double }}</span>
+    <br />
     <button @click="count++">click me</button>
   </h2>
 </template>

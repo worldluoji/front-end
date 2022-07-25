@@ -10,6 +10,14 @@
 <body>
   <h1>Tiny Vite Demo</h1>
   <div id="app"></div>
+  <script>
+    // 热更新走socketio，代码在这里注入
+    window.process = {
+      env: {
+        NODE_ENV:'dev'
+      }
+    }
+  </script>
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>

@@ -31,9 +31,7 @@ app.use(async ctx => {
     `)
     ctx.body = content
   } else if (url.endsWith('.js')) {
-    console.log(__dirname, url)
     const p = path.resolve(__dirname, url.slice(1))
-    console.log(p, __dirname)
     ctx.type = 'application/javascript'    
     const content = fs.readFileSync(p,'utf-8')    
     ctx.body = rewriteImport(content)
@@ -87,7 +85,7 @@ app.use(async ctx => {
 })
 
 app.listen(24678, ()=>{
-  console.log('服务器已启动，端口24678')
+  console.log('服务器已启动，访问地址: http://localhost:24678')
 })
 
 
