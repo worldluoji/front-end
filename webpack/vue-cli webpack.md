@@ -169,7 +169,6 @@ vue inspect --plugins
 module.exports = defineConfig({
   transpileDependencies: true,
   chainWebpack: config => {
-    // GraphQL Loader
     config.module
       .rule('tsRule')
       .test(/\.tsx?$/)
@@ -185,3 +184,4 @@ module.exports = defineConfig({
 
 ## 参考资料
 - https://cli.vuejs.org/zh/guide/webpack.htm
+- https://cli.vuejs.org/zh/guide/css.html#%E5%90%91%E9%A2%84%E5%A4%84%E7%90%86%E5%99%A8-loader-%E4%BC%A0%E9%80%92%E9%80%89%E9%A1%B9
