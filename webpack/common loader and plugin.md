@@ -58,6 +58,8 @@
 
 　　　　(3)react-hot-loader : 动态刷新和转义react组件中修改的部分,基于webpack-dev-server插件需先安装,然后在webpack.config.js中引用react-hot-loader
 
+参考官方常用loader: https://www.webpackjs.com/loaders/
+
 <br>
 
 ## 常用PlugIn
