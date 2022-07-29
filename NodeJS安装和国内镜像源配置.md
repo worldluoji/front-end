@@ -21,7 +21,8 @@ npm uninsll xxx
 npm list
 npm install -g xxx   
 npm info xxx 查看安装包有哪些版本
-npm view @vue/cli versions 查看@vue/cli所有的版本
+npm view @vue/cli versions 查看远程镜像仓库@vue/cli所有的版本
+npm ls @vue/cli -g 查看本地@vue-cli的版本
 ```
 -g表示全局安装， 不-g仅仅在对应的nodejs工程下安装。
 一般工程都要先执行npm install命令，后续就可以安装自己需要的模块。
