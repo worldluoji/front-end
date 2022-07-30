@@ -65,6 +65,29 @@ import {createApp} from Vue 这一步, 由于浏览器无法识别 Vue 的路径
 
 <br>
 
+## 使用vite创建vue项目
+```
+npm init @vitejs/app
+yarn create @vitejs/app
+```
+之后，在 Project name 这一行，我们输入项目的名字;
+接着，在 Select a framework 这一行输入框架的名字，这里我们选择 vue；
+再之后，在 select a variant 这一行，因为在项目里，我们没有选择 TS，所以这里我们依然选择 vue 即可。
+还有其选项：
+```
+vanilla
+vue
+vue-ts
+react
+react-ts
+preact
+preact-ts
+lit-element
+lit-element-ts
+```
+
+<br>
+
 ## 总结
 webpack 启动服务器之前需要进行项目的打包，而 Vite 则是可以直接启动服务，通过浏览器运行时的请求拦截，实现首页文件的按需加载，这样开发服务器启动的时间就和整个项目的复杂度解耦。任何时候我们启动 Vite 的调试服务器，基本都可以在一秒以内响应，这极大地提升了开发者的体验，这也是 Vite 的使用率越来越高的原因。
 
