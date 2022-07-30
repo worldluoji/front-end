@@ -71,3 +71,10 @@ webpack 启动服务器之前需要进行项目的打包，而 Vite 则是可以
 Vite 的主要目的就是提供一个调试服务器。Vite 也可以和 Vue 解耦，实现对任何框架的支持，如果使用 Vite 支持 React，只需要解析 React 中的 JSX 就可以实现。这也是 Vite 项目的现状，我们只需要使用框架对应的 Vite 插件就可以支持任意框架。
 
 Vite 能够做到快的原因，还有一部分是因为使用了 esbuild 去解析 JavaScript 文件。esbuild 是一个用 Go 语言实现的 JavaScript 打包器，支持 JavaScript 和 TypeScript 语法，现在前端工程化领域的工具也越来越多地使用 Go 和 Rust 等更高效的语言书写，这也是性能优化的一个方向。
+
+
+## vite 资料
+vite官方收集的一些和vite相关的项目，包括插件，模板，都分类整理好的，地址如下：
+```
+https://github.com/vitejs/awesome-vite
+```
