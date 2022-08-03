@@ -11,5 +11,17 @@ fetch('http://example.com/movies.json')
 ```
 这里我们通过网络获取一个 JSON 文件并将其打印到控制台。最简单的用法是只提供一个参数用来指明想 fetch() 到的资源路径，然后返回一个包含响应结果的 promise（一个 Response 对象）。
 
+
+## 为什么有了xhr，还要fetch?
+XHR 和 fetch API 都是浏览器给上层使用者暴露出来的 API（类似于操作系统暴露系统 API 给浏览器这类应用一样）。这两套暴露的 API 给上层使用者提供了部分操作 http 包的能力。换句话说，这两者都是建立在 http 协议上的，我们可以将其当成具有部分功能的 http 客户端。
+
+XHR解决了局部渲染的问题，但XHR一次请求中，XHRhttp request 、http response 和事件监听都处于同一个 xhr 实例里面。整个代码组织缺少语义化，并且可能陷入回调地狱的窘境。如果没有各种包装库的实现（这也同样是 fetch API 出现后难以推广的原因之一，因为库封装的很好），手写 xhr 绝对是个痛苦的事情。
+
+fetch API 在设计时主要考虑点在哪里？
+- 使用最新的 Promise 语法结构，对上层用户编程更加友好
+- 整个设计更加底层，这意味着在实际使用过程当中能够进行更多的弹性设计
+- 关注点分离，request / response / header 分开，这也意味着能够更加灵活的使用这些 API
+
 ## 参考
-https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
+- https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
+- https://juejin.cn/post/6847009771170562062
