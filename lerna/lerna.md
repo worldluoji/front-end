@@ -148,10 +148,15 @@ lerna success found 3 packages
 导入本地已经存在的包: learna import <your pkg path>
 
 ### lerna run
-```
 lerna run < script > -- [..args] # 运行所有包里面的有这个script的命令
-$ lerna run --scope my-component test
 ```
+lerna run --scope card1 hello
+
+--scope <glob>
+Include only packages with names matching the given glob.
+```
+上述命令就表示执行card1包里script中的hello命令
+
 
 ### lerna exec
 运行任意命令在每个包
@@ -204,3 +209,4 @@ lerna info Looking for changed packages since v0.1.4
 ## 参考资料
 - read://https_juejin.cn/?url=https%3A%2F%2Fjuejin.cn%2Fpost%2F6844903856153821198
 - https://lerna.js.org/docs/getting-started
+- https://github.com/lerna/lerna/tree/main/commands/run#readme
