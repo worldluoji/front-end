@@ -20,7 +20,6 @@ lerna init --independent初始化项目。 lerna.json文件里面"version": "ind
     $ lerna -v
     $ lerna init # 用的默认的固定模式，vue babel等都是这个
     
-    # Add packages
     $ cd packages
     $ mkdir card1 card2 card3
     ...
@@ -35,22 +34,35 @@ lerna init --independent初始化项目。 lerna.json文件里面"version": "ind
 这样，card1、card2、card3就是三个独立的项目。默认是npm, 而且每个子package都有自己的node_modules
 
 
-## Set up yarn的workspaces模式
+## 配置yarn
 通过如下设置后，只有顶层有一个node_modules, 且使用yarn
 
 修改顶层 package.json and lerna.json
-### package.json 文件加入
+
+package.json 文件加入
 ```
 "private": true,
+```
+
+lerna.json 文件加入
+```
+"npmClient": "yarn",
+```
+
+## 配置工作目录
+默认lerna管理的包的路径默认配置在lerna.json
+```
+{
+  "packages": ["packages/*"]
+}
+```
+
+如果lerna.json中如果配置了"useWorkspaces": true, 则开启了workspace模式，
+这样lerna.json中的配置将无效，需要在package.json中配置工作路径：
+```
 "workspaces": [
     "packages/*"
 ],
-```
-
-### lerna.json 文件加入
-```
-"useWorkspaces": true,
-"npmClient": "yarn",
 ```
 
 ## git和npm配置
@@ -191,3 +203,4 @@ lerna info Looking for changed packages since v0.1.4
 
 ## 参考资料
 - read://https_juejin.cn/?url=https%3A%2F%2Fjuejin.cn%2Fpost%2F6844903856153821198
+- https://lerna.js.org/docs/getting-started
