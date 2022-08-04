@@ -119,3 +119,8 @@ npn install @types/Puppeteer
 - https://github.com/Microsoft/TypeScript-Vue-Starter#typescript-vue-starter
 - https://github.com/Microsoft/TypeScript-React-Starter#typescript-react-starter
 - https://www.tslang.cn/samples/index.html
+
+这里补充说明的时候，Vue或者React使用了TypeScript后，常常需要使用Html各元素的类型，可参考：
+```
+https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
+```
