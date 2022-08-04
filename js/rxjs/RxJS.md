@@ -5,6 +5,9 @@ RxJS is a library for reactive programming using Observables, to make it easier 
 ```
 npm install rxjs
 ```
+另外可以安装插件rxjs-watcher：https://github.com/xripcsu/rxjs-watcher
+
+A Simple devtools extension to visualize Rxjs observables.
 
 <br>
 
@@ -35,8 +38,23 @@ Subject的行为和发布订阅模式非常接近，subscribe去订阅，next触
 
 <br>
 
+## Operators
+操作符是函数，操作符是能让你以声明方式轻松组合复杂异步代码的基本构造块。有两种操作符：
+
+管道的操作符（Pipeable Operators）是可以使用语法 observableInstance.pipe(operator()) 联入 Observables 管道的类型。其中包括 filter(...) 和 mergeMap(...)。调用时，它们不会更改现有的 Observable 实例。
+相反，它们返回一个新的 Observable，其订阅逻辑是基于第一个 Observable 的。
+```
+obs.pipe(op1(), op2(), op3(), op4());
+```
+
+创建操作符（Creation Operators）是另一种操作符，可以作为独立函数调用以创建新的 Observable。
+例如： of(1, 2, 3) 创建一个 observable，它将一个接一个地发出 1、2 和 3。
+
+demo参考operators.js
+
 ## 参考
 - https://zhuanlan.zhihu.com/p/274469124
 - https://juejin.cn/post/7018006694051446820
 - https://juejin.cn/post/6976071705584205855
 - https://rxjs.dev/
+- https://rxjs.tech/guide/operators
