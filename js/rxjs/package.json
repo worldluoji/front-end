@@ -1,0 +1,17 @@
+{
+  "name": "rxjs",
+  "version": "1.0.0",
+  "description": "demo for rxjs",
+  "type": "module",
+  "scripts": {
+    "test": "node"
+  },
+  "keywords": [
+    "rxjs"
+  ],
+  "author": "luoji",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "^7.5.6"
+  }
+}
