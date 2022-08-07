@@ -1,5 +1,5 @@
 # webpack
-webpack是一个模块打包器（module bundler），webpack视html，JS，CSS，图片等文件都是一种 资源 ，
+webpack是一个模块打包器（module bundler），webpack视html，JS，CSS，图片等文件都是一种资源 ，
 每个资源文件都是一个模块（module）文件，webpack就是根据每个模块文件之间的依赖关系将所有的模块打包（bundle）起来。
 
 - 对 CommonJS 、ES6的语法做了兼容
@@ -8,6 +8,11 @@ webpack是一个模块打包器（module bundler），webpack视html，JS，CSS�
 - 有独立的配置文件
 - 可以将代码切割成不同的chunk，实现按需加载，降低了初始化时间
 - 具有强大的Plugin（插件）接口，大多是内部插件，使用起来比较灵活
+
+
+它的核心思路是将源代码以及图片、样式文件等资源文件都视为模块，然后通过提供对不同类型资源的处理器，将它们进行统一处理，形成最终可在浏览器运行的代码。
+
+<img src="Webpack 的工作机制.webp" />
 
 ## webpack原理
 webpack 的核心原理就是通过分析 JavaScript 中的 require 语句，分析出当前 JavaScript 文件所有的依赖文件，
