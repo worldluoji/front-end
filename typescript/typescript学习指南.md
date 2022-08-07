@@ -110,6 +110,7 @@ function buildName(firstName: string, lastName?: string, age: number = 18) {
 可以使用@types来管理声明文件，比如要使用Puppeteer，要引入它的声明文件需要：
 npn install @types/Puppeteer
 
+https://ts.xcatliu.com/basics/declaration-files.html
 
 ## 7. typescript免费教程
 - https://basarat.gitbook.io/typescript/
