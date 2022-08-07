@@ -10,6 +10,7 @@ import Timer from '../components/counter/timer';
 import ThemeContext from '../components/context/themecontext';
 import Carousel from '../components/carousel/carousel';
 import Turntable from '../components/turntable/turntable';
+import SearchBox from '../components/searchbox/SearchBox';
 
 const Root = () => (
     <BrowserRouter>
@@ -22,6 +23,7 @@ const Root = () => (
             <Route path="/context" element={<ThemeContext />} />
             <Route path="/carousel" element={<Carousel />} />
             <Route path="/turntable" element={<Turntable />} />
+            <Route path="/searchbox" element={<SearchBox />}></Route>
             {/* v6 router之前的老版本： <Route path=".*" component={ App }/>, 且不需要Routes包裹 */}
          </Routes>
     </BrowserRouter>
