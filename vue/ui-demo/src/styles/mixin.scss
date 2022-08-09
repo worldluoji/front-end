@@ -1,0 +1,89 @@
+
+/**
+ * 在下面的代码中，我们定义了 namespace 变量的值为 el，使用 Mixin 注册一个可以重复使用的模块 b，
+ * 可以通过传进来的 block 生成新的变量 $B，并且变量会渲染在 class 上，
+ * 并且注册了 when 可以新增 class 选择器，实现多个 class 的样式。
+ */
+$namespace: 'el';
+$state-prefix: 'is-';
+$element-separator: '__';
+$modifier-separator: '--';
+@mixin b($block) {
+  $B: $namespace + '-' + $block !global;
+  .#{$B} {
+    @content;
+  }
+}
+
+// 添加ben后缀啥的
+@mixin when($state) {
+  @at-root {
+    &.#{$state-prefix + $state} {
+      @content;
+    }
+  }
+}
+
+/**
+ * 1. mixin
+ * @mixin指令是另一种简化代码的方法。Mixins可以包含任意内容且可以传递参数，比'@extend'更加灵活和强大。
+ * 使用 @import 导入 mixin.scss 后，就可以用 include 语法去使用 Mixin 注册的代码块
+ * 
+ * 2. at-root
+ * The @at-root directive causes one or more rules to be emitted at the root of the document, 
+ * rather than being nested beneath their parent selectors. It can either be used with a single inline selector:
+ *
+    .parent {
+      ...
+      @at-root .child { ... }
+    }
+
+    Which would produce:
+
+    .parent { ... }
+    .child { ... }
+  
+ * 3. @content
+  在引用混合样式的时候，可以先将一段代码导入到混合指令中，然后再输出混合样式，额外导入的部分将出现在 @content 标志的地方：
+
+  @mixin apply-to-ie6-only {
+    * html {
+      @content;
+    }
+  }
+  @include apply-to-ie6-only {
+    #logo {
+      background-image: url(/logo.gif);
+    }
+  }
+  编译为
+
+  * html #logo {
+    background-image: url(/logo.gif);
+  }
+  
+ */
+
+@mixin m($modifier) {
+  $selector: &;
+  $currentSelector: '';
+  @each $unit in $modifier {
+    $currentSelector: #{$currentSelector +
+      & +
+      $modifier-separator +
+      $unit +
+      ','};
+  }
+
+  @at-root {
+    #{$currentSelector} {
+      @content;
+    }
+  }
+}
+
+$--header-padding: 0 20px !default;
+$--footer-padding: 0 20px !default;
+$--main-padding: 20px !default;
+
+
