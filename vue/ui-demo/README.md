@@ -16,3 +16,22 @@ Since TypeScript cannot handle type information for `.vue` imports, they are shi
 2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
 
 You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+
+## Jest配置
+```
+npm install -D jest@26 vue-jest@next @vue/test-utils@next 
+npm install -D babel-jest@26 @babel/core @babel/preset-env 
+npm install -D ts-jest@26 @babel/preset-typescript @types/jest
+```
+安装完毕后，我们要在根目录下新建.babel.config.js。下面的配置目的是让 babel 解析到 Node 和 TypeScript 环境下。
+```
+module.exports = {
+  presets: [
+    ['@babel/preset-env', { targets: { node: 'current' } }],
+    '@babel/preset-typescript',
+  ],
+}
+```
+我们还需要新建 jest.config.js，用来配置 jest 的测试行为。
+不同格式的文件需要使用不同命令来配置，对于.vue 文件我们使用 vue-jest，对于.js 或者.jsx 结果的文件，我们就要使用 babel-jest，而对于.ts 结尾的文件我们使用 ts-jest，然后匹配文件名是 xx.spect.js。
+这里请注意，Jest 只会执行.spec.js 结尾的文件。
