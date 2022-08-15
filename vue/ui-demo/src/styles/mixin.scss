@@ -1,4 +1,4 @@
-
+// scss参考： https://www.sasscss.com/documentation
 /**
  * 在下面的代码中，我们定义了 namespace 变量的值为 el，使用 Mixin 注册一个可以重复使用的模块 b，
  * 可以通过传进来的 block 生成新的变量 $B，并且变量会渲染在 class 上，
@@ -81,6 +81,40 @@ $modifier-separator: '--';
     }
   }
 }
+
+/** @each的使用
+$sizes: 40px, 50px, 80px;
+
+@each $size in $sizes {
+  .icon-#{$size} {
+    font-size: $size;
+    height: $size;
+    width: $size;
+  }
+}
+
+CSS OUTPUT
+.icon-40px {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+}
+
+.icon-50px {
+  font-size: 50px;
+  height: 50px;
+  width: 50px;
+}
+
+.icon-80px {
+  font-size: 80px;
+  height: 80px;
+  width: 80px;
+}
+
+@each也可以用于map,
+则是 @each $key,$value in $map
+*/
 
 $--header-padding: 0 20px !default;
 $--footer-padding: 0 20px !default;
@@ -202,3 +236,31 @@ $--button-large-border-radius: #{$--border-radius-base - 1} !default;
 $--button-large-padding-vertical: 15px !default;
 /// padding||Spacing|3
 $--button-large-padding-horizontal: 25px !default;
+
+/** 关于default的说明
+$content: "antzone" !default;
+#main {
+  content: $content;
+}
+
+编译为css代码如下:
+#main {
+  content: "antzone"; 
+}
+由于在声明默认值之前，并没有变量的赋值，所以就使用默认值。
+
+
+再来看一段代码实例:
+$content:"softwhy.com";
+$content: "antzone" !default;
+#main {
+  content: $content;
+}
+　　编译成css代码如下:
+
+#main {
+  content: "softwhy.com"; 
+}
+由于在默认变量值声明之前，就已经有变量赋值了，所以就不再使用默认值。
+
+*/
