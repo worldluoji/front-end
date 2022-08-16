@@ -23,7 +23,10 @@
   <el-container>
     <el-header>Header</el-header>
     <el-main>
-      <ElButton type="danger" size="medium">Click Me</ElButton>
+      <ElButton type="danger" size="medium" @click="showDialog">Click Me</ElButton>
+      <ElDialog :appendToBody="dialogVisiable" v-if="dialogVisiable">
+        <ElButton type="danger" size="medium" @click="showDialog">Close</ElButton>
+      </ElDialog>
     </el-main>
     <el-footer>Footer</el-footer>
   </el-container>
@@ -31,7 +34,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import ElButton from './Components/Button/Button.vue'
+import ElDialog from './Components/Dialog/Dialog.vue'
+let dialogVisiable = ref(false)
+const showDialog = () => {
+  dialogVisiable.value = !dialogVisiable.value
+}
 </script>
 
 <style lang="scss" scoped>
