@@ -12,7 +12,9 @@
   <el-header>Header</el-header>
   <el-container>
     <el-aside width="200px">Aside</el-aside>
-    <el-main>Main</el-main>
+    <el-main>
+      <ElNotification />
+    </el-main>
   </el-container>
 </el-container>
 
@@ -35,12 +37,19 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import ElButton from './Components/Button/Button.vue'
-import ElDialog from './Components/Dialog/Dialog.vue'
-let dialogVisiable = ref(false)
+import ElButton from './components/Button/Button.vue'
+import ElDialog from './components/Dialog/Dialog.vue'
+import ElNotification from './components/Notification/Notification.vue'
+const dialogVisiable = ref(false)
 const showDialog = () => {
   dialogVisiable.value = !dialogVisiable.value
 }
+
+const notificationVisiable = ref(false)
+const showNotification = () => {
+  notificationVisiable.value = !notificationVisiable.value
+}
+
 </script>
 
 <style lang="scss" scoped>
