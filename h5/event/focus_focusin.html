@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>focus and focusin</title>
+</head>
+<body>
+    <div>
+        <ul>
+            <li>focus:当focusable元素获得焦点时,不支持冒泡;</li>
+            <li>blur:当focusable元素失去焦点时,不支持冒泡;</li>
+            <li>focusin:和focus一样,只是此事件支持冒泡;</li>
+            <li>focusout:和blur一样,只是此事件支持冒泡。</li>
+        </ul>
+    </div>
+    <div id="parent-f" class="parent" >
+        <input type="text" id="f" />
+    </div>
+    <div id="parent-fin" class="parent">
+        <input type="text" id="fin" />
+    </div>
+    <script>
+        let parentF = document.getElementById('parent-f')
+        parentF.addEventListener('focus', () => {
+            console.log('parent-f focus')
+        })
+
+        let f = document.getElementById('f')
+        f.addEventListener('focus', () => {
+            console.log('f focus')
+        })
+
+        let parentFin = document.getElementById('parent-fin')
+        parentFin.addEventListener('focusin', () => {
+            console.log('parent-fin focus')
+        })
+
+        let fin = document.getElementById('fin')
+        fin.addEventListener('focusin', () => {
+            console.log('fin focus')
+        })
+        
+    </script>
+    <style>
+        .parent {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</body>
+</html>

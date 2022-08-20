@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<title>事件模型</title>
+	</head>
+	<body>
+        <p>
+            button是div的子元素，点击button也会触发div的click事件
+            由于on-属性的监听代码，只在冒泡阶段触发，所以点击结果是先输出1，再输出2，
+            即事件从子元素开始冒泡到父元素。
+            直接设置on-属性，与通过元素节点的setAttribute方法设置on-属性，效果是一样的。
+        </p>
+        <div onclick="console.log(2)">
+            <!-- onxxx 必须写全函数名和后面的括号 -->
+            <button id='btn1' onclick="clickAndSet()">点击1</button>
+            <button id='btn2'>点击2</button>
+            <button id='btn3'>点击3</button>
+            <button id='btn4'>点击4</button>
+            <button id='btn5'>点击5</button>
+        </div>
+    </body>
+    <script>
+        function clickAndSet(e) {
+            console.log(1)
+            let btn2 = document.getElementById('btn2')
+            btn2.setAttribute('onclick', 'log()')
+        }
+
+        function log() {
+            console.log(3)
+        }
+
+        // 使用这个方法指定的监听函数，也是只会在冒泡阶段触发
+        let btn3 = document.getElementById('btn3')
+        btn3.onclick = () => {
+            console.log(4)
+        }
+        // 后面可以是函数，也可以直接指定函数名，不用写函数名后的括号
+        btn4.onclick = log
+
+        function init() {
+            console.log('init...')
+        }
+
+        // 使用addEventListener添加事件，推荐
+        window.addEventListener('load', () => {
+            if (typeof window.onload  === 'function') {
+                window.onload()
+                init()
+            } else {
+                init()
+            }
+        })
+
+        let btn5 = document.getElementById('btn5')
+        btn5.addEventListener('click', () => {
+            console.log(5)
+        })
+
+    </script>
+</html>
