@@ -52,6 +52,9 @@ obs.pipe(op1(), op2(), op3(), op4());
 
 demo参考operators.js
 
+## switchmap
+switchMap 和其他打平操作符的主要区别是它具有取消效果。在每次发出时，会取消前一个内部 observable (你所提供函数的结果) 的订阅，然后订阅一个新的 observable。
+
 ## 参考
 - https://zhuanlan.zhihu.com/p/274469124
 - https://juejin.cn/post/7018006694051446820
