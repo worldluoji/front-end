@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Delegate</title>
+</head>
+<body>
+    <div>
+        <p>
+            You choosed 
+            <span id="choosed"></span>
+        </p>
+        <ul id="ul1">
+            <li>111</li>
+            <li>222</li>
+            <li>333</li>
+            <li>444</li>
+            <li>555</li>
+            <li class="outstanding">666</li>
+        </ul>
+    </div>
+    <script>
+        let oUl = document.getElementById("ul1")
+        // ev 就是你点击的东东
+        oUl.onclick = function(e){
+        let ev = e || window.event;
+        let target = ev.target || ev.srcElement
+        let choosed = document.getElementById('choosed')
+        if (target.nodeName.toLowerCase() === 'li') {
+            console.log(target.innerHTML)
+            choosed.innerHTML = target.innerHTML
+            if (target.matches('.outstanding')) {
+                choosed.style.color = 'red'
+            }
+        }
+    }
+    </script>
+</body>
+</html>
