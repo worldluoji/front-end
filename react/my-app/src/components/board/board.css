@@ -5,10 +5,11 @@
     height: 100vh;
     text-align: center;
 }
+/* gap: row-gap column-gap; gap: 20px 50px; 设置行间距为 20px，列间距为 50px： */
 
 .board-header {
     flex: 1;
-    margin: 1rem 1rem 0;
+    margin: 1rem 1rem 0; /*上 左右 下*/
     border-radius: 1rem;
     background-color: #282c34;
     min-height: 5rem;
@@ -16,7 +17,6 @@
     flex-direction: row-reverse;
     align-items: center;
     justify-content: center;
-   
 }
 
 .board-header > h1 {

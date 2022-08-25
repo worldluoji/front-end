@@ -73,12 +73,9 @@ class selector : .xxx
 Pixels are a type of length unit, which is what tells the browser how to size or space an item.
 
 ## 2) relative units:
-such as em or rem, are relative to another length value. 
-For example, em is based on the size of an element's font. 
-If you use it to set the font-size property itself, 
-it's relative to the parent's font-size.
-
 rem是基于html元素的字体大小来决定，而em则根据使用它的元素的大小决定。
+
+即em相对于父元素，rem相对于根元素。
 
 ## 3) in and mm refer to inches and millimeters, respectively. 这种绝对单位已经不再使用
 
