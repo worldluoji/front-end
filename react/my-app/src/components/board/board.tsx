@@ -1,45 +1,26 @@
 import React, { useState } from "react"
 import './board.css'
 
-
-const todoList = [
-    { title: '开发任务-1', status: '22-05-22 18:15' },
-    { title: '开发任务-3', status: '22-05-22 18:15' },
-    { title: '开发任务-5', status: '22-05-22 18:15' },
-    { title: '测试任务-3', status: '22-05-22 18:15' }
-]
-
-const ongoingList = [
-    { title: '开发任务-4', status: '22-05-22 18:15' },
-    { title: '开发任务-6', status: '22-05-22 18:15' },
-    { title: '测试任务-2', status: '22-05-22 18:15' }
-]
-  
-const doneList = [
-    { title: '开发任务-2', status: '22-05-22 18:15' },
-    { title: '测试任务-1', status: '22-05-22 18:15' }
-]
-
-interface Card {
+interface BoardCardProps {
     title: string,
     status: string
 }
 
-const KanbanCard = (card: Card) => {
+const BoardCard = (boardCardProps: BoardCardProps) => {
     return (
       <li className="kanban-card">
-        <div className="card-title">{card.title}</div>
-        <div className="card-status">{card.status}</div>
+        <div className="card-title">{boardCardProps.title}</div>
+        <div className="card-status">{boardCardProps.status}</div>
       </li>
     )
 }
 
-interface Submit {
+interface BoardCardOperations {
     onSubmit: (title: string) => void
 }
 
 // type Submit = (title: string) => void
-const KanbanNewCard = ({ onSubmit } : Submit) => {
+const BoardNewCard = ({ onSubmit } : BoardCardOperations) => {
     const [title, setTitle] = useState('')
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = (evt) => {
         setTitle(evt.target.value)
@@ -63,6 +44,25 @@ const KanbanNewCard = ({ onSubmit } : Submit) => {
 }
 
 function Board() {
+
+    const [todoList, setTodoList] = useState([
+        { title: '开发任务-1', status: '22-05-22 18:15' },
+        { title: '开发任务-3', status: '22-05-22 18:15' },
+        { title: '开发任务-5', status: '22-05-22 18:15' },
+        { title: '测试任务-3', status: '22-05-22 18:15' }
+    ])
+    
+    const [ongoingList, setOngoingList] = useState([
+        { title: '开发任务-4', status: '22-05-22 18:15' },
+        { title: '开发任务-6', status: '22-05-22 18:15' },
+        { title: '测试任务-2', status: '22-05-22 18:15' }
+    ])
+      
+    const [doneList, setDoneList] = useState([
+        { title: '开发任务-2', status: '22-05-22 18:15' },
+        { title: '测试任务-1', status: '22-05-22 18:15' }
+    ])
+
     const [showAdd, setShowAdd] = useState(false)
     const handleAdd = (evt: React.FormEvent<HTMLButtonElement>) => {
         setShowAdd(true)
@@ -85,20 +85,20 @@ function Board() {
                         <button onClick={ handleAdd } disabled={ showAdd }>添加新卡片</button>
                     </h2>
                     <ul>
-                        { showAdd && <KanbanNewCard onSubmit={ handleSubmit }/> }
-                        { todoList.map(props => <KanbanCard {...props}/>) }
+                        { showAdd && <BoardNewCard onSubmit={ handleSubmit }/> }
+                        { todoList.map(props => <BoardCard {...props}/>) }
                     </ul>
                 </section>
                 <section className="kanban-column column-ongoing">
                     <h2>进行中</h2>
                     <ul>
-                        { ongoingList.map(props => <KanbanCard {...props}/>) }
+                        { ongoingList.map(props => <BoardCard {...props}/>) }
                     </ul>
                 </section>
                 <section className="kanban-column column-done">
                     <h2>已完成</h2>
                     <ul>
-                        { doneList.map(props => <KanbanCard {...props}/>) }
+                        { doneList.map(props => <BoardCard {...props}/>) }
                     </ul>
                 </section>
             </main>
