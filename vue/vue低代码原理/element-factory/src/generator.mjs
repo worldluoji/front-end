@@ -9,7 +9,7 @@ const typeMap = {
     3: comment,
 }
 
-// 遍历AST抽象树，第一次进入时，parent就是ast
+// 遍历AST抽象树，第一次进入时，parent就是ast, ast的数据结构里Children, 表示子节点
 function walk(parent, fn) {
     if (parent.children && parent.children.length > 0) {
         parent.children.forEach(child => {
@@ -33,7 +33,6 @@ export default class Generator {
         this.depencencies = []
         this.props = []
         this.visit(this.ast)
-        console.log('depencencies === ', this.depencencies)
     }
 
     addDpe(name) {
@@ -54,6 +53,7 @@ export default class Generator {
     visit(parent) {
         const generator = this
         walk(parent, (child) => {
+            // 通过type获取到Handler
             const typeHandler = typeMap[child.type]
             if (typeHandler) {
                 let enter, leave

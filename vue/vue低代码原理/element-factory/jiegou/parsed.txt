@@ -1,0 +1,55 @@
+{
+    descriptor: {
+      filename: 'anonymous.vue',
+      source: '<template><Card :link="click_url">\n' +
+        '    <template #image>\n' +
+        '        <!-- <RectPic :value="pict_url" /> -->\n' +
+        '        <CirclePic :value="pict_url" />\n' +
+        '    </template>\n' +
+        '    <template #title>\n' +
+        '        <Title :msg="title" />\n' +
+        '    </template>\n' +
+        '    <template #under-title>\n' +
+        '        <Tags :tags="icons" />\n' +
+        '    </template>\n' +
+        '    <template #price>\n' +
+        '        <Price :value="real_wap_price" />\n' +
+        '        <!-- <DeletePrice :value="real_wap_price" /> -->\n' +
+        '        <!-- <MonthSell :value="month_sale" /> -->\n' +
+        '    </template>\n' +
+        '</Card></template>',
+      template: {
+        type: 'template',
+        content: '<Card :link="click_url">\n' +
+          '    <template #image>\n' +
+          '        <!-- <RectPic :value="pict_url" /> -->\n' +
+          '        <CirclePic :value="pict_url" />\n' +
+          '    </template>\n' +
+          '    <template #title>\n' +
+          '        <Title :msg="title" />\n' +
+          '    </template>\n' +
+          '    <template #under-title>\n' +
+          '        <Tags :tags="icons" />\n' +
+          '    </template>\n' +
+          '    <template #price>\n' +
+          '        <Price :value="real_wap_price" />\n' +
+          '        <!-- <DeletePrice :value="real_wap_price" /> -->\n' +
+          '        <!-- <MonthSell :value="month_sale" /> -->\n' +
+          '    </template>\n' +
+          '</Card>',
+        loc: [Object],
+        attrs: {},
+        ast: [Object],
+        map: [Object]
+      },
+      script: null,
+      scriptSetup: null,
+      styles: [],
+      customBlocks: [],
+      cssVars: [],
+      slotted: false,
+      shouldForceReload: [Function: shouldForceReload]
+    },
+    errors: []
+}
+  

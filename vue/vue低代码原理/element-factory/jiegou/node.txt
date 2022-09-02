@@ -1,0 +1,190 @@
+{
+    type: 1,    
+    ns: 0,      
+    tag: 'Card',
+    tagType: 1, 
+    props: [
+      {
+        type: 7,
+        name: 'bind',
+        exp: [Object],
+        arg: [Object],
+        modifiers: [],
+        loc: [Object]
+      }
+    ],
+    isSelfClosing: false,
+    children: [
+      { type: 2, content: '    ', loc: [Object] },
+      {
+        type: 1,
+        ns: 0,
+        tag: 'template',
+        tagType: 3,
+        props: [Array],
+        isSelfClosing: false,
+        children: [Array],
+        loc: [Object],
+        codegenNode: undefined
+      },
+      { type: 2, content: '\n    ', loc: [Object] },
+      {
+        type: 1,
+        ns: 0,
+        tag: 'template',
+        tagType: 3,
+        props: [Array],
+        isSelfClosing: false,
+        children: [Array],
+        loc: [Object],
+        codegenNode: undefined
+      },
+      { type: 2, content: '\n    ', loc: [Object] },
+      {
+        type: 1,
+        ns: 0,
+        tag: 'template',
+        tagType: 3,
+        props: [Array],
+        isSelfClosing: false,
+        children: [Array],
+        loc: [Object],
+        codegenNode: undefined
+      },
+      { type: 2, content: '\n    ', loc: [Object] },
+      {
+        type: 1,
+        ns: 0,
+        tag: 'template',
+        tagType: 3,
+        props: [Array],
+        isSelfClosing: false,
+        children: [Array],
+        loc: [Object],
+        codegenNode: undefined
+      },
+      { type: 2, content: '\n', loc: [Object] }
+    ],
+    loc: {
+      start: { column: 11, line: 1, offset: 10 },
+      end: { column: 8, line: 17, offset: 499 },
+      source: '<Card :link="click_url">\n' +
+        '    <template #image>\n' +
+        '        <!-- <RectPic :value="pict_url" /> -->\n' +
+        '        <CirclePic :value="pict_url" />\n' +
+        '    </template>\n' +
+        '    <template #title>\n' +
+        '        <Title :msg="title" />\n' +
+        '    </template>\n' +
+        '    <template #under-title>\n' +
+        '        <Tags :tags="icons" />\n' +
+        '    </template>\n' +
+        '    <template #price>\n' +
+        '        <Price :value="real_wap_price" />\n' +
+        '        <!-- <DeletePrice :value="real_wap_price" /> -->\n' +
+        '        <!-- <MonthSell :value="month_sale" /> -->\n' +
+        '    </template>\n' +
+        '</Card>'
+    },
+    codegenNode: undefined
+  }
+  [ 'click_url' ]
+  {
+    type: 1,
+    ns: 0,
+    tag: 'CirclePic',
+    tagType: 1,
+    props: [
+      {
+        type: 7,
+        name: 'bind',
+        exp: [Object],
+        arg: [Object],
+        modifiers: [],
+        loc: [Object]
+      }
+    ],
+    isSelfClosing: true,
+    children: [],
+    loc: {
+      start: { column: 9, line: 4, offset: 112 },
+      end: { column: 40, line: 4, offset: 143 },
+      source: '<CirclePic :value="pict_url" />'
+    },
+    codegenNode: undefined
+  }
+  [ 'click_url', 'pict_url' ]
+  {
+    type: 1,
+    ns: 0,
+    tag: 'Title',
+    tagType: 1,
+    props: [
+      {
+        type: 7,
+        name: 'bind',
+        exp: [Object],
+        arg: [Object],
+        modifiers: [],
+        loc: [Object]
+      }
+    ],
+    isSelfClosing: true,
+    children: [],
+    loc: {
+      start: { column: 9, line: 7, offset: 190 },
+      end: { column: 31, line: 7, offset: 212 },
+      source: '<Title :msg="title" />'
+    },
+    codegenNode: undefined
+  }
+  [ 'click_url', 'pict_url', 'title' ]
+  {
+    type: 1,
+    ns: 0,
+    tag: 'Tags',
+    tagType: 1,
+    props: [
+      {
+        type: 7,
+        name: 'bind',
+        exp: [Object],
+        arg: [Object],
+        modifiers: [],
+        loc: [Object]
+      }
+    ],
+    isSelfClosing: true,
+    children: [],
+    loc: {
+      start: { column: 9, line: 10, offset: 265 },
+      end: { column: 31, line: 10, offset: 287 },
+      source: '<Tags :tags="icons" />'
+    },
+    codegenNode: undefined
+  }
+  [ 'click_url', 'pict_url', 'title', 'icons' ]
+  {
+    type: 1,
+    ns: 0,
+    tag: 'Price',
+    tagType: 1,
+    props: [
+      {
+        type: 7,
+        name: 'bind',
+        exp: [Object],
+        arg: [Object],
+        modifiers: [],
+        loc: [Object]
+      }
+    ],
+    isSelfClosing: true,
+    children: [],
+    loc: {
+      start: { column: 9, line: 13, offset: 334 },
+      end: { column: 42, line: 13, offset: 367 },
+      source: '<Price :value="real_wap_price" />'
+    },
+    codegenNode: undefined
+}

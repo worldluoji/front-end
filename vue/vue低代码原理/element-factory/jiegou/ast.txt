@@ -1,0 +1,44 @@
+{
+    type: 1,        
+    ns: 0,
+    tag: 'template',
+    tagType: 0,     
+    props: [],
+    isSelfClosing: false,
+    children: [
+      {
+        type: 1,
+        ns: 0,
+        tag: 'Card',
+        tagType: 1,
+        props: [Array],
+        isSelfClosing: false,
+        children: [Array],
+        loc: [Object],
+        codegenNode: undefined
+      }
+    ],
+    loc: {
+      start: { column: 1, line: 1, offset: 0 },
+      end: { column: 19, line: 17, offset: 510 },
+      source: '<template><Card :link="click_url">\n' +
+        '    <template #image>\n' +
+        '        <!-- <RectPic :value="pict_url" /> -->\n' +
+        '        <CirclePic :value="pict_url" />\n' +
+        '    </template>\n' +
+        '    <template #title>\n' +
+        '        <Title :msg="title" />\n' +
+        '    </template>\n' +
+        '    <template #under-title>\n' +
+        '        <Tags :tags="icons" />\n' +
+        '    </template>\n' +
+        '    <template #price>\n' +
+        '        <Price :value="real_wap_price" />\n' +
+        '        <!-- <DeletePrice :value="real_wap_price" /> -->\n' +
+        '        <!-- <MonthSell :value="month_sale" /> -->\n' +
+        '    </template>\n' +
+        '</Card></template>'
+    },
+    codegenNode: undefined
+}
+  
