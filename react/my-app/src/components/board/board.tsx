@@ -114,13 +114,13 @@ function Board() {
             <KanBanBoard>
                 <KanBanBoardColumn className="column-todo" title={ todoTitle }>
                     { showAdd && <BoardNewCard onSubmit={ handleSubmit }/> }
-                    { todoList.map(props => <BoardCard { ...props }/>) }
+                    { todoList.map(props => <BoardCard key={ props.title } { ...props }/>) }
                 </KanBanBoardColumn>
                 <KanBanBoardColumn className="column-ongoing" title="进行中">
-                    { ongoingList.map(props => <BoardCard { ...props }/>) }
+                    { ongoingList.map(props => <BoardCard key={ props.title } { ...props }/>) }
                 </KanBanBoardColumn>
                 <KanBanBoardColumn className="column-done" title="已完成">
-                    { doneList.map(props => <BoardCard { ...props }/>) }
+                    { doneList.map(props => <BoardCard  key={ props.title } { ...props }/>) }
                 </KanBanBoardColumn>
             </KanBanBoard>
         </div>
