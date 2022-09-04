@@ -1,0 +1,18 @@
+{
+  "name": "vite-plugin-demo",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json5": "^2.2.1",
+    "tosource": "^2.0.0-alpha.3",
+    "vite": "^3.0.9"
+  }
+}
