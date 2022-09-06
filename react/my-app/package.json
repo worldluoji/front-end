@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
@@ -48,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "@emotion/babel-plugin": "^11.10.2",
     "@types/lodash": "^4.14.182",
     "@types/react-router-dom": "^5.3.3",
     "babel-plugin-import": "^1.13.5",
@@ -56,5 +59,9 @@
     "http-proxy-middleware": "^2.0.6",
     "http-server": "^14.1.1",
     "react-app-rewired": "^2.2.1"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11"
   }
 }

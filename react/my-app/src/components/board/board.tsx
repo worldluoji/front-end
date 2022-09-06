@@ -1,5 +1,7 @@
 import React, { ReactNode, useState } from "react"
 import './board.css'
+// @emotion/react provide the ability of css in js
+import styled from '@emotion/styled'
 
 interface BoardCardProps {
     title: string,
@@ -47,8 +49,16 @@ interface KanBanBoardProps {
     children: ReactNode
 }
 
+// https://emotion.sh/docs/typescript
+const Main = styled('main')`
+    flex: 10;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    margin: 0 1rem 1rem;
+`
 const KanBanBoard = (kanBanBoardProps: KanBanBoardProps) => (
-    <main className="kanban-board">{ kanBanBoardProps.children }</main>
+    <Main>{ kanBanBoardProps.children }</Main>
 )
 
 interface KanbanColumnProps extends KanBanBoardProps {
