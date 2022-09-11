@@ -194,13 +194,13 @@ function TextInputWithFocusButton() {
 
 <br>
 
-
 ## useContext：定义全局状态
 demo见context
 
 在 React 的开发中，除了像 Theme、Language 等一目了然的需要全局设置的变量外，我们很少会使用 Context 来做太多数据的共享。
 需要再三强调的是，Context 更多的是提供了一个强大的机制，让 React 应用具备定义全局的响应式数据的能力。
 
+<br>
 
 ## Hooks和class
 hooks和class一些生命周期的关系
@@ -229,6 +229,16 @@ Class 组件中还有其它一些比较少用的方法，比如 getSnapshotBefor
 
 在 React 中，Class 组件和函数组件是完全可以共存的。对于新的功能，我会更推荐使用函数组件。而对于已有的功能，则维持现状就可以。
 除非要进行大的功能改变，可以顺便把相关的类组件进行重构，否则是没有必要进行迁移的。
+
+<img src="Hooks里与组件生命周期有关的API.webp" />
+
+挂载阶段。React 会执行组件函数，在函数执行过程中遇到的 useState 、 useMemo 等 Hooks 依次挂载到 FiberNode 上，useEffect 其实也会被挂载，但它包含的副作用（Side-effect，在 Fiber 引擎中称为 Effect）会保留到提交阶段。
+
+更新阶段。当组件接收到新 props，调用 useState 返回的 setter 或者 useReducer 返回的 dispatch 修改了状态，组件会进入更新阶段。组件函数本身会被再次执行，Hooks 会依次与 FiberNode 上已经挂载的 Hooks 一一匹配，并根据需要更新。组件函数的返回值用来更新 FiberNode 树。
+
+卸载阶段。主要是执行 Effect 的清理函数。函数组件也有错误处理阶段，但没有对应的生命周期 Hooks，错误处理依赖于父组件或祖先组件提供的错误边界。
+
+<br>
 
 ### Hooks实现类似Class构造函数的只初始化一次的功能
 函数组件基本上没有统一的初始化需要，因为 Hooks 自己会负责自己的初始化。
