@@ -66,6 +66,48 @@ const [todos, setTodos] = useState([{ text: 'Learn Hooks' }]);
 - 从 URL 中读到的值。比如有时需要读取 URL 中的参数，把它作为组件的一部分状态。那么我们可以在每次需要用的时候从 URL 中读取，而不是读出来直接放到 state 里。
 - 从 cookie、localStorage 中读取的值。通常来说，也是每次要用的时候直接去读取，而不是读出来后放到 state 里。
 
+调用 state 更新函数后，组件的更新是异步的，不会马上执行；在 React 18 里，更是为更新 state 加入了自动批处理功能，多个 state 更新函数调用会被合并到一次重新渲染中。
+例如，下面的代码中，组件只会重新渲染一次，而且这次渲染使用了两个 state 分别的最新值。这就是 React对多个 state 更新的自动批处理。
+```
+function App() {
+  const [showAdd, setShowAdd] = useState(false);
+  const [todoList, setTodoList] = useState([/*省略*/]);
+  // ...省略
+  const handleSubmit = (title) => {
+    setTodoList(currentTodoList => [
+      { title, status: new Date().toString() },
+      ...currentTodoList
+    ]);
+    setShowAdd(false);
+  };
+  // ...省略
+}
+
+```
+然而需要注意的是，自动批处理功能在 React 18 版本以前，只在 React 事件处理函数中生效。如果 state 更新语句所在的区域稍有不同，比如将两个 state 更新写在异步请求的回调函数中，自动批处理就失效了。
+```
+const Search = () => {
+  const [province, setProvince] = useState(null);
+  const [cities, setCities] = useState([]);
+  const handleSearchClick = () => {
+    // 模拟调用服务器端接口搜索"吉林"
+    setTimeout(() => {
+      setProvince('吉林');
+      setCities(['长春', '吉林']);
+    }, 1000);
+  };
+  // ...省略
+```
+
+
+下面的方式，可以保证更新函数使用最新的 state 来计算新 state 值
+```
+setShowAdd(prevState => !prevState);
+setTodoList(prevState => {
+  return [...prevState, aNewTodoItem];
+});
+```
+
 <br>
 
 ## useEffect：执行副作用
