@@ -3,11 +3,10 @@ import './board.css'
 // @emotion/react provide the ability of css in js
 import styled from '@emotion/styled'
 
-
-const MINUTE = 60 * 1000;
-const HOUR = 60 * MINUTE;
-const DAY = 24 * HOUR;
-const UPDATE_INTERVAL = MINUTE;
+const MINUTE = 60 * 1000
+const HOUR = 60 * MINUTE
+const DAY = 24 * HOUR
+const UPDATE_INTERVAL = MINUTE
 
 interface BoardCardProps {
     title: string,
@@ -19,8 +18,10 @@ const BoardCard = (boardCardProps: BoardCardProps) => {
 
     useEffect(() => {
         const updateDisplayTime = () => {
-          const timePassed = new Date().getTime() - new Date(boardCardProps.status).getTime()
+          const timePassed = Date.now() - new Date(boardCardProps.status).getTime()
+
           let relativeTime = '刚刚'
+          
           if (MINUTE <= timePassed && timePassed < HOUR) {
             relativeTime = `${Math.ceil(timePassed / MINUTE)} 分钟前`
           } else if (HOUR <= timePassed && timePassed < DAY) {
@@ -119,11 +120,11 @@ function Board() {
     const [ongoingList, setOngoingList] = useState([
         { title: '开发任务-4', status: '2022-05-22 18:15' },
         { title: '开发任务-6', status: '2022-05-22 18:15' },
-        { title: '测试任务-2', status: '2022-05-22 18:15' }
+        { title: '测试任务-2', status: '2022-09-12 18:15' }
     ])
       
     const [doneList, setDoneList] = useState([
-        { title: '开发任务-2', status: '2022-05-22 18:15' },
+        { title: '开发任务-2', status: '2022-09-11 18:15' },
         { title: '测试任务-1', status: '2022-05-22 18:15' }
     ])
 
@@ -133,7 +134,7 @@ function Board() {
     }
 
     const handleSubmit = (title: string) => {
-        todoList.unshift({ title, status: new Date().toDateString() })
+        todoList.unshift({ title, status: new Date().toLocaleString() })
         setShowAdd(false)
     }
 
