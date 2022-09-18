@@ -2,6 +2,14 @@
 
 如果一个目录下存在一个tsconfig.json文件，那么它意味着这个目录是TypeScript项目的根目录。 
 tsconfig.json文件中指定了用来编译这个项目的根文件和编译选项。
+```
+tsc --init
+```
+使用上述命令可创建tsconfig.json默认配置文件。其它命令可参考：
+```
+tsc --help
+```
+
 ## 两个重要参数
 ```
 "target": "es2016", 
