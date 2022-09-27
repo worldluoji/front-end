@@ -14,7 +14,7 @@
     background-color: #282c34;
     min-height: 5rem;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
 }
@@ -55,6 +55,10 @@
 
 .column-done {
     background-color: #C0E8BA;
+}
+
+.column-loading {
+    background-color: #e3e3e3;
 }
 
 /* .kanban-column > ul { flex: 1; flex-basis: 0; overflow: auto; }，
