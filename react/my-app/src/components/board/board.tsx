@@ -10,7 +10,8 @@ const UPDATE_INTERVAL = MINUTE
 
 interface BoardCardProps {
     title: string,
-    status: string
+    status: string,
+    onDragStart: React.DragEventHandler
 }
 
 const BoardCard = (boardCardProps: BoardCardProps) => {
@@ -42,8 +43,16 @@ const BoardCard = (boardCardProps: BoardCardProps) => {
         }
     }, [boardCardProps.status])
 
+    // drag事件参考：https://juejin.cn/post/6998672428020793358
+    const handleDragStart: React.DragEventHandler = (evt) => {
+        // 所有拖拉事件的实例都有一个DragEvent.dataTransfer属性，用来读写需要传递的数据。这个属性的值是一个DataTransfer接口的实例
+        evt.dataTransfer.effectAllowed = 'move'
+        evt.dataTransfer.setData('text/plain', boardCardProps.title)
+        boardCardProps.onDragStart && boardCardProps.onDragStart(evt)
+    }
+
     return (
-      <li className="kanban-card">
+      <li className="kanban-card" draggable onDragStart={ handleDragStart }>
         <div className="card-title">{boardCardProps.title}</div>
         <div className="card-status">{displayTime}</div>
       </li>
@@ -96,22 +105,53 @@ const KanBanBoard = (kanBanBoardProps: KanBanBoardProps) => (
 
 interface KanbanColumnProps extends KanBanBoardProps {
     className: string,
-    title: string | JSX.Element
+    title: string | JSX.Element,
+    setIsDragSource?: (arg0: boolean) => void,
+    setIsDragTarget?: (arg0: boolean) => void,
+    onDrop?: (evt: React.DragEvent<HTMLElement>) => void
 } 
   
 const KanBanBoardColumn = (kanbanColumnProps: KanbanColumnProps) => {
     const combinedClassName = `kanban-column ${kanbanColumnProps.className}`
     return (
-        <section className={ combinedClassName }>
-            <h2>
-                { kanbanColumnProps.title }
-            </h2>
+        <section
+            onDragStart = {() => kanbanColumnProps.setIsDragSource && kanbanColumnProps.setIsDragSource(true)}
+            onDragOver={(evt) => {
+                // 拖拉到当前节点上方时，在当前节点上持续触发（相隔几百毫秒），该事件的target属性是当前节点
+                evt.preventDefault()
+                // 设置可移动被拖拉的节点
+                evt.dataTransfer.dropEffect = 'move'
+                kanbanColumnProps.setIsDragTarget && kanbanColumnProps.setIsDragTarget(true)
+            }}
+            onDragLeave={(evt) => {
+                // 拖拉操作离开当前节点范围时，在当前节点上触发，该事件的target属性是当前节点
+                evt.preventDefault()
+                // 设置无法放下被拖拉的节点
+                evt.dataTransfer.dropEffect = 'none'
+                kanbanColumnProps.setIsDragTarget && kanbanColumnProps.setIsDragTarget(false)
+            }}
+            onDrop={(evt) => {
+                // 释放到目标节点时，在目标节点触发
+                evt.preventDefault()
+                kanbanColumnProps.onDrop && kanbanColumnProps.onDrop(evt)
+            }} 
+            onDragEnd={(evt) => {
+                // 拖拉结束时（释放鼠标或按下ESC）, target是被拖拉的节点
+                evt.preventDefault()
+                kanbanColumnProps.setIsDragTarget && kanbanColumnProps.setIsDragTarget(false)
+                kanbanColumnProps.setIsDragSource && kanbanColumnProps.setIsDragSource(false)
+            }}  
+            className={ combinedClassName }>
+            <h2>{ kanbanColumnProps.title }</h2>
             <ul>{ kanbanColumnProps.children }</ul>
         </section>
     )
 }
 
 const DATA_STORE_KEY = 'kanban-data-store'
+const COLUMN_KEY_TODO = 'todo'
+const COLUMN_KEY_ONGOING = 'ongoing'
+const COLUMN_KEY_DONE = 'done'
 
 function Board() {
 
@@ -143,6 +183,42 @@ function Board() {
         setShowAdd(false)
     }
 
+    // draggedItem是拖拽的某个任务卡片
+    const [draggedItem, setDraggedItem] = useState({title: '', status: ''})
+    // source和target是看板的column，即未完成、进行中、或已完成
+    const [dragSource, setDragSource] = useState('')
+    const [dragTarget, setDragTarget] = useState('')
+
+    const handleDrop = (evt: React.DragEvent<HTMLElement>) => {
+        if (!draggedItem || !dragSource || !dragTarget || dragSource === dragTarget) {
+            return
+        }
+        
+        const updaters = {
+            [COLUMN_KEY_TODO]: setTodoList,
+            [COLUMN_KEY_ONGOING]: setOngoingList,
+            [COLUMN_KEY_DONE]: setDoneList
+        }
+
+        if (dragSource && (dragSource === COLUMN_KEY_TODO
+            || dragSource === COLUMN_KEY_ONGOING || dragSource === COLUMN_KEY_DONE)){
+                // 这里 currentStat是源column，就是把拖拽的卡片从当前列删除掉
+                updaters[dragSource]((currentStat) => 
+                // Object.is() 与 == 不同。== 运算符在判断相等前对两边的变量（如果它们不是同一类型）进行强制转换（这种行为将 "" == false 判断为 true），而 Object.is 不会强制转换两边的值。
+                // Object.is() 与 === 也不相同。差别是它们对待有符号的零和 NaN 不同，例如，=== 运算符（也包括 == 运算符）将数字 -0 和 +0 视为相等，而将 Number.NaN 与 NaN 视为不相等。
+                currentStat.filter((item) => !Object.is(item, draggedItem))
+            )
+        }
+
+        
+        if (dragTarget && (dragTarget === COLUMN_KEY_TODO
+            || dragTarget === COLUMN_KEY_ONGOING || dragTarget === COLUMN_KEY_DONE)) {
+                // 这里 currentStat 是目标 column， 就是把拖拽的卡片放入目标列
+                updaters[dragTarget]((currentStat) => [draggedItem, ...currentStat])
+        }
+    }
+
+    
     
     const todoTitle = (
         <>
@@ -187,15 +263,36 @@ function Board() {
                 { isLoading ? (
                     <KanBanBoardColumn className="column-loading" title='读取中...'></KanBanBoardColumn>
                 ) : (<>
-                    <KanBanBoardColumn className="column-todo" title={ todoTitle }>
+                    <KanBanBoardColumn 
+                        className="column-todo" 
+                        title={ todoTitle } 
+                        onDrop={ handleDrop }
+                        setIsDragSource={(isDragSource) => setDragSource(isDragSource? COLUMN_KEY_TODO: '')}
+                        setIsDragTarget={(isDragTarget) => setDragTarget(isDragTarget? COLUMN_KEY_TODO: '')}>
                         { showAdd && <BoardNewCard onSubmit={ handleSubmit }/> }
-                        { todoList.map(props => <BoardCard key={ props.title } { ...props }/>) }
+                        { todoList.map(props => <BoardCard key={ props.title } 
+                            onDragStart={() => setDraggedItem(props)}
+                            { ...props }/>) }
                     </KanBanBoardColumn>
-                    <KanBanBoardColumn className="column-ongoing" title="进行中">
-                        { ongoingList.map(props => <BoardCard key={ props.title } { ...props }/>) }
+                    <KanBanBoardColumn 
+                        className="column-ongoing" 
+                        title="进行中"
+                        onDrop={ handleDrop }
+                        setIsDragSource={(isDragSource) => setDragSource(isDragSource? COLUMN_KEY_ONGOING: '')}
+                        setIsDragTarget={(isDragTarget) => setDragTarget(isDragTarget? COLUMN_KEY_ONGOING: '')}>
+                        { ongoingList.map(props => <BoardCard key={ props.title } 
+                            onDragStart={() => setDraggedItem(props)}
+                            { ...props }/>) }
                     </KanBanBoardColumn>
-                    <KanBanBoardColumn className="column-done" title="已完成">
-                        { doneList.map(props => <BoardCard  key={ props.title } { ...props }/>) }
+                    <KanBanBoardColumn 
+                        className="column-done" 
+                        title="已完成"
+                        onDrop={ handleDrop }
+                        setIsDragSource={(isDragSource) => setDragSource(isDragSource? COLUMN_KEY_DONE: '')}
+                        setIsDragTarget={(isDragTarget) => setDragTarget(isDragTarget? COLUMN_KEY_DONE: '')}>
+                        { doneList.map(props => <BoardCard  key={ props.title } 
+                            onDragStart={() => setDraggedItem(props)}
+                            { ...props }/>) }
                     </KanBanBoardColumn>
                 </>)}
                 
