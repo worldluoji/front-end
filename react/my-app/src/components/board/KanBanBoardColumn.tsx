@@ -1,15 +1,31 @@
-import React, { ReactNode } from "react"
+import React, { ReactNode, useState } from "react"
+import BoardCard, { BoardCardProps } from './BoardCard'
+import BoardNewCard from "./BoardNewCard"
 
 interface KanbanColumnProps {
     children?: ReactNode
     className: string
-    title: string | JSX.Element
+    title: string
+    cardList: BoardCardProps[]
+    canAddNew?: boolean
     setIsDragSource?: (arg0: boolean) => void
     setIsDragTarget?: (arg0: boolean) => void
     onDrop?: (evt: React.DragEvent<HTMLElement>) => void
+    setDraggedItem?: React.Dispatch<React.SetStateAction<BoardCardProps>>
 }
+
 export default function KanBanBoardColumn(kanbanColumnProps: KanbanColumnProps) {
     const combinedClassName = `kanban-column ${kanbanColumnProps.className}`
+    const [showAdd, setShowAdd] = useState(false)
+    const handleAdd = (evt: React.FormEvent<HTMLButtonElement>) => {
+        setShowAdd(true)
+    }
+
+    const handleSubmit = (title: string) => {
+        kanbanColumnProps.cardList.unshift({ title, status: new Date().toLocaleString() })
+        setShowAdd(false)
+    }
+
     return (
         <section
             onDragStart={() => kanbanColumnProps.setIsDragSource && kanbanColumnProps.setIsDragSource(true)}
@@ -40,7 +56,18 @@ export default function KanBanBoardColumn(kanbanColumnProps: KanbanColumnProps) 
             } }
             className={combinedClassName}>
             <h2>{kanbanColumnProps.title}</h2>
-            <ul>{kanbanColumnProps.children}</ul>
+            { kanbanColumnProps.canAddNew && 
+                (<button onClick={ handleAdd } disabled={ showAdd }>&#8853; 添加新卡片</button>)
+            }
+            { showAdd && <BoardNewCard onAdd={ handleSubmit }/> }
+            <ul>
+                { kanbanColumnProps.cardList.map(props => 
+                    <BoardCard key={ props.title } 
+                               onDragStart={() => kanbanColumnProps.setDraggedItem && kanbanColumnProps.setDraggedItem(props)}
+                               { ...props }
+                    />) 
+                }
+            </ul>
         </section>
     )
 }

@@ -5,11 +5,12 @@ export const HOUR = 60 * MINUTE
 export const DAY = 24 * HOUR
 export const UPDATE_INTERVAL = MINUTE
 
-interface BoardCardProps {
+export interface BoardCardProps {
     title: string
     status: string
-    onDragStart: React.DragEventHandler
+    onDragStart?: React.DragEventHandler
 }
+
 export default function BoardCard(boardCardProps: BoardCardProps) {
     const [displayTime, setDisplayTime] = useState(boardCardProps.status)
 

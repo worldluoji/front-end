@@ -1,10 +1,11 @@
 import React, { useState } from "react"
+import { BoardCardProps } from "./BoardCard"
 
 interface BoardCardOperations {
-    onSubmit: (title: string) => void
+    onAdd: (title: string) => void
 }
-// type Submit = (title: string) => void
-export default function BoardNewCard({ onSubmit }: BoardCardOperations) {
+
+export default function BoardNewCard({ onAdd }: BoardCardOperations) {
     const [title, setTitle] = useState('')
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = (evt) => {
         setTitle(evt.target.value)
@@ -12,7 +13,7 @@ export default function BoardNewCard({ onSubmit }: BoardCardOperations) {
 
     const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (evt) => {
         if (evt.key === 'Enter') {
-            onSubmit(title)
+            onAdd(title)
         }
     }
 
