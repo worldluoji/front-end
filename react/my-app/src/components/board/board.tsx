@@ -8,6 +8,10 @@ const DATA_STORE_KEY = 'kanban-data-store'
 
 function Board() {
 
+    /**
+    * 这四个 state 是标题栏和 KanbanBoard 的共享应用状态，需要放在 标题栏和 KanbanBoard 共同的父组件 Board 中（虽然我们没有把 标题栏抽取成独立的组件，但逻辑上是一样的）。
+    * 这个过程被称作状态提升（Lifting State Up），也是我们在做 React 组件设计开发时会经常用到的一个技巧。
+    */
     const [todoList, setTodoList] = useState([
         { title: '开发任务-1', status: '2022-05-22 18:15' },
         { title: '开发任务-3', status: '2022-05-22 13:15' },
