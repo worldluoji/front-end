@@ -33,11 +33,16 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Eject 的字面意思是弹出，比如飞行员从战斗机中紧急弹出就是这个词。执行了这个命令，就代表你从 CRA 下车了：这个项目不再依赖 CRA，CRA 封装的各种工程化功能，都被打散加入到这个项目的代码中，你可以根据需要做深度定制。
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+根据打散出来的文件，可以看到 CRA 包含的基本功能：
+- 基于 Webpack 的开发服务器和生产环境构建；
+- 用 Babel 做代码转译（Transpile）；
+- 基于 Jest 和 @testing-library/react 的自动化测试框架；
+- ESLint 代码静态检查；
+- 以 PostCSS 为首的 CSS 后处理器。
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+https://time.geekbang.org/column/article/574579
 
 ## Learn More
 
