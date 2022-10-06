@@ -18,6 +18,7 @@ function walk(parent, fn) {
     }
 }
 
+// 这里其实就是把模板里的 CirclePic 转化为 circle-pic，找到对应的circle-pic.vue组件
 function toHyphenCase(str) {
     const char = str.charAt(0)
     const newStr = char.toLowerCase() + str.slice(1)
@@ -74,13 +75,16 @@ export default class Generator {
 
     buildScript() {
         const code = new Code
-        const resolve = this.options.resolve || ((elementName) => { 
+        const resolve = this.options.resolve || ((elementName) => {
+            // 以Tpl_开头，则说明也是一个模板文件，把Tpl_去掉，拿模板名
             if (elementName.indexOf('Tpl_') > -1) {
                 return `./${elementName.slice(4)}.tpl`
             } else {
                 return `./elements/${toHyphenCase(elementName)}.vue`
             }
         })
+
+        // 把依赖全部import
         this.depencencies.forEach(dep => {
             code.addLine(`import ${dep} from '${resolve(dep)}'`)
         })
