@@ -291,3 +291,7 @@ example2:
 当最大宽度为350px时，大小变为200px,且颜色变为黑色
 
 media query参考： https://developer.mozilla.org/zh-CN/docs/Web/CSS/Media_Queries/Using_media_queries
+
+
+15. input框文本居右
+<input type="text" value="xxx"  size="100" style="text-align:right" />
