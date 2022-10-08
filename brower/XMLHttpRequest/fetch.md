@@ -51,3 +51,4 @@ fetch API 在设计时主要考虑点在哪里？
 ## 参考
 - https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
 - https://juejin.cn/post/6847009771170562062
+- https://www.ruanyifeng.com/blog/2020/12/fetch-tutorial.html

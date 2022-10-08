@@ -6,7 +6,7 @@
 Access-Control-Allow-Credentials 响应头用于在请求要求包含 credentials（Request.credentials 的值为 include）时，
 告知浏览器是否可以将对请求的响应暴露给前端 JavaScript 代码。
 
-当请求的 credentials 模式（Request.credentials）为 include 时，
+当请求的 credentials 模式（Request.credentials）为 include 时，表示跨域请求将发送 Cookie，
 浏览器仅在响应标头 Access-Control-Allow-Credentials 的值为 true 的情况下将响应暴露给前端的 JavaScript 代码。
 
 Credentials 可以是 cookies、authorization headers 或 TLS client certificates。
