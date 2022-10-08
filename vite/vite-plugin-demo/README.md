@@ -22,9 +22,9 @@ npm install vite --save-dev
 此时执行npm run dev 即可在浏览器运行 index.html，
 其实就是 vite 把项目根目录当作 http 服务器根目录起了一个 Koa 而已。
 
-4. 添加一个 vite.config.jss
+4. 添加一个 vite.config.js
 
-5. 编写自定义插件，并添加到vite.config.jss中
+5. 编写自定义插件，并添加到vite.config.js中
 
 参考 vite-plugin-json5.js
 
