@@ -15,7 +15,7 @@ export const movieStore = defineStore("movie", {
     },
   },
   actions: {
-    addMovie(movie) {
+    addMovie(movie: string) {
       this.movieList.push(movie);
     },
   },
