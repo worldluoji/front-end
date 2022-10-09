@@ -1,4 +1,5 @@
-// https://react-redux.js.org/using-react-redux/usage-with-typescript
+// typescript参考： https://react-redux.js.org/using-react-redux/usage-with-typescript
+// react-redux浏览器插件：https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
 import {addCard, removeCard, Card, CardListDispatch} from './CardStore'
 import React, {useState} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
