@@ -89,6 +89,14 @@ React.createElement(
   
 这与Vue是类似的。
 
+React 从 17 版本开始已经启用全新的 JSX 运行时来替代 React.createElement
+
+作为编译输入，JSX 的语法没有改变，编译输出无论是 jsx-runtime 还是 React.createElement 函数，它们的返回值也同样都是 React 元素。
+可见，代码编译器为开发者隐藏了新旧 API 的差异。这个变化并不影响已有的对 JSX 的理解。
+
+另外，如果是开发者手工创建 React 元素，依旧应该调用 React.createElement 。
+这个 API 并不会被移除。而 jsx-runtime 代码只应由编译器生成，开发者不应直接调用这个函数。
+
 <br>
 
 ### 规则
