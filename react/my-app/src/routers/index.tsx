@@ -12,7 +12,7 @@ import Carousel from '../components/carousel/carousel';
 import Turntable from '../components/turntable/turntable';
 import SearchBox from '../components/searchbox/SearchBox';
 import Board from '../components/board/board';
-import CardList from '../components/redux/CardList';
+import CardList from '../components/redux/ReduxDemo';
 
 const Root = () => (
     <BrowserRouter>

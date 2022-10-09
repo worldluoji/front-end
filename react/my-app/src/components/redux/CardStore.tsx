@@ -36,5 +36,6 @@ const store = configureStore({
 
 store.subscribe(() => console.log(store.getState()))
 
+export type CardListDispatch = typeof store.dispatch
 export default store
 

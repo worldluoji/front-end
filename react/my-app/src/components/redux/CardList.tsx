@@ -1,39 +1,42 @@
-import store, {addCard, removeCard, Card} from './CardStore'
-import React, {useState} from "react"
+// https://react-redux.js.org/using-react-redux/usage-with-typescript
+import {addCard, removeCard, Card, CardListDispatch} from './CardStore'
+import React, {useState} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
-store.dispatch(addCard({ title: '开发任务-1' }))
-// [{ title: '开发任务-1' }]
-store.dispatch(addCard({ title: '测试任务-2' }))
-// [{ title: '测试任务-2' }, { title: '开发任务-1' }]
-store.dispatch(removeCard({ title: '开发任务-1' }))
-// [{ title: '测试任务-2' }]
+// store.dispatch(addCard({ title: '开发任务-1' }))
+// // [{ title: '开发任务-1' }]
+
 const CardList = () => {
-    const [cardList, setCardList] = useState<Card[]>(store.getState())
+    const cardList = useSelector((state: Card[]) => state)
+    
+    const dispatch:CardListDispatch = useDispatch()
 
     const [newTask, setNewTask] = useState('')
     const onChange:React.ChangeEventHandler<HTMLInputElement> = (e) => {
         setNewTask(e.target.value)
     }
-    const onClick = () => {
+    const onAdd = () => {
         if (!newTask || newTask === '') {
             alert('输入不能为空')
             return
         }
-        store.dispatch(addCard({ title: newTask }))
-        setCardList(store.getState())
+        dispatch(addCard({ title: newTask }))
     }
     return (
         <div>
             <ul>
                 { cardList && cardList.map(c => {
                     return (
-                        <li key={c.title}>{c.title}</li>
+                        <li key={c.title}>
+                            {c.title}
+                            <button onClick={() => {dispatch(removeCard({ title: c.title }))}}>删除</button>
+                        </li>
                     )
                 })}
             </ul>
             <div>
                 <input type="text" onChange={onChange}/>
-                <button onClick={onClick}>新增</button>
+                <button onClick={onAdd}>新增</button>
             </div>
         </div>
     )
