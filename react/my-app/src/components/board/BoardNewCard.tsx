@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { BoardCardProps } from "./BoardCard"
 
 interface BoardCardOperations {
     onAdd: (title: string) => void

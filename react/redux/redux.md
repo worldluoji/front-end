@@ -15,6 +15,18 @@ Redux 引入的概念其实并不多，主要就是三个：State、Action 和 R
 - 跨组件的状态共享：当某个组件发起一个请求时，将某个 Loading 的数据状态设为 True，另一个全局状态组件则显示 Loading 的状态。
 - 同组件多个实例的状态共享：某个页面组件初次加载时，会发送请求拿回了一个数据，切换到另外一个页面后又返回。这时数据已经存在，无需重新加载。设想如果是本地的组件 state，那么组件销毁后重新创建，state 也会被重置，就还需要重新获取数据。
 
+<br>
+
+## 什么时候使用 Redux？
+一般情况下，当你的 React 项目足够小，引入 Redux 的成本要大于收益。
+只有你预期项目规模会逐渐增大，或者项目已经是大中型的体量了，这时可以考虑引入 Redux。
+
+Redux 鼓励全局只有单一 store，所以比较适合管理全局状态。
+
+尤其有一种情况，当你发现，你不得不把项目中大部分组件的 state 都提升到根组件上时，全局状态会不断膨胀，那你就有可能亟需引入 Redux 了。
+
+<br>
+
 ## create Redux store
 The Redux store is an object which holds and manages application state. 
 
@@ -57,19 +69,20 @@ store.dispatch(loginAction()) // 等价于 store.dispatch({ type: 'LOGIN' });
 
 
 ## Reducer
-Reducers in Redux are responsible for the state modifications that take place in response to actions. A reducer takes state and action as arguments, and it always returns a new state.
+Reducers in Redux are responsible for the state modifications that take place in response to actions. 
+A reducer takes state and action as arguments, and it always returns a new state.
 
-在 Redux 中，所有对于 Store 的修改都必须通过这样一个公式去完成，即通过 Reducer 完成，而不是直接修改 Store.
+在 Redux 中，所有对于 Store 的修改都必须通过这样一个公式去完成，即使用dispatch(action)通过 Reducer 完成，而不是直接修改 Store.
 
-It is important to see that this is the only role of the reducer. It has no side effects — it never calls an API endpoint and it never has any hidden surprises. The reducer is simply a pure function that takes state and action, then returns new state.
+It is important to see that this is the only role of the reducer. It has no side effects — it never calls an API endpoint and it never has any hidden surprises. 
+The reducer is simply a pure function that takes state and action, then returns new state.
 
-Another key principle in Redux is that state is <strong>read-only</strong>. In other words, the reducer function must always return a new copy of state and never modify state directly. Redux does not enforce state immutability, however, you are responsible for enforcing it in the code of your reducer functions
+Another key principle in Redux is that state is <strong>read-only</strong>. 
+In other words, the reducer function must always return a new copy of state and never modify state directly. 
 
 example: Handle Multiple Actions
 
 ```
-
-
 const defaultState = {
   authenticated: false
 };

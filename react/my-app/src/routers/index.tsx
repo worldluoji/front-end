@@ -12,6 +12,7 @@ import Carousel from '../components/carousel/carousel';
 import Turntable from '../components/turntable/turntable';
 import SearchBox from '../components/searchbox/SearchBox';
 import Board from '../components/board/board';
+import CardList from '../components/redux/CardList';
 
 const Root = () => (
     <BrowserRouter>
@@ -26,6 +27,7 @@ const Root = () => (
             <Route path="/turntable" element={<Turntable />} />
             <Route path="/searchbox" element={<SearchBox />} />
             <Route path="/board" element={<Board />} />
+            <Route path="/cardlist" element={<CardList />} />
             {/* v6 router之前的老版本： <Route path=".*" component={ App }/>, 且不需要Routes包裹 */}
          </Routes>
     </BrowserRouter>
