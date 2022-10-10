@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ifc demo2</title>
+</head>
+<body>
+    <div style="background-color:#e5edff;">
+        <img src="https://img-blog.csdnimg.cn/20190723163707640.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L01lbmdfcWk4ODE2,size_16,color_FFFFFF,t_70" />
+        <span style="background-color: red;">x</span>
+    </div>
+    <div>
+        <p>
+            产生问题的原因
+
+                1、普通的内联元素（非 inline-block 元素）的高度是由 line-height 直接决定的。
+
+                2、默认的内联元素都是基线对齐，也就是字符 x 的下边缘。
+
+                3、图片是一个 inline-block 元素，他的基线就是 margin box，也就是图片的下边缘。
+
+                4、所以这里的图片就和 x 的下边缘对齐了。
+
+                5、文本节点也是有高度的，并根据高度会产生行距，即上下间隙，所以就撑大了 div。
+        </p>
+        <p>
+
+            解决问题的方案
+
+                1、将图片变成 block 元素，就不存在这个问题了。
+
+                2、改变 vertical-align 对齐方式，如 top bottom middle 都可以。
+
+                3、将 line-height 设置为为足够小，例如 0，这样文本的高度就为 0 就不会撑大 div 了。
+
+                4、将 font-size 设置为为足够小，间接计算出的 line-height 就为 0 ，也就不会撑大 div 了。
+        </p>
+    </div>
+</body>
+</html>

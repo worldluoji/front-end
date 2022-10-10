@@ -74,9 +74,31 @@ margin合并，MDN是这样定义的：
 ## IFC
 既然块级元素会触发BFC，那么内联元素会触发的则是IFC
 
-IFC 只有在一个块元素中仅包含内联级别元素时才会生成
+IFC(Inline Formatting Context) 直译为内联格式化上下文。
+我们可以简单理解为每个盒子都有一个 FC 特性，不同的 FC 值代表一组盒子中不同的排列方式。
 
-### IFC原理：
-- 内部的box 会在水平方向排布
-- 这些box 之间的水平方向的 margin、boder、padding 都有效
-- Box垂直对齐方式：以它们的底部、顶部对齐，或以它们里面的文本的基线（baseline）对齐（默认，文本与图片对其），例：line-heigth与vertical-align。
+有的 FC 表示盒子从上到下垂直排列，有的 FC 表示盒子从左到右水平排列等等。而 IFC 则是表示盒子从左到右的水平排列方式。
+
+<img src="css-ifc-box.jpeg" />
+
+IFC 只有在一个块元素中仅包含内联级别元素时才会生成。
+
+### IFC原理
+
+<img src="css-ifc-baseline.jpeg" />
+
+水平垂直方向上的排列。
+- 内联元素在水平线上一个接一个排列，默认通过基线排列。
+- 如果行内元素能在一行装下，子元素的排列方式由 text-align 决定。
+- 如果行内元素不能在一行装下，默认此行内框会被分割，根据 white-space 决定。
+
+内部元素水平方向上的 margin、padding、border 有效，垂直方向上无效。
+
+垂直方向上有多种对齐方式: 顶部、底部、基线，根据 vertical-align 属性决定。默认是baseline基线对齐。
+
+line box 的计算规则：
+- line box 的宽度由包含其元素的宽度决定。
+- line box 的高度受当前行所有内联元素的高度影响，可能比内部最高的元素还要高（由基线对齐所导致）。
+
+## 参考：
+https://mengsixing.github.io/blog/css-ifc.html#css-%E5%86%85%E8%81%94%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%B8%8A%E4%B8%8B%E6%96%87

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ifc demo1</title>
+</head>
+<body>
+    <div style="background-color:#e5edff">
+        <div
+            style="display:inline-block;width: 100px;height: 100px;background-color: orange"
+        >
+            content
+        </div>
+        <div
+            style="display:inline-block;width: 100px;height: 100px;background-color: red"
+        ></div><span style="background-color: red;">x</span>
+    </div>
+    <div>
+        <p>
+            产生问题的原因:
+            <ul>
+            <li>1、内联元素的排列方式，默认是按基线对齐。</li>
+            <li>2、没有内容的 inline-block 元素的基线是 margin box 的底部，也就是方块的底部</li>
+            <li>3、有内容的 inline-block 元素的基线就是元素里面最后一行内联元素的基线</li>
+            <li>4、所以这里的 content 就和第二个盒子的底部对齐了，div 就被撑大了</li>
+            </ul>
+            解决办法：
+            <ul>
+            <li>1、给第二个盒子加一个空白节点，如：&nbsp</li>
+            <li>2、改变两个盒子的 vertical-align 对齐方式，如 top bottom middle 都可以（如果只改一个，也会出现问题 1 中的问题）</li>
+            </ul>
+        </p>
+    </div>
+</body>
+</html>
