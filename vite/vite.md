@@ -1,4 +1,15 @@
 # vite
+## ESM
+ES6 Module 也被称作 ES Module(或 ESM)， 是由 ECMAScript 官方提出的模块化规范，作为一个官方提出的规范，
+ES Module 已经得到了现代浏览器的内置支持。
+在现代浏览器中，如果在 HTML 中加入含有type="module"属性的 script 标签，
+那么浏览器会按照 ES Module 规范来进行依赖加载和模块解析，这也是 Vite 在开发阶段实现 no-bundle 的原因，
+由于模块加载的任务交给了浏览器，即使不打包也可以顺利运行模块代码。
+
+ESM demo查看 esmdemo
+
+ES Module 的浏览器兼容性如今已经相当好了，覆盖了 90% 以上的浏览器份额，包括Chrome, Safari, Edge, Firefox等主流浏览器。
+可在<a href="https://caniuse.com/">CanIUse</a> 上查看详情数据。
 
 ## 为什么使用vite
 由于 webpack 在项目调试之前，要把所有文件的依赖关系收集完，打包处理后才能启动测试，
