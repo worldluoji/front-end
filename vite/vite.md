@@ -107,6 +107,10 @@ Vite 的主要目的就是提供一个调试服务器。Vite 也可以和 Vue �
 Vite 能够做到快的原因，还有一部分是因为使用了 esbuild 去解析 JavaScript 文件。esbuild 是一个用 Go 语言实现的 JavaScript 打包器，支持 JavaScript 和 TypeScript 语法，现在前端工程化领域的工具也越来越多地使用 Go 和 Rust 等更高效的语言书写，这也是性能优化的一个方向。
 
 
+## 注意点
+在开发阶段 Vite 通过 Dev Server 实现了不打包的特性，而在生产环境中，Vite 依然会基于 Rollup 进行打包，
+并采取一系列的打包优化手段。
+
 ## vite 资料
 vite官方收集的一些和vite相关的项目，包括插件，模板，都分类整理好的，地址如下：
 ```
