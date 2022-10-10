@@ -1,0 +1,90 @@
+<html>
+	<head>
+		<title>images lazyloader by Intersectionobserver</title>
+	</head>
+	<body>
+        <div>
+            <p>图片懒加载</p>
+            <div class=container>
+                <img id="img1" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img2" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img3" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img4" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img5" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img6" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img7" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img8" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img9" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img10" data-src="./test.jpg" />
+            </div>
+            <div class=container>
+                <img id="img11" data-src="./test.jpg" />
+            </div>
+        </div>
+
+        <div class="hidden">
+            <script>
+                function query(selector) {
+                    return Array.from(document.querySelectorAll(selector));
+                }
+
+                let observer = new IntersectionObserver(
+                    (entries) =>  {
+                        entries.forEach(function(entry) {
+                            //  如果看不到就不往后执行
+                            if (entry.intersectionRatio <= 0) {
+                                return
+                            }
+                            let e = entry.target
+                            console.log('see image', e.id)
+                            if (!e.src) {
+                                // h5新特性，只要以 data- 开头即添加了自定义属性之后，可以通过元素的 dataset 属性来访问自定义属性的值
+                                e.src = e.dataset.src
+                            }
+                            observer.unobserve(e)
+                        })
+                    },
+                    { threshold: [0, 0.25, 0.5, 0.75, 1] } // 用户可以自定义这个数组。比如，[0, 0.25, 0.5, 0.75, 1]就表示当目标元素 0%、25%、50%、75%、100% 可见时，会触发回调函数。
+                )
+
+                // 启动监听所有img标签
+                query('img').forEach(function (item) {
+                    observer.observe(item)
+                })
+            </script>
+        </div>
+    </body>
+    <style>
+        .container {
+            width: 25vw;
+            margin-top: 10px;
+        }
+
+		img {
+            max-width: 100%;
+            min-height:25vh;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</html>
