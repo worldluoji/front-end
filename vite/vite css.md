@@ -119,3 +119,37 @@ export default {
 - cssnano: 主要用来压缩 CSS 代码，跟常规的代码压缩工具不一样，它能做得更加智能，比如提取一些公共样式进行复用、缩短一些常见的属性值等等。
 
 关于 PostCSS 插件，这里还给大家推荐一个站点：www.postcss.parts/
+
+
+## 4. CSS In JS
+社区中有两款主流的CSS In JS 方案: styled-components和emotion。
+
+对于 CSS In JS 方案，在构建侧我们需要考虑选择器命名问题、DCE(Dead Code Elimination 即无用代码删除)、代码压缩、生成 SourceMap、服务端渲染(SSR)等问题，
+而styled-components和emotion已经提供了对应的 babel 插件来解决这些问题，我们在 Vite 中要做的就是集成这些 babel 插件。
+```
+// vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    react({
+      babel: {
+        // 加入 babel 插件
+        // 以下插件包都需要提前安装
+        // 当然，通过这个配置你也可以添加其它的 Babel 插件
+        plugins: [
+          // 适配 styled-component
+          "babel-plugin-styled-components"
+          // 适配 emotion
+          "@emotion/babel-plugin"
+        ]
+      },
+      // 注意: 对于 emotion，需要单独加上这个配置
+      // 通过 `@emotion/react` 包编译 emotion 中的特殊 jsx 语法
+      jsxImportSource: "@emotion/react"
+    })
+  ]
+})
+```
