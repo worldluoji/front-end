@@ -29,6 +29,48 @@ webpack 提供的打包功能可以帮助我们更好地组织开发代码，但
 
 <br>
 
+## vite架构
+<img src="vite结构图.webp" />
+
+### EsBuild
+Vite 在开发阶段使用EsBuild成功启动项目并获得极致的性能提升，
+生产环境处于稳定性考虑采用了功能更加丰富、生态更加成熟的 Rollup 作为依赖打包工具。
+
+为什么生产不用Esbuild? 因为EsBuild作为打包工具也有一些缺点:
+- 不支持降级到 ES5 的代码。这意味着在低端浏览器代码会跑不起来。
+- 不支持 const enum 等语法。这意味着单独使用这些语法在 esbuild 中会直接抛错。
+- 不提供操作打包产物的接口，像 Rollup 中灵活处理打包产物的能力(如renderChunk钩子)在 Esbuild 当中完全没有。
+- 不支持自定义 Code Splitting 策略。传统的 Webpack 和 Rollup 都提供了自定义拆包策略的 API，而 Esbuild 并未提供，从而降级了拆包优化的灵活性。
+
+#### TS(X)/JS(X) 单文件编译
+而在 TS(X)/JS(X) 单文件编译上面，Vite 也使用 Esbuild 进行语法转译，也就是将 Esbuild 作为 Transformer 来用。
+可以在架构图中Vite Plugin Pipeline看到。
+
+也就是说，Esbuild 转译 TS 或者 JSX 的能力通过 Vite 插件提供，这个 Vite 插件在开发环境和生产环境都会执行，因此，我们可以得出下面这个结论:
+Vite 已经将 Esbuild 的 Transformer 能力用到了生产环境。尽管如此，对于低端浏览器场景，Vite 仍然可以做到语法和 Polyfill 安全。
+
+这部分能力用来替换原先 Babel 或者 TSC 的功能，因为无论是 Babel 还是 TSC都有性能问题，大家对这两个工具普遍的认知都是: 慢，太慢了。
+
+Esbuild Transfomer 能带来巨大的性能提升，但其自身也有局限性，最大的局限性就在于 TS 中的类型检查问题。这是因为 Esbuild 并没有实现 TS 的类型系统，在编译 TS(或者 TSX) 文件时仅仅抹掉了类型相关的代码，暂时没有能力实现类型检查。
+
+也因此，如果使用ts, vite build之前会先执行tsc命令，也就是借助 TS 官方的编译器进行类型检查, 可参考vite-react-demo.
+
+#### 代码压缩
+从架构图中prepare plugins for rollup中可以看到，在生产环境中 Esbuild 压缩器通过插件的形式融入到了 Rollup 的打包流程中
+
+为什么 Vite 要将 Esbuild 作为生产环境下默认的压缩工具呢？因为压缩效率实在太高了！
+
+传统的方式都是使用 Terser 这种 JS 开发的压缩器来实现，在 Webpack 或者 Rollup 中作为一个 Plugin 来完成代码打包后的压缩混淆的工作。但 Terser 其实很慢，主要有 2 个原因。
+- 压缩这项工作涉及大量 AST 操作，并且在传统的构建流程中，AST 在各个工具之间无法共享，比如 Terser 就无法与 Babel 共享同一个 AST，造成了很多重复解析的过程。
+- JS 本身属于解释性 + JIT（即时编译） 的语言，对于压缩这种 CPU 密集型的工作，其性能远远比不上 Golang 这种原生语言。
+
+压缩一个大小为3.2 MB的库，Terser 需要耗费8798 ms，而 Esbuild 仅仅需要361 ms，压缩效率较 Terser 提升了二三十倍，
+并且产物的体积几乎没有劣化，因此 Vite 果断将Esbuild内置为默认的压缩方案。
+
+### 构建基石——Rollup
+
+<br>
+
 ## vite原理
 三个问题：
 - 浏览器的 module 功能有一些限制需要额外处理。浏览器识别出 JavaScript 中的 import 语句后，
