@@ -68,11 +68,41 @@ Esbuild Transfomer 能带来巨大的性能提升，但其自身也有局限性�
 并且产物的体积几乎没有劣化，因此 Vite 果断将Esbuild内置为默认的压缩方案。
 
 ### 构建基石——Rollup
+ESM 已经得到众多浏览器的原生支持，但生产环境做到完全no-bundle也不行，会有网络性能问题。为了在生产环境中也能取得优秀的产物性能，Vite 默认选择在生产环境中利用 Rollup 打包，并基于 Rollup 本身成熟的打包能力进行扩展和优化，主要包含 3 个方面:
+
+1. CSS 代码分割。如果某个异步模块中引入了一些 CSS 代码，Vite 就会自动将这些 CSS 抽取出来生成单独的文件，提高线上产物的缓存复用率。
+
+2. 自动预加载。Vite 会自动为入口 chunk 的依赖自动生成预加载标签<link rel="moduelpreload"> ，如:
+```
+<head>
+  <!-- 省略其它内容 -->
+  <!-- 入口 chunk -->
+  <script type="module" crossorigin src="/assets/index.250e0340.js"></script>
+  <!--  自动预加载入口 chunk 所依赖的 chunk-->
+  <link rel="modulepreload" href="/assets/vendor.293dca09.js">
+</head>
+```
+这种适当预加载的做法会让浏览器提前下载好资源，优化页面性能。
+
+3. 异步 Chunk 加载优化。
+在异步引入的 Chunk 中，通常会有一些公用的模块，如现有两个异步引入的 Chunk: A 和 B，而且两者有一个公共依赖 C
+
+一般情况下，Rollup 打包之后，会先请求 A，然后浏览器在加载 A 的过程中才决定请求和加载 C，
+但 Vite 进行优化之后，请求 A 的同时会自动预加载 C，通过优化 Rollup 产物依赖加载方式节省了不必要的网络开销。
+
+#### 插件机制
+无论是开发阶段还是生产环境，Vite 都根植于 Rollup 的插件机制和生态。
+
+在开发阶段，Vite 借鉴了 WMR 的思路，自己实现了一个 Plugin Container，用来模拟 Rollup 调度各个 Vite 插件的执行逻辑，
+而 Vite 的插件写法完全兼容 Rollup，因此在生产环境中将所有的 Vite 插件传入 Rollup 也没有问题。
+
+反过来说，Rollup 插件却不一定能完全兼容 Vite(这部分我们会在插件开发小节展开来说)。
+不过，目前仍然有不少 Rollup 插件可以直接复用到 Vite 中，你可以通过这个站点查看所有兼容 Vite 的 Rollup 插件: vite-rollup-plugins.patak.dev/ 。
 
 <br>
 
-## vite原理
-三个问题：
+## mini vite 开发实战
+首先需要解决三个问题：
 - 浏览器的 module 功能有一些限制需要额外处理。浏览器识别出 JavaScript 中的 import 语句后，
 会发起一个新的网络请求去获取新的文件，所以只支持 /、./ 和…/ 开头的路径。浏览器并不知道 Vue 是从哪来，我们第一个要做的，就是分析文件中的 import 语句。如果路径不是一个相对路径或者绝对路径，那就说明这个模块是来自 node_modules，我们需要去 node_modules 查找这个文件的入口文件后返回浏览器。
 - ./App.vue 是相对路径，可以找到文件，但是浏览器不支持 .vue 文件的解析;
