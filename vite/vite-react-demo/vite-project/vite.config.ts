@@ -1,6 +1,7 @@
 import { defineConfig, normalizePath } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import autoprefixer from 'autoprefixer'
 
 const variablePath = normalizePath(path.resolve('./src/global.scss'))
 
@@ -15,6 +16,14 @@ export default defineConfig({
       scss: {
         additionalData: `@import "${variablePath}";`
       }
+    },
+    postcss: {
+      plugins: [
+        autoprefixer({
+          // 指定目标浏览器
+          overrideBrowserslist: ['Chrome > 40', 'ff > 31', 'ie 11']
+        })
+      ]
     }
   }
 })

@@ -77,3 +77,45 @@ export default {
 ### 3. PostCSS
 一般你可以通过 postcss.config.js 来配置 postcss ，不过在 Vite 配置文件中已经提供了 PostCSS 的配置入口，
 我们可以直接在 Vite 配置文件中进行操作。
+
+安装一个常用的 PostCSS 插件——autoprefixer:
+```
+npm i autoprefixer -D
+```
+这个插件主要用来自动为不同的目标浏览器添加样式前缀，解决的是浏览器兼容性的问题。
+
+vite.config.ts 增加如下的配置:
+```
+import autoprefixer from 'autoprefixer';
+
+export default {
+  css: {
+    // 进行 PostCSS 配置
+    postcss: {
+      plugins: [
+        autoprefixer({
+          // 指定目标浏览器
+          overrideBrowserslist: ['Chrome > 40', 'ff > 31', 'ie 11']
+        })
+      ]
+    }
+  }
+}
+```
+执行npm run build命令进行打包，可以看到产物中自动补上了浏览器前缀，如:
+```
+._header_kcvt0_1 {
+  <!-- 前面的样式省略 -->
+  -webkit-text-decoration: dashed;
+  -moz-text-decoration: dashed;
+  text-decoration: dashed;
+}
+```
+
+由于有 CSS 代码的 AST (抽象语法树)解析能力，PostCSS 可以做的事情非常多，甚至能实现 CSS 预处理器语法和 CSS Modules，
+除了刚刚提到的autoprefixer插件，常见的插件还包括:
+- postcss-pxtorem： 用来将 px 转换为 rem 单位，在适配移动端的场景下很常用。
+- postcss-preset-env: 通过它，你可以编写最新的 CSS 语法，不用担心兼容性问题。
+- cssnano: 主要用来压缩 CSS 代码，跟常规的代码压缩工具不一样，它能做得更加智能，比如提取一些公共样式进行复用、缩短一些常见的属性值等等。
+
+关于 PostCSS 插件，这里还给大家推荐一个站点：www.postcss.parts/
