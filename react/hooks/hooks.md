@@ -319,5 +319,5 @@ const MyComp = () => {
   return (
     <div>My Component</div>
   );
-};s
+};
 ```
