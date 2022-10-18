@@ -1,6 +1,6 @@
 
-import React,{ useCallback } from "react";
-import useCounter from "./useCounter";
+import React from "react";
+import useCounter from "../../hooks/useCounter";
 
 interface Counter {
     count: number;
