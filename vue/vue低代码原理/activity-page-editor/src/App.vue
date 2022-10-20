@@ -14,6 +14,7 @@
 <script setup>
 import { sfc } from 'element-factory'
 import Render from './components/Render.vue'
+// Panel为属性面板
 import Panel from './components/Panel.vue'
 // import schema from './schemas/card.mjs'
 import list from './schemas/list.mjs'
@@ -21,11 +22,14 @@ import data from './data.mjs'
 import { onMounted, ref } from 'vue'
 import { parse, idMap } from './utils.mjs'
 
+// 当前选中的组件
 const currentComponent = ref(null)
 const schema = [JSON.parse(JSON.stringify(list))]
 
+// 存放楼层数据，用于页面展示，先通过parse将json转化为xml,实际就转到了element-factory
 let xml = ref(schema.map(ss => parse(ss, ['List'])))
 
+// schema-change 事件定义在 elements/wrapper.vue中, 点击warpper时会触发这个事件，而这里的idMap是在解析json schema时每个组件的id，这样就将面板切换到了当前组件的面板
 onMounted(() => {
   document.body.addEventListener('schema-change', (e) => {
     currentComponent.value = idMap.get(e.id)
@@ -104,6 +108,7 @@ function onAddBottom() {
   }
 }
 
+// 出码
 function createCode(xml) {
   if ('download' in document.createElement('a')) {
     let eleLink = document.createElement('a');
