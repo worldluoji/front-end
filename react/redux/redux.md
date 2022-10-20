@@ -73,6 +73,7 @@ Reducers in Redux are responsible for the state modifications that take place in
 A reducer takes state and action as arguments, and it always returns a new state.
 
 在 Redux 中，所有对于 Store 的修改都必须通过这样一个公式去完成，即使用dispatch(action)通过 Reducer 完成，而不是直接修改 Store.
+可以把Reducer看作一个同步函数，修改state。
 
 It is important to see that this is the only role of the reducer. It has no side effects — it never calls an API endpoint and it never has any hidden surprises. 
 The reducer is simply a pure function that takes state and action, then returns new state.
