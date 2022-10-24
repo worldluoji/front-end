@@ -3,7 +3,14 @@
 ### 使用
 
 1. 运行命令
-npm run start
+```
+cd workspace
+vite
+```
+如果没有安装vite，则需要
+```
+npm install -g vite
+```
 
 2. 打开 workspace/card.tpl 修改文件查看效果
 
