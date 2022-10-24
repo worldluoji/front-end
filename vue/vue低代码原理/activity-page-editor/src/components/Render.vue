@@ -15,9 +15,8 @@
 <script>
 import factory from 'element-factory'
 import Blank from './blank.vue'
-import { parse } from '../utils.mjs'
 
-// 这里，通过构造<script type="module"> js </script>，把各个依赖引入
+// 这里，通过构造script type="module" js把各个依赖引入
 function buildDeps(deps) {
     return deps.map(dep => {
         const { name, value } = dep
