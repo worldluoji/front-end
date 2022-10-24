@@ -22,6 +22,8 @@ function buildDeps(deps) {
         const { name, value } = dep
         let js = factory(value, { browser: true })
             .replace(/\"vue\"/g, '"/node_modules/.vite/deps/vue.js"')
+
+        // 这里__default__,就是 factory 代码模版里写的 export default方法
         js += `;\n window.__${name}__ = __default__`
         const script = document.createElement('script')
         script.type = 'module'
@@ -74,6 +76,7 @@ export default {
                     script.type = 'module'
                     script.innerHTML = js
                     window[`__render${this.name}__`] = (Component) => {
+                        console.log('cc', Component)
                         this.$.components.Current = Component
                         this.current = 'Current'
                     }
