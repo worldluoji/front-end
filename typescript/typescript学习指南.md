@@ -117,11 +117,41 @@ https://ts.xcatliu.com/basics/declaration-files.html
 - https://www.tslang.cn/docs/handbook/typescript-in-5-minutes.html
 
 ## 8. Vue and React with typescript
-- https://github.com/Microsoft/TypeScript-Vue-Starter#typescript-vue-starter
-- https://github.com/Microsoft/TypeScript-React-Starter#typescript-react-starter
-- https://www.tslang.cn/samples/index.html
-
-这里补充说明的时候，Vue或者React使用了TypeScript后，常常需要使用Html各元素的类型，可参考：
+Vue或者React使用了TypeScript后，常常需要使用Html各元素的类型，可参考：
 ```
 https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement
 ```
+在项目中，会看到`[]`被推导为`never[]`，`{}`被推导为any，比如
+```
+<script setup lang="ts">
+    let a = [] // type of a is never[]
+...
+</script>
+```
+而根据ts官网说法：
+```
+The never type represents the type of values that never occur.
+```
+也就是说，never是永远不会出现的值的类型。一个声明为空的数组里不应该出现任何值，所以被推导为never也是合理的。
+相当于你向编译器表示，我这个数组是空的，编译器自然就认为这个数组一直是空的，此时你要给它赋值，显然会破坏类型系统。
+
+正确做法应该是：
+```
+let a: number[] = [] // 明确指定元素类型
+let a = [1] // 自动推断
+```
+
+
+而{}会被推导成any，任何类型都可以赋值给它
+```
+<script setup lang="ts">
+    let o = [] // type of o is any
+...
+</script>
+```
+至于原因，让我们看看TypeScript的官方wiki是怎么说的：
+```
+Types with no members can be substituted by any type.
+In general, you should never find yourself declaring an interface with no properties.
+```
+也就是说，任何类型都可以赋值给没有成员的类型，相当于变成了any。
