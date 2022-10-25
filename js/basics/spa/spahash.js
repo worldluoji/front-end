@@ -1,7 +1,6 @@
 class HashRouter {  
     constructor () {  
         this.routes = {}; // 存放路由path及callback  
-        this.currentUrl = '';  
           
         // 监听路由change调用相对应的路由回调，第三个参数默认值为false，将使用冒泡传播，当值设置为true时，事件使用捕获传播。
         window.addEventListener('load', this.refresh, false);  
@@ -18,7 +17,11 @@ class HashRouter {
         } else {
             console.log('404')
         }
-    }  
+    }
+    
+    refresh() {
+        console.log('refresh to ', window.location.hash)
+    }
 }  
   
 // 使用 router  

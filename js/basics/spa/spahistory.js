@@ -1,12 +1,3 @@
-/*
-history 模式核心借用 HTML5 history api，api 提供了丰富的 router 相关属性先了解一个几个相关的api
-
-history.pushState 浏览器历史纪录添加记录
-history.replaceState修改浏览器历史纪录中当前纪录
-history.popState 当 history 发生变化时触
-*/
-
-// 定义 Router  
 class HistoryRouter {  
     constructor () {  
         this.routes = {};  
