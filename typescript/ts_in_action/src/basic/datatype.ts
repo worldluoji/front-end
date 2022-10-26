@@ -49,7 +49,7 @@ let un: undefined = undefined
 let nu: null = null
 
 // null和undefined是其它类型的字类型，需要把tsconfig里的strictNullCheck改为false,就能把其它类型变量赋为null
-s1 = null
+// s1 = null
 
 // 7. void 
 let noReturn = () => {}
