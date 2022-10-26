@@ -21,14 +21,16 @@ umdLib.doSomething()
 
 
 // 模块插件和全局插件，是为了给某些类库添加一些自定义方法,
-// 一下示例使用moment类库，是一个时间类库 npm i moment
+// 以下示例使用moment类库，是一个时间类库 npm i moment
 import m from 'moment';
 
 // 模块插件, 为某些已有的模块添加自定义方法
 declare module 'moment' {
     export function myFunction(): void;
 }
-m.myFunction = () => {}
+m.myFunction = () => {
+    console.log('this is my defined function for moment')
+}
 
 // 全局插件，为已有的全局库添加自定义方法
 declare global {
