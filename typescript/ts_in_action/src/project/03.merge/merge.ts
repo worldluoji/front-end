@@ -20,6 +20,26 @@ let am: Am = {
         return bar
     }
 }
+// 接口的非函数的成员应该是唯一的。如果它们不是唯一的，那么它们必须是相同的类型。如果两个接口中同时声明了同名的非函数成员且它们的类型不同，则编译器会报错。
+// 对于函数成员，每个同名函数声明都会被当成这个函数的一个重载。
+// https://www.tslang.cn/docs/handbook/declaration-merging.html
+
+interface Cloner {
+    clone(animal: Animal): Animal;
+}
+interface Cloner {
+    clone(animal: Dog): Dog;
+    clone(animal: Cat): Cat;
+}
+
+// 合并声明为：
+interface Cloner {
+    clone(animal: Dog): Dog;
+    clone(animal: Cat): Cat;
+    clone(animal: Animal): Animal;
+}
+// 注意每组接口里的声明顺序保持不变，但各组接口之间的顺序是后来的接口重载出现在靠前位置。
+
 
 // 命名空间与类进行声明合并，要放在类定义的后面
 class Cm {}
