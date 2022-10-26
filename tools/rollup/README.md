@@ -80,3 +80,16 @@ $ rollup -c
 ```
 $ rollup add.js --format cjs
 ```
+
+## rollup-plugin-visualizer分析vite工程代码文件大小
+npm install 安装插件 rollup-plugin-visualizer。使用这个插件后，我们就可以获取到代码文件大小的报告了。
+
+之后，进入到 vite.config.js 这个文件中，新增下列代码，就可以在 Vite 中加载可视化分析插件:
+```
+import { visualizer } from 'rollup-plugin-visualizer'
+export default defineConfig({
+  plugins: [vue(),vueJsx(), visualizer()],
+})
+```
+我们在项目的根目录下执行 npm run build 命令后，项目就把项目代码打包在根目录的 dist 目录下，并且根目录下多了一个文件 stat.html。
+打开这个 stat 文件, 里面就能看到各个模块的体积，就可以按需优化。
