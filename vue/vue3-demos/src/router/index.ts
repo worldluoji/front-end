@@ -13,6 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
+    // 懒加载，只有用户访问了 /dynamic 这个页面后，对应页面的代码才会加载执行。
     component: () =>
       import(
         /* webpackChunkName: "dynamic" */ "../views/DynamicComponentView.vue"
