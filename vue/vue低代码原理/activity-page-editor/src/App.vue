@@ -37,14 +37,30 @@ onMounted(() => {
 })
 
 function onchange(keys, value) {
-  const arr = keys.split('.')
-  const lastKey = arr.pop()
+  // console.log('change', keys, value) 切换属性：props.:value real_wap_price（props.:value 属性名），切换组件：name Tags （name 组件名）
+  // change props.:tags icons
+  const arr = keys.split('.') // 属性 [props, :value]  组件 [name]
+  const lastKey = arr.pop() // 属性  :value    组件 name
   let res = currentComponent.value
   for (let key of arr) {
     res = res[key]
+    // console.log( 'i', res) 属性  第一次， res = res[props], 第二次进入，res = props[':value']
+    // 组件，res = res.name
   }
   res[lastKey] = value
-  // 如果是切换组件就把 props 填空
+  // console.log('res', res)
+  /*
+    {
+      "type": "Element",
+      "name": "Price",
+      "props": {
+          ":value": "real_wap_price"
+      },
+      "id": "4"
+    }
+  */
+
+  // 如果是切换组件就把 props 清空
   if (keys === 'name') {
     res.props = {}
   }
@@ -143,7 +159,7 @@ function onclose () {
     </a>
   </div>
   <div v-for="(x, i) in xml" :key="i">
-    <Render :schema="x" :name="i" :data="data.data" />
+    <Render :schema="x" :name="i + ''" :data="data.data" />
   </div>
   <Panel :data="currentComponent" @change="onchange" :close="onclose"></Panel>
 </template>
