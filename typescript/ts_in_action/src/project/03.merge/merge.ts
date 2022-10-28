@@ -41,7 +41,8 @@ interface Cloner {
 // 注意每组接口里的声明顺序保持不变，但各组接口之间的顺序是后来的接口重载出现在靠前位置。
 
 
-// 命名空间与类进行声明合并，要放在类定义的后面
+// 命名空间与类进行声明合并，要放在类定义的后面, namespace声明可以用来添加新类型，值和命名空间，只要不出现冲突。
+// 如下为Cm添加了一个静态成员state
 class Cm {}
 namespace Cm {
     export let state = 1
@@ -65,3 +66,16 @@ namespace Colorm {
     export function mix() {}
 }
 console.log(Colorm)
+
+
+// class C { }和interface C { }可以同时存在并且都可以做为C类型的属性。
+class MFoo {
+    x: number;
+}
+  // ... elsewhere ...
+interface MFoo {
+    y: number;
+}
+
+let mf: MFoo = { x: 1, y: 2};
+console.log(mf.x + mf.y); // OK
