@@ -12,7 +12,11 @@
         </div>
         <div class="block">
         </div>
-        <div class="block">
+        <div class="gd block">
+            <div class="mini-block">
+            </div>
+            <div class="mini-block">
+            </div>
         </div>
     </div>
     <style>
@@ -29,6 +33,18 @@
 
         .app:hover {
             border: 1px solid blue;
+        }
+
+        .mini-block {
+            height:100px;
+            width: 100%;
+            background-color: darkgreen;
+            border-right: 1px solid grey;
+        }
+
+        .gd {
+            display: grid;
+            grid-template-columns: auto auto;
         }
 
     </style>
