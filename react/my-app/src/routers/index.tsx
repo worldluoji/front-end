@@ -14,6 +14,7 @@ import SearchBox from '../components/searchbox/SearchBox';
 import Board from '../components/board/board';
 import CardList from '../components/redux/ReduxDemo';
 import ScrollTop from '../components/totop/ScrollTop';
+import KeyPress from '../components/keypress/KeyPress';
 
 
 const Root = () => (
@@ -31,6 +32,7 @@ const Root = () => (
             <Route path="/board" element={<Board />} />
             <Route path="/cardlist" element={<CardList />} />
             <Route path="/totop" element={<ScrollTop />} />
+            <Route path="/keypress" element={<KeyPress />} />
             {/* v6 router之前的老版本： <Route path=".*" component={ App }/>, 且不需要Routes包裹 */}
          </Routes>
     </BrowserRouter>
