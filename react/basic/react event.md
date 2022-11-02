@@ -1,4 +1,6 @@
-# React 合成事件
+# React 事件
+
+## React合成事件
 ```
 <!-- 这是HTML不是JSX -->
 <button onclick="handleClick()">按钮</button>
@@ -71,3 +73,44 @@ useEffect(() => {
 2) 很多第三方框架，尤其是与 React 异构的框架，在运行时会生成额外的 DOM 节点。
 在 React 应用中整合这类框架时，常会有非 React 的 DOM 侵入 React 渲染的 DOM 树中。
 当需要监听这类框架的事件时，要监听原生 DOM 事件，而不是 React 合成事件。这同样也是 useEffect 或 useLayoutEffect 的领域。
+
+<br>
+
+## React事件说明
+在 React 17 之前，所有的事件都是绑定在 document 上的，而从 React 17 开始，所有的事件都绑定在整个 App 上的根节点上，
+这主要是为了以后页面上可能存在多版本 React 的考虑：
+- 第一，虚拟 DOM render 的时候， DOM 很可能还没有真实地 render 到页面上，所以无法绑定事件。
+- 第二，React 可以屏蔽底层事件的细节，避免浏览器的兼容性问题。同时呢，对于 React Native 这种不是通过浏览器 render 的运行时，也能提供一致的 API。
+
+为什么事件绑定在某个根节点上，也能触发实际 DOM 节点的事件？
+我们知道，在浏览器的原生机制中，事件会从被触发的节点往父节点冒泡，然后沿着整个路径一直到根节点，所以根节点其实是可以收到所有的事件的。这也称之为浏览器事件的冒泡模型。
+
+<br>
+
+## 自定义事件
+虽然自定义事件和原生事件看上去类似，但是两者的机制是完全不一样的：
+- 原生事件是浏览器的机制；
+- 自定义事件则是纯粹的组件自己的行为，本质是一种回调函数机制。
+
+在 React 中，自定义事件不用通过任何特殊的 API，只需要通过 props 给组件传递一个回调函数，
+然后在组件中的某个时机，比如用户输入，或者某个请求完成时，去调用这个传过来的回调函数就可以了。
+
+习惯上会将这样的回调函数命名为 onSomething 这种以“ on ”开头的名字，方便在使用的时候理解。
+
+```
+import { useState } from "react";
+
+// 创建一个无状态的受控组件
+function ToggleButton({ value, onChange }) {
+  const handleClick = () => {
+    onChange(!value);
+  };
+  return (
+    <button style={{ width: "60px" }} onClick={handleClick}>
+      <span>{value ? "On" : "Off"}</span>
+    </button>
+  );
+}
+```
+这里的自定义事件，就是定义了一个 onChange 这样的属性，允许传递一个回调函数给这个组件，
+在某个时机去调用这个回调函数，从而实现事件的功能。

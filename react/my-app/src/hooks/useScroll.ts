@@ -4,10 +4,19 @@ import { useState, useEffect } from 'react';
 // 获取横向，纵向滚动条位置
 const getPosition = () => {
   return {
-    x: document.body.scrollLeft,
-    y: document.body.scrollTop,
+    x: document.documentElement.scrollLeft,
+    y: document.documentElement.scrollTop,
   };
 };
+/*
+要获取当前页面的滚动条纵坐标位置，用：
+document.documentElement.scrollTop;
+而不是：
+document.body.scrollTop;
+documentElement 对应的是 html 标签，而 body 对应的是 body 标签。
+
+在标准w3c下，document.body.scrollTop恒为0，需要用document.documentElement.scrollTop来代替;
+*/
 
 const useScroll = () => {
   // 定一个 position 这个 state 保存滚动条位置
@@ -27,35 +36,3 @@ const useScroll = () => {
 };
 
 export default useScroll;
-
-
-/*
-
-import React, { useCallback } from 'react';
-import useScroll from './useScroll';
-
-function ScrollTop() {
-  const { y } = useScroll();
-
-  const goTop = useCallback(() => {
-    document.body.scrollTop = 0;
-  }, []);
-
-  const style = {
-    position: "fixed",
-    right: "10px",
-    bottom: "10px",
-  };
-  // 当滚动条位置纵向超过 300 时，显示返回顶部按钮
-  if (y > 300) {
-    return (
-      <button onClick={goTop} style={style}>
-        Back to Top
-      </button>
-    );
-  }
-  // 否则不 render 任何 UI
-  return null;
-}
-
-*/
