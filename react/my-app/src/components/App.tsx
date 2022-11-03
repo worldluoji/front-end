@@ -1,16 +1,16 @@
-import React from 'react';
-import {Routes, Route, Link } from 'react-router-dom';
-import { Layout, Menu, ConfigProvider } from 'antd';
-import zh_CN from 'antd/lib/locale-provider/zh_CN';
+import React from 'react'
+import { Routes, Route, Link } from 'react-router-dom'
+import { Layout, Menu, ConfigProvider } from 'antd'
+import zh_CN from 'antd/lib/locale-provider/zh_CN'
+import Board from '../components/board/board'
+import Counter from '../components/counter/counter'
 
-import Setting from './setting';
-import './App.css';
+import './App.css'
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content, Footer } = Layout
 
 const App = ({ match }: any) => {
-  // let defaultKey = match.url.replace('/', '') || 'employee';
-  const defaultKey = 'employee'
+  const defaultKey = 'board'
   return <ConfigProvider locale={zh_CN}>
     <Layout>
       <Header>
@@ -20,14 +20,16 @@ const App = ({ match }: any) => {
           defaultSelectedKeys={[defaultKey]}
           className="menu"
         >
-          <Menu.Item key="setting"><Link to="/setting">系统设置</Link></Menu.Item>
+          <Menu.Item key="board"><Link to="/board">看板</Link></Menu.Item>
+          <Menu.Item key="counter"><Link to="/counter">计数器</Link></Menu.Item>
         </Menu>
         
       </Header>
       <Content className="contentWrap">
         <div className="content">
           <Routes>
-            <Route path="/setting" element={<Setting />} />
+            <Route path="/board" element={<Board />} />
+            <Route path="/counter" element={<Counter />} />
           </Routes>
         </div>
       </Content>
@@ -36,4 +38,4 @@ const App = ({ match }: any) => {
   </ConfigProvider>
 }
 
-export default App;
+export default App
