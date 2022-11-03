@@ -24,29 +24,39 @@ React 提供的 Hooks 其实非常少，一共只有 10 个，比如 useState、
    
 错误示例：
 ```
-function MyComp() {
-  const [count, setCount] = useState(0);
-  if (count > 10) {
-    // 错误：不能将 Hook 用在条件判断里
-    useEffect(() => {
-      // ...
-    }, [count])
-  }
-  
-  // 这里可能提前返回组件渲染结果，后面就不能再用 Hooks 了
-  if (count === 0) {
-    return 'No content';
-  }
+import { Modal } from "antd";
+import useUser from "../09/useUser";
 
-  // 错误：不能将 Hook 放在可能的 return 之后
-  const [loading, setLoading] = useState(false);
-  
-  //...
-  return <div>{count}</div>
+function UserInfoModal({ visible, userId, ...rest }) {
+  // 当 visible 为 false 时，不渲染任何内容
+  if (!visible) return null;
+  // 这一行 Hook 在可能的 return 之后，会报错！
+  const { data, loading, error } = useUser(userId);
+
+  return (
+    <Modal visible={visible} {...rest}>
+      {/* 对话框的内容 */}
+    </Modal>
+  );
+};
+}
+```
+修复方法：把条件判断的结果放到两个组件之中，确保真正 render UI 的组件收到的所有属性都是有值的。
+可以在 UserInfoModal 外层加一个容器，这样就能实现条件渲染了：
+```
+// 定义一个容器组件用于封装真正的 UserInfoModal
+export default function UserInfoModalWrapper({
+  visible,
+  ...rest, // 使用 rest 获取除了 visible 之外的属性
+}) {
+  // 如果对话框不显示，则不 render 任何内容
+  if (!visible) return null; 
+  // 否则真正执行对话框的组件逻辑
+  return <UserInfoModal {...rest} />;
 }
 ```
 
-2. Hooks 作为专门为函数组件设计的机制，使用的情况只有两种，一种是在函数组件内，另外一种则是在自定义的 Hooks 里面。
+1. Hooks 作为专门为函数组件设计的机制，使用的情况只有两种，一种是在函数组件内，另外一种则是在自定义的 Hooks 里面。
 
 总结了一下：
 - Hooks 不能出现在条件语句或者循环中，也不能出现在 return 之后；
