@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import App from '../components/App';
 
-import Counter from '../components/counter/counter';
 import Resize from '../components/resize/resize';
 import Blog from '../components/blogdata/blogdata';
 import Timer from '../components/counter/timer';
@@ -22,7 +21,6 @@ const Root = () => (
     <BrowserRouter>
         <Routes>
             <Route path="/*" element={<App />} />
-            <Route path="/counter" element={<Counter />} />
             <Route path="/resize" element={<Resize />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/timer" element={<Timer />} />

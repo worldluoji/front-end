@@ -4,11 +4,13 @@ import { Layout, Menu, ConfigProvider } from 'antd'
 import zh_CN from 'antd/lib/locale-provider/zh_CN'
 import Board from '../components/board/board'
 import Counter from '../components/counter/counter'
+import Counter2 from '../components/counter/counterRenderProps'
 
 import './App.css'
 
 const { Header, Content, Footer } = Layout
 
+// router/index.tsx 路由的优先级高于App里用Route配置的优先级
 const App = ({ match }: any) => {
   const defaultKey = 'board'
   return <ConfigProvider locale={zh_CN}>
@@ -22,6 +24,7 @@ const App = ({ match }: any) => {
         >
           <Menu.Item key="board"><Link to="/board">看板</Link></Menu.Item>
           <Menu.Item key="counter"><Link to="/counter">计数器</Link></Menu.Item>
+          <Menu.Item key="counter2"><Link to="/counter2">计数器2</Link></Menu.Item>
         </Menu>
         
       </Header>
@@ -30,6 +33,7 @@ const App = ({ match }: any) => {
           <Routes>
             <Route path="/board" element={<Board />} />
             <Route path="/counter" element={<Counter />} />
+            <Route path="/counter2" element={<Counter2 />} />
           </Routes>
         </div>
       </Content>
