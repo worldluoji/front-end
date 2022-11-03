@@ -5,6 +5,8 @@ import zh_CN from 'antd/lib/locale-provider/zh_CN'
 import Board from '../components/board/board'
 import Counter from '../components/counter/counter'
 import Counter2 from '../components/counter/counterRenderProps'
+import ListWithMore from './listwithmore/ListWithMore'
+
 
 import './App.css'
 
@@ -25,6 +27,7 @@ const App = ({ match }: any) => {
           <Menu.Item key="board"><Link to="/board">看板</Link></Menu.Item>
           <Menu.Item key="counter"><Link to="/counter">计数器</Link></Menu.Item>
           <Menu.Item key="counter2"><Link to="/counter2">计数器2</Link></Menu.Item>
+          <Menu.Item key="listwithmore"><Link to="/listwithmore">ListWithMore</Link></Menu.Item>
         </Menu>
         
       </Header>
@@ -34,6 +37,7 @@ const App = ({ match }: any) => {
             <Route path="/board" element={<Board />} />
             <Route path="/counter" element={<Counter />} />
             <Route path="/counter2" element={<Counter2 />} />
+            <Route path="/listwithmore" element={<ListWithMore />} />
           </Routes>
         </div>
       </Content>
