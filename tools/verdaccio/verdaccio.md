@@ -32,3 +32,18 @@ C:\Users\12345\AppData\Roaming\verdaccio\storage 路径下，手动删除即可
 
 ## 参考文档
 https://verdaccio.org/zh-cn/docs
+
+
+## 常见问题
+verdaccio搭建本地npm私库后，上传包到私库报错：
+```
+http <-- 503, user: xx, req: ‘PUT /helloworld’, error: one of the uplinks is down, refuse to publish
+```
+解决方法：
+
+1：找到config.yaml新增配置
+```
+publish:
+  allow_offline: true
+```
+2：检查是否有要求上传包的命名规则
