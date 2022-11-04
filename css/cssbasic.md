@@ -294,4 +294,6 @@ media query参考： https://developer.mozilla.org/zh-CN/docs/Web/CSS/Media_Quer
 
 
 15. input框文本居右
+```
 <input type="text" value="xxx"  size="100" style="text-align:right" />
+```
