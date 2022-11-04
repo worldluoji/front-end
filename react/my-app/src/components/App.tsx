@@ -6,6 +6,8 @@ import Board from '../components/board/board'
 import Counter from '../components/counter/counter'
 import Counter2 from '../components/counter/counterRenderProps'
 import ListWithMore from './listwithmore/ListWithMore'
+import Form from './form/Form'
+import Form1 from './form/Form1'
 
 
 import './App.css'
@@ -28,6 +30,8 @@ const App = ({ match }: any) => {
           <Menu.Item key="counter"><Link to="/counter">计数器</Link></Menu.Item>
           <Menu.Item key="counter2"><Link to="/counter2">计数器2</Link></Menu.Item>
           <Menu.Item key="listwithmore"><Link to="/listwithmore">ListWithMore</Link></Menu.Item>
+          <Menu.Item key="form"><Link to="/form">Form by hooks</Link></Menu.Item>
+          <Menu.Item key="form1"><Link to="/form1">非受控Form</Link></Menu.Item>
         </Menu>
         
       </Header>
@@ -38,6 +42,8 @@ const App = ({ match }: any) => {
             <Route path="/counter" element={<Counter />} />
             <Route path="/counter2" element={<Counter2 />} />
             <Route path="/listwithmore" element={<ListWithMore />} />
+            <Route path="/form" element={<Form />} />
+            <Route path="/form1" element={<Form1 />} />
           </Routes>
         </div>
       </Content>
