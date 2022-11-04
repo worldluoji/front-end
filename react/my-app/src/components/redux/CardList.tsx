@@ -8,9 +8,10 @@ import { useSelector, useDispatch } from 'react-redux'
 // // [{ title: '开发任务-1' }]
 
 const CardList = () => {
+    // useSelector的入参就是state, 在ts中需要指定类型
     const cardList = useSelector((state: Card[]) => state)
     
-    const dispatch:CardListDispatch = useDispatch()
+    const dispatch: CardListDispatch = useDispatch()
 
     const [newTask, setNewTask] = useState('')
     const onChange:React.ChangeEventHandler<HTMLInputElement> = (e) => {
