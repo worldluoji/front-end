@@ -17,8 +17,8 @@ function hideModal(modalId: string, force: boolean) {
     return {
         type: "nice-modal/hide",
         payload: {
-        modalId,
-        force,
+            modalId,
+            force,
         },
     }
 }

@@ -1,8 +1,6 @@
-export interface Action {
-    type: string,
-    payload: {
-        modalId: string,
-        args?: boolean,
-        force?: boolean,
-    }
+
+export interface ModalActionPayloadType {
+    modalId: string,
+    args?: any,
+    force?: boolean
 }
