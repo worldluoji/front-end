@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support ServiceWorker?</title>
+</head>
+<body>
+    <h1 id="info">Hello ServiceWorker!!!</h1>
+    <script>
+        let info = document.querySelector('#info')
+        if ('serviceWorker' in navigator) {
+            // navigator.serviceWorker
+            //     .register('/sw.js')               
+            //     .then((registration) => {
+            //         console.log(`ServiceWorker successfully registered with scope:${registration.scope}`)
+            //     }).catch((err) => {
+            //         console.log('Failed to register ServiceWorker', err)
+            //     })
+            info.innerHTML = 'Your browser support ServiceWorker'
+        } else {
+            info.innerHTML = 'Your browser not support ServiceWorker'
+        }
+    </script>
+</body>
+</html>
