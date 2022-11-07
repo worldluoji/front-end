@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Progressive Times - Online News</title>
+  <link href="https://fonts.googleapis.com/css?family=Raleway|Merriweather" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="./css/site.css">
+  <!-- Adress bar styling -->
+  <meta name="theme-color" content="#FFD700">
+  <meta name="msapplication-navbutton-color" content="#FFD700">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="./manifest.json">
+</head>
+<body>
+  <!-- header -->
+  <div id="header">
+    <img id="logo" src="./images/newspaper.svg" />
+    <h1>Progressive Times</h1>
+    <h6>Latest News</h6>
+  </div>
+  <!-- latest news -->
+  <div id="latest"></div>
+  <hr>
+  <button id="btnSave" disabled>click this button to show the prompt</button>
+  <!-- javaScript -->
+  <script async src="./js/main.js"></script>
+  <script>
+    // Register the service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').then(function(registration) {
+        console.log(`Service Worker registered successfully with scope`, registration.scope)
+      }).catch((err) => {
+        console.log(`Service Worker registered Failed`, err)
+      })
+    }
+
+    let btnSave = document.getElementById('btnSave')
+    let savedPrompt = null
+
+    // 当一个 Web 清单 manifest.json 存在时，并且配置了start_url和icon, 它将在移动设备上发送，但是在提示用户将网站保存到主屏幕之前。
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // 默认情况之下，用户至少访问两次，且间隔5分钟，浏览器会自动弹出添加提示，这里取消了默认处理
+      e.preventDefault()
+      btnSave.removeAttribute('disabled')
+      savedPrompt = e // 将事件保存在变量中，稍后可以触发它
+      return false
+    })
+
+    btnSave.addEventListener('click', () => {
+      if (savedPrompt) {
+        // BeforeInstallPromptEvent 接口的 prompt() 方法允许一个开发人员在自己选择的一个时间显示安装提示
+        savedPrompt.prompt()
+        savedPrompt.userChoice.then((result) => {
+          if (result.outcome === 'dismissed') {
+            console.log('user dismissed homescreen install')
+          } else {
+             console.log('user add to homescreen')
+          }
+        })
+        savedPrompt = null
+      }
+    })
+  </script>
+</body>
+</html>
