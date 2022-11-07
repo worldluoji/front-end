@@ -1,7 +1,7 @@
 // 缓存名称
 const cacheName = 'helloCache'
 
-// 监听service worker install事件
+// 监听service worker install事件，缓存指定的两个文件
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(cacheName)
@@ -20,7 +20,7 @@ self.addEventListener('fetch', event => {
         caches.match(event.request)
             .then(response => {
                 if (response) {
-                    console.log('using cache', response)
+                    console.log(`using cache ${cacheName}`, response)
                     return response
                 }
                 return fetch(event.request)

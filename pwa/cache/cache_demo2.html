@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 引入字体 -->
+    <link href="https://fonts.googleapis.com/css?family=Lato">
+    <title>cache demo2</title>
+    <style>
+        #body {
+            font-family: 'Lato', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hello Service Worker Cache</h1>
+    <script async src="./js/script.js"> </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                .register('./service-worker2.js')
+                .then(function(registration) {
+                    console.log(`Service Worker registered successfully with scope`, registration.scope)
+                }).catch((err) => {
+                    console.log(`Service Worker registered Failed`, err)
+                })
+        }
+    </script>
+</body>
+</html>
