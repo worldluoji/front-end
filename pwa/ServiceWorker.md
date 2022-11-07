@@ -8,3 +8,7 @@ Service Worker 还提供了拦截前端请求的能力，使得它能够结合 L
 我们可以把 Service Worker 看作一种前端的资源请求代理。每一个前端页面发出的请求都会先由这个代理进行处理，然后你再决定请求是直接发送到服务器端，还是从本地的 Local Storage 读取内容返回。
 
 Service Worker 是一段独立于页面之外的 JavaScript 脚本，它并不在 Web 页面中运行，但是会在 Web 页面加载时，由一段代码去触发注册、下载和激活。一旦安装完成之后，Service Worker 就会拦截所有当前域名下的所有请求，由代码逻辑决定应该如何处理.
+
+推荐使用 Google 的 Workbox 进行开发，减少重复代码，提高开发效率:
+
+https://zhuanlan.zhihu.com/p/41652314
