@@ -9,6 +9,8 @@ import ListWithMore from './listwithmore/ListWithMore'
 import Form from './form/Form'
 import Form1 from './form/Form1'
 import Modal from './modal/ModalDemo'
+import Loadable from './loadable/LoadableDemo'
+
 
 
 import './App.css'
@@ -33,7 +35,8 @@ const App = ({ match }: any) => {
           <Menu.Item key="listwithmore"><Link to="/listwithmore">ListWithMore</Link></Menu.Item>
           <Menu.Item key="form"><Link to="/form">Form by hooks</Link></Menu.Item>
           <Menu.Item key="form1"><Link to="/form1">非受控Form</Link></Menu.Item>
-          <Menu.Item key="modal"><Link to="/modal">modal</Link></Menu.Item>
+          <Menu.Item key="modal"><Link to="/modal">Modal</Link></Menu.Item>
+          <Menu.Item key="loadable"><Link to="/loadable">Ladable</Link></Menu.Item>
         </Menu>
         
       </Header>
@@ -47,6 +50,7 @@ const App = ({ match }: any) => {
             <Route path="/form" element={<Form />} />
             <Route path="/form1" element={<Form1 />} />
             <Route path="/modal" element={<Modal />} />
+            <Route path="/loadable" element={<Loadable />} />
           </Routes>
         </div>
       </Content>
