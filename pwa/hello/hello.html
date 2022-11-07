@@ -11,13 +11,6 @@
     <script>
         let info = document.querySelector('#info')
         if ('serviceWorker' in navigator) {
-            // navigator.serviceWorker
-            //     .register('/sw.js')               
-            //     .then((registration) => {
-            //         console.log(`ServiceWorker successfully registered with scope:${registration.scope}`)
-            //     }).catch((err) => {
-            //         console.log('Failed to register ServiceWorker', err)
-            //     })
             info.innerHTML = 'Your browser support ServiceWorker'
         } else {
             info.innerHTML = 'Your browser not support ServiceWorker'
