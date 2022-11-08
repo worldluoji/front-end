@@ -1,4 +1,4 @@
-# Nginx Location 正则表达式
+# nginx location
 ```
 Syntax: location [ = | ~ | ~* | ^~ ] uri { ... }
 location @name { ... }
