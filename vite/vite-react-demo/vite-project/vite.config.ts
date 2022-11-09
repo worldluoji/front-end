@@ -4,15 +4,45 @@ import path from 'path'
 import autoprefixer from 'autoprefixer'
 import svgr from 'vite-plugin-svgr'
 // 还需要在tsconfig compilerOptions 中配置 "types": ["vite-plugin-svgr/client"]
+import viteImagemin from 'vite-plugin-imagemin'
 
 const variablePath = normalizePath(path.resolve('./src/global.scss'))
+
+const isProduction = process.env.NODE_ENV === 'production'
+const CDN_URL = 'https://xxx.xxx.xxx'
+
+// console.log(`isProduction: ${isProduction}`)
 
 // https://vitejs.dev/config/
 // 配置文件中默认在 plugins 数组中配置了官方的 react 插件，来提供 React 项目编译和热更新的功能。
 export default defineConfig({
   // 手动指定项目根目录位置到src下
   // root: path.join(__dirname, 'src'),
-  plugins: [react(), svgr()],
+  plugins: [react(), 
+            svgr(),
+            viteImagemin({
+              // 无损压缩配置，无损压缩下图片质量不会变差
+              optipng: {
+                optimizationLevel: 7
+              },
+              // 有损压缩配置，有损压缩下图片质量可能会变差
+              pngquant: {
+                quality: [0.8, 0.9],
+              },
+              // svg 优化
+              svgo: {
+                plugins: [
+                  {
+                    name: 'removeViewBox'
+                  },
+                  {
+                    name: 'removeEmptyAttrs',
+                    active: false
+                  }
+                ]
+              }
+            })
+  ],
   css: {
     preprocessorOptions: {
       scss: {
@@ -34,5 +64,6 @@ export default defineConfig({
     alias: {
       '@assets': path.join(__dirname, 'src/assets')
     }
-  }
+  },
+  base: isProduction ? CDN_URL: '/' // 加上这个配置，npm run build，可以发现产物中的静态资源地址已经自动加上了 CDN 地址前缀
 })
