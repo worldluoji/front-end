@@ -42,6 +42,8 @@ Vite 在开发阶段使用EsBuild成功启动项目并获得极致的性能提�
 - 不提供操作打包产物的接口，像 Rollup 中灵活处理打包产物的能力(如renderChunk钩子)在 Esbuild 当中完全没有。
 - 不支持自定义 Code Splitting 策略。传统的 Webpack 和 Rollup 都提供了自定义拆包策略的 API，而 Esbuild 并未提供，从而降级了拆包优化的灵活性。
 
+<br>
+
 #### TS(X)/JS(X) 单文件编译
 而在 TS(X)/JS(X) 单文件编译上面，Vite 也使用 Esbuild 进行语法转译，也就是将 Esbuild 作为 Transformer 来用。
 可以在架构图中Vite Plugin Pipeline看到。
@@ -55,6 +57,7 @@ Esbuild Transfomer 能带来巨大的性能提升，但其自身也有局限性�
 
 也因此，如果使用ts, vite build之前会先执行tsc命令，也就是借助 TS 官方的编译器进行类型检查, 可参考vite-react-demo.
 
+<br>
 #### 代码压缩
 从架构图中prepare plugins for rollup中可以看到，在生产环境中 Esbuild 压缩器通过插件的形式融入到了 Rollup 的打包流程中
 
@@ -90,13 +93,15 @@ ESM 已经得到众多浏览器的原生支持，但生产环境做到完全no-b
 一般情况下，Rollup 打包之后，会先请求 A，然后浏览器在加载 A 的过程中才决定请求和加载 C，
 但 Vite 进行优化之后，请求 A 的同时会自动预加载 C，通过优化 Rollup 产物依赖加载方式节省了不必要的网络开销。
 
+<br>
+
 #### 插件机制
 无论是开发阶段还是生产环境，Vite 都根植于 Rollup 的插件机制和生态。
 
 在开发阶段，Vite 借鉴了 WMR 的思路，自己实现了一个 Plugin Container，用来模拟 Rollup 调度各个 Vite 插件的执行逻辑，
 而 Vite 的插件写法完全兼容 Rollup，因此在生产环境中将所有的 Vite 插件传入 Rollup 也没有问题。
 
-反过来说，Rollup 插件却不一定能完全兼容 Vite(这部分我们会在插件开发小节展开来说)。
+反过来说，Rollup 插件却不一定能完全兼容 Vite。
 不过，目前仍然有不少 Rollup 插件可以直接复用到 Vite 中，你可以通过这个站点查看所有兼容 Vite 的 Rollup 插件: vite-rollup-plugins.patak.dev/ 。
 
 <br>
