@@ -38,6 +38,11 @@ postData('https://example.com/answer', { answer: 42 })
 });
 ```
 
+mode属性指定请求的模式。可能的取值如下：
+- cors：默认值，允许跨域请求。
+- same-origin：只允许同源请求。
+- no-cors：请求方法只限于 GET、POST 和 HEAD，并且只能使用有限的几个简单标头，不能添加跨域的复杂标头，相当于提交表单所能发出的请求。
+
 ## 为什么有了xhr，还要fetch?
 XHR 和 fetch API 都是浏览器给上层使用者暴露出来的 API（类似于操作系统暴露系统 API 给浏览器这类应用一样）。这两套暴露的 API 给上层使用者提供了部分操作 http 包的能力。换句话说，这两者都是建立在 http 协议上的，我们可以将其当成具有部分功能的 http 客户端。
 
