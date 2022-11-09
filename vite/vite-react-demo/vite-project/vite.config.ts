@@ -2,6 +2,8 @@ import { defineConfig, normalizePath } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import autoprefixer from 'autoprefixer'
+import svgr from 'vite-plugin-svgr'
+// 还需要在tsconfig compilerOptions 中配置 "types": ["vite-plugin-svgr/client"]
 
 const variablePath = normalizePath(path.resolve('./src/global.scss'))
 
@@ -10,7 +12,7 @@ const variablePath = normalizePath(path.resolve('./src/global.scss'))
 export default defineConfig({
   // 手动指定项目根目录位置到src下
   // root: path.join(__dirname, 'src'),
-  plugins: [react()],
+  plugins: [react(), svgr()],
   css: {
     preprocessorOptions: {
       scss: {

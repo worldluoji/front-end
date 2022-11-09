@@ -24,3 +24,12 @@ npm run build
 ```
 实际执行了"tsc && vite build"命令，这里tsc做ts类型检查，tsconfig.json中,noEmit为true，表示只做类型检查不输出产物。
 真正打包的实际是Rollup.
+
+
+## svg图支持说明
+- Vue2 项目中可以使用 vite-plugin-vue2-svg插件。
+- Vue3 项目中可以引入 vite-svg-loader。
+- React 项目使用 vite-plugin-svgr插件。
+```
+npm i vite-plugin-svgr -D
+```

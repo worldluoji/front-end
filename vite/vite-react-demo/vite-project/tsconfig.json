@@ -16,7 +16,8 @@
     // 1. noEmit 表示只做类型检查，而不会输出产物文件，该项目中产物文件由Rollup输出
     // 2. 这行配置与 tsc --noEmit 命令等效
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["vite-plugin-svgr/client"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
