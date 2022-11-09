@@ -25,5 +25,12 @@ export default defineConfig({
         })
       ]
     }
+  },
+  resolve: {
+    // 别名配置，这样 Vite 在遇到@assets路径的时候，会自动帮我们定位至根目录下的src/assets目录。
+    // 值得注意的是，alias 别名配置不仅在 JavaScript 的 import 语句中生效，在 CSS 代码的 @import 和 url导入语句中也同样生效。
+    alias: {
+      '@assets': path.join(__dirname, 'src/assets')
+    }
   }
 })

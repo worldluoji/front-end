@@ -1,6 +1,15 @@
 
 .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: url('@assets/back.jpeg');
+}
+
+.header_text {
     color: $theme-color;
     text-decoration: dashed;
 }
+
 // https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-decoration
