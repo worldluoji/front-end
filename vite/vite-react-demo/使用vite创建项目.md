@@ -26,10 +26,27 @@ npm run build
 真正打包的实际是Rollup.
 
 
-## svg图支持说明
+## svg图加载
 - Vue2 项目中可以使用 vite-plugin-vue2-svg插件。
 - Vue3 项目中可以引入 vite-svg-loader。
 - React 项目使用 vite-plugin-svgr插件。
 ```
 npm i vite-plugin-svgr -D
 ```
+
+## JSON加载
+JSON 加载
+Vite 中已经内置了对于 JSON 文件的解析，底层使用@rollup/pluginutils 的 dataToEsm 方法将 JSON 对象转换为一个包含各种具名导出的 ES 模块，使用姿势如下:
+```
+import { version } from '../../../package.json';
+```
+不过你也可以在配置文件禁用按名导入的方式:
+```
+// vite.config.ts
+{
+  json: {
+    stringify: true
+  }
+}
+```
+这样会将 JSON 的内容解析为export default JSON.parse("xxx")，这样会失去按名导出的能力，不过在 JSON 数据量比较大的时候，可以优化解析性能。
