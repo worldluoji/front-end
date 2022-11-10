@@ -2,12 +2,23 @@
 </script>
 
 <template>
-  <div>
-    <h1>Hello Vue Draggable</h1>
-    <p>
+    <nav>
       <router-link to="/">Go to Home Page</router-link> <br>
       <router-link to="/twolist">Go to two-list-draggable demo</router-link>
-    </p>
-    <router-view></router-view>
-  </div>
+    </nav>
+    <router-view />
 </template>
+
+<style scoped>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+nav {
+  padding: 30px;
+}
+</style>

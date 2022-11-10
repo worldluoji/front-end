@@ -4,7 +4,7 @@ const router = createRouter({
     routes:[
         {
             path:'/',
-            component: () => import('../App.vue'),
+            component: () => import('../components/Home.vue'),
         },
         {
             path:'/twolist',
