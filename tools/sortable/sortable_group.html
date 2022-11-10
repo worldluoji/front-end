@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sortable: `put: []` demo</title>
+  <!-- Sortable.js -->
+  <script src="Sortable.js"></script>
+  <style>
+    li {
+        background-color: darkgray;
+    }
+  </style>
+</head>
+
+<body>
+  
+  <ul id="foo">
+    <li>foo 1</li>
+    <li>foo 2</li>
+    <li>foo 3</li>
+  </ul>
+
+  <ul id="bar">
+    <li>bar 1</li>
+    <li>bar 2</li>
+    <li>bar 3</li>
+  </ul>
+
+  <ul id="qux">
+    <li>qux 1</li>
+  </ul>
+
+  <script>
+    Sortable.create(foo, {
+        group: 'foo',
+        animation: 100
+    });
+    
+    Sortable.create(bar, {
+        group: {
+            name: 'bar',
+            pull: true
+        },
+        animation: 100
+    });
+    
+    Sortable.create(qux, {
+        group: {
+            name: 'qux',
+            put: ['foo', 'bar']
+        },
+        animation: 100
+    });
+  </script>
+
+</body>
+</html>

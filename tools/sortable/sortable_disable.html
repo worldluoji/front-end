@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortable Disable</title>
+</head>
+<body>
+<script src="./Sortable.js"></script>
+  
+  <button id="switcher">disable</button>
+  <br/>  <br/>
+  
+  <ul id="list" class="list-group">
+    <li class="list-group-item">This is <a href="http://rubaxa.github.io/Sortable/">Sortable</a></li>
+    <li class="list-group-item">It works with Bootstrap...</li>
+    <li class="list-group-item">...out of the box.</li>
+    <li class="list-group-item">It has support for touch devices.</li>
+    <li class="list-group-item">Just drag some elements around.</li>
+  </ul>
+
+  <script>
+    var sortable = Sortable.create(list);
+
+    switcher.onclick = function () {
+        var state = sortable.option("disabled"); // get
+
+        sortable.option("disabled", !state); // set
+    
+        switcher.innerHTML = state ? 'disable' : 'enable';
+    };
+  </script>
+</body>
+</html>

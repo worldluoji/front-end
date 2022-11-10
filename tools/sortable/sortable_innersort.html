@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inner Sort</title>
+    <style>
+        .list-group-item {
+            background-color: darkgray;
+        }
+    </style>
+</head>
+<body>    
+    <!-- Latest Sortable -->
+    <script src="./Sortable.js"></script>
+
+    <!-- sort: true -->
+    <div id="sortTrue" class="list-group">
+      <div class="list-group-item">foo</div>
+      <div class="list-group-item">bar</div>
+      <div class="list-group-item">baz</div>
+    </div>
+    
+    <hr>
+    
+    <!-- sort: false -->
+    <div id="sortFalse" class="list-group">
+      <div class="list-group-item">qux</div>
+      <div class="list-group-item">quux</div>
+    </div>
+    
+    <script>
+        // sort: true
+        Sortable.create(sortTrue, {
+            group: "sorting",
+            sort: true
+        });
+
+        // sort: false
+        Sortable.create(sortFalse, {
+            group: "sorting",
+            sort: false
+        });
+    </script>
+</body>
+</html>

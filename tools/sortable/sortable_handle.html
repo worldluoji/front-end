@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortable Handle</title>
+    <style>
+        body {
+            padding: 30px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .my-handle {
+            cursor: move;
+            cursor: -webkit-grabbing;
+        }
+    </style>
+</head>
+<body>
+  <script src="./Sortable.js"></script>
+  
+  <!-- List with handle -->
+  <ul id="listWithHandle">
+    <li class="list-group-item">
+        <span class="glyphicon glyphicon-move my-handle" aria-hidden="true">👋</span>
+        Item 1
+      </li>
+    <li class="list-group-item">
+        <span class="glyphicon glyphicon-move my-handle" aria-hidden="true">👋</span>
+        Item 2
+    </li>
+  </ul>
+
+  <script>
+    // List with handle
+    Sortable.create(listWithHandle, {
+        handle: '.my-handle',
+        animation: 150
+    });
+  </script>
+</body>
+</html>
