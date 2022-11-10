@@ -59,6 +59,7 @@ Esbuild Transfomer 能带来巨大的性能提升，但其自身也有局限性�
 也因此，如果使用ts, vite build之前会先执行tsc命令，也就是借助 TS 官方的编译器进行类型检查, 可参考vite-react-demo.
 
 <br>
+
 #### 代码压缩
 从架构图中prepare plugins for rollup中可以看到，在生产环境中 Esbuild 压缩器通过插件的形式融入到了 Rollup 的打包流程中
 
