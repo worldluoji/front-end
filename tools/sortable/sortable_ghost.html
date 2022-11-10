@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortable ghost</title>
+    <style>
+        /* ghostClass */
+        .ghost {
+            opacity: .5;
+            background: #C8EBFB;
+        }
+
+        body {
+            padding: 20px;
+        }
+
+        .list-group-item {
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <script src="./Sortable.js"></script>
+  
+    <!-- Simple List -->
+    <div id="simpleList" class="list-group"></div>
+
+    <script>
+        Sortable.create(simpleList, {
+            ghostClass: 'ghost'
+        });
+
+        // Generate 100 items
+        simpleList.innerHTML = Array.apply(null,  new Array(100)).map(function (v, i) {
+        return '<div class="list-group-item">item ' +
+            (i + 1) +
+            '</div>';
+        }).join('');
+    </script>
+</body>
+</html>
