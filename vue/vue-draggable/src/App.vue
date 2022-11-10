@@ -4,7 +4,8 @@
 <template>
     <nav>
       <router-link to="/">Go to Home Page</router-link> <br>
-      <router-link to="/twolist">Go to two-list-draggable demo</router-link>
+      <router-link to="/twolist">Go to two-list-draggable demo</router-link>  <br>
+      <router-link to="/clone">Go to clone demo</router-link>
     </nav>
     <router-view />
 </template>

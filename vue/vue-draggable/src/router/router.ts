@@ -9,6 +9,10 @@ const router = createRouter({
         {
             path:'/twolist',
             component: () => import('../components/TwoListDraggable.vue'),
+        },
+        {
+            path:'/clone',
+            component: () => import('../components/Clone.vue'),
         }
     ]
 })
