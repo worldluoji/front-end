@@ -1,0 +1,16 @@
+{
+  "name": "throttle-debounce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "throttle-debounce": "^5.0.0"
+  }
+}
