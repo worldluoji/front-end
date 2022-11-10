@@ -1,4 +1,5 @@
 # vite
+vite 是一个提倡 no-bundle 的构建工具，相比于传统的 Webpack，能做到开发时的模块按需编译，而不用先打包完再加载。
 ## ESM
 ES6 Module 也被称作 ES Module(或 ESM)， 是由 ECMAScript 官方提出的模块化规范，作为一个官方提出的规范，
 ES Module 已经得到了现代浏览器的内置支持。
