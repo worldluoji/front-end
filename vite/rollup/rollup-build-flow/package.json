@@ -1,0 +1,17 @@
+{
+  "name": "rollup-build-flow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ./build.js",
+    "buildGen": "node ./buildGen.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rollup": "^3.2.5"
+  }
+}
