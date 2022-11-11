@@ -6,5 +6,20 @@ defineProps({
 </script>
 
 <template>
-    I am Image
+    <div class="container">
+        <img
+            src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+            draggable="false"
+        />
+    </div>
 </template>
+
+<style scoped>
+    .container {
+        position: relative;
+    }
+
+    img {
+        width: 100%;
+    }
+</style>

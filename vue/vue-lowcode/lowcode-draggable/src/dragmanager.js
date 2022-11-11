@@ -60,7 +60,7 @@ export default class DragManager {
     }
 
     dragexist(e) {
-        const i = +e.target.dataset.index
+        const i = e.target.dataset.index
         this.opData = this.ref.value[i] // 对应App.vue里的 content[i]
         this.opData.state = 2 // 激活over样式
     }
@@ -76,6 +76,7 @@ export default class DragManager {
         e.preventDefault()
         // 如果找到了，状态置为1，正常展示
         let i = this.ref.value.indexOf(this.opData)
+        // console.log(i, this.opData, this.ref.value)
         if (i > -1) {
             this.ref.value[i].state = 1
         }
