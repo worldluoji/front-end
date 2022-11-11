@@ -1,4 +1,4 @@
-# rollup demo
+# rollup
 
 rollup.js 的开发本意，是打造一款简单易用的 ES 模块打包工具，不必配置，直接使用。这一点，它确实做到了。
 
@@ -93,3 +93,14 @@ export default defineConfig({
 ```
 我们在项目的根目录下执行 npm run build 命令后，项目就把项目代码打包在根目录的 dist 目录下，并且根目录下多了一个文件 stat.html。
 打开这个 stat 文件, 里面就能看到各个模块的体积，就可以按需优化。
+
+
+## 常用rollup插件库
+```
+@rollup/plugin-json： 支持.json的加载，并配合rollup的Tree Shaking机制去掉未使用的部分，进行按需打包。
+@rollup/plugin-babel：在 Rollup 中使用 Babel 进行 JS 代码的语法转译。
+@rollup/plugin-typescript: 支持使用 TypeScript 开发。
+@rollup/plugin-alias：支持别名配置。
+@rollup/plugin-replace：在 Rollup 进行变量字符串的替换。
+rollup-plugin-visualizer: 对 Rollup 打包产物进行分析，自动生成产物体积可视化分析图。
+```
