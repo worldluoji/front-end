@@ -94,6 +94,25 @@ export default defineConfig({
 我们在项目的根目录下执行 npm run build 命令后，项目就把项目代码打包在根目录的 dist 目录下，并且根目录下多了一个文件 stat.html。
 打开这个 stat 文件, 里面就能看到各个模块的体积，就可以按需优化。
 
+## 接入插件能力
+在 Rollup 的日常使用中，我们难免会遇到一些 Rollup 本身不支持的场景，
+比如兼容 CommonJS 打包、注入环境变量、配置路径别名、压缩产物代码 等等。
+这个时候就需要我们引入相应的 Rollup 插件了。
+
+虽然 Rollup 能够打包输出出 CommonJS 格式的产物，但对于输入给 Rollup 的代码并不支持 CommonJS，仅仅支持 ESM。
+你可能会说，那我们直接在项目中统一使用 ESM 规范就可以了啊，这有什么问题呢？
+需要注意的是，我们不光要考虑项目本身的代码，还要考虑第三方依赖。
+目前为止，还是有不少第三方依赖只有 CommonJS 格式产物而并未提供 ESM 产物，比如项目中用到 lodash 时，打包项目会出现报错。
+
+这时的解决方法为引入两个rollup插件：
+```
+npm i @rollup/plugin-node-resolve @rollup/plugin-commonjs 
+```
+@rollup/plugin-node-resolve是为了允许我们加载第三方依赖，否则像import React from 'react' 的依赖导入语句将不会被 Rollup 识别。
+
+@rollup/plugin-commonjs 的作用是将 CommonJS 格式的代码转换为 ESM 格式
+
+例子见rollup-commonjs
 
 ## 常用rollup插件库
 ```
