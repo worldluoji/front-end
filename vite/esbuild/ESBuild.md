@@ -69,3 +69,11 @@ runBuild();
 详见 buildserver.js
 
 node buildserver.js, 我们在浏览器访问localhost:8000可以看到 Esbuild 服务器返回的编译产物
+
+<br>
+
+## 单文件转译——Transform API
+它也包含了同步和异步的两个方法，分别是transformSync和transform
+
+见 transform.js， 同样不建议使用同步方法。
+出于性能考虑，Vite 的底层实现也是采用 transform这个异步的 API 进行 TS 及 JSX 的单文件转译的。
