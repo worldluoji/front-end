@@ -1,5 +1,5 @@
 {
-  "name": "rollup-commonjs",
+  "name": "rollup-plugin",
   "version": "1.0.0",
   "description": "",
   "main": "rollup.config.js",
@@ -12,8 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@rollup/plugin-commonjs": "^23.0.2",
-    "@rollup/plugin-node-resolve": "^15.0.1",
-    "lodash": "^4.17.21"
+    "@rollup/plugin-alias": "^4.0.2",
+    "@rollup/plugin-replace": "^5.0.1"
   }
 }

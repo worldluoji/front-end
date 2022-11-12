@@ -101,3 +101,174 @@ rollup.rollup方法会返回一个bundle对象，这个对象是包含generate�
 两个方法唯一的区别在于后者会将代码写入到磁盘中，同时会触发writeBundle钩子，传入所有的打包产物信息，
 包括 chunk 和 asset，和 generateBundle钩子非常相似。
 不过值得注意的是，这个钩子执行的时候，产物已经输出了，而 generateBundle 执行的时候产物还并没有输出
+
+<br>
+
+## 插件源码学习
+1. alias插件的代码简化后如下:
+```
+export default alias(options) {
+  // 获取 entries 配置
+  const entries = getEntries(options);
+  return {
+    // resolveId 钩子一般用来解析模块路径，为Async + First类型即异步优先的钩子。
+    // 传入三个参数，当前模块路径、引用当前模块的模块路径、其余参数
+    resolveId(importee, importer, resolveOptions) {
+      // 先检查能不能匹配别名规则, importee比如 index.js中 import的 module-a
+      const matchedEntry = entries.find((entry) => matches(entry.find, importee));
+      // 如果不能匹配替换规则，或者当前模块是入口模块，则不会继续后面的别名替换流程
+      if (!matchedEntry || !importerId) {
+        // return null 后，当前的模块路径会交给下一个插件处理
+        return null;
+      }
+      // 正式替换路径
+      const updatedId = normalizeId(
+        importee.replace(matchedEntry.find, matchedEntry.replacement)
+      );
+      // 每个插件执行时都会绑定一个上下文对象作为 this
+      // 这里的 this.resolve 会执行所有插件(除当前插件外)的 resolveId 钩子
+      return this.resolve(
+        updatedId,
+        importer,
+        Object.assign({ skipSelf: true }, resolveOptions)
+      ).then((resolved) => {
+        // 替换后的路径即 updateId 会经过别的插件进行处理
+        let finalResult: PartialResolvedId | null = resolved;
+        if (!finalResult) {
+          // 如果其它插件没有处理这个路径，则直接返回 updateId
+          finalResult = { id: updatedId };
+        }
+        return finalResult;
+      });
+    }
+  }
+}
+```
+从这里你可以看到 resolveId 钩子函数的一些常用使用方式，它的入参分别是当前模块路径、引用当前模块的模块路径、解析参数，返回值可以是 null、string 或者一个对象，我们分情况讨论。
+
+- 返回值为 null 时，会默认交给下一个插件的 resolveId 钩子处理。
+- 返回值为 string 时，则停止后续插件的处理。这里为了让替换后的路径能被其他插件处理，特意调用了 this.resolve 来交给其它插件处理，否则将不会进入到其它插件的处理。
+- 返回值为一个对象时，也会停止后续插件的处理，不过这个对象就可以包含更多的信息了，包括解析后的路径、是否被 enternal、是否需要 tree-shaking 等等，不过大部分情况下返回一个 string 就够用了。
+
+
+2. load 为Async + First类型，即异步优先的钩子，和resolveId类似。
+它的作用是通过 resolveId 解析后的路径来加载模块内容，例如image插件：
+```
+const mimeTypes = {
+  '.jpg': 'image/jpeg',
+  // 后面图片类型省略
+};
+
+export default function image(opts = {}) {
+  const options = Object.assign({}, defaults, opts);
+  return {
+    name: 'image',
+    load(id) {
+      const mime = mimeTypes[extname(id)];
+      if (!mime) {
+        // 如果不是图片类型，返回 null，交给下一个插件处理
+        return null;
+      }
+      // 加载图片具体内容
+      const isSvg = mime === mimeTypes['.svg'];
+      const format = isSvg ? 'utf-8' : 'base64';
+      const source = readFileSync(id, format).replace(/[\r\n]+/gm, '');
+      const dataUri = getDataUri({ format, isSvg, mime, source });
+      const code = options.dom ? domTemplate({ dataUri }) : constTemplate({ dataUri });
+
+      return code.trim();
+    }
+  };
+}
+```
+load 钩子的入参是模块 id，返回值一般是 null、string 或者一个对象：
+- 如果返回值为 null，则交给下一个插件处理；
+- 如果返回值为 string 或者对象，则终止后续插件的处理，如果是对象可以包含 SourceMap、AST 等更详细的信息。
+
+
+3. 代码转换: transform
+transform 钩子也是非常常见的一个钩子函数，为Async + Sequential类型，也就是异步串行钩子，作用是对加载后的模块内容进行自定义的转换。我们以官方的 replace 插件为例, 核心逻辑简化如下:
+```
+import MagicString from 'magic-string';
+
+export default function replace(options = {}) {
+  return {
+    name: 'replace',
+    transform(code, id) {
+      // 省略一些边界情况的处理
+      // 执行代码替换的逻辑，并生成最后的代码和 SourceMap
+      return executeReplacement(code, id);
+    }
+  }
+}
+
+function executeReplacement(code, id) {
+  const magicString = new MagicString(code);
+  // 通过 magicString.overwrite 方法实现字符串替换
+  if (!codeHasReplacements(code, id, magicString)) {
+    return null;
+  }
+
+  const result = { code: magicString.toString() };
+
+  if (isSourceMapEnabled()) {
+    result.map = magicString.generateMap({ hires: true });
+  }
+
+  // 返回一个带有 code 和 map 属性的对象
+  return result;
+}
+```
+transform 钩子的入参分别为模块代码、模块 ID，返回一个包含 code(代码内容) 和 map(SourceMap 内容) 属性的对象，当然也可以返回 null 来跳过当前插件的 transform 处理。
+
+需要注意的是，当前插件返回的代码会作为下一个插件 transform 钩子的第一个入参，实现类似于瀑布流的处理。
+
+
+4. Chunk 级代码修改: renderChunk
+继续以 replace插件举例，在这个插件中，也同样实现了 renderChunk 钩子函数:
+```
+export default function replace(options = {}) {
+  return {
+    name: 'replace',
+    transform(code, id) {
+      // transform 代码省略
+    },
+    renderChunk(code, chunk) {
+      const id = chunk.fileName;
+      // 省略一些边界情况的处理
+      // 拿到 chunk 的代码及文件名，执行替换逻辑
+      return executeReplacement(code, id);
+    },
+  }
+}
+```
+可以看到这里 replace 插件为了替换结果更加准确，在 renderChunk 钩子中又进行了一次替换，因为后续的插件仍然可能在 transform 中进行模块内容转换，进而可能出现符合替换规则的字符串。
+
+这里我们把关注点放到 renderChunk 函数本身，可以看到有两个入参，分别为 chunk 代码内容、chunk 元信息，返回值跟 transform 钩子类似，既可以返回包含 code 和 map 属性的对象，也可以通过返回 null 来跳过当前钩子的处理。
+
+
+5. 产物生成最后一步: generateBundle
+generateBundle 也是异步串行的钩子，你可以在这个钩子里面自定义删除一些无用的 chunk 或者静态资源，或者自己添加一些文件。这里以 Rollup 官方的html插件来具体说明，这个插件的作用是通过拿到 Rollup 打包后的资源来生成包含这些资源的 HTML 文件，源码简化后如下所示:
+
+export default function html(opts: RollupHtmlOptions = {}): Plugin {
+  // 初始化配置
+  return {
+    name: 'html',
+    async generateBundle(output: NormalizedOutputOptions, bundle: OutputBundle) {
+      // 省略一些边界情况的处理
+      // 1. 获取打包后的文件
+      const files = getFiles(bundle);
+      // 2. 组装 HTML，插入相应 meta、link 和 script 标签
+      const source = await template({ attributes, bundle, files, meta, publicPath, title});
+      // 3. 通过上下文对象的 emitFile 方法，输出 html 文件
+      const htmlFile: EmittedAsset = {
+        type: 'asset',
+        source,
+        name: 'Rollup HTML Asset',
+        fileName
+      };
+      this.emitFile(htmlFile);
+    }
+  }
+}
+相信从插件的具体实现中，你也能感受到这个钩子的强大作用了。入参分别为output 配置、所有打包产物的元信息对象，通过操作元信息对象你可以删除一些不需要的 chunk 或者静态资源，也可以通过 插件上下文对象的emitFile方法输出自定义文件。
