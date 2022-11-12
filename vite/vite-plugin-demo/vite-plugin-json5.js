@@ -4,6 +4,7 @@ import JSON5 from "json5"
 
 const fileRegex = /\.json5$/
 
+// Vite 插件与 Rollup 插件结构类似，为一个name和各种插件 Hook 的对象
 function createJson5Plugin() {
     return {
         name: 'createJson5Plugin',
