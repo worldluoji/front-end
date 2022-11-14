@@ -184,3 +184,43 @@ if (import.meta.hot) {
 - configureServer: 用来获取 Vite Dev Server 实例，添加中间件。
 - transformIndexHtml: 用来转换 HTML 的内容。
 - handleHotUpdate: 用来进行热更新模块的过滤，或者进行自定义的热更新处理。
+
+总结一下vite钩子执行顺序：
+
+<img src="vite钩子执行顺序.webp" />
+
+<br>
+
+## 插件应用位置
+默认情况下 Vite 插件同时被用于开发环境和生产环境，你可以通过apply属性来决定应用场景:
+```
+{
+  // 'serve' 表示仅用于开发环境，'build'表示仅用于生产环境
+  apply: 'serve'
+}
+```
+apply参数还可以配置成一个函数，进行更灵活的控制:
+```
+apply(config, { command }) {
+  // 只用于非 SSR 情况下的生产环境构建
+  return command === 'build' && !config.build.ssr
+}
+```
+同时，你也可以通过enforce属性来指定插件的执行顺序:
+```
+{
+  // 默认为`normal`，可取值还有`pre`和`post`
+  enforce: 'pre'
+}
+```
+
+<img src="Vite插件的执行顺序.webp" />
+
+Vite 会依次执行如下的插件:
+- Alias (路径别名)相关的插件。
+- 带有 enforce: 'pre' 的用户插件。
+- Vite 核心插件。
+- 没有 enforce 值的用户插件，也叫普通插件。
+- Vite 生产环境构建用的插件。
+- 带有 enforce: 'post' 的用户插件。
+- Vite 后置构建插件(如压缩插件)。
