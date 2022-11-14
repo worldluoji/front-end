@@ -15,10 +15,6 @@ defineProps({
 </template>
 
 <style scoped>
-    .container {
-        position: relative;
-    }
-
     img {
         width: 100%;
     }
