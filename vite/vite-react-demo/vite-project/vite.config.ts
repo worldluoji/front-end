@@ -6,6 +6,8 @@ import svgr from 'vite-plugin-svgr'
 // 还需要在tsconfig compilerOptions 中配置 "types": ["vite-plugin-svgr/client"]
 import viteImagemin from 'vite-plugin-imagemin'
 
+import virtual from './plugins/virtual-module'
+
 const variablePath = normalizePath(path.resolve('./src/global.scss'))
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -20,6 +22,7 @@ export default defineConfig({
   // root: path.join(__dirname, 'src'),
   plugins: [react(), 
             svgr(),
+            virtual(),
             viteImagemin({
               // 无损压缩配置，无损压缩下图片质量不会变差
               optipng: {

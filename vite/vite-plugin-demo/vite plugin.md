@@ -224,3 +224,9 @@ Vite 会依次执行如下的插件:
 - Vite 生产环境构建用的插件。
 - 带有 enforce: 'post' 的用户插件。
 - Vite 后置构建插件(如压缩插件)。
+
+<br>
+
+## 插件例子
+1. 当前目录，处理json5解析
+2. vite-react-demo -> vite-project -> plugins 虚拟模块插件
