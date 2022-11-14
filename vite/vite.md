@@ -205,3 +205,8 @@ vite官方收集的一些和vite相关的项目，包括插件，模板，都分
 ```
 https://github.com/vitejs/awesome-vite
 ```
+
+## 术语补充
+- bundle 指的是整体的打包产物，包含 JS 和各种静态资源。
+- chunk指的是打包后的 JS 文件，是 bundle 的子集。
+- vendor是指第三方包的打包产物，是一种特殊的 chunk。
