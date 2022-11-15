@@ -1,5 +1,5 @@
 <template>
-    <p>请拖入卡片</p>
+    请拖入卡片
 </template>
 
 <style scoped>
