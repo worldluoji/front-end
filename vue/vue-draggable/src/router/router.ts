@@ -13,6 +13,10 @@ const router = createRouter({
         {
             path:'/clone',
             component: () => import('../components/Clone.vue'),
+        },
+        {
+            path:'/simple',
+            component: () => import('../components/Simple.vue'),
         }
     ]
 })
