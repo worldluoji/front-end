@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "composite": true,
+    "composite": true, // "composite": true 表示可以被增量编译和引用，"declaration": true 表示要生成声明文件。
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.ts", "plugins"]
+  "include": ["vite.config.ts", "plugins"] // include指定编译哪些文件
 }

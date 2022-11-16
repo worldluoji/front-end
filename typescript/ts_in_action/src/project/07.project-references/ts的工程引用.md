@@ -1,11 +1,11 @@
 # ts的工程引用
-在old工程里，src目录下有client,common,server三个不通的项目，希望通过编译后，在输出目录dist里没有
+在old工程里，src目录下有client,common,server三个不同的项目，希望通过编译后，在输出目录dist里没有
 src这一层级。 使用include可以实现，但不够优雅，项目一旦过大，难以维护。
 
 工程引用解决了多目录打包，以及打包效率的问题。
 
 在new工程中，代码没有改动，只是在client,common,server三个目录下各自有一个tsconfig.json文件。
-要使用工程引用，以下编译选项是必须的：
+要使用工程引用，composite编译选项是必须的：
 ```
 "compilerOptions":{
     "composite": true,
