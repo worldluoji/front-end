@@ -52,3 +52,98 @@ dist/assets/index.455b0f99.js               145.13 KiB / gzip: 48.13 KiB
 小结一下，Vite 默认拆包的优势在于实现了 CSS 代码分割与业务代码、第三方库代码、动态 import 模块代码三者的分离，
 但缺点也比较直观，第三方库的打包产物容易变得比较臃肿，上述例子中的 vendor.js的大小已经达到 500 KB 以上，
 显然是有进一步拆包的优化空间的，这个时候我们就需要用到 Rollup 中的拆包 API ——manualChunks 了。
+
+<br>
+
+## 自定义拆包策略
+针对更细粒度的拆包，Vite 的底层打包引擎 Rollup 提供了manualChunks，
+让我们能自定义拆包策略，它属于 Vite 配置的一部分，示例如下:
+```
+// vite.config.ts
+export default {
+  build: {
+    rollupOptions: {
+      output: {
+        // manualChunks 配置
+        manualChunks: {},
+      },
+    }
+  },
+}
+```
+manualChunks 主要有两种配置的形式，可以配置为一个对象或者一个函数。我们先来看看对象的配置，也是最简单的配置方式:
+```
+// vite.config.ts
+{
+  build: {
+    rollupOptions: {
+      output: {
+        // manualChunks 配置
+        manualChunks: {
+          // 将 React 相关库打包成单独的 chunk 中
+          'react-vendor': ['react', 'react-dom'],
+          // 将 Lodash 库的代码单独打包
+          'lodash': ['lodash-es'],
+          // 将组件库的代码打包
+          'library': ['antd', '@arco-design/web-react'],
+        },
+      },
+    }
+  },
+}
+```
+在对象格式的配置中，key代表 chunk 的名称，value为一个字符串数组，每一项为第三方包的包名。
+这样，react和react-dom会被单独打包到一个chunk中， lodash-es会被单独打包到一个chunk，依次类推。
+
+通过函数进行更加灵活的配置，而 Vite 中的默认拆包策略也是通过函数的方式来进行配置的，我们可以在 Vite 的实现中瞧一瞧:
+```
+// Vite 部分源码
+function createMoveToVendorChunkFn(config: ResolvedConfig): GetManualChunk {
+  const cache = new Map<string, boolean>()
+  // 返回值为 manualChunks 的配置
+  return (id, { getModuleInfo }) => {
+    // Vite 默认的配置逻辑其实很简单
+    // 主要是为了把 Initial Chunk 中的第三方包代码单独打包成`vendor.[hash].js`
+    if (
+      id.includes('node_modules') &&
+      !isCSSRequest(id) &&
+      // 判断是否为 Initial Chunk
+      staticImportedByEntry(id, getModuleInfo, cache)
+    ) {
+      return 'vendor'
+    }
+  }
+}
+```
+Rollup 会对每一个模块调用 manualChunks 函数，在 manualChunks 的函数入参中你可以拿到模块 id 及模块详情信息，
+经过一定的处理后返回 chunk 文件的名称，这样当前 id 代表的模块便会打包到你所指定的 chunk 文件中。
+这可能会出现循环引用的问题。
+
+<br>
+
+## 终极解决方案
+尽管上述的解决方案已经能帮我们正常进行产物拆包，但从实现上来看，还是显得略微繁琐，那么有没有开箱即用的拆包方案，能让我们直接用到项目中呢？
+
+答案是肯定的，接下来我就给大家介绍 Vite 自定义拆包的终极解决方案——vite-plugin-chunk-split。
+
+首先安装一下这个插件:
+```
+pnpm i vite-plugin-chunk-split -D
+```
+然后你可以在项目中引入并使用:
+```
+// vite.config.ts
+import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
+
+export default {
+  chunkSplitPlugin({
+    // 指定拆包策略
+    customSplitting: {
+      // 1. 支持填包名。`react` 和 `react-dom` 会被打包到一个名为`render-vendor`的 chunk 里面(包括它们的依赖，如 object-assign)
+      'react-vendor': ['react', 'react-dom'],
+      // 2. 支持填正则表达式。src 中 components 和 utils 下的所有文件被会被打包为`component-util`的 chunk 中
+      'components-util': [/src\/components/, /src\/utils/]
+    }
+  })
+}
+```
