@@ -297,3 +297,7 @@ media query参考： https://developer.mozilla.org/zh-CN/docs/Web/CSS/Media_Quer
 ```
 <input type="text" value="xxx"  size="100" style="text-align:right" />
 ```
+
+16. css元素重叠的方法
+1、给元素设置负margin，负margin可以让元素的占用空间变小，后面的元素可以覆盖当前的元素；
+2、使用position属性，利用绝对定位、相对定位来让多个元素进行重叠。
