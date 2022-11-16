@@ -1,4 +1,4 @@
-# PV、UV和VV
+# PV、UV和 VV
 ## PV
 即页面浏览量或点击量，用户每1次对网站中的每个网页访问均被记录1个PV。用户对同一页面的多次访问，访问量累计，用以衡量网站用户访问的网页数量。
 
@@ -12,3 +12,19 @@
 如：你今天10点钟打开了百度，访问了它的三个页面；11点钟又打开了百度，访问了它的两个页面，则PV数+5，VV数+2.
 
 PV是指页面的浏览次数，VV是指你访问网站的次数。
+
+##  更准确的统计 PV
+Page Visibility API 由 document.visibilityState 属性以及 visibilitychange 事件组成。
+基于这两个 API，你可以确保只会在页面的 visibilityState 可见时才发送 Page View 统计。
+
+此外，你还可以监听 visibilitychange 事件，在用户重新切回到在后台运行有段时间的应用时发送新的 Page View 统计。
+Page Visibility API 很好的解决了加载完成后几乎不需要刷新的 WEB 应用的 Page View 统计问题。
+
+具体如下：
+
+- 页面加载时，如果页面的 visibilityState 是可见的，发送 Page View 统计；
+- 如果页面的 visibilityState 是隐藏的，就监听 visibilitychange 事件，并在 visibilityState 变为可见时发送 Page View 统计；
+- 如果 visibilityState 由隐藏变为可见，并且自上次用户交互之后已经过了“足够长”的时间，就发送新的 Page View 统计；
+- 如果 URL 发生变化（仅限于 pathname 或 search 部分发送变化, hash 部分则应该忽略，因为它是用来标记页面内跳转的) 发送新的 Page View 统计；
+
+参考： https://zhuanlan.zhihu.com/p/26341409
