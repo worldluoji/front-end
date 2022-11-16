@@ -35,10 +35,20 @@ sVite 正好是补足了 Rollup 应用构建的能力，在拆包能力这一块
 
 对于 Initital Chunk 而言，业务代码和第三方包代码分别打包为单独的 chunk，在上述的例子中分别对应index.js和vendor.js。
 需要说明的是，这是 Vite 2.9 版本之前的做法，而在 Vite 2.9 及以后的版本，默认打包策略更加简单粗暴，
-将所有的 js 代码全部打包到 index.js 中。
+将所有的 js 代码全部打包到 index.js 中:
+```
+vite v3.1.8 building for production...
+✓ 38 modules transformed.
+dist/assets/react.35ef61ed.svg              4.02 KiB
+dist/assets/logo-with-shadow.51249ca9.png   29.40 KiB
+dist/assets/back.3d1b206c.jpeg              9.00 KiB
+dist/index.html                             0.64 KiB
+dist/assets/index.dccd1fea.css              0.21 KiB / gzip: 0.17 KiB
+dist/assets/index.31029545.js               144.49 KiB / gzip: 47.78 KiB
+```
 
 对于 Async Chunk 而言 ，动态 import 的代码会被拆分成单独的 chunk，如上述的Dynacmic组件。
 
 小结一下，Vite 默认拆包的优势在于实现了 CSS 代码分割与业务代码、第三方库代码、动态 import 模块代码三者的分离，
-但缺点也比较直观，第三方库的打包产物容易变得比较臃肿，上述例子中的vendor.js的大小已经达到 500 KB 以上，
+但缺点也比较直观，第三方库的打包产物容易变得比较臃肿，上述例子中的 vendor.js的大小已经达到 500 KB 以上，
 显然是有进一步拆包的优化空间的，这个时候我们就需要用到 Rollup 中的拆包 API ——manualChunks 了。
