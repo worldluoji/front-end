@@ -7,6 +7,7 @@ import svgr from 'vite-plugin-svgr'
 import viteImagemin from 'vite-plugin-imagemin'
 
 import virtual from './plugins/virtual-module'
+import { chunkSplitPlugin } from 'vite-plugin-chunk-split'
 
 const variablePath = normalizePath(path.resolve('./src/global.scss'))
 
@@ -43,6 +44,15 @@ export default defineConfig({
                     active: false
                   }
                 ]
+              }
+            }),
+            chunkSplitPlugin({
+              // 指定拆包策略
+              customSplitting: {
+                // 1. 支持填包名。`react` 和 `react-dom` 会被打包到一个名为`render-vendor`的 chunk 里面(包括它们的依赖，如 object-assign)
+                'react-vendor': ['react', 'react-dom'],
+                // 2. 支持填正则表达式。src 中 components 和 utils 下的所有文件被会被打包为`component-util`的 chunk 中
+                'components-util': [/src\/components/, /src\/utils/]
               }
             })
   ],

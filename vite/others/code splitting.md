@@ -128,7 +128,7 @@ Rollup 会对每一个模块调用 manualChunks 函数，在 manualChunks 的函
 
 首先安装一下这个插件:
 ```
-pnpm i vite-plugin-chunk-split -D
+npm i vite-plugin-chunk-split -D
 ```
 然后你可以在项目中引入并使用:
 ```
