@@ -91,7 +91,7 @@ const xxx = await vite.ssrLoadModule('/src/entry-server.tsx')
 
 第二步，删除项目自带的src/main.ts，然后在 src 目录下新建entry-client.tsx和entry-server.tsx两个入口文件
 
-第三步，新建src/ssr-server/index.ts, 编写后端服务
+第三步，新建src/ssr-server/index.ts, 简单编写一个express后端服务
 
 第四步，在package.json script中添加命令，这里涉及两个工具需要安装：
 - nodemon: 一个监听文件变化自动重启 Node 服务的工具。
@@ -99,6 +99,24 @@ const xxx = await vite.ssrLoadModule('/src/entry-server.tsx')
 ```
 npm i esno nodemon -D
 ```
+### SSR 运行时实现
+SSR 作为一种特殊的后端服务，我们可以将其封装成一个中间件的形式。
+运行时实现参考：src/ssr-server/index.ts
+
+###  静态资源问题处理
+npm run build及npm run preview进行生产环境的预览，会发现 SSR 可以正常返回内容，但所有的静态资源及 CSR 的代码都失效了
+这是因为对于开发阶段的静态资源 Vite Dev Server 的中间件已经帮我们处理了，而生产环境所有的资源都已经打包完成，
+我们需要启用单独的静态资源服务来承载这些资源。这里你可以使用serve-static中间件来完成这个服务。
+参考：src/ssr-server/index.ts。
+
+不过，一般情况下，我们会将静态资源部上传到 CDN 上，并且将 Vite 的 base 配置为域名前缀，
+这样我们可以通过 CDN 直接访问到静态资源，而不需要加上服务端的处理。
+不过作为本地的生产环境预览而言，serve-static还是一个不错的静态资源处理手段。
+
+## 开箱即用产品
+Nuxt 是一个构建于 Vue 生态系统之上的全栈框架，它为编写 Vue SSR 应用提供了丝滑的开发体验。更棒的是，你还可以把它当作一个静态站点生成器来用！我们强烈建议你试一试。
+
+Quasar 是一个基于 Vue 的完整解决方案，它可以让你用同一套代码库构建不同目标的应用，如 SPA、SSR、PWA、移动端应用、桌面端应用以及浏览器插件。除此之外，它还提供了一整套 Material Design 风格的组件库。
 
 ## 参考
 - https://staging-cn.vuejs.org/guide/scaling-up/ssr.html
