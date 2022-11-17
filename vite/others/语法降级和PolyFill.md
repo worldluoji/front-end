@@ -32,3 +32,28 @@ import "core-js/modules/es6.set.js"
 ```
 看似各种运行时库眼花缭乱，其实都是core-js和regenerator-runtime不同版本的封装罢了(@babel/runtime是个特例，不包含 core-js 的 Polyfill)。
 这类库是项目运行时必须要使用到的，因此一定要放到package.json中的dependencies中！
+
+详见 bebal-test工程
+
+## Vite 语法降级与 Polyfill 注入
+Vite 官方已经为我们封装好了一个开箱即用的方案: @vitejs/plugin-legacy，我们可以基于它来解决项目语法的浏览器兼容问题。
+这个插件内部同样使用 @babel/preset-env 以及 core-js等一系列基础库来进行语法降级和 Polyfill 注入。
+```
+npm i @vitejs/plugin-legacy -D
+```
+随后项目中使用
+```
+// vite.config.ts
+import legacy from '@vitejs/plugin-legacy';
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [
+    // 省略其它插件
+    legacy({
+      // 设置目标浏览器，browserslist 配置语法
+      targets: ['ie >= 11'],
+    })
+  ]
+})
+```

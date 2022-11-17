@@ -8,6 +8,7 @@ import viteImagemin from 'vite-plugin-imagemin'
 
 import virtual from './plugins/virtual-module'
 import { chunkSplitPlugin } from 'vite-plugin-chunk-split'
+import legacy from '@vitejs/plugin-legacy'
 
 const variablePath = normalizePath(path.resolve('./src/global.scss'))
 
@@ -54,6 +55,11 @@ export default defineConfig({
                 // 2. 支持填正则表达式。src 中 components 和 utils 下的所有文件被会被打包为`component-util`的 chunk 中
                 'components-util': [/src\/components/, /src\/utils/]
               }
+            }),
+            legacy({
+              // 设置目标浏览器，browserslist 配置语法
+              targets: ['last 2 versions and since 2018 and > 0.5%','ie >= 11'],
+              // 通过官方的legacy插件， Vite 会分别打包出Modern模式和Legacy模式的产物，然后将两种产物插入同一个 HTML 里面，Modern产物被放到 type="module"的 script 标签中，而Legacy产物则被放到带有 nomodule 的 script 标签中
             })
   ],
   css: {
