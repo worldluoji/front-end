@@ -85,7 +85,20 @@ const xxx = await vite.ssrLoadModule('/src/entry-server.tsx')
 
 <br>
 
-项目参考 vite-ssr
+## 项目参考 vite-ssr
+### 项目骨架搭建
+第一步， npm init vite@latest 创建一个vite + react + ts 项目
+
+第二步，删除项目自带的src/main.ts，然后在 src 目录下新建entry-client.tsx和entry-server.tsx两个入口文件
+
+第三步，新建src/ssr-server/index.ts, 编写后端服务
+
+第四步，在package.json script中添加命令，这里涉及两个工具需要安装：
+- nodemon: 一个监听文件变化自动重启 Node 服务的工具。
+- esno: 类似 ts-node 的工具，用来执行 ts 文件，底层基于 Esbuild 实现。
+```
+npm i esno nodemon -D
+```
 
 ## 参考
 - https://staging-cn.vuejs.org/guide/scaling-up/ssr.html
