@@ -48,9 +48,10 @@ import styles from './index.module.css'
 // 这里的 styles 是一个对象，如{ "container": "xxx" }，而不是 CSS 代码
 console.log(styles)
 ```
-
 3. 依赖外部化(external)。对于某些第三方依赖我们并不需要使用构建后的版本，而是直接从 node_modules 中读取，
 比如 react-dom，这样在 SSR 构建的过程中将不会构建这些依赖，从而极大程度上加速 SSR 的构建。
+
+<img src="./SSR构建时示意图.webp" />
 
 ## 运行时
 对于 SSR 的运行时，一般可以拆分为比较固定的生命周期阶段，简单来讲可以整理为以下几个核心的阶段:
@@ -83,6 +84,8 @@ const xxx = await vite.ssrLoadModule('/src/entry-server.tsx')
 这样 Vite 会专门为 SSR 打包出一份构建产物。因此你可以看到，大部分 SSR 构建时的事情，Vite 已经帮我们提供了开箱即用的方案，我们后续直接使用即可。
 
 <br>
+
+项目参考 vite-ssr
 
 ## 参考
 - https://staging-cn.vuejs.org/guide/scaling-up/ssr.html

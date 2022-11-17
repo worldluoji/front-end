@@ -1,10 +1,6 @@
 # 使用vite创建项目
 ```
-npm create vite 
-or
-pmpm create vite 
-or
-yarn create vite
+npm init vite@latest
 ```
 然后按照提示一步一步选择即可。
 
