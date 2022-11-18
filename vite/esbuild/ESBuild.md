@@ -77,3 +77,127 @@ node buildserver.js, 我们在浏览器访问localhost:8000可以看到 Esbuild 
 
 见 transform.js， 同样不建议使用同步方法。
 出于性能考虑，Vite 的底层实现也是采用 transform这个异步的 API 进行 TS 及 JSX 的单文件转译的。
+
+<br>
+
+## Esbuild 插件开发
+插件开发其实就是基于原有的体系结构中进行扩展和自定义。 
+Esbuild 插件也不例外，通过 Esbuild 插件我们可以扩展 Esbuild 原有的路径解析、模块加载等方面的能力，并在 Esbuild 的构建过程中执行一系列自定义的逻辑。
+Esbuild 插件结构被设计为一个对象，里面有name和setup两个属性，name是插件的名称，setup是一个函数，
+其中入参是一个 build 对象，这个对象上挂载了一些钩子可供我们自定义一些钩子函数逻辑。
+
+build.js中，envPlugin就是一个插件定义的例子。
+
+<br>
+
+## 钩子函数的使用
+1. onResolve 钩子 和 onLoad钩子
+
+在 Esbuild 插件中，onResolve 和 onload是两个非常重要的钩子，分别控制路径解析和模块内容加载的过程。
+
+首先，我们来说说上面插件示例中的两个钩子该如何使用。
+```
+build.onResolve({ filter: /^env$/ }, args => ({
+  path: args.path,
+  namespace: 'env-ns',
+}));
+
+build.onLoad({ filter: /.*/, namespace: 'env-ns' }, () => ({
+  contents: JSON.stringify(process.env),
+  loader: 'json',
+}));
+```
+可以发现这两个钩子函数中都需要传入两个参数: Options 和 Callback。
+
+先说说Options。它是一个对象，对于onResolve 和 onload 都一样，包含filter和namespace两个属性，类型定义如下:
+```
+interface Options {
+  filter: RegExp;
+  namespace?: string;
+}
+```
+filter 为必传参数，是一个正则表达式，它决定了要过滤出的特征文件。
+插件中的 filter 正则是使用 Go 原生正则实现的，为了不使性能过于劣化，规则应该尽可能严格。同时它本身和 JS 的正则也有所区别，不支持前瞻(?<=)、后顾(?=)和反向引用(\1)这三种规则。
+
+namespace 为选填参数，一般在 onResolve 钩子中的回调参数返回namespace属性作为标识，
+我们可以在onLoad钩子中通过 namespace 将模块过滤出来。
+
+如上述插件示例就在onLoad钩子通过env-ns这个 namespace 标识过滤出了要处理的env模块。
+
+还有一个回调参数 Callback，它的类型根据不同的钩子会有所不同。相比于 Options，Callback 函数入参和返回值的结构复杂得多，涉及很多属性。不过，我们也不需要看懂每个属性的细节，先了解一遍即可，常用的一些属性会在插件实战部分讲解来讲。
+
+在 onResolve 钩子中函数参数和返回值梳理如下:
+```
+build.onResolve({ filter: /^env$/ }, (args: onResolveArgs): onResolveResult => {
+  // 模块路径
+  console.log(args.path)
+  // 父模块路径
+  console.log(args.importer)
+  // namespace 标识
+  console.log(args.namespace)
+  // 基准路径
+  console.log(args.resolveDir)
+  // 导入方式，如 import、require
+  console.log(args.kind)
+  // 额外绑定的插件数据
+  console.log(args.pluginData)
+  
+  return {
+      // 错误信息
+      errors: [],
+      // 是否需要 external
+      external: false;
+      // namespace 标识
+      namespace: 'env-ns';
+      // 模块路径
+      path: args.path,
+      // 额外绑定的插件数据
+      pluginData: null,
+      // 插件名称
+      pluginName: 'xxx',
+      // 设置为 false，如果模块没有被用到，模块代码将会在产物中会删除。否则不会这么做
+      sideEffects: false,
+      // 添加一些路径后缀，如`?xxx`
+      suffix: '?xxx',
+      // 警告信息
+      warnings: [],
+      // 仅仅在 Esbuild 开启 watch 模式下生效
+      // 告诉 Esbuild 需要额外监听哪些文件/目录的变化
+      watchDirs: [],
+      watchFiles: []
+  }
+}
+```
+在 onLoad 钩子中函数参数和返回值梳理如下:
+```
+build.onLoad({ filter: /.*/, namespace: 'env-ns' }, (args: OnLoadArgs): OnLoadResult => {
+  // 模块路径
+  console.log(args.path);
+  // namespace 标识
+  console.log(args.namespace);
+  // 后缀信息
+  console.log(args.suffix);
+  // 额外的插件数据
+  console.log(args.pluginData);
+  
+  return {
+      // 模块具体内容
+      contents: '省略内容',
+      // 错误信息
+      errors: [],
+      // 指定 loader，如`js`、`ts`、`jsx`、`tsx`、`json`等等
+      loader: 'json',
+      // 额外的插件数据
+      pluginData: null,
+      // 插件名称
+      pluginName: 'xxx',
+      // 基准路径
+      resolveDir: './dir',
+      // 警告信息
+      warnings: [],
+      // 同上
+      watchDirs: [],
+      watchFiles: []
+  }
+});
+```

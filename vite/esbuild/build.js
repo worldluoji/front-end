@@ -1,5 +1,22 @@
 const { build, buildSync, serve } = require("esbuild");
 
+let envPlugin = {
+  name: 'env',
+  setup(build) {
+    // 过滤出env路径，加上 namespace标记为 env-ns
+    build.onResolve({ filter: /^env$/ }, args => ({
+      path: args.path,
+      namespace: 'env-ns',
+    }))
+
+    // 根据namespace过滤出上述env，使用json loader将内容替换为process.env
+    build.onLoad({ filter: /.*/, namespace: 'env-ns' }, () => ({
+      contents: JSON.stringify(process.env),
+      loader: 'json',
+    }))
+  },
+}
+
 async function runBuild() {
   // 异步方法，返回一个 Promise
   const result = await build({
@@ -32,7 +49,8 @@ async function runBuild() {
     // 针对一些特殊的文件，调用不同的 loader 进行加载
     loader: {
       '.png': 'base64',
-    }
+    },
+    plugins: [envPlugin]
   });
   console.log(result);
 }
