@@ -201,3 +201,27 @@ build.onLoad({ filter: /.*/, namespace: 'env-ns' }, (args: OnLoadArgs): OnLoadRe
   }
 });
 ```
+
+2. 其他钩子
+在 build 对象中，除了onResolve和onLoad，还有onStart和onEnd两个钩子用来在构建开启和结束时执行一些自定义的逻辑，使用上比较简单，如下面的例子所示:
+```
+let examplePlugin = {
+  name: 'example',
+  setup(build) {
+    build.onStart(() => {
+      console.log('build started')
+    });
+    build.onEnd((buildResult) => {
+      if (buildResult.errors.length) {
+        return;
+      }
+      // 构建元信息
+      // 获取元信息后做一些自定义的事情，比如生成 HTML
+      console.log(buildResult.metafile)
+    })
+  },
+}
+```
+在使用这些钩子的时候，有 2 点需要注意。
+- onStart 的执行时机是在每次 build 的时候，包括触发 watch 或者 serve模式下的重新构建。
+- onEnd 钩子中如果要拿到 metafile，必须将 Esbuild 的构建配置中metafile属性设为 true。
