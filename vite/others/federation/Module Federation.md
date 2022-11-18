@@ -36,3 +36,7 @@ npm install @originjs/vite-plugin-federation -D
 - Host模块: 即本地模块，用来消费远程模块。
 - Remote模块: 即远程模块，用来生产一些模块，并暴露运行时容器供本地模块消费。
 - Shared依赖: 即共享依赖，用来在本地模块和远程模块中实现第三方依赖的共享。
+
+Host和Remote的交互流程如下：
+
+<img src="远程模块的运行时容器与本地模块的交互流程.webp" />
