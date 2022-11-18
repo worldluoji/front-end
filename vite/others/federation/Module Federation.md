@@ -31,3 +31,8 @@ demo见 host和remote, 基于Vue + ts创建了项目，并安装vite-plugin-fede
 ```
 npm install @originjs/vite-plugin-federation -D
 ```
+
+总体而言，实现模块联邦有三大主要的要素:
+- Host模块: 即本地模块，用来消费远程模块。
+- Remote模块: 即远程模块，用来生产一些模块，并暴露运行时容器供本地模块消费。
+- Shared依赖: 即共享依赖，用来在本地模块和远程模块中实现第三方依赖的共享。
