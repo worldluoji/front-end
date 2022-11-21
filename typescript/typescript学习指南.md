@@ -33,6 +33,8 @@ tsc hello.ts
 ```
 编译后会生成.js文件
 
+-w 表示监听模式，这样修改文件后就会自动触发重新编译。
+
 - 插件（可选）
 ```
 JavaScript and TypeScript Nightly
