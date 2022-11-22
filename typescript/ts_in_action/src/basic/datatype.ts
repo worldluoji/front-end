@@ -12,6 +12,7 @@ age = '26';
 // 1. array
 let arr: number[] = [1,2,3]
 let arr2: Array<number> = [4,5,6]
+let arr3: number[] = new Array(3)
 
 // 2. tuple
 let tuple: [number, string] = [1,'2']
