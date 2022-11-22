@@ -10,11 +10,12 @@
         <anchored-heading :level="2">Hello world!!</anchored-heading>
         <anchored-heading :level="3">Hello world!!!</anchored-heading>
     </div>
+<!-- https://unpkg.com/vue@3.2.37/dist/vue.runtime.global.js 用Vue3也是可以的 -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
     Vue.component('anchored-heading', {
-        render: function (createElement) {
-            return createElement(
+        render: function (h) {
+            return h(
                 'h' + this.level,   // 标签名称
                 this.$slots.default // 子节点数组
             )
