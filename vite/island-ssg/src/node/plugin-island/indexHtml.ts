@@ -15,6 +15,12 @@ export function pluginIndexHtml(): Plugin {
           let html = await readFile(DEFAULT_HTML_PATH, "utf-8");
 
           try {
+            // 热更新
+            html = await server.transformIndexHtml(
+                req.url,
+                html,
+                req.originalUrl
+            );
             res.statusCode = 200;
             res.setHeader("Content-Type", "text/html");
             res.end(html);
