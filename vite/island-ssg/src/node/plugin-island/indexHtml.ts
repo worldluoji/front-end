@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import { Plugin } from "vite";
-import { DEFAULT_HTML_PATH } from "../constants";
+import { CLIENT_ENTRY_PATH, DEFAULT_HTML_PATH } from "../constants";
 
 // 该插件让工程识别index.html
 export function pluginIndexHtml(): Plugin {
@@ -8,6 +8,22 @@ export function pluginIndexHtml(): Plugin {
     name: "island:index-html",
     // 'serve' 表示仅用于开发环境
     apply: "serve",
+    // 这个钩子用来转换 HTML 内容, 这里插入口 script 标签
+    transformIndexHtml(html) {
+        return {
+            html,
+            tags: [
+                {
+                    tag: "script",
+                    attrs: {
+                        type: "module",
+                        src: `/@fs/${CLIENT_ENTRY_PATH}`,
+                    },
+                    injectTo: "body",
+                },
+            ],
+        };
+    },
     // 用来获取 Vite Dev Server 实例，添加中间件
     configureServer(server) {
       return () => {
