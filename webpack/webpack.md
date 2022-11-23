@@ -48,3 +48,56 @@ plugins: [
  new HtmlWebpackPlugin({template: './src/index.html'})
 ]
 ```
+
+## 模版
+```
+const path = require('path');
+const { VueLoaderPlugin } = require('vue-loader/dist/index')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+module.exports = {
+  mode: 'production',
+  entry: {
+    'index' : path.join(__dirname, 'src/index.js'),
+  },
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: '[name].js',
+  },
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        use: [
+          'vue-loader'
+        ]
+      },
+      {  
+        test: /\.(css|less)$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+        ]
+      },
+    ]
+  },
+  plugins: [
+    new VueLoaderPlugin(), 
+    new MiniCssExtractPlugin({
+      filename: '[name].css'
+    })
+  ],
+  externals: {
+    'vue': 'window.Vue'
+  }
+}
+```
+module，这是 Webpack 打包构建的核心所在，你可以根据自己项目的打包需要，选择对应的打包加载器（Loader）来处理指定的打包文件。
+这里我们选择了 vue-loader 和 css-loader 就是为了解决项目里 Vue.js3 源码和 Vue.js3 源码里的 CSS 代码的打包编译处理。
+
+Vue 的加载插件（VueLoaderPlugin）来辅助你在编译 Vue.js 3 代码时候做相关的编译处理。
+这里也用了 CSS 的分离插件（MiniCssExtractPlugin），主要是在 Webpack 打包的生命周期过程中将 Vue.js 3 源码里的 CSS 代码分离出单独的 CSS 文件。
+
+externals，这个是声明在 Webpack 打包编译过程中，有哪些源码依赖的 npm 模块需要“排除打包”处理，
+也就是不做打包整合处理。我们这里就是将 Vue.js 3 的运行源码进行“排除打包”处理，让代码最终代码依赖的 Vue.js 3 运行时，从 window.Vue 全局变量获取。
+这么做的好处就是通过减少打包的内容来缩短打包时间。

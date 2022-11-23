@@ -1,4 +1,6 @@
 # create a new ts app with webpack
+可以通过官方提供的脚手架来自动创建基于webpack的工程，也可以直接通过webpack手动构建。
+前者的好处是快，后者则更有利于自主掌控。
 
 ## 1. 创建ts配置文件
 ```
