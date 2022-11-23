@@ -25,3 +25,16 @@ import { readFile } from "fs/promises";
 let html = await readFile(DEFAULT_HTML_PATH, "utf-8");
 ```
 指定编码读取文件。
+
+## 4. fs-extra
+它会比原生的 fs 库提供更加好用的文件操作 API:
+```
+npm i fs-extra
+npm i @types/fs-extra -D
+```
+使用示例： 
+```
+await fs.ensureDir(join(root, "build")); // 确保目录用户正在请求的目录存在。 如果目录结构不存在，该函数将自行创建结构
+await fs.writeFile(join(root, "build/index.html"), html);
+await fs.remove(join(root, ".temp"));
+```
