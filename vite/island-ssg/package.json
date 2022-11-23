@@ -12,15 +12,18 @@
   "author": "luoji",
   "license": "ISC",
   "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
     "@vitejs/plugin-react": "^2.2.0",
     "eslint-plugin-react": "^7.31.11",
+    "rollup": "^3.4.0",
     "typescript": "^4.9.3"
   },
   "dependencies": {
     "cac": "^6.7.14",
+    "fs-extra": "^10.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vite": "^3.2.4"

@@ -18,8 +18,18 @@ npm link
 ## Dev Server启动
 ```
 island dev .
+island dev docs 仅启用docs目录
 ```
 
+## build
+```
+island build docs
+```
+然后在终端进入产物目录build里面，执行如下预览命令:
+```
+serve . 或者
+http-server
+```
 
 ## 问题说明
 1. React is not defined 的错误
