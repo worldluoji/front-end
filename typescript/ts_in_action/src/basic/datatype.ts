@@ -14,6 +14,13 @@ let arr: number[] = [1,2,3]
 let arr2: Array<number> = [4,5,6]
 let arr3: number[] = new Array(3)
 
+// 2行3列，二维数组创建方法
+let d2:number[][] = new Array<Array<number>>()
+for (let i = 0; i < 2; i++) {
+    let a = [0,0,0] // 3列，需要赋值0，否则会为NaN
+    d2.push(a)
+}
+
 // 2. tuple
 let tuple: [number, string] = [1,'2']
 tuple.push('3')
