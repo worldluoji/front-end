@@ -36,13 +36,21 @@
             :key="index"
             :props="element.props"
             :data-index="index"
+            @click="showPanel(element)"
           ></component>
         </template>
       </draggable>
       <div class="top-white"></div>
     </div>
-    <div class="panel">
-      
+    <div class="panel" v-if="current">
+      <component 
+        :is="current + 'Panel'"
+        :key="current"
+        :props="panelProps"
+        @change="change"
+       ></component>
+       <button @click="save">保存</button> &nbsp;&nbsp;
+       <button @click="cancel">取消</button>
     </div>
   </div>
   </div>
@@ -54,6 +62,7 @@ import Image from './components/Image.vue'
 import Offer from './components/Offer.vue'
 import List from './components/List.vue'
 import draggable from 'vuedraggable'
+import ImagePanel from './panel/ImagePanel.vue'
 export default {
   name: 'App',
   components: {
@@ -61,13 +70,36 @@ export default {
     Image,
     Offer,
     List,
-    draggable
+    draggable,
+    ImagePanel
   },
   data() {
     return {
       enabled: true,
       dragging: false,
-      content: []
+      content: [],
+      current: '',
+      panelProps: {},
+    }
+  },
+  methods: {
+    change(p) {
+      // console.log('change', p)
+      this.panelProps = p
+    },
+    save() {
+      let it = this.content.find(c => c.name === this.current)
+      if (!it) {
+        return
+      }
+      Object.assign(it.props, this.panelProps)
+      console.log('save', it, this.content)
+    },
+    cancel() {
+      this.current = ''
+    },
+    showPanel(element) {
+      this.current = element.name
     }
   }
 }
@@ -112,6 +144,7 @@ export default {
 .container {
   display: grid;
   grid-template-columns: 20vw 375px 30vw;
+  column-gap: 10vw;
 }
 
 .top-white {
@@ -134,5 +167,9 @@ export default {
 }
 .not-draggable {
   cursor: no-drop;
+}
+
+.panel {
+  width: 100%;
 }
 </style>
