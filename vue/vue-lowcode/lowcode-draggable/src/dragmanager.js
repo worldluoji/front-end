@@ -29,11 +29,10 @@ export default class DragManager {
         const target = e.target
         const { value } = this.ref
         // console.log('pos', e)
-        const tm = value.indexOf(this.opData)
         if (e.target.isDragContent) {
             // console.log('go here')
             // 拖拽到画布里
-            const index = tm
+            const index = value.indexOf(this.opData)
             if (index < 0) {
                 // 没有就加入进去
                 this.ref.value.push(this.opData)
@@ -41,18 +40,6 @@ export default class DragManager {
                 // 如果不是最后一个，就把前面的那个删了，再加入
                 this.ref.value.splice(index, 1)
                 this.ref.value.push(this.opData)
-            }
-        } else if(tm > -1) {
-            // 画布内拖动
-            // offsetHeight 属性是一个只读属性，它返回该元素的像素高度，高度包含内边距（padding）和边框（border），不包含外边距（margin）
-            // offsetY是左上角垂直偏移量
-            // console.log('go there')
-            let [ y, h, index ] = [ e.offsetY, target.offsetHeight, target.dataset.index ]
-            let direction = y < (h / 2) ? 1 : 0
-            const i = tm
-            if (i !== index - direction + 1) {
-                this.ref.value.splice(i, 1)
-                this.ref.value.splice(index - direction + 1, 0, this.opData)
             }
         }
     }
@@ -76,13 +63,15 @@ export default class DragManager {
 
     // 拖拉到当前节点上方时，在当前节点上持续触发（相隔几百毫秒），该事件的target属性是当前节点
     dragover(e) {
+        console.log('dropover')
         e.preventDefault()
         // dragover每隔几百毫秒就会触发计算，代价太大
-        // this.calPos(e) 
+        this.calPos(e) 
     }
 
     // 被拖拉的节点或选中的文本，释放到目标节点时，在目标节点上触发。注意，如果当前节点不允许drop，即使在该节点上方松开鼠标键，也不会触发该事件
     drop(e) {
+        console.log('drop')
         e.preventDefault()
         const isIn = e.target.dataset.container
         // console.log(this.ref.value, this.opData, e)

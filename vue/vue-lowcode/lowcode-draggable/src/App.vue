@@ -1,19 +1,5 @@
-<script setup>
-import { ref } from 'vue'
-import Carousel from './components/Carousel.vue'
-import Image from './components/Image.vue'
-import Offer from './components/Offer.vue'
-import List from './components/List.vue'
-const components = {
-  Carousel,
-  Image,
-  Offer,
-  List,
-}
-const content = ref([])
-</script>
-
 <template>
+  <div class="wrapper">
   <div class="container">
     <div v-draggable class="material-icon-list">
       <div class="material-icon" data-material="Image">
@@ -34,27 +20,69 @@ const content = ref([])
       </div>
     </div>
     <div class="drag-content" v-dragcontent="content">
-      <div class="material-item" 
-        v-for="(item, index) in content" 
-        :class="{ disabled: item.state === 0, over: item.state === 2 }"
-        :data-index="index"
-        :key="index"
-      >
-        <component 
-          :is="components[item.name]"
-          :key="index"
-          :props="item.props"
-          :data-index="index"
-        ></component>
-      </div>
+      <div class="top-white"></div>
+      <draggable 
+        class="list-group" 
+        v-dragcontent="content"
+        :list="content"
+        :disabled="!enabled"
+        item-key="id"
+        ghost-class="ghost"
+        @start="dragging = true"
+        @end="dragging = false">
+        <template #item="{ element, index }" class="list-group-item">
+          <component 
+            :is="element.name"
+            :key="index"
+            :props="element.props"
+            :data-index="index"
+          ></component>
+        </template>
+      </draggable>
+      <div class="top-white"></div>
     </div>
+    <div class="panel">
+      
+    </div>
+  </div>
   </div>
 </template>
 
+<script>
+import Carousel from './components/Carousel.vue'
+import Image from './components/Image.vue'
+import Offer from './components/Offer.vue'
+import List from './components/List.vue'
+import draggable from 'vuedraggable'
+export default {
+  name: 'App',
+  components: {
+    Carousel,
+    Image,
+    Offer,
+    List,
+    draggable
+  },
+  data() {
+    return {
+      enabled: true,
+      dragging: false,
+      content: []
+    }
+  }
+}
+</script>
+
 <style>
 .material-icon-list {
-  margin-right: 10vw;
+  /* margin-right: 10vw; */
+  display: grid;
+  grid-template-columns: 5vw 5vw;
+  grid-template-rows: 8vw 8vw;
+  gap: 2vw;
+  place-items: center;
 }
+
 .material-icon-list:after {
   content: "";
   display: block;
@@ -69,19 +97,42 @@ const content = ref([])
   text-align: center;
   color: #777;
 }
+
 .drag-content {
   width: 375px;
   min-height: 500px;
   border: 1px solid #ddd;
+  border-radius: 5px;
 }
-.material-item {
-  min-height: 100px;
+
+.wrapper {
+  margin-top: 5vw;
 }
-.material-item.over {
-  outline: 1px dashed blueviolet;
-}
+
 .container {
   display: grid;
-  grid-template-columns: 20vw 1fr;
+  grid-template-columns: 20vw 375px 30vw;
+}
+
+.top-white {
+  height: 15px;
+}
+
+.list-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+}
+
+.list-group-item {
+}
+
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+.not-draggable {
+  cursor: no-drop;
 }
 </style>
