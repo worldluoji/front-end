@@ -59,10 +59,20 @@ export default {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  padding: 10px 0px;
+}
+
+.list-group:hover {
+  border: 1px solid blue;
 }
 
 .list-group-item {
   background-color: darkgrey;
+  text-align: center;
+}
+
+.list-group-item:hover {
+  border: 1px solid blue;
 }
 
 </style>

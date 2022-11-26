@@ -63,7 +63,6 @@ export default class DragManager {
 
     // 拖拉到当前节点上方时，在当前节点上持续触发（相隔几百毫秒），该事件的target属性是当前节点
     dragover(e) {
-        console.log('dropover')
         e.preventDefault()
         // dragover每隔几百毫秒就会触发计算，代价太大
         this.calPos(e) 
@@ -71,7 +70,6 @@ export default class DragManager {
 
     // 被拖拉的节点或选中的文本，释放到目标节点时，在目标节点上触发。注意，如果当前节点不允许drop，即使在该节点上方松开鼠标键，也不会触发该事件
     drop(e) {
-        console.log('drop')
         e.preventDefault()
         const isIn = e.target.dataset.container
         // console.log(this.ref.value, this.opData, e)
