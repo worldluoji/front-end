@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    <div v-if="!previewing">
     <div class="operation">
       <button @click="preview">预览</button>
       <button @click="seeSchame">Schema</button>
@@ -57,6 +58,11 @@
         <button @click="cancel">取消</button>
       </div>
     </div>
+    </div>
+    <div v-else>
+      <Render :content="content" />
+      <button @click="canelPrevie">取消预览</button>
+    </div>
   </div>
 </template>
 
@@ -67,6 +73,7 @@ import Offer from './components/Offer.vue'
 import List from './components/List.vue'
 import draggable from 'vuedraggable'
 import ImagePanel from './panel/ImagePanel.vue'
+import Render from './render/Render.vue'
 export default {
   name: 'App',
   components: {
@@ -75,7 +82,8 @@ export default {
     Offer,
     List,
     draggable,
-    ImagePanel
+    ImagePanel,
+    Render
   },
   data() {
     return {
@@ -84,6 +92,7 @@ export default {
       content: [],
       current: '',
       panelProps: {},
+      previewing: false
     }
   },
   methods: {
@@ -110,6 +119,10 @@ export default {
     },
     preview() {
       console.log('预览')
+      this.previewing = true
+    },
+    canelPrevie() {
+      this.previewing = false
     }
   }
 }
