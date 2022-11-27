@@ -7,21 +7,17 @@ const p = defineProps({
 
 const defaultUrl = 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'
 const props = reactive(p)
-if (!props.props.url) {
-    props.props.url = defaultUrl
-    props.props.height = ''
-    props.props.width = ''
-}
 
 </script>
 
 <template>
     <div class="container">
-        <img
+        <img v-if="props.props"
             :src="props.props.url ? props.props.url: defaultUrl"
             :height="props.props.height"
             draggable="false"
         />
+        <img v-else :src="defaultUrl"  />
     </div>
 </template>
 
