@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper">
     <div class="operation">
-      <button>预览</button>
+      <button @click="preview">预览</button>
+      <button @click="seeSchame">Schema</button>
     </div>
     <div class="container">
       <div v-draggable class="material-icon-list">
@@ -103,6 +104,12 @@ export default {
     },
     showPanel(element) {
       this.current = element.name
+    },
+    seeSchame() {
+      console.log(JSON.stringify(this.content))
+    },
+    preview() {
+      console.log('预览')
     }
   }
 }
@@ -141,7 +148,9 @@ export default {
 }
 
 .wrapper {
-  margin-top: 5vw;
+  margin-top: 5vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
@@ -173,7 +182,17 @@ export default {
 }
 
 .panel {
-  width: 100%;
+  background-color: #fff;
+  width: 300px;
+  height: 100vh;
+  position: fixed;
+  top: 5vh;
+  right: 0;
+  color: #000;
+  border: 1px solid #eee;
+  border-top: 0;
+  border-bottom: 0;
+  padding: 12px;
 }
 
 .operation {
@@ -181,5 +200,6 @@ export default {
   align-items: center;
   justify-content: center;
   margin-bottom: 2vh;
+  column-gap: 2vw;
 }
 </style>
