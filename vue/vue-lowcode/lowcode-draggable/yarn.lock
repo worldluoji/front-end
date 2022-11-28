@@ -221,9 +221,9 @@
   dependencies:
     "ms" "2.1.2"
 
-"esbuild-windows-64@0.15.13":
-  "integrity" "sha512-Et6htEfGycjDrtqb2ng6nT+baesZPYQIW+HUEHK4D1ncggNrDNk3yoboYQ5KtiVrw/JaDMNttz8rrPubV/fvPQ=="
-  "resolved" "https://registry.npmmirror.com/esbuild-windows-64/-/esbuild-windows-64-0.15.13.tgz"
+"esbuild-darwin-64@0.15.13":
+  "integrity" "sha512-WAx7c2DaOS6CrRcoYCgXgkXDliLnFv3pQLV6GeW1YcGEZq2Gnl8s9Pg7ahValZkpOa0iE/ojRVQ87sbUhF1Cbg=="
+  "resolved" "https://registry.npmmirror.com/esbuild-darwin-64/-/esbuild-darwin-64-0.15.13.tgz"
   "version" "0.15.13"
 
 "esbuild@^0.15.9":
@@ -283,6 +283,11 @@
   "version" "7.0.1"
   dependencies:
     "to-regex-range" "^5.0.1"
+
+"fsevents@~2.3.2":
+  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
+  "resolved" "https://registry.npmmirror.com/fsevents/-/fsevents-2.3.2.tgz"
+  "version" "2.3.2"
 
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="

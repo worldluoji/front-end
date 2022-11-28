@@ -34,16 +34,17 @@ export default {
 <style scoped>
     .container {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
     }
 
-    .group {
+    /* .group {
         display: flex;
         flex-direction: column;
         width: 375px;
         min-height: 500px;
         border: 1px solid #ddd;
         border-radius: 5px;
-    }
+    } */
 </style>
