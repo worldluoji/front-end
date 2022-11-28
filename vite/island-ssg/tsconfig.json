@@ -5,5 +5,6 @@
       "module": "commonjs" /* Specify what module code is generated. */,
       "rootDir": "src" /* Specify the root folder within your source files. */,
       "jsx": "react-jsx" /* 支持编译react jsx文件 */,
+      "esModuleInterop": true /* 在 ESM 语法中导入 CJS 模块时通常需要加上这个配置 */,
     }
 }

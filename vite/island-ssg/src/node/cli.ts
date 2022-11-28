@@ -1,9 +1,9 @@
 import { cac } from "cac";
-import path = require("path");
+import path from "path";
 import { createDevServer } from "./dev"; 
 import { build } from "./build";
 
-const version = require("../../package.json").version;
+const version = '1.0.0';
 
 const cli = cac("island").version(version).help();
 

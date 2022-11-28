@@ -2,8 +2,8 @@ import {build as viteBuild } from 'vite';
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH  } from "./constants";
 import { join } from "path";
 import type { RollupOutput } from "rollup";
-import * as fs from "fs-extra"
 import pluginReact from "@vitejs/plugin-react";
+import fse from "fs-extra"
 
 // 打包
 export async function bundle(root: string) {
@@ -64,7 +64,7 @@ export async function build(root: string = process.cwd()) {
   const [clientBundle, serverBundle] = await bundle(root);
   // 引入 ssr 入口模块
   const serverEntryPath = join(root, ".temp", "ssr-entry.js");
-  const { render } = require(serverEntryPath);
+  const { render } = await import(serverEntryPath);
   await renderPage(render, root, clientBundle);
 }
 
@@ -91,7 +91,7 @@ export async function renderPage(
         <script type="module" src="/${clientChunk?.fileName}"></script>
       </body>
     </html>`.trim();
-    await fs.ensureDir(join(root, "build"));
-    await fs.writeFile(join(root, "build/index.html"), html);
-    await fs.remove(join(root, ".temp"));
+    await fse.ensureDir(join(root, "build"));
+    await fse.writeFile(join(root, "build/index.html"), html);
+    await fse.remove(join(root, ".temp"));
 }
