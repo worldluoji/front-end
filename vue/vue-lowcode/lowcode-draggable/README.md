@@ -11,3 +11,5 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 2. 属性分离
 3. 容器嵌套容器
 4. 路由及打包
+5. 接口配置
+6. 远程引入卡片
