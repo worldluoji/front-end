@@ -9,8 +9,15 @@
     @end="dragging = false"
   >
     <template #item="{ element, index }">
-      <div :class="[{'list-group-item': enabled}]" data-container="true" :data-index="index">
-        <component :is="element.name"/>
+      <div v-if="enabled" 
+            :class="[{'list-group-item': enabled}]" 
+            data-container="true" 
+            :data-index="index" 
+            @click.stop="showPanel(element)">
+        <component :is="element.name" :props="element.props" />
+      </div>
+      <div v-else :class="[{'list-group-item': enabled}]" data-container="true" :data-index="index">
+        <component :is="element.name" :props="element.props" />
       </div>
     </template>
   </draggable>
@@ -46,7 +53,13 @@ export default {
   },
   created() {
     this.enabled = this.design
-  }
+  },
+  methods: {
+    showPanel(element) {
+        // console.log('show in list ele panel')
+        this.$emit('changep', element)
+    }
+  },
 };
 </script>
 <style scoped>

@@ -43,15 +43,16 @@
                 :design="true"
                 :data-index="index"
                 @click="showPanel(element)"
+                @changep="showPanel"
               ></component>
             </template>
           </draggable>
           <div class="top-white"></div>
         </div>
-        <div class="panel" v-if="current">
+        <div class="panel" v-if="current.id">
           <component 
-            :is="current + 'Panel'"
-            :key="current"
+            :is="current.name + 'Panel'"
+            :key="current.id"
             :props="panelProps"
             @change="change"
           ></component>
@@ -91,7 +92,7 @@ export default {
       enabled: true,
       dragging: false,
       content: [],
-      current: '',
+      current: {},
       panelProps: {},
       previewing: false
     }
@@ -102,24 +103,41 @@ export default {
       this.panelProps = p
     },
     save() {
-      let it = this.content.find(c => c.name === this.current)
+      // TODO 目前只更新楼层和一层容器
+      let it = this.content.find(c => c.id === this.current.id)
+      if (!it) {
+        let list = this.content.filter(c => c.name === 'List')
+        console.log(list)
+        list.forEach(l => {
+          if (l.props.list) {
+            let tmp = l.props.list.find(t => t.id === this.current.id)
+            if (tmp) {
+              it = tmp
+            }
+          }
+        })
+      }
       if (!it) {
         return
+      }
+      if (!it.props) {
+        it.props = {}
       }
       Object.assign(it.props, this.panelProps)
       console.log('save', it, this.content)
     },
     cancel() {
-      this.current = ''
+      this.current = {}
     },
     showPanel(element) {
-      this.current = element.name
+      // console.log('showPanel out', element)
+      this.current = element
     },
     seeSchame() {
       console.log(JSON.stringify(this.content))
     },
     preview() {
-      console.log('预览')
+      // console.log('预览')
       this.previewing = true
     },
     canelPreview() {

@@ -15,6 +15,7 @@ export default class DragManager {
         this.current = e.target.dataset.material
         // 当前拖动的组件(schema)
         this.opData = {
+            id: uuid(),
             name: this.current,
             props: {},
             state: 2,
