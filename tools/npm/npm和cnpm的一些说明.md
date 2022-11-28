@@ -23,3 +23,14 @@ bluebird的版本号：^3.3.4, body-parse的版本号：~1.15.2
 
 ## resolutions
 可强制锁定npm包的版本，注意低版本的npm无法锁定。
+
+## npm install xxx --legacy-peer-deps命令是什么？
+在NPM v7中，现在默认安装package.json中的peerDependencies。
+
+在很多情况下，这会导致版本冲突，从而中断安装过程。
+
+--legacy-peer-deps标志是在v7中引入的，目的是绕过peerDependency自动安装；
+它告诉 NPM 忽略项目中引入的各个modules之间的相同modules但不同版本的问题并继续安装，保证各个引入的依赖之间对自身所使用的不同版本modules共存。
+
+
+
