@@ -3,13 +3,13 @@
     :list="props.list"
     :disabled="!enabled"
     item-key="id"
-    class="list-group"
+    :class="enabled ? 'list-group':'list-groupr'"
     ghost-class="ghost"
     @start="dragging = true"
     @end="dragging = false"
   >
     <template #item="{ element, index }">
-      <div class="list-group-item" :class="{ 'not-draggable': !enabled }" data-container="true" :data-index="index">
+      <div :class="[{'list-group-item': enabled}]" data-container="true" :data-index="index">
         <component :is="element.name"/>
       </div>
     </template>
@@ -35,13 +35,17 @@ export default {
     props: {
         type: Object,
         required: true
-    }
+    },
+    design: false
   },
   data() {
     return {
-      enabled: true,
+      enabled: false,
       dragging: false
     };
+  },
+  created() {
+    this.enabled = this.design
   }
 };
 </script>
@@ -55,7 +59,7 @@ export default {
 }
 
 /* 实际是list-group来控制内部每一项的布局 */
-.list-group {
+.list-group,.list-groupr {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));

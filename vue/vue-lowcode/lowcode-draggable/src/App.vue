@@ -40,6 +40,7 @@
                 :is="element.name"
                 :key="index"
                 :props="element.props"
+                :design="true"
                 :data-index="index"
                 @click="showPanel(element)"
               ></component>
