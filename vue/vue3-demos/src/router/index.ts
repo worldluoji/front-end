@@ -63,6 +63,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "setup" */ "../views/SetupTestView.vue"),
   },
+  {
+    path: "/jsx",
+    name: "jsx",
+    component: () =>
+      import(/* webpackChunkName: "jsx" */ "../components/jsx/CounterJSX"),
+  },
 ];
 
 const router = createRouter({
