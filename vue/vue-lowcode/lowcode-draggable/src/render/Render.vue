@@ -37,14 +37,10 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        width: 100%;
     }
 
-    /* .group {
-        display: flex;
-        flex-direction: column;
-        width: 375px;
-        min-height: 500px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    } */
+    .group {
+        width: 100%;
+    }
 </style>
