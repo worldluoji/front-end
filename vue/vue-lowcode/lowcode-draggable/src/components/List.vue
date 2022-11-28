@@ -16,7 +16,7 @@
             @click.stop="showPanel(element)">
         <component :is="element.name" :props="element.props" />
       </div>
-      <div v-else :class="[{'list-group-item': enabled}]" data-container="true" :data-index="index">
+      <div v-else :class="[{'list-group-item': enabled}]">
         <component :is="element.name" :props="element.props" />
       </div>
     </template>
