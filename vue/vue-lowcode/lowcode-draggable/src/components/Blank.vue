@@ -1,9 +1,9 @@
-<template>
+<template class="container">
     请拖入卡片
 </template>
 
 <style scoped>
-    p {
-        text-align: center;
+    .container {
+        padding: 10px 16px;
     }
 </style>

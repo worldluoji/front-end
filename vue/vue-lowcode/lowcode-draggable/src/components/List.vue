@@ -1,19 +1,19 @@
 <template>
-      <draggable
-        :list="props.list"
-        :disabled="!enabled"
-        item-key="id"
-        class="list-group"
-        ghost-class="ghost"
-        @start="dragging = true"
-        @end="dragging = false"
-      >
-        <template #item="{ element, index }">
-          <div class="list-group-item" :class="{ 'not-draggable': !enabled }" data-container="true" :data-index="index">
-            <component :is="element.name"/>
-          </div>
-        </template>
-      </draggable>
+  <draggable
+    :list="props.list"
+    :disabled="!enabled"
+    item-key="id"
+    class="list-group"
+    ghost-class="ghost"
+    @start="dragging = true"
+    @end="dragging = false"
+  >
+    <template #item="{ element, index }">
+      <div class="list-group-item" :class="{ 'not-draggable': !enabled }" data-container="true" :data-index="index">
+        <component :is="element.name"/>
+      </div>
+    </template>
+  </draggable>
 </template>
 
 <script>
@@ -59,10 +59,20 @@ export default {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  padding: 10px 0px;
+}
+
+.list-group:hover {
+  border: 1px solid blue;
 }
 
 .list-group-item {
-  padding: 10px 16px;
   background-color: darkgrey;
+  text-align: center;
 }
+
+.list-group-item:hover {
+  border: 1px solid blue;
+}
+
 </style>

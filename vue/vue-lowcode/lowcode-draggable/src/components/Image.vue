@@ -1,16 +1,23 @@
 <script setup>
-defineProps({
+import { reactive } from 'vue';
+const p = defineProps({
     props: Object,
     className: String,
 })
+
+const defaultUrl = 'https://img.tt98.com/d/file/96kaifa/20181009233732/5bbc9c7b22f00.jpg'
+const props = reactive(p)
+
 </script>
 
 <template>
     <div class="container">
-        <img
-            src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+        <img v-if="props.props"
+            :src="props.props.url ? props.props.url: defaultUrl"
+            :height="props.props.height"
             draggable="false"
         />
+        <img v-else :src="defaultUrl"  />
     </div>
 </template>
 
