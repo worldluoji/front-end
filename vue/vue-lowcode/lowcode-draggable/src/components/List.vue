@@ -59,7 +59,7 @@ export default {
 }
 
 /* 实际是list-group来控制内部每一项的布局 */
-.list-group,.list-groupr {
+.list-group {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -68,6 +68,12 @@ export default {
 
 .list-group:hover {
   border: 1px solid blue;
+}
+
+.list-groupr {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 }
 
 .list-group-item {
