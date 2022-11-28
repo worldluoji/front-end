@@ -14,19 +14,19 @@
 </template>
 
 <script>
-import Carousel from '../components/Carousel.vue'
 import Image from '../components/Image.vue'
 import Offer from '../components/Offer.vue'
 import List from '../components/List.vue'
+import NavBar from '../components/NavBar.vue';
 export default {
     props: {
         content: Array
     },
     components: {
         Image,
-        Carousel,
         Offer,
-        List
+        List,
+        NavBar
     }
 }
 </script>

@@ -27,23 +27,23 @@
 import draggable from 'vuedraggable';
 import Blank from './Blank.vue';
 import Offer from './Offer.vue';
-import Carousel from './Carousel.vue';
 import Image from './Image.vue';
+import NavBar from './NavBar.vue';
 export default {
   name: "List",
   components: {
     draggable,
     Blank,
     Offer,
-    Carousel,
-    Image
+    Image,
+    NavBar
   },
   props: {
     props: {
         type: Object,
         required: true
     },
-    design: false
+    design: Boolean
   },
   data() {
     return {
