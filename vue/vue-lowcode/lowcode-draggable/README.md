@@ -9,6 +9,6 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 ## TODOS
 1. 属性分离
 2. 容器嵌套容器，限制嵌套的层数？通过传入parentIndex索引来找到对应位置的数据？
-3. 路由及打包
+3. 打包
 4. 接口配置
 5. 远程引入卡片
