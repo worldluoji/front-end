@@ -29,6 +29,8 @@ import Blank from './Blank.vue';
 import Offer from './Offer.vue';
 import Image from './Image.vue';
 import NavBar from './NavBar.vue';
+import currentPanelStore from '../store/currentPanel.js'
+
 export default {
   name: "List",
   components: {
@@ -48,7 +50,8 @@ export default {
   data() {
     return {
       enabled: false,
-      dragging: false
+      dragging: false,
+      currentPanel: currentPanelStore()
     };
   },
   created() {
@@ -56,8 +59,7 @@ export default {
   },
   methods: {
     showPanel(element) {
-        // console.log('show in list ele panel')
-        this.$emit('changep', element)
+        this.currentPanel.set(element)
     }
   },
 };

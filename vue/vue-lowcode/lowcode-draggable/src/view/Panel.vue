@@ -1,8 +1,8 @@
 <template>
-    <div class="panel" v-if="props.current && props.current.id">
+    <div class="panel" v-if="current && current.id">
         <component 
-            :is="defineAsyncComponent(() => import(`../panel/${props.current.name}Panel.vue`))"
-            :key="props.current.id"
+            :is="defineAsyncComponent(() => import(`../panel/${current.name}Panel.vue`))"
+            :key="current.id"
             :props="panelProps"
             @change="change"
         ></component>
@@ -13,12 +13,13 @@
 
 <script setup>
 import { defineAsyncComponent, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import metaStore from '../store/meta.js'
-const props = defineProps({
-    current: Object
-})
-// console.log('in', props)
+import currentPanelStore from '../store/currentPanel.js'
+
 const meta = metaStore()
+const currentPanel = storeToRefs(currentPanelStore())
+const current = currentPanel.get
 const panelProps = ref({})
 
 const change = (p) => {
@@ -29,13 +30,13 @@ const change = (p) => {
 const save = () => {
     // TODO 目前只更新楼层和一层容器
     let content = meta.get
-    let it = content.find(c => c.id === props.current.id)
+    let it = content.find(c => c.id === current.value.id)
     if (!it) {
         let list = content.filter(c => c.name === 'List')
-        console.log(list)
+        // console.log(list)
         list.forEach(l => {
             if (l.props.list) {
-                let tmp = l.props.list.find(t => t.id === props.current.id)
+                let tmp = l.props.list.find(t => t.id === current.value.id)
                 if (tmp) {
                     it = tmp
                 }

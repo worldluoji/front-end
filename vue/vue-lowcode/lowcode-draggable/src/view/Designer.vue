@@ -40,13 +40,12 @@
                   :design="true"
                   :data-index="index"
                   @click="showPanel(element)"
-                  @changep="showPanel"
                 ></component>
               </template>
             </draggable>
             <div class="top-white"></div>
           </div>
-          <Panel :current="current" @cancel="cancelPanel"/>
+          <Panel @cancel="cancelPanel"/>
         </div>
       </div>
     </div>
@@ -54,10 +53,11 @@
   
   <script>
   import draggable from 'vuedraggable'
-  import metaStore from '../store/meta.js'
   import Operation from './operation.vue' 
   import Cards from '../components'
   import Panel from './Panel.vue'
+  import metaStore from '../store/meta.js'
+  import currentPanelStore from '../store/currentPanel.js'
 
   export default {
     name: 'Designer',
@@ -72,8 +72,8 @@
         enabled: true,
         dragging: false,
         content: [],
-        current: {},
-        meta: metaStore()
+        meta: metaStore(),
+        currentPanel: currentPanelStore()
       }
     },
     beforeMount() {
@@ -81,11 +81,11 @@
     },
     methods: {
       cancelPanel() {
-        this.current = {}
+        this.currentPanel.set({})
       },
       showPanel(element) {
         // console.log('showPanel out', element)
-        this.current = element
+        this.currentPanel.set(element)
       }
     }
   }
