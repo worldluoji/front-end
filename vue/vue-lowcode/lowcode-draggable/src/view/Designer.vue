@@ -1,10 +1,7 @@
 <template>
     <div>
       <div class="wrapper">
-        <div class="operation">
-          <button @click="preview">预览</button>
-          <button @click="seeSchame">Schema</button>
-        </div>
+        <Operation :content="content" />
         <div class="container">
           <div v-draggable class="material-icon-list">
             <div class="material-icon" data-material="Image">
@@ -67,12 +64,14 @@
   <script>
   import { defineAsyncComponent } from 'vue'
   import draggable from 'vuedraggable'
-  import metaStore from "../store/meta.js"
+  import metaStore from '../store/meta.js'
+  import Operation from './operation.vue' 
 
   export default {
     name: 'Designer',
     components: {
       draggable,
+      Operation
     },
     setup() {
         return {
@@ -127,20 +126,7 @@
       showPanel(element) {
         // console.log('showPanel out', element)
         this.current = element
-      },
-      seeSchame() {
-        console.log(JSON.stringify(this.content))
-      },
-      preview() {
-        // params传参方式已经废弃了: https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22
-        // history模式state传参数只能是非响应式数据, 所以这里转了一下，更好的方式是用pinia来存
-        this.meta.set(this.content)
-        this.$router.push({
-            name: 'preview',
-            path: '/preview',
-            // state: {content: JSON.stringify(this.content)}
-        })        
-      },
+      }
     }
   }
   </script>
@@ -221,14 +207,6 @@
     border-bottom: 0;
     padding: 12px;
     z-index: 10;
-  }
-  
-  .operation {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 2vh;
-    column-gap: 2vw;
   }
   
   </style>

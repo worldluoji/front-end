@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { useRoute,useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { onBeforeMount, ref} from 'vue'
 import Render from '../render/Render.vue'
 import metaStore from "../store/meta.js"
