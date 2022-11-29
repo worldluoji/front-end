@@ -14,19 +14,13 @@
 </template>
 
 <script>
-import Image from '../components/Image.vue'
-import Offer from '../components/Offer.vue'
-import List from '../components/List.vue'
-import NavBar from '../components/NavBar.vue';
+import Cards from '../components'
 export default {
     props: {
         content: Array
     },
     components: {
-        Image,
-        Offer,
-        List,
-        NavBar
+        ...Cards
     }
 }
 </script>
