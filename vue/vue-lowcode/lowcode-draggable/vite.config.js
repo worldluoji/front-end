@@ -10,5 +10,8 @@ export default defineConfig({
     Components({
       resolvers: [VantResolver()],
     }),
-  ]
+  ],
+  define: {
+    'process.env': {}
+  }
 })

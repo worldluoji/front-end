@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import DragManager from './dragmanager.js'
+import router from './router/router'
 
 const dragManager = new DragManager
 
@@ -17,4 +18,5 @@ createApp(App)
         // 监听了dragover 和 drop
         dragManager.setContainer(el, binding)
     })
+    .use(router)
     .mount('#app')
