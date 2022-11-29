@@ -34,7 +34,7 @@
               @end="dragging = false">
               <template #item="{ element, index }" class="list-group-item">
                 <component 
-                  :is="defineAsyncComponent(() => import(`../components/${element.name}.vue`))"
+                  :is="element.name"
                   :key="index"
                   :props="element.props"
                   :design="true"
@@ -66,12 +66,14 @@
   import draggable from 'vuedraggable'
   import metaStore from '../store/meta.js'
   import Operation from './operation.vue' 
+  import Cards from '../components'
 
   export default {
     name: 'Designer',
     components: {
       draggable,
-      Operation
+      Operation,
+      ...Cards
     },
     setup() {
         return {
