@@ -105,6 +105,8 @@ export default class DragManager {
             }
             // console.log(this.ref.value, this.opData, e.target.parentNode.dataset.index)
         }
-        
+
+        // 拖拽结束后清空opData
+        this.opData = {}
     }
 }
