@@ -7,9 +7,8 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 - [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
 
 ## TODOS
-1. 卡片动态引入
-2. 属性分离
-3. 容器嵌套容器，限制嵌套的层数？通过传入parentIndex索引来找到对应位置的数据？
-4. 路由及打包
-5. 接口配置
-6. 远程引入卡片
+1. 属性分离
+2. 容器嵌套容器，限制嵌套的层数？通过传入parentIndex索引来找到对应位置的数据？
+3. 路由及打包
+4. 接口配置
+5. 远程引入卡片

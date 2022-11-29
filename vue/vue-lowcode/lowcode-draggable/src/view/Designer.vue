@@ -37,7 +37,7 @@
               @end="dragging = false">
               <template #item="{ element, index }" class="list-group-item">
                 <component 
-                  :is="element.name"
+                  :is="defineAsyncComponent(() => import(`../components/${element.name}.vue`))"
                   :key="index"
                   :props="element.props"
                   :design="true"
@@ -51,7 +51,7 @@
           </div>
           <div class="panel" v-if="current.id">
             <component 
-              :is="current.name + 'Panel'"
+              :is="defineAsyncComponent(() => import(`../panel/${current.name}Panel.vue`))"
               :key="current.id"
               :props="panelProps"
               @change="change"
@@ -65,25 +65,19 @@
   </template>
   
   <script>
-  import Image from '../components/Image.vue'
-  import Offer from '../components/Offer.vue'
-  import List from '../components/List.vue'
-  import NavBar from '../components/NavBar.vue'
+  import { defineAsyncComponent } from 'vue'
   import draggable from 'vuedraggable'
-  import ImagePanel from '../panel/ImagePanel.vue'
-  import NavBarPanel from '../panel/NavBarPanel.vue'
   import metaStore from "../store/meta.js"
 
   export default {
     name: 'Designer',
     components: {
-      Image,
-      Offer,
-      List,
-      NavBar,
       draggable,
-      ImagePanel,
-      NavBarPanel
+    },
+    setup() {
+        return {
+            defineAsyncComponent
+        }
     },
     data() {
       return {
