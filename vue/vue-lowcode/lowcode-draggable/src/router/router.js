@@ -11,10 +11,9 @@ const routes = [
   
 // 创建路由实例并传递 `routes` 配置
 // 你可以在这里输入更多的配置，但我们在这里暂时保持简单
-console.log(process.env)
 const router = createRouter({
     // 内部提供了 history 模式的实现。
-    history: createWebHistory(process.env.BASE_URL),
+    history: createWebHistory(),
     routes, // `routes: routes` 的缩写
 });
 
