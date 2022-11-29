@@ -72,6 +72,8 @@
   import draggable from 'vuedraggable'
   import ImagePanel from '../panel/ImagePanel.vue'
   import NavBarPanel from '../panel/NavBarPanel.vue'
+  import metaStore from "../store/meta.js"
+
   export default {
     name: 'Designer',
     components: {
@@ -90,7 +92,11 @@
         content: [],
         current: {},
         panelProps: {},
+        meta: metaStore()
       }
+    },
+    beforeMount() {
+        this.content = this.meta.get
     },
     methods: {
       change(p) {
@@ -134,10 +140,11 @@
       preview() {
         // params传参方式已经废弃了: https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22
         // history模式state传参数只能是非响应式数据, 所以这里转了一下，更好的方式是用pinia来存
+        this.meta.set(this.content)
         this.$router.push({
             name: 'preview',
             path: '/preview',
-            state: {content: JSON.stringify(this.content)}
+            // state: {content: JSON.stringify(this.content)}
         })        
       },
     }

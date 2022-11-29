@@ -9,10 +9,11 @@
 import { useRoute,useRouter } from 'vue-router'
 import { onBeforeMount, ref} from 'vue'
 import Render from '../render/Render.vue'
+import metaStore from "../store/meta.js"
 let content = ref()
-const route = useRoute()
+let meta = metaStore()
 onBeforeMount(() => {
-    content.value = JSON.parse(history.state.content)
+    content.value = meta.get
     // console.log('preview', content.value)
 })
 

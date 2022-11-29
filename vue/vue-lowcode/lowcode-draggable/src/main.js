@@ -3,6 +3,9 @@ import './style.css'
 import App from './App.vue'
 import DragManager from './dragmanager.js'
 import router from './router/router'
+import { createPinia } from 'pinia'
+
+const pinia = createPinia()
 
 const dragManager = new DragManager
 
@@ -19,4 +22,5 @@ createApp(App)
         dragManager.setContainer(el, binding)
     })
     .use(router)
+    .use(pinia)
     .mount('#app')
