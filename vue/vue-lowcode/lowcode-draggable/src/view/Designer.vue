@@ -46,39 +46,26 @@
             </draggable>
             <div class="top-white"></div>
           </div>
-          <div class="panel" v-if="current.id">
-            <component 
-              :is="defineAsyncComponent(() => import(`../panel/${current.name}Panel.vue`))"
-              :key="current.id"
-              :props="panelProps"
-              @change="change"
-            ></component>
-            <button @click="save">保存</button> &nbsp;&nbsp;
-            <button @click="cancel">取消</button>
-          </div>
+          <Panel :current="current" @cancel="cancelPanel"/>
         </div>
       </div>
     </div>
   </template>
   
   <script>
-  import { defineAsyncComponent } from 'vue'
   import draggable from 'vuedraggable'
   import metaStore from '../store/meta.js'
   import Operation from './operation.vue' 
   import Cards from '../components'
+  import Panel from './Panel.vue'
 
   export default {
     name: 'Designer',
     components: {
       draggable,
       Operation,
+      Panel,
       ...Cards
-    },
-    setup() {
-        return {
-            defineAsyncComponent
-        }
     },
     data() {
       return {
@@ -86,7 +73,6 @@
         dragging: false,
         content: [],
         current: {},
-        panelProps: {},
         meta: metaStore()
       }
     },
@@ -94,35 +80,7 @@
         this.content = this.meta.get
     },
     methods: {
-      change(p) {
-        // console.log('change', p)
-        this.panelProps = p
-      },
-      save() {
-        // TODO 目前只更新楼层和一层容器
-        let it = this.content.find(c => c.id === this.current.id)
-        if (!it) {
-          let list = this.content.filter(c => c.name === 'List')
-          console.log(list)
-          list.forEach(l => {
-            if (l.props.list) {
-              let tmp = l.props.list.find(t => t.id === this.current.id)
-              if (tmp) {
-                it = tmp
-              }
-            }
-          })
-        }
-        if (!it) {
-          return
-        }
-        if (!it.props) {
-          it.props = {}
-        }
-        Object.assign(it.props, this.panelProps)
-        console.log('save', it, this.content)
-      },
-      cancel() {
+      cancelPanel() {
         this.current = {}
       },
       showPanel(element) {
@@ -194,21 +152,6 @@
   }
   .not-draggable {
     cursor: no-drop;
-  }
-  
-  .panel {
-    background-color: #fff;
-    width: 300px;
-    height: 100vh;
-    position: fixed;
-    top: 5vh;
-    right: 0;
-    color: #000;
-    border: 1px solid #eee;
-    border-top: 0;
-    border-bottom: 0;
-    padding: 12px;
-    z-index: 10;
   }
   
   </style>
