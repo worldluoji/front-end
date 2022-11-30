@@ -21,8 +21,13 @@ export default class DragManager {
             state: 2,
         }
 
+        //  容器，设置默认值，后续可通过配置面板修改
         if (this.current === 'List') {
-            this.opData.props.list = [{id: 1, name: 'Blank'}, {id: 2, name: 'Blank'}]
+            this.opData.props = {
+                list: [],
+                row: 1,
+                column: 1
+            }
         }
     }
 
@@ -36,7 +41,9 @@ export default class DragManager {
             const index = value.indexOf(this.opData)
             if (index < 0) {
                 // 没有就加入进去
-                this.ref.value.push(this.opData)
+                if (Object.keys(this.opData).length > 0) {
+                    this.ref.value.push(this.opData)
+                }
             } else if (index !== value.length - 1) {
                 // 如果不是最后一个，就把前面的那个删了，再加入
                 this.ref.value.splice(index, 1)
@@ -75,37 +82,14 @@ export default class DragManager {
         const isIn = e.target.dataset.container
         // console.log(this.ref.value, this.opData, e)
         if (!isIn) {
-            this.calPos(e)
             // 如果找到了，状态置为1，正常展示
             let i = this.ref.value.indexOf(this.opData)
             if (i > -1) {
                 this.ref.value[i].state = 1
             }
-        } else {
-            if (this.opData.props.list) {
-                return
-            }
-
-            if (!e.target.parentNode || !e.target.parentNode.dataset) {
-                return
-            }
-            const index = e.target.parentNode.dataset.index
-            if (index === undefined || index >= this.ref.value.length) {
-                return
-            }
-
-            // 为容器设置某个元素的属性
-            const i = e.target.dataset.index
-            this.ref.value[index].props.list[i] = {id: uuid(), name: this.opData.name}
-
-            // 删除外层
-            let d = this.ref.value.indexOf(this.opData)
-            if (d > -1) {
-                this.ref.value.splice(d, 1)
-            }
-            // console.log(this.ref.value, this.opData, e.target.parentNode.dataset.index)
         }
 
+        console.log('drop', this.ref.value)
         // 拖拽结束后清空opData
         this.opData = {}
     }

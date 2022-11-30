@@ -1,12 +1,45 @@
 <template class="container">
-    请拖入卡片
+    <div v-if="props && props.element">
+        <component :is="props.element" @click.stop="showPanel(props.element)" :props="props.props"/>
+    </div>
+    <div v-else> 
+        点击选择卡片
+    </div>
 </template>
 
-<script setup>
-defineProps({
-    props: Object,
-    className: String,
-})
+<script>
+import Image from './Image.vue'
+import Offer from './Offer.vue'
+import NavBar from './NavBar.vue'
+import currentPanelStore from '../store/currentPanel.js'
+export default {
+    components: {
+        Image,
+        Offer,
+        NavBar
+    },
+    props: {
+        props: { 
+            type: Object,
+            required: true
+        }
+    },
+    data() {
+        return {
+            currentPanel: currentPanelStore(),
+        }
+    },
+    methods: {
+        showPanel(element) {
+            const elementObj = {
+                id: this.props.id,
+                name: element,
+            }
+            // console.log('blank', elementObj)
+            this.currentPanel.set(elementObj)
+        }
+    }
+}
 
 </script>
 

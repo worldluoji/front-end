@@ -29,6 +29,7 @@ const change = (p) => {
 
 const save = () => {
     // TODO 目前只更新楼层和一层容器
+    // console.log(111, current.value, panelProps.value)
     let content = meta.get
     let it = content.find(c => c.id === current.value.id)
     if (!it) {
@@ -36,9 +37,18 @@ const save = () => {
         // console.log(list)
         list.forEach(l => {
             if (l.props.list) {
-                let tmp = l.props.list.find(t => t.id === current.value.id)
+                let tmp = l.props.list.find(t => { 
+                    if (t.id === current.value.id) {
+                        it = t
+                        return t
+                    }
+                    if (t.name === 'Blank' && t.props.id === current.value.id) {
+                        it = t.props
+                        return t.props
+                    } 
+                }) 
                 if (tmp) {
-                    it = tmp
+                    return
                 }
             }
         })

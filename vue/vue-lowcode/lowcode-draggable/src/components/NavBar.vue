@@ -1,5 +1,5 @@
 <template>
-    <van-nav-bar :title="p.props.title || '标题'" 
+    <van-nav-bar :title="(p.props && p.props.title) || '标题'" 
         :style="{'background-color': '#ee0a24'}"
     />
 </template>

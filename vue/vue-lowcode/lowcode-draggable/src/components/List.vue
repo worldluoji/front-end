@@ -1,6 +1,6 @@
 <template>
   <draggable
-    :list="props.list"
+    :list="lists"
     :disabled="!enabled"
     item-key="id"
     :class="enabled ? 'list-group':'list-groupr'"
@@ -30,6 +30,7 @@ import Offer from './Offer.vue';
 import Image from './Image.vue';
 import NavBar from './NavBar.vue';
 import currentPanelStore from '../store/currentPanel.js'
+import uuid from '../utils/uuid'
 
 export default {
   name: "List",
@@ -51,7 +52,7 @@ export default {
     return {
       enabled: false,
       dragging: false,
-      currentPanel: currentPanelStore()
+      currentPanel: currentPanelStore() 
     };
   },
   created() {
@@ -62,6 +63,26 @@ export default {
         this.currentPanel.set(element)
     }
   },
+  computed: {
+    lists() {
+        const {list, row, column} = this.props
+        if (list === undefined) {
+            return []
+        }
+        const n = row * column
+        const l = list.length
+        console.log(n,l)
+        if (l >= n) {
+            list.length = n
+        } else {
+            for (let i = l; i < n ; i++) {
+                list.push({id: uuid(), name: 'Blank', props: {id: uuid(), element: undefined, props: {}}})
+            }
+        }
+
+        return list
+    }
+  }
 };
 </script>
 <style scoped>
@@ -92,7 +113,6 @@ export default {
 }
 
 .list-group-item {
-  background-color: darkgrey;
   text-align: center;
 }
 
