@@ -7,8 +7,7 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 - [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
 
 ## TODOS
-1. 容器嵌套容器，限制嵌套的层数？通过传入parentIndex索引来找到对应位置的数据？
-2. 原子属性
-3. 打包
-4. 接口配置
-5. 远程引入卡片
+1. 原子属性
+2. 打包
+3. 接口配置
+4. 远程引入卡片
