@@ -89,7 +89,7 @@ export default class DragManager {
             }
         }
 
-        console.log('drop', this.ref.value)
+        // console.log('drop', this.ref.value)
         // 拖拽结束后清空opData
         this.opData = {}
     }
