@@ -1,9 +1,9 @@
-import {build as viteBuild } from 'vite';
+import { build as viteBuild } from 'vite';
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH  } from "./constants";
 import { join } from "path";
 import type { RollupOutput } from "rollup";
 import pluginReact from "@vitejs/plugin-react";
-import fse from "fs-extra"
+import fse from "fs-extra";
 
 // 打包
 export async function bundle(root: string) {
