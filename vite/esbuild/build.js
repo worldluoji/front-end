@@ -14,6 +14,15 @@ let envPlugin = {
       contents: JSON.stringify(process.env),
       loader: 'json',
     }))
+
+    build.onEnd((buildResult) => {
+      if (buildResult.errors.length) {
+        return;
+      }
+      // 构建元信息s
+      // 获取元信息后做一些自定义的事情，比如生成 HTML
+      console.log(buildResult)
+    })
   },
 }
 
