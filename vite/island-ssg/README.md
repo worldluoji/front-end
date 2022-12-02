@@ -9,11 +9,14 @@ npm install
 ```
 npm run start
 ```
+这里其实是使用tsup对cli.ts进行编译，而cli.ts中的两个命令，分别是针对dev本地调试和build打包使用。
+这样，dev和build的代码都被编译为了dist中的js文件，其中.js为csj风格，.mjs为ems风格。
 
 ## island命令link到全局
 ```
 npm link
 ```
+这里其实是将package.json中,bin下配置的island命令link到全局，这样后面可以直接使用island命令了。
 
 ## Dev Server启动
 ```
@@ -30,6 +33,13 @@ island build docs
 serve . 或者
 http-server
 ```
+可以看到，island命令是执行了bin/island.js, island.js又是直接导入已经编译好的cli.mjs。
+```
+import("../dist/cli.mjs");
+```
+因此，这其实是一个先编译，再使用的过程。
+
+当我们使用island命令，直接会进行构建，然后使用。这其实就是SSG的过程，它本质上是构建阶段的 SSR。
 
 ## 问题说明
 1. React is not defined 的错误
