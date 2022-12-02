@@ -79,7 +79,7 @@ async function createSsrMiddleware(app: Express): Promise<RequestHandler> {
         const { ServerEntry } = await loadSsrEntryModule(vite);
         // 2. 数据预取
         const data = await fetchData();
-        // 3. 「核心」渲染组件
+        // 3. 「核心」渲染组件, renderToString方法并不会处理添加在元素上的任何事件。要想实现事件监听，这就需要同构了,客户端通过 hydrate注入
         const appHtml = renderToString(React.createElement(ServerEntry, { data }));
         // 4. 拼接 HTML，返回响应
         const html = await toHtml(vite, appHtml, data, req.originalUrl);

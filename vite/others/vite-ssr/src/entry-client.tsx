@@ -19,6 +19,7 @@ import App from './App'
 // @ts-ignore
 const data = window.__SSR_DATA__;
 
+// 在客户端渲染过程中会使用hydrate方法复用渲染好的结构，然后加上事件
 ReactDOM.hydrate(
   <React.StrictMode>
     {/* @ts-ignore */}
