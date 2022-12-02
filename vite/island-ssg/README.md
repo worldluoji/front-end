@@ -41,6 +41,18 @@ import("../dist/cli.mjs");
 
 当我们使用island命令，直接会进行构建，然后使用。这其实就是SSG的过程，它本质上是构建阶段的 SSR。
 
+
+## test
+unit test
+```
+npm run test:init
+```
+
+e2e test
+```
+npm run test:e2e
+```
+
 ## 问题说明
 1. React is not defined 的错误
 
