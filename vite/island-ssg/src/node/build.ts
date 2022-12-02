@@ -1,57 +1,57 @@
 import { build as viteBuild } from 'vite';
-import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH  } from "./constants";
-import { join } from "path";
-import type { RollupOutput } from "rollup";
-import pluginReact from "@vitejs/plugin-react";
-import fse from "fs-extra";
+import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
+import { join } from 'path';
+import type { RollupOutput } from 'rollup';
+import pluginReact from '@vitejs/plugin-react';
+import fse from 'fs-extra';
 
 // 打包
 export async function bundle(root: string) {
-    const clientBuild = async() => {
-        return viteBuild({
-            mode: 'production',
-            root,
-            build: {
-                outDir: 'build',
-                rollupOptions: {
-                    input: CLIENT_ENTRY_PATH,
-                    output: {
-                        format: 'esm'
-                    }
-                }
-            },
-            plugins: [pluginReact()]
-        })
-    }
+  const clientBuild = async () => {
+    return viteBuild({
+      mode: 'production',
+      root,
+      build: {
+        outDir: 'build',
+        rollupOptions: {
+          input: CLIENT_ENTRY_PATH,
+          output: {
+            format: 'esm'
+          }
+        }
+      },
+      plugins: [pluginReact()]
+    });
+  };
 
-    const serverBuild = async () => {
-        return viteBuild({
-            mode: 'production',
-            root,
-            build: {
-                ssr: true,
-                outDir: '.temp',
-                rollupOptions: {
-                    input: SERVER_ENTRY_PATH,
-                    output: {
-                        format: 'cjs'
-                    }
-                },
-            },
-            plugins: [pluginReact()]
-        })
-    }
+  const serverBuild = async () => {
+    return viteBuild({
+      mode: 'production',
+      root,
+      build: {
+        ssr: true,
+        outDir: '.temp',
+        rollupOptions: {
+          input: SERVER_ENTRY_PATH,
+          output: {
+            format: 'cjs'
+          }
+        }
+      },
+      plugins: [pluginReact()]
+    });
+  };
 
-    console.log(`Building client + server bundles...`);
-    try {
-        const [clientBundle, serverBundle] = await Promise.all([
-            clientBuild(),
-            serverBuild()
-        ])
-        return [clientBundle, serverBundle] as [RollupOutput, RollupOutput]
-    } catch (e) {
-        console.log(e)
-    }
+  console.log('Building client + server bundles...');
+  try {
+    const [clientBundle, serverBundle] = await Promise.all([
+      clientBuild(),
+      serverBuild()
+    ]);
+    return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 /*
@@ -63,22 +63,22 @@ build 方法，主要分三步:
 export async function build(root: string = process.cwd()) {
   const [clientBundle, serverBundle] = await bundle(root);
   // 引入 ssr 入口模块
-  const serverEntryPath = join(root, ".temp", "ssr-entry.js");
+  const serverEntryPath = join(root, '.temp', 'ssr-entry.js');
   const { render } = await import(serverEntryPath);
   await renderPage(render, root, clientBundle);
 }
 
 export async function renderPage(
-    render: () => string,
-    root: string,
-    clientBundle: RollupOutput
+  render: () => string,
+  root: string,
+  clientBundle: RollupOutput
 ) {
-    const clientChunk = clientBundle.output.find(
-        (chunk) => chunk.type === 'chunk' && chunk.isEntry
-    )
-    console.log('Rendering page in server side...', clientChunk?.fileName)
-    const appHtml = render()
-    const html = `
+  const clientChunk = clientBundle.output.find(
+    (chunk) => chunk.type === 'chunk' && chunk.isEntry
+  );
+  console.log('Rendering page in server side...', clientChunk?.fileName);
+  const appHtml = render();
+  const html = `
     <!DOCTYPE html>
     <html>
       <head>
@@ -91,7 +91,7 @@ export async function renderPage(
         <script type="module" src="/${clientChunk?.fileName}"></script>
       </body>
     </html>`.trim();
-    await fse.ensureDir(join(root, "build"));
-    await fse.writeFile(join(root, "build/index.html"), html);
-    await fse.remove(join(root, ".temp"));
+  await fse.ensureDir(join(root, 'build'));
+  await fse.writeFile(join(root, 'build/index.html'), html);
+  await fse.remove(join(root, '.temp'));
 }
