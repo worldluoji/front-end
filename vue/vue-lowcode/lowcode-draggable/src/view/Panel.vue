@@ -33,11 +33,11 @@ const save = () => {
     let content = meta.get
     let it = content.find(c => c.id === current.value.id)
     if (!it) {
-        let list = content.filter(c => c.name === 'List')
+        let list = content.filter(c => c.type === 'Container')
         // console.log(list)
         list.forEach(l => {
-            if (l.props.list) {
-                let tmp = l.props.list.find(t => { 
+            if (l.props.children) {
+                let tmp = l.props.children.find(t => { 
                     if (t.id === current.value.id) {
                         it = t
                         return t

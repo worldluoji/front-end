@@ -16,7 +16,7 @@
               <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.78101 9.75193C9.90612 8.75107 10.7569 8 11.7656 8H36.2344C37.2431 8 38.0939 8.75107 38.219 9.75193L41.719 37.7519C41.8682 38.9456 40.9374 40 39.7344 40H8.26556C7.06257 40 6.1318 38.9456 6.28101 37.7519L9.78101 9.75193Z" fill="none" stroke="#777" stroke-width="4" stroke-linejoin="round"/><path d="M15 18C15 18 17 22 24 22C31 22 33 18 33 18" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <p>商品</p>
             </div>
-            <div class="material-icon" data-material="List">
+            <div class="material-icon" data-material="List-Container">
               <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 14H30C30 14 38 18.1481 38 27.7993C38 37.4504 30 42 30 42H13C13 42 6 35.9785 6 28C6 20.0215 13 14 13 14Z" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M38 27.9998C25 24.9998 19 33.9998 6 27.9998" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 14H40C40 14 44 18 44 30" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 6L32 8.66667L31 14H13L9 6Z" fill="none" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <p>容器</p>
             </div>

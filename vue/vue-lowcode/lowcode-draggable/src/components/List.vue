@@ -65,22 +65,25 @@ export default {
   },
   computed: {
     lists() {
-        const {list, row, column} = this.props
-        if (list === undefined) {
-            return []
-        }
+        let {children, row, column} = this.props
+        row = row ? row: 0
+        column = column ? column: 0
         const n = row * column
-        const l = list.length
-        console.log(n,l)
+        if (children === undefined || n === 0) {
+          return []
+        }
+        
+        const l = children.length
+        // console.log(n,l)
         if (l >= n) {
-            list.length = n
+          children.length = n
         } else {
-            for (let i = l; i < n ; i++) {
-                list.push({id: uuid(), name: 'Blank', props: {id: uuid(), element: undefined, props: {}}})
-            }
+          for (let i = l; i < n ; i++) {
+            children.push({id: uuid(), name: 'Blank', props: {id: uuid(), element: undefined, props: {}}})
+          }
         }
 
-        return list
+        return children
     }
   }
 };
@@ -103,7 +106,7 @@ export default {
 }
 
 .list-group:hover {
-  border: 1px solid blue;
+  border: 1px dashed blue;
 }
 
 .list-groupr {
@@ -117,7 +120,7 @@ export default {
 }
 
 .list-group-item:hover {
-  border: 1px solid blue;
+  border: 1px dashed blue;
 }
 
 </style>
