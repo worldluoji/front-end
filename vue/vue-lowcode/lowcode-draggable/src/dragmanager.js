@@ -60,15 +60,6 @@ export default class DragManager {
         el.addEventListener('drop', (e) => this.drop(e))
     }
 
-    dragexist(e) {
-        if (e.target.dataset.container) {
-            return
-        }
-        const i = e.target.dataset.index
-        this.opData = this.ref.value[i] // 对应App.vue里的 content[i]
-        this.opData.state = 2 // 激活over样式
-    }
-
     // 拖拉到当前节点上方时，在当前节点上持续触发（相隔几百毫秒），该事件的target属性是当前节点
     dragover(e) {
         e.preventDefault()
