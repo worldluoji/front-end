@@ -13,7 +13,7 @@ function createJson5Plugin() {
             console.log('createJson5Plugin', id)
             // 只有文件后缀名是.json5的时候才处理
             if (!fileRegex.test(id)) {
-                return {}
+                return null
             }
             const object = JSON5.parse(code)
             const out = `const object = ${toSource(object)}
