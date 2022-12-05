@@ -28,40 +28,8 @@ const change = (p) => {
 }
 
 const save = () => {
-    // TODO 目前只更新楼层和一层容器
     // console.log(111, current.value, panelProps.value)
-    let content = meta.get
-    let it = content.find(c => c.id === current.value.id)
-    if (!it) {
-        let list = content.filter(c => c.type === 'Container')
-        // console.log(list)
-        list.forEach(l => {
-            if (l.props.children) {
-                let tmp = l.props.children.find(t => { 
-                    if (t.id === current.value.id) {
-                        it = t
-                        return t
-                    }
-                    if (t.name === 'Blank' && t.props.id === current.value.id) {
-                        it = t.props
-                        return t.props
-                    } 
-                }) 
-                if (tmp) {
-                    return
-                }
-            }
-        })
-    }
-    if (!it) {
-        return
-    }
-    if (!it.props) {
-        it.props = {}
-    }
-    Object.assign(it.props, panelProps.value)
-    console.log('save', it, content)
-    meta.set(content)
+    meta.updateProps(current.value.id, panelProps.value)
 }
 
 const emits = defineEmits(['cancel'])
