@@ -11,7 +11,7 @@ const props = reactive(p)
 </script>
 
 <template>
-    <div class="container">
+    <div class="image-wrapper">
         <img v-if="props.props"
             :src="props.props.url ? props.props.url: defaultUrl"
             :height="props.props.height"
@@ -22,7 +22,7 @@ const props = reactive(p)
 </template>
 
 <style scoped>
-    .container {
+    .image-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
