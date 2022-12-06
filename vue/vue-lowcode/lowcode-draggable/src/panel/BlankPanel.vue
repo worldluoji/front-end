@@ -10,7 +10,6 @@
 </template>
 
 <script setup>
-import uuid from '../utils/uuid'
 const p = defineProps({
     props: {
         type: Object,

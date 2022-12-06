@@ -1,6 +1,6 @@
 <template>
   <draggable
-    :list="lists"
+    :list="props.children"
     :disabled="!enabled"
     item-key="id"
     :class="enabled ? 'list-group':'list-groupr'"
@@ -14,10 +14,10 @@
             data-container="true" 
             :data-index="index" 
             @click.stop="showPanel(element)">
-        <component :is="element.name" :props="element.props" />
+        <component :is="element.name" :props="element.props" :eid="element.id" />
       </div>
       <div v-else :class="[{'list-group-item': enabled}]">
-        <component :is="element.name" :props="element.props" />
+        <component :is="element.name" :props="element.props" :eid="element.id" />
       </div>
     </template>
   </draggable>
@@ -30,6 +30,7 @@ import Offer from './Offer.vue';
 import Image from './Image.vue';
 import NavBar from './NavBar.vue';
 import currentPanelStore from '../store/currentPanel.js'
+import metaStore from '../store/meta.js'
 import uuid from '../utils/uuid'
 
 export default {
@@ -43,8 +44,12 @@ export default {
   },
   props: {
     props: {
-        type: Object,
-        required: true
+      type: Object,
+      required: true
+    },
+    eid: {
+      type: String,
+      required: true
     },
     design: Boolean
   },
@@ -52,7 +57,8 @@ export default {
     return {
       enabled: false,
       dragging: false,
-      currentPanel: currentPanelStore() 
+      currentPanel: currentPanelStore(),
+      meta: metaStore()
     };
   },
   created() {
@@ -60,30 +66,38 @@ export default {
   },
   methods: {
     showPanel(element) {
-        this.currentPanel.set(element)
+      this.currentPanel.set(element)
     }
   },
-  computed: {
-    lists() {
-        let {children, row, column} = this.props
-        row = row ? row: 0
-        column = column ? column: 0
+  watch: {
+    props: {
+      handler(newVal) {
+        let {children, row, column} = newVal
+        // console.log('props', this.eid, children)
+        row = row ? row: 1
+        column = column ? column: 1
         const n = row * column
         if (children === undefined || n === 0) {
-          return []
-        }
-        
-        const l = children.length
-        // console.log(n,l)
-        if (l >= n) {
-          children.length = n
-        } else {
-          for (let i = l; i < n ; i++) {
-            children.push({id: uuid(), name: 'Blank', props: {id: uuid(), element: undefined, props: {}}})
-          }
+          return
         }
 
-        return children
+        const l = children.length
+        if (l > n) {
+          let removedChildren = new Set()
+          for (let i = l - 1; i >= n; i--) {
+            removedChildren.add(children[i].id)
+          }
+          this.meta.removeChildren(this.eid, removedChildren)
+        } else if (l < n) {
+          let newChildren = []
+          for (let i = l; i < n ; i++) {
+            newChildren.push({id: uuid(), name: 'Blank', props: {id: uuid(), element: '', props: {}}})
+          }
+          this.meta.addChildren(this.eid, newChildren)
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 };

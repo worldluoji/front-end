@@ -37,6 +37,7 @@
                   :is="element.name"
                   :key="index"
                   :props="element.props"
+                  :eid="element.id"
                   :design="true"
                   :data-index="index"
                   @click="showPanel(element)"
