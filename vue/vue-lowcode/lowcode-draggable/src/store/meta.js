@@ -32,8 +32,11 @@ const metaStore = defineStore("meta", {
   },
   getters: {
     get(state) {
-      return state.content
+      return state.content;
     },
+    getElementById(state) {
+      return (id) => findById(state.content, id);
+    }
   },
   actions: {
     set(c) {
@@ -41,7 +44,7 @@ const metaStore = defineStore("meta", {
     },
     updateProps(currentId, value) {
       let it = findById(this.content, currentId)
-      console.log('update', it, currentId, value)
+      // console.log('update', it, currentId, value)
       if (it) {
         Object.assign(it.props, value)
         // console.log('save', it, this.content)

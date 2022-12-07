@@ -48,18 +48,19 @@
     </div>
 </template>
 <script setup>
-import { onBeforeMount } from 'vue';
+const p = defineProps({
+    props: {
+        type: Object,
+        required: true
+    }
+})
 
-const atomicAttrs = {
-    marginTop: '0',
-    marginRight: '0',
-    marginBottom: '0',
-    marginLeft: '0'
-};
-
-onBeforeMount(() => {
-    
-});
+let atomicAttrs = {
+    marginTop: (p.props && p.props.marginTop) || '0',
+    marginRight: (p.props && p.props.marginRight) || '0',
+    marginBottom: (p.props && p.props.marginBottom) || '0',
+    marginLeft: (p.props && p.props.marginLeft) || '0',
+}
 
 const emit = defineEmits(['change']);
 const change = () => {
