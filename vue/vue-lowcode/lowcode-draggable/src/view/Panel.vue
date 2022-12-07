@@ -6,6 +6,9 @@
             :props="panelProps"
             @change="change"
         ></component>
+        <hr>
+        <Box @change="change"/>
+        <hr>
         <button @click="save">保存</button> &nbsp;&nbsp;
         <button @click="cancel">取消</button>
     </div>
@@ -16,6 +19,7 @@ import { defineAsyncComponent, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import metaStore from '../store/meta.js'
 import currentPanelStore from '../store/currentPanel.js'
+import Box from '../panel/sub/Box.vue'
 
 const meta = metaStore()
 const currentPanel = storeToRefs(currentPanelStore())
@@ -23,8 +27,9 @@ const current = currentPanel.get
 const panelProps = ref({})
 
 const change = (p) => {
-    // console.log('change', p)
-    panelProps.value = p
+    // console.log('before change', p)
+    Object.assign(panelProps.value, p)
+    // console.log('after change', panelProps.value)
 }
 
 const save = () => {

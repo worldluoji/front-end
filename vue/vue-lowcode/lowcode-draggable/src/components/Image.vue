@@ -11,7 +11,7 @@ const props = reactive(p)
 </script>
 
 <template>
-    <div class="image-wrapper">
+    <div class="image-wrapper" v-atomicattr="props.props.atomicAttrs">
         <img v-if="props.props"
             :src="props.props.url ? props.props.url: defaultUrl"
             :height="props.props.height"
