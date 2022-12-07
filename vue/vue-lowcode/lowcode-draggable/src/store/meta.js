@@ -51,7 +51,7 @@ const metaStore = defineStore("meta", {
       }
     },
     removeChildren(eid, children) {
-      let e = findById(tshis.content, eid)
+      let e = findById(this.content, eid)
       if (e) {
         const newChildren = e.props.children.filter(c => !children.has(c.id))
         e.props.children = newChildren
