@@ -1,7 +1,9 @@
 <template>
-    <van-nav-bar :title="(p.props && p.props.title) || '标题'" 
-        :style="{'background-color': '#ee0a24'}"
-    />
+    <div v-atomicattr="p.props.atomicAttrs">
+        <van-nav-bar :title="(p.props && p.props.title) || '标题'" 
+            :style="{'background-color': '#ee0a24'}"
+        />
+    </div>
 </template>
 
 <script setup>

@@ -49,10 +49,7 @@
 </template>
 <script setup>
 const p = defineProps({
-    props: {
-        type: Object,
-        required: true
-    }
+    props: Object,
 })
 
 let atomicAttrs = {
@@ -61,7 +58,7 @@ let atomicAttrs = {
     marginBottom: (p.props && p.props.marginBottom) || '0',
     marginLeft: (p.props && p.props.marginLeft) || '0',
 }
-
+// console.log(222, atomicAttrs)
 const emit = defineEmits(['change']);
 const change = () => {
     // console.log('set...', atomicAttrs);

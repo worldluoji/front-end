@@ -38,12 +38,17 @@ watch(current, (newVal) => {
 
 const change = (p) => {
     // console.log('before change', p)
-    Object.assign(panelProps.value, p);
+    if (p.atomicAttrs) {
+        delete panelProps.value.atomicAttrs
+        panelProps.value.atomicAttrs = p.atomicAttrs;
+    } else {
+        Object.assign(panelProps.value, p);   
+    }
     // console.log('after change', panelProps.value)
 }
 
 const save = () => {
-    // console.log(111, current.value, panelProps.value)
+    // console.log(111, panelProps.value)
     meta.updateProps(current.value.id, panelProps.value)
 }
 
