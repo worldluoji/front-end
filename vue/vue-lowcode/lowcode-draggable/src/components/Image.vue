@@ -1,12 +1,10 @@
 <script setup>
-import { reactive } from 'vue';
-const p = defineProps({
+const props = defineProps({
     props: Object,
     className: String,
 })
 
 const defaultUrl = 'https://img.tt98.com/d/file/96kaifa/20181009233732/5bbc9c7b22f00.jpg'
-const props = reactive(p)
 
 </script>
 

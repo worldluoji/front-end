@@ -5,14 +5,17 @@
 </template>
 
 <script setup>
-    const data = {
-        title: ''
-    }
-    const emit = defineEmits(['change'])
-    const change = () => {
-        console.log(data)
-        emit('change', data)
-    }
+const p = defineProps({
+    props: Object
+})
+const data = {
+    title: (p.props && p.props.title) ? p.props.title: ''
+}
+const emit = defineEmits(['change'])
+const change = () => {
+    console.log(data)
+    emit('change', data)
+}
 </script>
 
 <style scoped>

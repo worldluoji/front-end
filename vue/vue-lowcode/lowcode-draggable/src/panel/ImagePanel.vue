@@ -6,9 +6,12 @@
 </template>
 
 <script setup>
+const p = defineProps({
+    props: Object
+})
 const data = {
-    url: '',
-    height: ''
+    url: (p.props && p.props.url) ? p.props.url : '',
+    height: (p.props && p.props.height) ? p.props.height : ''
 };
 const emit = defineEmits(['change']);
 const change = () => {
