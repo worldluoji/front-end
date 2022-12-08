@@ -34,8 +34,8 @@
         </div>
 
          <div class="top-area-right">
-            <button @click="preview">预览</button>
-            <button @click="seeSchame">查看Schema</button>
+            <el-button @click="preview">预览</el-button>
+            <MetaData :data="JSON.stringify(props.content)"/>
         </div>
         
     </div>
@@ -45,6 +45,7 @@
 import metaStore from '../store/meta.js';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import MetaData from './MetaData.vue'
 const props = defineProps({
     content: Array,
 })
@@ -77,10 +78,6 @@ const preview = () => {
     })        
 }
 
-// 查看Schema
-const seeSchame = () => {
-    console.log(JSON.stringify(props.content))
-}
 </script>
 
 <style scoped>
