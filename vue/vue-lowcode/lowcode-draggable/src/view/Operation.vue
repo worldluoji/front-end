@@ -43,6 +43,7 @@
 
 <script setup>
 import metaStore from '../store/meta.js';
+import CanvasStore from '../store/canvas.js';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import MetaData from './MetaData.vue'
@@ -54,8 +55,10 @@ const props = defineProps({
 const pcWidth = '987'
 const padWidth = '768'
 const mobileWidth = '375'
-const canvasWidth = ref(pcWidth)
+const canvas = CanvasStore()
+const canvasWidth = ref(canvas.getWidth || pcWidth)
 const emits = defineEmits(['changeWidth'])
+emits('changeWidth', canvasWidth.value)
 const setCanvasWidth = (val) => {
     if (val) {
         canvasWidth.value = val
@@ -71,6 +74,7 @@ const preview = () => {
     // params传参方式已经废弃了: https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22
     // history模式state传参数只能是非响应式数据, 所以这里转了一下，更好的方式是用pinia来存
     meta.set(props.content)
+    canvas.setWidth(canvasWidth.value)
     router.push({
         name: 'preview',
         path: '/preview',
