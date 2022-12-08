@@ -1,7 +1,7 @@
 <template>
     <div>
       <div class="wrapper">
-        <Operation :content="content" />
+        <Operation :content="content"  @changeWidth="changeWidth"/>
         <div class="container">
           <div v-draggable class="material-icon-list">
             <div class="material-icon" data-material="Image">
@@ -54,7 +54,7 @@
   
   <script>
   import draggable from 'vuedraggable'
-  import Operation from './operation.vue' 
+  import Operation from './Operation.vue' 
   import Cards from '../components'
   import Panel from './Panel.vue'
   import metaStore from '../store/meta.js'
@@ -74,11 +74,12 @@
         dragging: false,
         content: [],
         meta: metaStore(),
-        currentPanel: currentPanelStore()
+        currentPanel: currentPanelStore(),
+        canvasWidth: '987px'
       }
     },
     beforeMount() {
-        this.content = this.meta.get
+      this.content = this.meta.get
     },
     methods: {
       cancelPanel() {
@@ -87,6 +88,10 @@
       showPanel(element) {
         // console.log('showPanel out', element)
         this.currentPanel.set(element)
+      },
+      changeWidth(val) {
+        // console.log('changeWidth', val)
+        this.canvasWidth = `${val}px`
       }
     }
   }
@@ -118,21 +123,21 @@
   }
   
   .drag-content {
-    width: 375px;
+    width: v-bind(canvasWidth);
     min-height: 500px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    background-color: #f0f2f5;
   }
   
   .wrapper {
-    margin-top: 5vh;
     display: flex;
     flex-direction: column;
   }
   
   .container {
     display: grid;
-    grid-template-columns: 20vw 375px 30vw;
+    grid-template-columns: 200px 1fr 300px;
     column-gap: 10vw;
   }
   
