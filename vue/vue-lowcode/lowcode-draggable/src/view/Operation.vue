@@ -26,7 +26,7 @@
                 </span>
                 <div class="lp-simulator-width-setter">
                     <span class="lp-simulator-width-setter-wrapper">
-                        <input type="text" autocomplete="off" height="28" v-model="canvasWidth">
+                        <input type="text" autocomplete="off" height="28" v-model="canvasWidth" @change="setCanvasWidth($event.target.value)" />
                         <span class="next-input-group-addon next-input-group-text next-medium">px</span>
                     </span>
                 </div>
@@ -89,7 +89,7 @@ const seeSchame = () => {
     background-color: #fff;
     width: 100%;
     margin-bottom: 2px;
-    padding: 8px 12px 8px 16px;
+    padding: 4px 12px 4px 16px;
   }
 
   .top-area-left {

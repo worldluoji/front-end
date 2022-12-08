@@ -64,7 +64,7 @@ const cancel = () => {
     width: 300px;
     height: 100vh;
     position: fixed;
-    top: 5vh;
+    top: 100px;
     right: 0;
     color: #000;
     border: 1px solid #eee;

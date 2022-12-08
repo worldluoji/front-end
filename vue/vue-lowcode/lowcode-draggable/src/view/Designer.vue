@@ -128,11 +128,13 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f0f2f5;
+    margin-top: 10px;
   }
   
   .wrapper {
     display: flex;
     flex-direction: column;
+    background-color: #f0f2f5;
   }
   
   .container {
