@@ -105,6 +105,7 @@
     grid-template-rows: 8vw 8vw;
     gap: 2vw;
     place-items: center;
+    background-color: #fff;
   }
   
   .material-icon-list:after {
