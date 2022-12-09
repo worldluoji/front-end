@@ -2,6 +2,7 @@
     <el-tabs 
         :tab-position="tabPosition" 
         class="left-tabs"
+        type="border-card"
     >
       <el-tab-pane label="组件库">
         <Material />
@@ -36,7 +37,7 @@
     height: 100%;
   }
 
-  .el-tabs__item.is-active {
+  .el-tabs__item.is-active,.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
     color: rgb(16, 15, 15);
   }
 
