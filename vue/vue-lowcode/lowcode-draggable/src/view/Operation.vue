@@ -75,6 +75,7 @@ const preview = () => {
     // history模式state传参数只能是非响应式数据, 所以这里转了一下，更好的方式是用pinia来存
     meta.set(props.content)
     canvas.setWidth(canvasWidth.value)
+    canvas.setDesign(false)
     router.push({
         name: 'preview',
         path: '/preview',

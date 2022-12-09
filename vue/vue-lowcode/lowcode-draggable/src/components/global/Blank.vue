@@ -1,6 +1,6 @@
 <template class="container">
     <div v-if="props && props.element">
-        <component :is="props.element" @click.stop="showPanel(props.element)" :props="props.props"/>
+        <component :is="props.element" @click.stop="showPanel(props.element)" :props="props.props" :eid="props.id" :design="canvas.isDesign"/>
     </div>
     <div v-else> 
         点击选择卡片
@@ -8,25 +8,29 @@
 </template>
 
 <script>
-import Image from './Image.vue'
-import Offer from './Offer.vue'
-import NavBar from './NavBar.vue'
-import currentPanelStore from '../store/currentPanel.js'
+import Image from '../Image.vue'
+import Offer from '../Offer.vue'
+import NavBar from '../NavBar.vue'
+import List from '../List.vue'
+import currentPanelStore from '../../store/currentPanel.js'
+import canvasStore from '../../store/canvas.js';
 export default {
     components: {
         Image,
         Offer,
-        NavBar
+        NavBar,
+        List
     },
     props: {
         props: { 
             type: Object,
             required: true
-        }
+        },
     },
     data() {
         return {
             currentPanel: currentPanelStore(),
+            canvas: canvasStore()
         }
     },
     methods: {

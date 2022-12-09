@@ -18,6 +18,13 @@ const findById = (content, id) => {
           return t
         }
       }
+
+      if (e.props.props && e.props.props.children) {
+        let t = findById(e.props.props.children, id)
+        if (t) {
+          return t
+        }
+      }
     }
   }
   return null
@@ -60,6 +67,9 @@ const metaStore = defineStore("meta", {
     addChildren(eid, children) {
       let e = findById(this.content, eid)
       if (e) {
+        if (!e.props.children) {
+          e.props.children = []
+        }
         e.props.children.push(...children)
       }
     }

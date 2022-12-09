@@ -1,6 +1,5 @@
 <template>
     <div class="ListPanel">
-        row: <input type="number" placeholder="请输入行数" v-model="data.row" @change="change"/> <br>
         column: <input type="number" placeholder="请输入列数" v-model="data.column" @change="change"/>
     </div>
 </template>
@@ -13,7 +12,6 @@ const p = defineProps({
     }
 })
 const data = {
-    row: p.props.row ? p.props.row: 1,
     column: p.props.column ? p.props.column: 1
 }
 

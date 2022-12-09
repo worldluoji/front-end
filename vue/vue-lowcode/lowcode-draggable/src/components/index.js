@@ -1,4 +1,3 @@
-import Blank from './Blank.vue'
 import Image from './Image.vue'
 import NavBar from './NavBar.vue'
 import Offer from './Offer.vue'
@@ -9,5 +8,4 @@ export default {
     NavBar,
     Offer,
     List,
-    Blank
 }

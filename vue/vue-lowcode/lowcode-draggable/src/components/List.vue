@@ -11,8 +11,6 @@
     <template #item="{ element, index }">
       <div v-if="enabled" 
             :class="[{'list-group-item': enabled}]" 
-            data-container="true" 
-            :data-index="index" 
             @click.stop="showPanel(element)">
         <component :is="element.name" :props="element.props" :eid="element.id" />
       </div>
@@ -25,19 +23,18 @@
 
 <script>
 import draggable from 'vuedraggable';
-import Blank from './Blank.vue';
 import Offer from './Offer.vue';
 import Image from './Image.vue';
 import NavBar from './NavBar.vue';
-import currentPanelStore from '../store/currentPanel.js'
-import metaStore from '../store/meta.js'
-import uuid from '../utils/uuid'
+import currentPanelStore from '../store/currentPanel.js';
+import metaStore from '../store/meta.js';
+import canvasStore from '../store/canvas.js';
+import uuid from '../utils/uuid';
 
 export default {
   name: "List",
   components: {
     draggable,
-    Blank,
     Offer,
     Image,
     NavBar
@@ -50,19 +47,19 @@ export default {
     eid: {
       type: String,
       required: true
-    },
-    design: Boolean
+    }
   },
   data() {
     return {
       enabled: false,
       dragging: false,
       currentPanel: currentPanelStore(),
-      meta: metaStore()
+      meta: metaStore(),
+      canvas: canvasStore()
     };
   },
   created() {
-    this.enabled = this.design
+    this.enabled = this.canvas.isDesign
   },
   methods: {
     showPanel(element) {
@@ -72,12 +69,12 @@ export default {
   watch: {
     props: {
       handler(newVal) {
-        let {children, row, column} = newVal
+        let {children, column} = newVal
         // console.log('props', this.eid, children)
-        row = row ? row: 1
         column = column ? column: 1
-        const n = row * column
-        if (children === undefined || n === 0) {
+        const n = column
+        children = children ? children: []
+        if (n === 0) {
           return
         }
 

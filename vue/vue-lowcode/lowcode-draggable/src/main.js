@@ -5,6 +5,7 @@ import DragManager from './dragmanager.js'
 import AtomicAttributeManager from './atomicmanager.js'
 import router from './router/router'
 import { createPinia } from 'pinia'
+import globalComponents from './components/global/global.js'
 
 const pinia = createPinia()
 
@@ -29,4 +30,5 @@ createApp(App)
     })
     .use(router)
     .use(pinia)
+    .use(globalComponents)
     .mount('#app')

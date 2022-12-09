@@ -19,7 +19,7 @@ const p = defineProps({
 const data = {
     element: p.props.element ? p.props.element: '',
 }
-const options = ['Image', 'NavBar', 'Offer']
+const options = ['Image', 'NavBar', 'Offer', 'List']
 const emit = defineEmits(['change'])
 const change = () => {
     console.log(data)

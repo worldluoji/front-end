@@ -48,7 +48,7 @@ const change = (p) => {
 }
 
 const save = () => {
-    // console.log(111, panelProps.value)
+    // console.log(111, panelProps.value, current)
     meta.updateProps(current.value.id, panelProps.value)
 }
 
