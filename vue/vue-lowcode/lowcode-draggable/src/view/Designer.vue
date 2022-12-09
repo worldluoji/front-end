@@ -3,24 +3,7 @@
       <div class="wrapper">
         <Operation :content="content"  @changeWidth="changeWidth"/>
         <div class="container">
-          <div v-draggable class="material-icon-list">
-            <div class="material-icon" data-material="Image">
-              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M39 6H9C7.34315 6 6 7.34315 6 9V39C6 40.6569 7.34315 42 9 42H39C40.6569 42 42 40.6569 42 39V9C42 7.34315 40.6569 6 39 6Z" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 23C20.7614 23 23 20.7614 23 18C23 15.2386 20.7614 13 18 13C15.2386 13 13 15.2386 13 18C13 20.7614 15.2386 23 18 23Z" fill="none" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M42 36L31 26L21 35L14 29L6 35" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <p>图片</p>
-            </div>
-            <div class="material-icon" data-material="NavBar">
-              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="6" width="40" height="30" rx="2" fill="none" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 42H28" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 42H36" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 42H6" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M42 42H44" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 42H14" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <p>导航栏</p>
-            </div>
-            <div class="material-icon" data-material="Offer">
-              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.78101 9.75193C9.90612 8.75107 10.7569 8 11.7656 8H36.2344C37.2431 8 38.0939 8.75107 38.219 9.75193L41.719 37.7519C41.8682 38.9456 40.9374 40 39.7344 40H8.26556C7.06257 40 6.1318 38.9456 6.28101 37.7519L9.78101 9.75193Z" fill="none" stroke="#777" stroke-width="4" stroke-linejoin="round"/><path d="M15 18C15 18 17 22 24 22C31 22 33 18 33 18" stroke="#777" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <p>商品</p>
-            </div>
-            <div class="material-icon" data-material="List-Container">
-              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 14H30C30 14 38 18.1481 38 27.7993C38 37.4504 30 42 30 42H13C13 42 6 35.9785 6 28C6 20.0215 13 14 13 14Z" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M38 27.9998C25 24.9998 19 33.9998 6 27.9998" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 14H40C40 14 44 18 44 30" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 6L32 8.66667L31 14H13L9 6Z" fill="none" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <p>容器</p>
-            </div>
-          </div>
+          <LeftSide />
           <div class="drag-content" v-dragcontent="content">
             <div class="top-white"></div>
             <draggable 
@@ -57,6 +40,7 @@
   import Operation from './Operation.vue' 
   import Cards from '../components'
   import Panel from './Panel.vue'
+  import LeftSide from './LeftSide.vue'
   import metaStore from '../store/meta.js'
   import currentPanelStore from '../store/currentPanel.js'
 
@@ -66,6 +50,7 @@
       draggable,
       Operation,
       Panel,
+      LeftSide,
       ...Cards
     },
     data() {
@@ -97,32 +82,7 @@
   }
   </script>
   
-  <style>
-  .material-icon-list {
-    /* margin-right: 10vw; */
-    display: grid;
-    grid-template-columns: 5vw 5vw;
-    grid-template-rows: 8vw 8vw;
-    gap: 2vw;
-    place-items: center;
-    background-color: #fff;
-  }
-  
-  .material-icon-list:after {
-    content: "";
-    display: block;
-    clear: both;
-  }
-  .material-icon {
-    float: left;
-  }
-  .material-icon p {
-    font-size: 16px;
-    margin: 0px;
-    text-align: center;
-    color: #777;
-  }
-  
+<style>
   .drag-content {
     width: v-bind(canvasWidth);
     min-height: 500px;
@@ -140,8 +100,8 @@
   
   .container {
     display: grid;
-    grid-template-columns: 200px 1fr 300px;
-    column-gap: 10vw;
+    grid-template-columns: 280px 1fr 300px;
+    column-gap: 30px;
   }
   
   .top-white {
@@ -162,6 +122,5 @@
   .not-draggable {
     cursor: no-drop;
   }
-  
-  </style>
+</style>
   

@@ -9,8 +9,8 @@
         <hr>
         <Box @change="change" :props="panelProps.atomicAttrs"/>
         <hr>
-        <button @click="save">保存</button> &nbsp;&nbsp;
-        <button @click="cancel">取消</button>
+        <el-button @click="save">保存</el-button>
+        <el-button @click="cancel">取消</el-button>
     </div>
 </template>
 

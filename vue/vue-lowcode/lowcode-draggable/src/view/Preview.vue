@@ -1,7 +1,7 @@
 <template>
     <div class="preview">
         <Render :content="content" />
-        <button @click="canelPreview">取消预览</button>
+        <el-button @click="canelPreview">取消预览</el-button>
     </div>
 </template>
 
