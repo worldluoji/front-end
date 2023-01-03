@@ -1,8 +1,0 @@
-.eslintrc.cjs
-node_modules
-package.json
-package-lock.json
-dist
-bin
-esm-cjs
-docs
