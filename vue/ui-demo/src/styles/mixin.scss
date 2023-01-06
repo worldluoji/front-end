@@ -1,4 +1,3 @@
-// scss参考： https://www.sasscss.com/documentation
 /**
  * 在下面的代码中，我们定义了 namespace 变量的值为 el，使用 Mixin 注册一个可以重复使用的模块 b，
  * 可以通过传进来的 block 生成新的变量 $B，并且变量会渲染在 class 上，
@@ -17,7 +16,6 @@ $modifier-separator: '--';
   }
 }
 
-// 添加ben后缀啥的
 @mixin when($state) {
   @at-root {
     &.#{$state-prefix + $state} {

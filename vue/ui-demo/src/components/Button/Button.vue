@@ -85,7 +85,7 @@ const buttonSize = computed(()=>{
       $--button-large-border-radius
     );
   }
-@include m(primary) {
+  @include m(primary) {
     @include button-variant(
       $--button-primary-font-color,
       $--button-primary-background-color,

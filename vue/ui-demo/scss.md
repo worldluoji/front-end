@@ -1,8 +1,12 @@
 # scss
+Sass 是一种 CSS 的预编译语言。它提供了 变量（variables）、嵌套（nested rules）、 混合（mixins）、 函数（functions）等功能，
+并且完全兼容 CSS 语法。Sass 能够帮助复杂的样式表更有条理， 并且易于在项目内部或跨项目共享设计。
 
-## 1. mixin
+<br>
+
+## 1. @mixin and @include
 @mixin指令是另一种简化代码的方法。Mixins可以包含任意内容且可以传递参数，比'@extend'更加灵活和强大。
-使用 @import 导入 mixin.scss 后，就可以用 include 语法去使用 Mixin 注册的代码块
+使用 @import 导入 mixin.scss 后，就可以用 include 语法去使用 Mixin 注册的代码块。
 ```
   @mixin reset-list {
     margin: 0;
@@ -39,8 +43,26 @@
     margin-right: 2em;
   }
 ```
-  
-## 2. at-root
+mixin还可以有入参：
+```
+@mixin theme($theme: DarkGray) {
+  background: $theme;
+  box-shadow: 0 0 1px rgba($theme, .25);
+  color: #fff;
+}
+
+.info {
+  @include theme;
+}
+.alert {
+  @include theme($theme: DarkRed);
+}
+.success {
+  @include theme($theme: DarkGreen);
+}
+```
+
+## 2. @at-root
 The @at-root directive causes one or more rules to be emitted at the root of the document, 
 rather than being nested beneath their parent selectors. It can either be used with a single inline selector:
 ```
@@ -74,6 +96,7 @@ rather than being nested beneath their parent selectors. It can either be used w
     background-image: url(/logo.gif);
   }
 ```
+@content类似于一个占位符，或者插槽的作用。
 
 ## 4. @each的使用
 ```
@@ -142,8 +165,8 @@ $content: "antzone" !default;
 ## 6. mix
 ```
 .foo{
- color: mix(#036, #d2e1dd);
- color: mix(#000, #fff, 75%);
+  color: mix(#036, #d2e1dd);
+  color: mix(#000, #fff, 75%);
 }
 
 Syntax
@@ -151,4 +174,85 @@ mix($color1, $color2, $weight)
 ```
 - $color1	Required	Specifies the first color.
 - $color2	Required	Specifies the second color.
-- $weight	Optional	Specifies the percentage of mix of $color1 to $color2.The $weight must be a number between 0% and 100% (both are inclusive). Default value is 50%.
+- $weight	Optional	Specifies the percentage of mix of $color1 to $color2.
+The $weight must be a number between 0% and 100% (both are inclusive). Default value is 50%.
+
+<br>
+
+## 7. modules
+You don't have to write all your Sass in a single file. 
+You can split it up however you want with the @use rule.
+```
+// _base.scss
+$font-stack: Helvetica, sans-serif;
+$primary-color: #333;
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+}
+// styles.scss
+@use 'base';
+
+.inverse {
+  background-color: base.$primary-color;
+  color: white;
+}
+```
+
+## 8. @extend
+Using @extend lets you share a set of CSS properties from one selector to another.
+```
+/* This CSS will print because %message-shared is extended. */
+%message-shared {
+  border: 1px solid #ccc;
+  padding: 10px;
+  color: #333;
+}
+
+// This CSS won't print because %equal-heights is never extended.
+%equal-heights {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.message {
+  @extend %message-shared;
+}
+
+.success {
+  @extend %message-shared;
+  border-color: green;
+}
+
+.error {
+  @extend %message-shared;
+  border-color: red;
+}
+
+.warning {
+  @extend %message-shared;
+  border-color: yellow;
+}
+```
+
+## 9. 操作符
+在 CSS 中经常需要做数学计算。Sass 支持部分标准的 数学运算符，例如 +、-、*、math.div() 和 %。
+```
+@use "sass:math";
+
+.container {
+  display: flex;
+}
+
+article[role="main"] {
+  width: math.div(600px, 960px) * 100%;
+}
+
+aside[role="complementary"] {
+  width: math.div(300px, 960px) * 100%;
+  margin-left: auto;
+}
+```
+## 参考资料
+https://www.sasscss.com/guide
