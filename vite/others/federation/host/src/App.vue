@@ -11,7 +11,7 @@ const data: number = add(1, 2);
 
 <template>
   <div>
-    <img alt="Vue logo" src="./assets/logo.png" />
+    <img alt="Vue logo" src="./assets/vue.svg" />
     <HelloWorld msg="这是Local应用"/>
     <RemoteApp />
     <AysncRemoteButton />
