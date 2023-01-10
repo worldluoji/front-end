@@ -8,7 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { Options, Vue } from "vue-class-component";
 // @ is an alias to /src
 import DynamicComponent1 from "@/components/dynamiccomponents/DynamicComponent1.vue";
 import DynamicComponent2 from "@/components/dynamiccomponents/DynamicComponent2.vue";

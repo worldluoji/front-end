@@ -7,19 +7,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Foo from "./Fooo.vue";
 import Bar from "./Bar.vue";
-import { Options, Vue } from "vue-class-component";
 
-@Options({
-  components: {
-    Foo,
-    Bar,
-  },
-})
-export default class DynamicComponent2 extends Vue {
-  public view = "Foo";
-  public href = "c";
-}
+const view = Bar;
+const href = "c";
 </script>
