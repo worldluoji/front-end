@@ -5983,6 +5983,11 @@
     "picocolors" "^1.0.0"
     "stable" "^0.1.8"
 
+"systemjs@^6.13.0":
+  "integrity" "sha512-P3cgh2bpaPvAO2NE3uRp/n6hmk4xPX4DQf+UzTlCAycssKdqhp6hjw+ENWe+aUS7TogKRFtptMosTSFeC6R55g=="
+  "resolved" "https://registry.npmmirror.com/systemjs/-/systemjs-6.13.0.tgz"
+  "version" "6.13.0"
+
 "table@^6.0.9":
   "integrity" "sha512-s/fitrbVeEyHKFa7mFdkuQMWlH1Wgw/yEXMt5xACT4ZpzWFluehAxRtUUQKPuWhaLAWhFcVx6w3oC8VKaUfPGA=="
   "resolved" "https://registry.npmmirror.com/table/-/table-6.8.0.tgz"
