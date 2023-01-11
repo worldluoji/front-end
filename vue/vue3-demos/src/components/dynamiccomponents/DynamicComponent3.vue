@@ -19,5 +19,6 @@ let current = allComponents.BasicMobileComponents.NavBar;
 </script>
 
 <style scoped>
+/* @import并不是直接引入css代码到页面，而是发起新的不带scoped的请求获得样式资源；因此，这种引用方式是全局的，从而引起全局污染。 */
 @import './dist/style.css';
 </style>
