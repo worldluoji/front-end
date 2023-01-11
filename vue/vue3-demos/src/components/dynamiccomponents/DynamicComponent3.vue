@@ -5,6 +5,7 @@
 <script setup lang="ts">
 // 引入打包好的ESM模块
 import { allComponents } from './dist/origin-elements';
+// import ('./dist/style.css');
 // 打包好的库，实际只要在本机上就能成import进来，所以可以先从远端下载到本机，然后加载
 // import { allComponents } from '/Users/honorluo/front-end/js/node/static-server/dist/origin-elements.js';
 
