@@ -8,20 +8,30 @@
 </head>
 <body>
     <div class="app" id="app"></div>
-    <div id="ball"></div>
+    <div class="container">
+      <div id="ball"></div>
+    </div>
     <style>
         body {
           margin: 0;
         }
       
         #ball {
-          top: 32px;
-          left: 32px;
-          position: fixed;
+          position: relative;
           height: 32px;
           width: 32px;
           background: #08f;
           border-radius: 32px;
+        }
+
+        .container {
+          /* 设置了position ball的parentOffset才是相对于父元素，否则是相对body */
+          position: relative;
+          background-color: aquamarine;
+          width: 200px;
+          height: 200px;
+          left: 100px;
+          top: 100px;
         }
     </style>
 </body>
