@@ -2,6 +2,7 @@
   "name": "rxjs",
   "version": "1.0.0",
   "description": "demo for rxjs",
+  "type": "module",
   "scripts": {
     "test": "node",
     "start": "webpack-dev-server --mode=development --config ./build/webpack.config.js",
