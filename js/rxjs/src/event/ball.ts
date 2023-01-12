@@ -2,8 +2,8 @@ import { fromEvent } from 'rxjs'
 import { map, switchMap, takeUntil } from 'rxjs/operators'
 
 const ball = document.getElementById('ball')
-if (ball == null) {
-    throw new Error('can not find ball element')
+if (ball == null || ball.parentElement == null) {
+  throw new Error('can not find ball element')
 }
 
 function getMouseEventPos(event: MouseEvent) {
@@ -18,11 +18,12 @@ const mousedown$ = fromEvent<MouseEvent>(ball, 'mousedown').pipe(
   map(getMouseEventPos)
 )
 
-const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(
+// move时返回鼠标的位置
+const mousemove$ = fromEvent<MouseEvent>(ball.parentElement, 'mousemove').pipe(
   map(getMouseEventPos)
 )
 
-const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup')
+const mouseup$ = fromEvent<MouseEvent>(ball.parentElement, 'mouseup')
 
 const drag$ = mousedown$.pipe(
   switchMap(initialPos => {
@@ -52,7 +53,7 @@ const drag$ = mousedown$.pipe(
           }
         }
 
-        // 到这里，说明是合理的，记录下来，以便不合理时会退
+        // 到这里，说明是合理的，记录下来，以便不合理时回退
         lastTop = newTop
         lastLeft = newLeft
         return {
