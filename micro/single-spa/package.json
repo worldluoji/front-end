@@ -1,0 +1,18 @@
+{
+  "name": "single-spa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "single_spa": "concurrently --names \"app-shell,decide   ,inspire  ,checkout \" \"mfserve --listen 3000 --single app-shell\" \"mfserve --listen 3001 --cors team-decide\" \"mfserve --listen 3002 --cors team-inspire\" \"mfserve --listen 3003 --cors team-checkout\" \"wait-on http://localhost:3000 && opener http://localhost:3000\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@microfrontends/serve": "^11.3.0",
+    "concurrently": "^6.0.2",
+    "opener": "^1.5.2",
+    "wait-on": "^5.3.0"
+  }
+}
