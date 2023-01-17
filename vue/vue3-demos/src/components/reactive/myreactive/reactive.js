@@ -130,3 +130,87 @@ export function effect(fn, options = {}) {
   effectFn.scheduler = options.scheduler; // 调度时机 watchEffect 会用到
   return effectFn;
 }
+
+/**
+* computed创建的时候，lazy: true,所以是不执行计算方法的，在get value的时候，把_dirty改为false，并执行一次计算。
+* 后续只有当触发set value的时候，才会走scheduler，并把_dirty改为true,重新执行一次计算。
+* 也就是说，getter是计算方法，scheduler通过_dirty的值控制getter是否执行
+**/
+export function computed(getterOrOptions) {
+  // getterOrOptions可以是函数，也可以是一个对象，支持get和set
+  // 还记得清单应用里的全选checkbox就是一个对象配置的computed
+  let getter, setter
+  if (typeof getterOrOptions === 'function') {
+    getter = getterOrOptions
+    setter = () => {
+      console.warn('计算属性不能修改')
+    }
+  } else {
+    getter = getterOrOptions.get
+    setter = getterOrOptions.set
+  }
+  return new ComputedRefImpl(getter, setter)
+}
+class ComputedRefImpl {
+  constructor(getter, setter) {
+    this._setter = setter
+    this._val = undefined
+    this._dirty = true
+    // computed就是一个特殊的effect，设置lazy和执行时机
+    this.effect = effect(getter, {
+      lazy: true,
+      scheduler: () => {
+        if (!this._dirty) {
+          this._dirty = true
+          trigger(this, 'value')
+        }
+      },
+    })
+  }
+  get value() {
+    track(this, 'value')
+    if (this._dirty) {
+      this._dirty = false
+      this._val = this.effect()
+    }
+    return this._val
+  }
+  set value(val) {
+    this._setter(val)
+  }
+}
+
+
+export function ref(val) {
+  if (isRef(val)) {
+    return val
+  }
+  return new RefImpl(val)
+}
+export function isRef(val) {
+  return !!(val && val.__isRef)
+}
+
+// ref 的执行逻辑要比 reactive 要简单一些，不需要使用 Proxy 代理语法，直接使用对象语法的 getter 和 setter 配置，监听 value 属性即可。
+class RefImpl {
+  constructor(val) {
+    this.__isRef = true
+    this._val = convert(val)
+  }
+  get value() {
+    track(this, 'value')
+    return this._val
+  }
+
+  set value(val) {
+    if (val !== this._val) {
+      this._val = convert(val)
+      trigger(this, 'value')
+    }
+  }
+}
+
+// ref也可以支持复杂数据结构
+function convert(val) {
+  return isObject(val) ? reactive(val) : val
+}
