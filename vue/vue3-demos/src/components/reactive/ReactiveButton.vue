@@ -25,8 +25,10 @@ effect(() => {
 </script>
 
 <template>
-  <p>{{ dummy }}</p>
-  <button @click="increment">
-    {{ state.count }}
-  </button>
+  <div>
+    <p>{{ dummy }}</p>
+    <button @click="increment">
+      {{ state.count }}
+    </button>
+  </div>
 </template>

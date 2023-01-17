@@ -18,17 +18,19 @@ function mutateDeeply() {
 </script>
 
 <template>
-  <button @click="mutateDeeply">
-    {{ obj.nested.count }}
-  </button>
-  <ul>
-    <li v-for="(item, index) in obj.arr" :key="index">
-      {{ item }}
-    </li>
-  </ul>
-  <ul>
-    <li v-for="(item, index) in arr" :key="index">
-      {{ item }}
-    </li>
-  </ul>
+  <div>
+    <button @click="mutateDeeply">
+      {{ obj.nested.count }}
+    </button>
+    <ul>
+      <li v-for="(item, index) in obj.arr" :key="index">
+        {{ item }}
+      </li>
+    </ul>
+    <ul>
+      <li v-for="(item, index) in arr" :key="index">
+        {{ item }}
+      </li>
+    </ul>
+  </div>
 </template>
