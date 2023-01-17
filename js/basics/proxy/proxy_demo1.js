@@ -1,4 +1,5 @@
 const handler = {
+    // 第一个参数是该对象本身，第二个参数是该对象访问的属性
     get: function(obj, prop) {
         return prop in obj ? obj[prop] : 37;
     }

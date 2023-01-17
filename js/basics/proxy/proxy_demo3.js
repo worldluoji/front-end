@@ -1,20 +1,21 @@
 let validator = {
-    set: function(obj, prop, value) {
-      if (prop === 'age') {
-        if (!Number.isInteger(value)) {
-          throw new TypeError('The age is not an integer');
-        }
-        if (value > 200) {
-          throw new RangeError('The age seems invalid');
-        }
+  // obj: 对象本身，prop对象名称，value对象值
+  set: function(obj, prop, value) {
+    if (prop === 'age') {
+      if (!Number.isInteger(value)) {
+        throw new TypeError('The age is not an integer');
       }
-  
-      // The default behavior to store the value
-      obj[prop] = value;
-  
-      // 表示成功
-      return true;
+      if (value > 200) {
+        throw new RangeError('The age seems invalid');
+      }
     }
+
+    // The default behavior to store the value
+    obj[prop] = value;
+
+    // 表示成功
+    return true;
+  }
 };
   
 let person = new Proxy({}, validator);
