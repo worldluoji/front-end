@@ -35,15 +35,15 @@ const mutableHandlers = {
  * map 的 key 是我们要代理的 target 对象，值还是一个 depsMap，存储这每一个 key 依赖的函数，
  * 每一个 key 都可以依赖多个 effect。
  * 
-        targetMap = {
-            target： {
-                key1: [回调函数1，回调函数2],
-                key2: [回调函数3，回调函数4],
-                }  ,
-                target1： {
-                key3: [回调函数5]
-            }  
-        }
+  targetMap = {
+    target： {
+      key1: [回调函数1，回调函数2],
+      key2: [回调函数3，回调函数4],
+    },
+    target1： {
+      key3: [回调函数5]
+    }
+  }
  */
 
 const targetMap = new WeakMap();

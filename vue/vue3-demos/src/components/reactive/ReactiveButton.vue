@@ -18,6 +18,7 @@ function increment() {
 const counter = reactive({ num1: 1, num2: 2 });
 let dummy = ref(0);
 // 当counter.num1或者counter.num2改变，effect中的方法就会执行，从而更新dummy
+// 在 effect 中获取 counter.num1 和 counter.num2 的时候，就会触发 counter 的 get 拦截函数；get 函数，会把当前的 effect 函数注册到一个全局的依赖地图中去。这样 counter.num1 在修改的时候，就会触发 set 拦截函数，去依赖地图中找到注册的 effect 函数，然后执行。
 effect(() => {
   dummy.value = counter.num1 + counter.num2;
   console.log(dummy.value); // 每次counter.num1修改都会打印日志
