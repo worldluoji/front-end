@@ -137,6 +137,39 @@ const response = await fetch('/users', {
 })
 ```
 
+### 文件上传
+
+如果表单里面有文件选择器，可以用前一个例子的写法，上传的文件包含在整个表单里面，一起提交。
+
+另一种方法是用脚本添加文件，构造出一个表单，进行上传。
+```
+const input = document.querySelector('input[type="file"]');
+
+const data = new FormData();
+data.append('file', input.files[0]);
+data.append('user', 'foo');
+
+fetch('/avatars', {
+  method: 'POST',
+  body: data
+});
+```
+上传二进制文件时，不用修改标头的Content-Type，浏览器会自动设置。
+
+### 直接上传二进制数据
+
+fetch()也可以直接上传二进制数据，将 Blob 或 arrayBuffer 数据放在body属性里面。
+```
+let blob = await new Promise(resolve =>   
+  canvasElem.toBlob(resolve,  'image/png')
+);
+
+let response = await fetch('/article/fetch/post/image', {
+  method:  'POST',
+  body: blob
+});
+```
+
 ### 使用 AbortController取消 fetch请求
 fetch()请求发送以后，如果中途想要取消，需要使用AbortController对象。
 ```
