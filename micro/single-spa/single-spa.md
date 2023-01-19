@@ -93,6 +93,43 @@ Utility： A utility is an in-browser module that (generally) has it's own repos
 Each single-spa microfrontend is an in-browser JavaScript module.
 An in-browser JavaScript module is when imports and exports are not compiled away by your build tool, but instead are resolved within the browser. This is different from build-time modules, which are supplied by your node_modules and compiled away before they touch the browser.
 
-参考：
+## 总结
+### single-spa 只做两件事
+- 提供生命周期概念，并负责调度子应用的生命周期
+- 挟持 url 变化事件和函数，url 变化时匹配对应子应用，并执行生命周期流程。
+
+### 三大分类： 
+- Application：子应用，和 url 强相关，交由 single-spa 调用生命周期 
+- Parcel：组件，和 url 无关，手动调用生命周期 
+- Utility Module：统一将公共资源导出的模块
+
+### “重要”概念：
+- Root Config：指主应用的 index.html + main.js。
+- HTML 负责声明资源路径，JS 负责注册子应用和启动主应用
+- Application：要暴露 bootstrap, mount, umount 三个生命周期，一般在 mount 开始渲染子 SPA 应用 * 
+- Parcel：也要暴露 bootstrap, mount, unmount 三个生命周期，可以再暴露 update 生命周期。
+parcel 可大到一个 Application，也可以小到一个功能组件。与 Application 不同的是 Parcel 需要开发都手动调用生命周期。
+
+### single-spa-react, single-spa-vue...
+是给子应用快速生成 bootstrap, mount, unmount 的生命周期函数的工具库。
+
+### single-spa-css
+隔离前后两个子应用的 CSS 样式。
+在子应用 mount 时添加子应用的 CSS，在 unmount 时删除子应用的 CSS。
+
+如果要在多个子应用进行样式隔离，可以有两种方法：
+- Shadow DOM，样式隔离比较好的方法，但是穿透比较麻烦
+- Scoped CSS，在子应用的 CSS 选择器上添加前缀做区分，可以使用 postcss-prefix-selector 这个包来快速添加前缀。
+  
+### single-spa-leaked-globals
+在子应用 mount 时给 window 对象恢复/添加一些全局变量，如 jQuery 的 $ 或者 lodash 的 _，在 unmount 时把 window 对象的变量删掉。
+
+实现了“如果主应用一个url只有一个页面”情况下的 JS 沙箱。
+
+### single-spa-layout
+和 Vue Router 差不多，主要功能是可以在 index.html 指定在哪里渲染哪个子应用。
+
+## 参考：
 - https://single-spa.js.org/docs/microfrontends-concept
 - https://single-spa.js.org/docs/module-types
+- https://zhuanlan.zhihu.com/p/378346507
