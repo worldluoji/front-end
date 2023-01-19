@@ -14,7 +14,7 @@
 - 首先，使用 template 属性来创建模板。利用 DOM 可以查找到模板的内容，但是模板元素是不会被渲染到页面上的，也就是说 DOM 树中的 template 节点不会出现在布局树中，所以我们可以使用 template 来自定义一些基础的元素结构，这些基础的元素结构是可以被重复使用的。
 - 其次，我们需要创建一个类。在该类的构造函数中要完成三件事：
   - 查找模板内容；
-  - 创建Shadoe DOM；
+  - 创建Shadow DOM；
   - 再将模板添加到影子 DOM 上。
 - demo 见 hello_Webcomponents.html
 
@@ -42,7 +42,7 @@ Shadow DOM 内部的样式是不会影响到全局 CSSOM 的。另外，使用 D
 
 ## 浏览器如何实现影子DOM?
 - 我们使用了两次 hello-Webcomponents 属性，那么就会生成两个影子 DOM，并且每个影子 DOM 都有一个 shadow root 的根节点，我们可以将要展示的样式或者元素添加到影子 DOM 的根节点上，每个影子 DOM 你都可以看成是一个独立的 DOM.
-- 浏览器为了实现影子 DOM 的特性，在代码内部做了大量的条件判断，比如当通过 DOM 接口去查找元素时，渲染引擎会去判断 geek-bang 属性下面的 shadow-root 元素是否是影子 DOM，如果是影子 DOM，那么就直接跳过 shadow-root 元素的查询操作。所以这样通过 DOM API 就无法直接查询到影子 DOM 的内部元素了。
+- 浏览器为了实现影子 DOM 的特性，在代码内部做了大量的条件判断，比如当通过 DOM 接口去查找元素时，渲染引擎会去判断 hello-webcomponent 属性下面的 shadow-root 元素是否是影子 DOM，如果是影子 DOM，那么就直接跳过 shadow-root 元素的查询操作。所以这样通过 DOM API 就无法直接查询到影子 DOM 的内部元素了。
 - 当生成布局树的时候，渲染引擎也会判断 hello-Webcomponents 属性下面的 shadow-root 元素是否是影子 DOM，如果是，那么在影子 DOM 内部元素的节点选择 CSS 样式的时候，会直接使用影子 DOM 内部的 CSS 属性。所以这样最终渲染出来的效果就是影子 DOM 内部定义的样式。
 
 <br>
