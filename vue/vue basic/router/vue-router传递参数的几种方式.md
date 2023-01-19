@@ -54,6 +54,7 @@ router.beforeEach(async to => {
   }
 })
 ```
+https://router.vuejs.org/guide/advanced/meta.html
 
 <br>
 
