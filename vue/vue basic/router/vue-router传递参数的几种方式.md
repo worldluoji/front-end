@@ -18,6 +18,8 @@ this.$router.push({
     params: { id: 1 },
 });
 ```
+值得注意的是，在新版本的vue-router中，params传参方式已经废弃了，原因如下: 
+https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22
 
 <br>
 
