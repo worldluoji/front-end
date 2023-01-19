@@ -21,10 +21,44 @@ this.$router.push({
 值得注意的是，在新版本的vue-router中，params传参方式已经废弃了，原因如下: 
 https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22
 
+it's an anti-pattern in routing for many reasons, one of them being reloading the page lose the params
+
+大致是说，通过params传参，是“反模式”的，比如说刷新页面后就会丢失param.
+
+也给出了四种解决建议：
+
+1. Putting the data in a store like pinia: this is relevant if the data is used across multiple pages
+即使用pinia来传递参数
+
+2. Move the data to an actual param by defining it on the route's path or pass it as query params: 
+this is relevant if you have small pieces of data that can fit in the URL and should be preserved when reloading the page.
+通过路径参数或者query来传递参数
+
+3. Pass the data as state to save it to the History API state:
+History模式可以使用History state API传递参数
+```
+<router-link :to="{ name: 'somewhere', state: { myData } }">...</router-link>
+<button
+  @click="$router.push({ name: 'somewhere', state: { myData } })"
+>...</button>
+```
+Note state is subject to History state limitations.
+
+4. Pass it as a new property to to.meta during navigation guards:
+传递
+```
+router.beforeEach(async to => {
+  if (to.meta.shouldFetch) {
+    // name `data` whatever you want
+    to.meta.data = await fetchSomething()
+  }
+})
+```
+
 <br>
 
 ## 声明式的导航
 router-link标签跳转传参 ：
 ```
-<router-link :to="{name:'home',params:{id:1}}">跳转</router-link>
+<router-link :to="{name:'home', params:{id:1}}">跳转</router-link>
 ```
