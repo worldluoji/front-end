@@ -15,7 +15,7 @@ Hooks 在一定程度上更好地体现了 React 的开发思想，即从 State 
 Hooks 和  Class 两种方式在 React 开发中几乎是完全等价的，没有绝对的优劣。
 如果你决定开始使用 Hooks，那么对于已有的 Class 组件，其实是完全没必要进行立刻重构的。只要在新的功能上，再来使用函数组件和 Hooks 就可以了。
 
-React 提供的 Hooks 其实非常少，一共只有 10 个，比如 useState、useEffect、useCallback、useMemo、useRef、useContesxt 等等。
+React 提供的 Hooks 其实非常少，一共只有 10 个，比如 useState、useEffect、useCallback、useMemo、useRef、useContext 等等。
 
 <br>
 
@@ -76,7 +76,7 @@ const [todos, setTodos] = useState([{ text: 'Learn Hooks' }]);
 - 从 URL 中读到的值。比如有时需要读取 URL 中的参数，把它作为组件的一部分状态。那么我们可以在每次需要用的时候从 URL 中读取，而不是读出来直接放到 state 里。
 - 从 cookie、localStorage 中读取的值。通常来说，也是每次要用的时候直接去读取，而不是读出来后放到 state 里。
 
-调用 state 更新函数后，组件的更新是异步的，不会马上执行；在 React 18 里，更是为更新 state 加入了自动批处理功能，多个 state 更新函数调用会被合并到一次重新渲染中。
+调用 state 更新函数后，组件的更新是异步的，不会马上执行；在 React 18 里，更是为更新 state 加入了自动批处理功能: <strong>多个 state 更新函数调用会被合并到一次重新渲染中</strong>。
 例如，下面的代码中，组件只会重新渲染一次，而且这次渲染使用了两个 state 分别的最新值。这就是 React对多个 state 更新的自动批处理。
 ```
 function App() {
@@ -128,7 +128,7 @@ setTodoList(prevState => {
 
 第三种比较常见的副作用是与网络请求（HTTP request）相关，比如我们要针对一个用户下单的动作发起一个网络请求，需要先获得用户 ID，再连着用户的 ID 一起发送。如果我们还没获取到用户 ID，就发起下单请求，可能就会收到报错。
 
-纯函数的意思是说，一个函数的返回结果的变化只依赖其入参数，并且没有副作用。
+<strong>纯函数的意思是说，一个函数的返回结果的变化只依赖其入参数，并且没有副作用</strong>。
 总之，副作用就是让一个函数不再是纯函数的各类操作。
 
 ```
@@ -143,7 +143,7 @@ useEffect(callback, dependencies)
 - 每次 render 后执行：不提供第二个依赖项参数。比如 useEffect(() => {})。
 - 仅第一次 render 后执行：提供一个空数组作为依赖项。比如 useEffect(() => {}, [])。
 - 第一次以及依赖项发生变化后执行：提供依赖项数组。比如 useEffect(() => {}, [deps])。
-- 组件 unmount 后执行：返回一个回调函数。比如 useEffect() => { return () => {} }, [])。
+- 组件 unmount 后执行返回的一个回调函数。比如 useEffect(() => { return () => {} }, [])。
 
 那么在定义依赖项时，我们需要注意以下三点：
 - 依赖项中定义的变量一定是会在回调函数中用到的，否则声明依赖项其实是没有意义的。
@@ -347,6 +347,6 @@ const MyComp = () => {
 
 ## 其它说明
 Hooks 是逻辑重用的第一选择。 
-不过在如今的函数组件情况下，Hooks 有一个局限，那就是只能用作数据逻辑的重用，
+不过在如今的函数组件情况下，Hooks 有一个局限，那就是：<strong>只能用作数据逻辑的重用</strong>，
 而一旦涉及 UI 表现逻辑的重用，就有些力不从心了，而这正是 render props 擅长的地方。
 所以，即使有了 Hooks，我们也要掌握 render props 这个设计模式的用法， 见CounterRenderProps.jsx
