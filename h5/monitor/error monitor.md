@@ -4,7 +4,6 @@
  - https://blog.sentry.io/2016/01/04/client-javascript-reporting-window-onerror level2 (怎么捕获错误)
  - https://blog.sentry.io/2016/05/17/what-is-script-error level2 （错误上报后总是会发现 Script Error. 咋办）
  - https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/try...catch level1 （try catch）
- - https://developer.mozilla.org/zh-CN/docs/Web/API/Window/unhandledrejection_event level1 （Promise reject）
 
 2. unhandledrejection
 当 Promise 被 reject 且没有 reject 处理器的时候，会触发 unhandledrejection 事件
