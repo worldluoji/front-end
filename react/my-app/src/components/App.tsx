@@ -36,7 +36,7 @@ const App = ({ match }: any) => {
           <Menu.Item key="form"><Link to="/form">Form by hooks</Link></Menu.Item>
           <Menu.Item key="form1"><Link to="/form1">非受控Form</Link></Menu.Item>
           <Menu.Item key="modal"><Link to="/modal">Modal</Link></Menu.Item>
-          <Menu.Item key="loadable"><Link to="/loadable">Ladable</Link></Menu.Item>
+          <Menu.Item key="loadable"><Link to="/loadable">Loadable</Link></Menu.Item>
         </Menu>
         
       </Header>
