@@ -189,7 +189,8 @@ yarn add eslint-plugin-react-hooks --save-dev
 ```
 useCallback(fn, deps)
 ```
-这里 fn 是定义的回调函数，deps 是依赖的变量数组。只有当某个依赖变量发生变化时，才会重新声明 fn 这个回调函数
+这里 fn 是定义的回调函数，deps 是依赖的变量数组。只有当某个依赖变量发生变化时，才会重新声明 fn 这个回调函数，
+否则函数保持不变。注意，这里并不是说依赖项变了才会执行函数，要与useMemo区分开来。
 
 
 ## useMemo
