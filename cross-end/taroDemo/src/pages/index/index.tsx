@@ -1,6 +1,12 @@
-import { View } from '@tarojs/components'
-import { Swiper, SwiperItem } from '@tarojs/components'
+import { Swiper, SwiperItem, View } from '@tarojs/components'
 import './index.scss'
+import Taro from '@tarojs/taro'
+
+const toForm = () => {
+  Taro.navigateTo({
+    url: '/pages/form/form',
+  })
+}
 
 export default function Index() {
   return (
@@ -9,10 +15,9 @@ export default function Index() {
       autoplay
       interval={1000}
       indicatorColor="#999"
-      onClick={() => {}}
       onAnimationFinish={() => {}}
     >
-      <SwiperItem>
+      <SwiperItem onClick={toForm}>
         <View className="text">1</View>
       </SwiperItem>
       <SwiperItem>
