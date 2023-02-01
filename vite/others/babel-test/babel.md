@@ -112,5 +112,32 @@ transform-runtime 一方面能够让我们在代码中使用非全局版本的 P
 
 babel也支持编写自己的插件，来应用你想要的任何转换规则。
 
+## preset
+preset实际就是包含了某些特定能力转换插件的集合，比如：
+- @babel/preset-env 用于编译 ES2015+ 语法
+- @babel/preset-typescript 用于 TypeScript
+- @babel/preset-react 用于 React
+- @babel/preset-flow 用于 Flow
+
+自定义预设实际就是将其它预设和插件进行组合：
+```
+module.exports = function() {
+  return {
+    plugins: ["pluginA", "pluginB", "pluginC"],
+  };
+};
+```
+
+预设可以包含其它预设和带有选项的插件。
+```
+module.exports = () => ({
+  presets: [require("@babel/preset-env")],
+  plugins: [
+    [require("@babel/plugin-proposal-class-properties"), { loose: true }],
+    require("@babel/plugin-proposal-object-rest-spread"),
+  ],
+});
+```
+
 ## 参考资料
 https://babel.docschina.org/docs/en/
