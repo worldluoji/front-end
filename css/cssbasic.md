@@ -55,6 +55,15 @@ padding: 40px 20px 20px 40px;
 ```
 顺时针，第一个是top
 
+```
+padding: 40px 20px;
+```
+上下40px, 左右20px
+
+```
+padding: 40px 30px 20px;
+```
+top 40px, bottom 20px, 左右30px
 ## 6. margin
 an element's margin controls the amount of space between an element's border and surrounding elements.
 用法和padding一致
@@ -73,9 +82,36 @@ class selector : .xxx
 Pixels are a type of length unit, which is what tells the browser how to size or space an item.
 
 ## 2) relative units:
-rem是基于html元素的字体大小来决定，而em则根据使用它的元素的大小决定。
+rem是基于html元素的字体大小来决定，而em则根据使用它的元素的大小决定。比如:
 
-即em相对于父元素，rem相对于根元素。
+```
+.padded {
+  font-size: 16px;
+  padding: 1em;
+}
+```
+那么，这里1em=16px，表示上下左右padding都是16px;
+如果.padded没有设置font-size, 就会继承父元素的font-size，即此时1em等于父元素的font-size。
+
+还有一种情况
+```
+body {
+  font-size: 16px;
+}
+
+.slogan {
+  font-size: 1.2em;
+  padding: 1.2em;
+}
+```
+显然font-size没有“自己的1.2倍”，这里font-size的意思就是父元素font-size的1.2倍  = 16 * 1.2 = 19.2px，
+而 padding = 1.2 * 自己的font-size = 19.2 * 1.2 = 23.04px. 
+
+
+rem是"root em"的缩写，则相对于根元素`<html>`。
+值得注意的是：伪类选择器:root等价于选择了html根节点。
+
+经验：拿不准的时候，用rem设置字号，用px设置边框，用em设置padding等其它属性。
 
 ## 3) in and mm refer to inches and millimeters, respectively. 这种绝对单位已经不再使用
 
