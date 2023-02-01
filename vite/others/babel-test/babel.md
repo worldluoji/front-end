@@ -102,3 +102,6 @@ transform-runtime 一方面能够让我们在代码中使用非全局版本的 P
 另一方面对于asyncToGeneator这类的工具函数，它也将其转换成了一段引入语句，不再将完整的实现放到文件中，节省了编译后文件的体积。
 
 另外，transform-runtime方案引用的基础库也发生了变化，不再是直接引入core-js和regenerator-runtime，而是引入@babel/runtime-corejs3。
+
+## 参考资料
+https://babel.docschina.org/docs/en/
