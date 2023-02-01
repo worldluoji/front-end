@@ -4,7 +4,7 @@ npm init -y
 npm i @babel/cli @babel/core @babel/preset-env
 ```
 各个依赖的作用:
-- @babel/cli: 为 babel 官方的脚手架工具，很适合我们练习用。
+- @babel/cli: 一个允许你在终端使用 babel 的工具，很适合我们练习用。
 - @babel/core: babel 核心编译库。
 - @babel/preset-env: babel 的预设工具集，基本为 babel 必装的库。
 
@@ -102,6 +102,15 @@ transform-runtime 一方面能够让我们在代码中使用非全局版本的 P
 另一方面对于asyncToGeneator这类的工具函数，它也将其转换成了一段引入语句，不再将完整的实现放到文件中，节省了编译后文件的体积。
 
 另外，transform-runtime方案引用的基础库也发生了变化，不再是直接引入core-js和regenerator-runtime，而是引入@babel/runtime-corejs3。
+
+
+## plugins
+转换规则会体现为插件的形式，插件是小型 JavaScript 程序，它指示 Babel 如何进行代码转换。
+
+比如，想要将 ES2015+ 语法转换为 ES5，我们可以依赖类似 @babel/plugin-transform-arrow-functions 这样的官方插件.
+该插件将代码中的所有箭头函数都将转换为 ES5 兼容的函数表达式.
+
+babel也支持编写自己的插件，来应用你想要的任何转换规则。
 
 ## 参考资料
 https://babel.docschina.org/docs/en/
