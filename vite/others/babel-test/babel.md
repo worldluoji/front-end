@@ -110,7 +110,21 @@ transform-runtime 一方面能够让我们在代码中使用非全局版本的 P
 比如，想要将 ES2015+ 语法转换为 ES5，我们可以依赖类似 @babel/plugin-transform-arrow-functions 这样的官方插件.
 该插件将代码中的所有箭头函数都将转换为 ES5 兼容的函数表达式.
 
+插件配置时可以指定选项：
+```
+{
+  "plugins": ["pluginA", ["pluginB"], ["pluginC", { "module": "bluebird" }]]
+}
+```
+### 插件执行顺序：
+- 插件在预设之前运行。
+- 插件排序是从第一个到最后一个。
+- 预设顺序是颠倒的（最后一个到第一个）。
+
+### 自定义插件
 babel也支持编写自己的插件，来应用你想要的任何转换规则。
+
+<br>
 
 ## preset
 preset实际就是包含了某些特定能力转换插件的集合，比如：
@@ -139,5 +153,8 @@ module.exports = () => ({
 });
 ```
 
+<br>
+
 ## 参考资料
-https://babel.docschina.org/docs/en/
+- https://babel.docschina.org/docs/en/
+- https://github.com/thejameskyle/babel-handbook
