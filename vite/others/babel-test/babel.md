@@ -1,4 +1,9 @@
-# babel demo
+# Babel
+Babel 是 JavaScript 编译器，更确切地说是源码到源码的编译器，通常也叫做“转换编译器（transpiler）”。 
+意思是说你为 Babel 提供一些 JavaScript 代码，Babel 更改这些代码，然后返回给你新生成的代码。
+这个处理过程中的每一步都涉及到创建或是操作抽象语法树，亦称 AST。
+
+## babel demo
 ```
 npm init -y
 npm i @babel/cli @babel/core @babel/preset-env
@@ -103,6 +108,7 @@ transform-runtime 一方面能够让我们在代码中使用非全局版本的 P
 
 另外，transform-runtime方案引用的基础库也发生了变化，不再是直接引入core-js和regenerator-runtime，而是引入@babel/runtime-corejs3。
 
+<br>
 
 ## plugins
 转换规则会体现为插件的形式，插件是小型 JavaScript 程序，它指示 Babel 如何进行代码转换。
