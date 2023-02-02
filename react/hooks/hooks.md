@@ -162,28 +162,15 @@ function Sample() {
 代码的原意可能是在 todos 变化的时候去产生一些副作用，但是这里的 todos 变量是在函数内创建的，实际上每次都产生了一个新数组。
 所以在作为依赖项的时候进行引用的比较，实际上被认为是发生了变化的。
 
-
-## Eslint hooks 配置
+### useEffect和useLayoutEffect的区别
+- useEffect 是异步执行的，而useLayoutEffect是同步执行的。
+- useEffect 的执行时机是浏览器完成渲染之后，而 useLayoutEffect 的执行时机是浏览器把内容真正渲染到界面之前。
+- 如果你在 ssr 的时候使用这个函数会有一个 warning。
 ```
-npm install eslint-plugin-react-hooks --save-dev
-yarn add eslint-plugin-react-hooks --save-dev
+Warning: useLayoutEffect does nothing on the server, because...
 ```
-然后eslint配置文件中加入：
-```
-{
-  "plugins": [
-    // ...
-    "react-hooks"
-  ],
-  "rules": {
-    // ...
-    // 检查 Hooks 的使用规则
-    "react-hooks/rules-of-hooks": "error", 
-    // 检查依赖项的声明
-    "react-hooks/exhaustive-deps": "warn"
-  }
-}
-```
+这是因为 useLayoutEffect 是不会在服务端执行的，所以就有可能导致 ssr 渲染出来的内容和实际的首屏内容并不一致。
+所以，这时候应该用useEffect代替useLayoutEffect.
 
 ## useCallback
 ```
@@ -351,3 +338,27 @@ Hooks 是逻辑重用的第一选择。
 不过在如今的函数组件情况下，Hooks 有一个局限，那就是：<strong>只能用作数据逻辑的重用</strong>，
 而一旦涉及 UI 表现逻辑的重用，就有些力不从心了，而这正是 render props 擅长的地方。
 所以，即使有了 Hooks，我们也要掌握 render props 这个设计模式的用法， 见CounterRenderProps.jsx
+
+<br>
+
+## Eslint hooks 配置
+```
+npm install eslint-plugin-react-hooks --save-dev
+yarn add eslint-plugin-react-hooks --save-dev
+```
+然后eslint配置文件中加入：
+```
+{
+  "plugins": [
+    // ...
+    "react-hooks"
+  ],
+  "rules": {
+    // ...
+    // 检查 Hooks 的使用规则
+    "react-hooks/rules-of-hooks": "error", 
+    // 检查依赖项的声明
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
+```
