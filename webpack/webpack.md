@@ -54,6 +54,24 @@ plugins: [
  new HtmlWebpackPlugin({template: './src/index.html'})
 ]
 ```
+webpack 插件是一个具有 apply 方法的 JavaScript 对象。
+apply 方法会被 webpack compiler 调用，并且在 整个 编译生命周期都可以访问 compiler 对象。
+一个简单的自定义插件：
+```
+const pluginName = 'ConsoleLogOnBuildWebpackPlugin';
+
+class ConsoleLogOnBuildWebpackPlugin {
+  apply(compiler) {
+    compiler.hooks.run.tap(pluginName, (compilation) => {
+      console.log('webpack 构建正在启动！');
+    });
+  }
+}
+
+module.exports = ConsoleLogOnBuildWebpackPlugin;
+```
+compiler hook 的 tap 方法的第一个参数，应该是驼峰式命名的插件名称。
+建议为此使用一个常量，以便它可以在所有 hook 中重复使用。
 
 ## 模版
 ```
@@ -126,4 +144,5 @@ webpack 的 import() 和 require.ensure() 需要 Promise。
 <br>
 
 ## 参考
-https://www.webpackjs.com/concepts/
+- https://www.webpackjs.com/concepts/
+- https://www.webpackjs.com/plugins/
