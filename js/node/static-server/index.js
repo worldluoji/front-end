@@ -7,8 +7,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
 
 var server = http.createServer(function (req, res){
-    const fileName = Path.resolve(__dirname, 'dist', "." + req.url);
-    const extName = Path.extname(fileName).substr(1);
+    const fileName = Path.resolve(__dirname, "." + req.url);
+    const extName = Path.extname(fileName).slice(1);
+    console.log(fileName);
 
     if (fs.existsSync(fileName)) { //判断本地文件是否存在
         var mineTypeMap={
@@ -41,4 +42,4 @@ var server = http.createServer(function (req, res){
         stream.pipe(res);
     }
 })
-server.listen(80);
+server.listen(8099);
