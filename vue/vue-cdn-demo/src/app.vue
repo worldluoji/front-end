@@ -13,13 +13,11 @@
     vuex状态演示<br />
     $store - count：{{ $store.state.count }}<br />
     <el-button @click="setCount">vuex的 计数</el-button><br /><br /><br /><br />
-    <OfferList />
+    <component :is="'OfferList'" />
   </div>
 </template>
 
 <script>
-import { onBeforeMount } from 'vue';
-
 export default {
   name: 'app',
   setup() {
@@ -39,6 +37,19 @@ export default {
     return {
       
     };
+  },
+  mounted() {
+    const s = document.createElement('script');
+    const url = 'http://localhost:8099/cutomerElements/1.0.0/cutomerElements.umd.cjs'
+    s.type = 'text/javascript';
+    s.src = url;
+    document.body.appendChild(s);    
+    setTimeout(() => {
+      console.log(window, window.location, window.cutomerElements);
+      Object.assign(this.$.components, window.cutomerElements.CustomerComponents);
+      console.log(this.$.components);
+      this.$forceUpdate();
+    }, 1000);
   },
   components: {
   },
