@@ -1,0 +1,546 @@
+/*文字*/
+
+//文字尺寸
+.fs-10 {
+    font-size: 10px;
+}
+
+.fs-11 {
+    font-size: 11px;
+}
+
+.fs-12 {
+    font-size: 12px;
+}
+
+.fs-13 {
+    font-size: 13px;
+}
+
+.fs-14 {
+    font-size: 14px;
+}
+
+.fs-15 {
+    font-size: 15px;
+}
+
+.fs-16 {
+    font-size: 16px;
+}
+
+.fs-17 {
+    font-size: 17px;
+}
+
+.fs-18 {
+    font-size: 18px;
+}
+
+.fs-19 {
+    font-size:19px;
+}
+
+.fs-20 {
+    font-size: 20px;
+}
+
+.fs-21 {
+    font-size: 21px;
+}
+
+.fs-22 {
+    font-size: 22px;
+}
+
+//文字加粗
+.f-bold {
+    font-weight: bold
+}
+
+//对齐
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+// 单行文本省略号...
+.ellipsis-single {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.el-month-table td.today .cell {
+    color: #606266;
+    font-weight: 500;
+}
+
+// 强制换行
+.text-wrap {
+    /* 只对英文起作用，以字母作为换行依据。 */
+    word-break: break-all;
+    /* 只对英文起作用，以单词作为换行依据。*/
+    word-wrap: break-word;
+    /* 只对中文起作用，强制换行。*/
+    white-space: pre-wrap;
+}
+
+// 强制不换行
+.text-nowrap {
+    word-break: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+}
+
+// 允许选中
+.user-select {
+    user-select: auto;
+}
+
+//文字颜色
+.fc-red {
+    color: #ED6347;
+}
+
+.fc-redHyaline {
+    color: #FF8D8D;
+}
+
+.fc-blue {
+    color: #6575F6;
+}
+
+.fc-black {
+    color: #333;
+}
+
+.fc-white {
+    color: #fff;
+}
+
+.fc-success {
+    color: #4EC66B;
+}
+
+.fc-warn {
+    color: #EB9E08;
+}
+
+.fc-fail {
+    color: #F56A00;
+}
+
+.fc-6 {
+    color: #666
+}
+
+.fc-9 {
+    color: #999
+}
+
+.fc-owe {
+    color: #FF5B5B;
+}
+
+.fc-has {
+    color: #FF7A66;
+}
+
+.fc-war {
+    color: #FF9A33;
+}
+
+.fc-f6a {
+    color: #F6AA2B;
+}
+
+.fc-add {
+    color: #64D0C5;
+}
+
+.fc-b30 {
+    color: #E67B30;
+}
+
+.fc-22d {
+    color: #F5222D;
+}
+
+.fc-b36 {
+    color: #212B36;
+}
+
+
+/*内边距*/
+
+.pad-10 {
+    padding: 10px;
+}
+
+.pad-15 {
+    padding: 15px;
+}
+
+.pad-20 {
+    padding: 20px;
+}
+
+.pad-x-10 {
+    padding: 0 10px;
+}
+
+.pad-x-15 {
+    padding: 0 15px;
+}
+
+.pad-x-20 {
+    padding: 0 20px;
+}
+
+.pad-y-10 {
+    padding: 10px 0;
+}
+
+.pad-y-15 {
+    padding: 15px 0;
+}
+
+.pad-y-20 {
+    padding: 20px 0;
+}
+
+.pad-left-10 {
+    padding-left: 10px;
+}
+
+.pad-left-15 {
+    padding-left: 10px;
+}
+
+.pad-left-20 {
+    padding-left: 20px;
+}
+
+.pad-right-10 {
+    padding-right: 10px;
+}
+
+.pad-right-15 {
+    padding-right: 15px;
+}
+
+.pad-right-20 {
+    padding-right: 20px;
+}
+
+.pad-top-10 {
+    padding-top: 10px;
+}
+
+.pad-top-15 {
+    padding-top: 15px;
+}
+
+.pad-top-20 {
+    padding-top: 20px;
+}
+
+.pad-top-30 {
+    padding-top: 30px;
+}
+
+.pad-bottom-10 {
+    padding-bottom: 10px;
+}
+
+.pad-bottom-15 {
+    padding-bottom: 10px;
+}
+
+.pad-bottom-20 {
+    padding-bottom: 20px;
+}
+
+
+/*外边距*/
+
+.mg-0 {
+    margin: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.mg-5 {
+    margin: 5px;
+}
+
+.mg-10 {
+    margin: 10px;
+}
+
+.mg-15 {
+    margin: 15px;
+}
+
+.mg-20 {
+    margin: 20px;
+}
+
+.mg-x-10 {
+    margin: 0 10px;
+}
+
+.mg-x-15 {
+    margin: 0 15px;
+}
+
+.mg-x-20 {
+    margin: 0 20px;
+}
+
+.mg-y-10 {
+    margin: 10px 0;
+}
+
+.mg-y-15 {
+    margin: 15px 0;
+}
+
+.mg-y-20 {
+    margin: 20px 0;
+}
+
+.mg-left-5 {
+    margin-left: 5px;
+}
+
+.mg-left-10 {
+    margin-left: 10px;
+}
+
+.mg-left-15 {
+    margin-left: 15px;
+}
+
+.mg-left-20 {
+    margin-left: 20px;
+}
+
+.mg-right-5 {
+    margin-right: 5px;
+}
+
+.mg-right-10 {
+    margin-right: 10px;
+}
+
+.mg-right-15 {
+    margin-right: 15px;
+}
+
+.mg-right-20 {
+    margin-right: 20px;
+}
+
+.mg-top-10 {
+    margin-top: 10px;
+}
+
+.mg-top-15 {
+    margin-top: 15px;
+}
+
+.mg-top-20 {
+    margin-top: 20px;
+}
+
+.mg-top-30 {
+    margin-top: 30px;
+}
+
+.mg-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.mg-bottom-15 {
+    margin-bottom: 15px;
+}
+
+.mg-bottom-20 {
+    margin-bottom: 20px;
+}
+
+
+/*布局*/
+
+// 显示隐藏
+.inline-block {
+    display: inline-block;
+}
+
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+//浮动
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
+//清除浮动
+.fn-clear {
+    zoom: 1;
+    clear: both;
+}
+
+.fn-clear:after {
+    content: " ";
+    display: block;
+    visibility: hidden;
+    font-size: 0;
+    clear: both;
+    height: 0;
+}
+
+// 行元素垂直对齐方式
+.media-middle {
+    vertical-align: middle;
+}
+
+.media-top {
+    vertical-align: top;
+}
+
+.media-bottom {
+    vertical-align: bottom;
+}
+
+.media-baseline {
+    vertical-align: baseline;
+}
+
+//父盒子一般高
+.half {
+    display: inline-block;
+    width: 0;
+    height: 50%;
+}
+
+//字体图标
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.07em;
+    fill: currentColor;
+    overflow: hidden;
+}
+
+// 纯色图标样式
+.pureicon {
+    font-size: inherit;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    overflow: hidden;
+}
+
+//盒子阴影
+.shadow {
+    box-shadow: 0px 2px 6px 0px rgba(37, 39, 50, 0.05);
+}
+
+//鼠标状态
+.pointer {
+    cursor: pointer
+}
+
+// 自定义图片关闭按钮样式
+.custom_img-priview {
+    .el-icon-circle-close {
+        color: #FFF;
+    }
+}
+.border-top{
+    border-top: 1px solid #ebebee;
+}
+.border-bottom{
+    border-bottom: 1px solid #ebebee;
+}
+.border-left{
+    border-left: 1px solid #ebebee;
+}
+.border-right{
+    border-right: 1px solid #ebebee;
+}
+.none-more{
+    width: 100%;
+    padding: 16px;
+    text-align: center;
+    color: #909399;
+}
+.footer {
+    position: fixed;
+    bottom: 0;
+    height: 52px;
+    text-align: right;
+    width: 100%;
+    right: 0;
+    background: #fff;
+    line-height: 52px;
+    padding-right: 24px;
+    z-index: 1;
+  }
+  .form-title{
+      font-size:12px;
+      color:#999;
+  }
+  .link-btn{
+    color:#5f3bce;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+  table.customize {
+    font-size: 11px;
+    color: #999;
+    border-width: 1px;
+    border-color: #ebeef5;
+    border-collapse: collapse;
+    td {
+      border-width: 1px;
+      padding: 8px;
+      border-style: solid;
+      border-color: #ebeef5;
+      background-color: #ffffff;
+      .title {
+        color: #333;
+        margin-right: 40px;
+      }
+    }
+    .file {
+      color: #409eff;
+      cursor: pointer;
+    }
+  }
