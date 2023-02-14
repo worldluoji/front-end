@@ -43,13 +43,13 @@ export default {
     const url = 'http://localhost:8099/cutomerElements/1.0.0/cutomerElements.umd.cjs'
     s.type = 'text/javascript';
     s.src = url;
-    document.body.appendChild(s);    
-    setTimeout(() => {
+    s.onload = () => {
       console.log(window, window.location, window.cutomerElements);
       Object.assign(this.$.components, window.cutomerElements.CustomerComponents);
       console.log(this.$.components);
       this.$forceUpdate();
-    }, 1000);
+    }
+    document.body.appendChild(s);
   },
   components: {
   },
