@@ -6,7 +6,6 @@ node_modules
 /.VSCodeCounter*
 *-lock.json
 *.zip
-package.json
 
 # local env files
 .env.local
