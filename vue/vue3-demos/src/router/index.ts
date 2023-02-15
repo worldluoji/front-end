@@ -69,6 +69,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "jsx" */ "../components/jsx/CounterJSX"),
   },
+  {
+    path: "/dynmd",
+    name: "dynmd",
+    component: () =>
+      import(/* webpackChunkName: "dynmd" */ "../views/DynamicModuleView.vue"),
+  },
 ];
 
 const router = createRouter({
