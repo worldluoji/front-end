@@ -1,14 +1,8 @@
 
 import { createApp, h } from 'vue';
 
-import ModuleComponent from './AModule';
-
-
-const createMyApp = () => createApp({
-  render() {
-    return h(ModuleComponent, {});
-  }
-});
+// import ModuleComponent from './AModule';
+import ModuleComponent from './BModule.vue';
 
 // 实现动态渲染组件的过程
 export const createModule = () => {
@@ -18,12 +12,17 @@ export const createModule = () => {
   const body = document.querySelector('body') as HTMLBodyElement;
   body.appendChild(dom);
   
-  const module1 = createMyApp();
+  let module1: any;
 
   // 返回当前组件的操作实例, 其中封装了挂载和卸载组件的方法
   return {
-    open: () => {
+    open: (params: any) => {
       console.log('open...');
+      module1 = createApp({
+        render() {
+          return h(ModuleComponent, { params: params });
+        }
+      });
       // 把组件 ModuleComponent 作为一个独立应用挂载在 DOM 节点上
       module1.mount(dom);
     },

@@ -4,8 +4,8 @@
 
 <!-- 按定义渲染组件 (<script setup> 组合式 API) -->
 <script setup lang="ts">
-import Foo from "./Fooo.vue";
-import Bar from "./Bar.vue";
+import Foo from "./AFooo.vue";
+import Bar from "./ABar.vue";
 import { defineProps } from "vue";
 const props = defineProps({
   view: { type: Number, required: true },

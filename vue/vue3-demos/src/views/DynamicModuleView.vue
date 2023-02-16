@@ -12,7 +12,7 @@ let mod: { open: any; close: any; };
 
 const open = () => {
     mod = createModule();
-    mod.open();
+    mod.open({ text: 'hello world!!!'});
 };
 
 const close = () => {

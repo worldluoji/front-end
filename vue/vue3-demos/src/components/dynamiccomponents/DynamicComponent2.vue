@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import Foo from "./Fooo.vue";
-import Bar from "./Bar.vue";
+import Foo from "./AFooo.vue";
+import Bar from "./ABar.vue";
 
 const view = Bar;
 const href = "c";
