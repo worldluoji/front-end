@@ -12,7 +12,6 @@
     "pinia": "^2.0.16",
     "systemjs": "^6.13.0",
     "vue": "^3.2.13",
-    "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.3",
     "vuedraggable": "^4.1.0"
   },
