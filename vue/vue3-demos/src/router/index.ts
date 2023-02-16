@@ -75,6 +75,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "dynmd" */ "../views/DynamicModuleView.vue"),
   },
+  {
+    path: "/dyform",
+    name: "dyform",
+    component: () =>
+      import(/* webpackChunkName: "dyform" */ "../views/DynamicFormView.vue"),
+  },
 ];
 
 const router = createRouter({
