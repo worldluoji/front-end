@@ -8,4 +8,7 @@ const app = Vue.createApp(App)
   .use(store) // 挂载vuex
   .use(router) // 挂载路由
   .use(ElementPlus) // 加载ElementPlus
+  .directive('atomicattr', (el, binding) => {
+    // mock
+  })
   .mount('#app') // 挂载Vue的app实例

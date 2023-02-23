@@ -13,7 +13,7 @@
     vuex状态演示<br />
     $store - count：{{ $store.state.count }}<br />
     <el-button @click="setCount">vuex的 计数</el-button><br /><br /><br /><br />
-    <component :is="'OfferList'" />
+    <component :is="'SplitLine'" />
   </div>
 </template>
 
