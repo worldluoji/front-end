@@ -117,6 +117,9 @@ https://ts.xcatliu.com/basics/declaration-files.html
 ## 7. typescript免费教程
 - https://basarat.gitbook.io/typescript/
 - https://www.tslang.cn/docs/handbook/typescript-in-5-minutes.html
+- https://github.com/type-challenges/type-challenges
+
+前两个是教程，最后一个是类型练习（挑战）。
 
 ## 8. Vue and React with typescript
 Vue或者React使用了TypeScript后，常常需要使用Html各元素的类型，可参考：
