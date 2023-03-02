@@ -102,6 +102,66 @@ https://www.typescriptlang.org/dt/searchhttps://www.typescriptlang.org/dt/search
 
 <br>
 
+## declare module
+如果是需要扩展原有模块，需要在类型声明文件中先引用原有模块，再使用 declare module 扩展原有模块：
+```
+// types/moment-plugin/index.d.ts
+
+import * as moment from 'moment';
+
+declare module 'moment' {
+    export function foo(): moment.CalendarKey;
+}
+// src/index.ts
+
+import * as moment from 'moment';
+import 'moment-plugin';
+
+moment.foo();
+```
+declare module 也可用于在一个文件中一次性声明多个模块的类型：
+
+```
+// types/foo-bar.d.ts
+
+declare module 'foo' {
+    export interface Foo {
+        foo: string;
+    }
+}
+
+declare module 'bar' {
+    export function bar(): string;
+}
+// src/index.ts
+
+import { Foo } from 'foo';
+import * as bar from 'bar';
+
+let f: Foo;
+bar.bar();
+```
+
+<br>
+
+## 自动生成声明文件
+如果库的源码本身就是由 ts 写的，那么在使用 tsc 脚本将 ts 编译为 js 的时候，添加 declaration 选项，就可以同时也生成 .d.ts 声明文件了。
+
+我们可以在命令行中添加 --declaration（简写 -d），或者在 tsconfig.json 中添加 declaration 选项。这里以 tsconfig.json 为例：
+```
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "lib",
+        "declaration": true,
+    }
+}
+```
+上例中我们添加了 outDir 选项，将 ts 文件的编译结果输出到 lib 目录下，
+然后添加了 declaration 选项，设置为 true，表示将会由 ts 文件自动生成 .d.ts 声明文件，也会输出到 lib 目录下。
+
+<br>
+
 ## 参考
 - https://ts.xcatliu.com/basics/declaration-files.html
 - https://www.tslang.cn/docs/handbook/declaration-files/by-example.html
