@@ -88,7 +88,7 @@ function overload(a: any, b: any): any {}
 // 枚举兼容性 枚举和number可以相互兼容，但枚举之间相互不兼容
 enum Fruit { Apple, Banana }
 enum Color { Red, Yellow }
-let fruit: Fruit.Apple = 1
+let fruit: Fruit.Apple
 let no: number = Fruit.Apple
 // let color: Color.Red = Fruit.Apple
 
