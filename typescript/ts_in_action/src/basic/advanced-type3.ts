@@ -22,6 +22,10 @@ type PartialObj = Partial<Obja3>
 
 // 抽取属性a和b
 type PickObj = Pick<Obja3, 'a' | 'b'>
+
+// 自己实现Pick, 可以点进Pick实现查看
+type MyPick<T, R extends keyof T> = {[P in R]: T[P]}
+
 // Readonly Partial Pick 被称为同态，因为不会引入新的属性，只会作用于Obja3
 
 // 非同态，增加x,y两个属性，且都是Obja3类型
