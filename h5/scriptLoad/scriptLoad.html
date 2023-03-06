@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script load demo</title>
+    <script src="./0.defer1.js?wait=3000" defer></script>
+    <script src="./1.async1.js?wait=3000" async></script>
+    <script src="./2.normal1.js?wait=500"></script>
+    <script src="./3.async2.js?wait=100" async></script>
+    <script src="./4.normal2.js?wait=400"></script>
+</head>
+<body>
+    <h1>Script load demo</h1>
+    <h2>async和defer, 这两个属性使得script都不会阻塞DOM的渲染。</h2>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            console.log('DOMContentLoaded');
+        });
+        window.addEventListener('load', (event) => {
+            console.log('loaded');
+        });
+    </script>
+</body>
+</html>
