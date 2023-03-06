@@ -337,3 +337,14 @@ media query参考： https://developer.mozilla.org/zh-CN/docs/Web/CSS/Media_Quer
 16. css元素重叠的方法
 1、给元素设置负margin，负margin可以让元素的占用空间变小，后面的元素可以覆盖当前的元素；
 2、使用position属性，利用绝对定位、相对定位来让多个元素进行重叠。
+
+17. bottom
+The effect of bottom depends on how the element is positioned (i.e., the value of the position property):
+- When position is set to absolute or fixed, the bottom property specifies the distance between the element's outer margin of bottom edge and the inner border of the bottom edge of its containing block.
+- When position is set to relative, the bottom property specifies the distance the element's bottom edge is moved above its normal position.
+- When position is set to sticky, the bottom property is used to compute the sticky-constraint rectangle.
+- When position is set to static, the bottom property has no effect.
+
+When both top and bottom are specified, position is set to absolute or fixed, and height is unspecified (either auto or 100%) both the top and bottom distances are respected. In all other situations, if height is constrained in any way or position is set to relative, the top property takes precedence and the bottom property is ignored.
+
+reference: https://developer.mozilla.org/en-US/docs/Web/CSS/bottom
