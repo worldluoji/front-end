@@ -87,6 +87,8 @@ fetch('http://another.com', {
   credentials: "include"
 });
 ```
+当请求使用 credentials: 'include' 时，响应的 Access-Control-Allow-Origin 不能使用通配符 "*"。
+在这种情况下，Access-Control-Allow-Origin 必须是当前请求的源，在使用 CORS Unblock 插件的情况下请求仍会失败。
 
 redirect属性指定 HTTP 跳转的处理方法。可能的取值如下：
 ```
