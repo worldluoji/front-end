@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node ./dist/hello-koa.js"
+    "start": "ts-node ./src/hello-koa.ts"
   },
   "keywords": [],
   "author": "",
