@@ -1,8 +1,13 @@
 # Babel
+Babel 是一个工具链，主要用于在当前和旧的浏览器或环境中，将 ECMAScript 2015+ 代码转换为 JavaScript 向后兼容版本的代码。
+以下是 Babel 可以做的主要事情：
+- 转换语法
+- Polyfill 目标环境中缺少的功能（通过如 core-js 的第三方 polyfill）
+- 源代码转换(codemods)
+
 Babel 是 JavaScript 编译器，更确切地说是源码到源码的编译器，通常也叫做“转换编译器（transpiler）”。 
 意思是说你为 Babel 提供一些 JavaScript 代码，Babel 更改这些代码，然后返回给你新生成的代码。
 这个处理过程中的每一步都涉及到创建或是操作抽象语法树，亦称 AST。
-
 ## babel demo
 ```
 npm init -y
@@ -163,4 +168,4 @@ module.exports = () => ({
 
 ## 参考资料
 - https://babel.docschina.org/docs/en/
-- https://github.com/thejameskyle/babel-handbook
+- https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/README.md
