@@ -144,6 +144,79 @@ bar.bar();
 
 <br>
 
+## npm包声明文件编写
+包声明文件的编写，一般是创建一个 types 目录，专门用来管理自己写的声明文件，
+将 foo 的声明文件放到 types/foo/index.d.ts 中。
+这种方式需要配置下 tsconfig.json 中的 paths 和 baseUrl 字段。
+目录结构：
+```
+/path/to/project
+├── src
+|  └── index.ts
+├── types
+|  └── foo
+|     └── index.d.ts
+└── tsconfig.json
+```
+tsconfig.json 内容：
+```
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "baseUrl": "./",
+        "paths": {
+            "*": ["types/*"]
+        }
+    }
+}
+```
+npm 包的声明文件主要有以下几种语法：
+- export 导出变量
+- export namespace 导出（含有子属性的）对象
+- export default ES6 默认导出
+- export = commonjs 导出模块
+
+我们可以使用 declare 先声明多个变量，最后再用 export 一次性导出。
+```
+// types/foo/index.d.ts
+declare const name: string;
+declare function getName(): string;
+declare class Animal {
+    constructor(name: string);
+    sayHi(): string;
+}
+declare enum Directions {
+    Up,
+    Down,
+    Left,
+    Right
+}
+interface Options {
+    data: any;
+}
+
+export { name, getName, Animal, Directions, Options };
+```
+注意，与全局变量的声明文件类似，interface 前是不需要 declare 的。
+
+
+### export namespace
+与 declare namespace 类似，export namespace 用来导出一个拥有子属性的对象：
+```
+export namespace foo {
+    const name: string;
+    namespace bar {
+        function baz(): string;
+    }
+}
+// src/index.ts
+
+import { foo } from 'foo';
+
+console.log(foo.name);
+foo.bar.baz();
+```
+
 ## 自动生成声明文件
 如果库的源码本身就是由 ts 写的，那么在使用 tsc 脚本将 ts 编译为 js 的时候，添加 declaration 选项，就可以同时也生成 .d.ts 声明文件了。
 
