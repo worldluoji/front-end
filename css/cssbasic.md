@@ -1,5 +1,28 @@
-# css基础
+# CSS
+CSS (Cascading Style Sheets，层叠样式表），本质上就是声明规则，然后产生各种效果。
 
+<br>
+
+# 层叠
+CSS的第一个"C"表示层叠，层叠就是一系列规则，它决定了如何解决冲突，是CSS的基础。
+## 解决冲突的三个条件
+1. 样式来源
+2. 选择器优先级
+3. 源码顺序
+
+总的来说，样式冲突时，优先级：
+- !important: 样式表中!important优先级高于行内样式；
+- 行内样式：行内样式高于央视表中非!important的样式；
+- 选择器：如果选择的ID更多，则胜出；如果ID相同，class更多则胜出；如果ID和class都一样，拥有更多标签的胜出；
+- 伪类选择器：比如:hover和属性选择器([type="input"]), 与class选择器的优先级相同；
+- 通用选择器*和组合选择器(> + ~) 对优先级没有影响。
+- 前面的条件都一样的情况下，位于页面较晚位置出现的胜出（后面的覆盖前面的）
+
+demo -> priority.html
+
+<br>
+
+# 常用CSS
 ## 1.  导入三方字体
 To import a Google Font, you can copy the font's URL from the Google Fonts library and then paste it in your HTML. 
 For this challenge, we'll import the Lobster font. 
@@ -13,7 +36,6 @@ Now you can use the Lobster font in your CSS by using Lobster as the FAMILY_NAME
 ```
 font-family: FAMILY_NAME, GENERIC_NAME;
 ```
-
 
 ## 2. font "degrade" 
 There are several default fonts that are available in all browsers. 
