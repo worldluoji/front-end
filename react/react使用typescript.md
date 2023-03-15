@@ -54,25 +54,3 @@ const [todoList, setTodoList] = useState<Array<KanbanCardType>>([]);
 const AdminContext = React.createContext<boolean>(false);
 ...
 ```
-
-## ts中type和interface的区别
-1. type 可以作为联合 Union 类型的别名，但 interface 不可以
-```
-type Pet = Cat | Dog; // 可以
-interface IPet extends Cat | Dog {} // 不可以，会抛错
-```
-
-2. interface 可以重复声明（Redeclaration），但 type 不可以
-```
-interface ICat {
-  age: number
-}
-interface ICat {
-  color: string
-} // 可以，会合并
-const cat: ICat = { age: 4, color: 'silver shaded' };
-
-type Cat = { age: number };
-type Cat = { color: string }; // 不可以，会抛错
-```
-越是希望组件的设计开发更封闭一些，越倾向于用 type ，越是认为组件需要更开放更灵活，越倾向于 interface。
