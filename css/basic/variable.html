@@ -64,3 +64,14 @@
     </div>
   </aside>
 </body>
+
+<script type="text/javascript">
+    let rootElement = document.documentElement;
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle
+    let styles = getComputedStyle(rootElement);
+    let mainColor = styles.getPropertyValue('--main-bg');
+    console.log(String(mainColor).trim());
+
+    rootElement = document.documentElement;
+    rootElement.style.setProperty('--main-bg', '#cdf');
+</script>
