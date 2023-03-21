@@ -163,8 +163,17 @@ vmin是vh和vw中小的那个，vmax是vh、vw中大的那个。
 经验：拿不准的时候，用rem设置字号，用px设置border粗细，用em设置padding、border-radius等属性。
 需要自适应的场景，比如移动端，优先使用视口单位。 -> ./basic/relativeUnit.html
 
+# line-height
+The line-height CSS property sets the height of a line box. It's commonly used to set the distance between lines of text. On block-level elements, it specifies the minimum height of line boxes within the element. 
+The line-height property is unusual in that it accepts both units and unitless values.
 
-## 9. body
+When you use a unitless number, that declared value is inherited, meaning its computed value is recalculated for each inheriting child element. 
+This will almost always be the result you want. 
+Using a unitless number lets you set the line height on the body and then forget about it for the rest of the page, unless there are particular places where you want to make an exception.
+
+-> ./basic/line-height.html
+
+## inherit
 you can style your body element just like any other HTML element, 
 and all your other elements will inherit your body element's styles.
 
@@ -185,84 +194,11 @@ example:
 
 由于h1没有显示指定color和font-family，h1会继承color: green和font-family: monospace两个属性。
 
-## 10. multipla css
-example1:
-```
-<style>
-  body {
-    background-color: black;
-    font-family: monospace;
-    color: green;
-  }
-  .pink-text {
-    color: pink;
-  }
-
-  .blue-text {
-    color: blue;
-  }
-</style>
-<h1 class="pink-text blue-text">Hello World!</h1>
-```
-这时,blue覆盖pink,与css中定义的顺序有关，与class中哪个在前哪个在后无关。
-
-example2:
-```
-<style>
-  body {
-    background-color: black;
-    font-family: monospace;
-    color: green;
-  }
-  .pink-text {
-    color: pink;
-  }
-
-  #orange-text {
-    color: orange;
-  }
-  
-  .blue-text {
-    color: blue;
-  }
-
-</style>
-<h1 id="orange-text" class="pink-text blue-text">Hello World!</h1>
-```
-
-这时候颜色为orange, id selector优先级高。
-
-example3:
-In many situations, you will use CSS libraries. These may accidentally override your own CSS. 
-So when you absolutely need to be sure that an element has specific CSS, you can use !important.
-```
-<style>
-  body {
-    background-color: black;
-    font-family: monospace;
-    color: green;
-  }
-  #orange-text {
-    color: orange;
-  }
-  .pink-text {
-    color: pink !important;
-  }
-  .blue-text {
-    color: blue;
-  }
-</style>
-<h1 id="orange-text" class="pink-text blue-text" style="color: white">Hello World!</h1>
-```
-通过!important， pink-text优先级最高。
-
-总结：!important > style="xxx" > id selector > class selector
-
-## 11. color的16进制表示有时候可以简写
+## color的16进制表示有时候可以简写
 red's hex code #FF0000 can be shortened to #F00. 
 This shortened form gives one digit for red, one digit for green, and one digit for blue.
 
-## 12. css定义和使用变量
+## css定义和使用变量
 To create a CSS variable, you just need to give it a name with two hyphens in front of it and assign it a value like this:
 定义：--penguin-skin: gray;
 
@@ -290,7 +226,7 @@ example: Improve Compatibility with Browser Fallbacks
 ```
 如果有的浏览器不支持css变量定义，就会回退到background: red;
 
-## 13 Inherit CSS Variables
+## Inherit CSS Variables
 To make use of inheritance, CSS variables are often defined in the :root element.
 example:
 ```
