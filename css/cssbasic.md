@@ -245,6 +245,7 @@ example:
   border-radius: 70% 70% 60% 60%;
 }
 ```
+-> ./basic/variable.html
 
 ## media query
 使用 @media 查询，你可以针对不同的媒体类型定义不同的样式。
