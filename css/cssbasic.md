@@ -1,14 +1,24 @@
 # CSS
 CSS (Cascading Style Sheets，层叠样式表），本质上就是声明规则，然后产生各种效果。
 
+A key part of CSS development comes down to writing rules in such a way that they’re predictable.
+
 <br>
 
 # 层叠
 CSS的第一个"C"表示层叠，层叠就是一系列规则，它决定了如何解决冲突，是CSS的基础。
+
+The cascade is the name for this set of rules. 
+It determines how conflicts are resolved, and it’s a fundamental part of how the language works.
+
 ## 解决冲突的三个条件
-1. 样式来源
-2. 选择器优先级
-3. 源码顺序
+1. Stylesheet the styles come from. Your styles are applied in conjunction with the browser’s default styles.
+2. Selector selectors take precedence over which.
+3. Source in which styles are declared in the stylesheet.
+
+css样式来源：
+- author styles，including the stylesheets you add to your web page and the inline style.
+- user agent styles, which are the browser’s default styles
 
 总的来说，样式冲突时，优先级：
 - !important: 样式表中!important优先级高于行内样式；
@@ -21,6 +31,20 @@ CSS的第一个"C"表示层叠，层叠就是一系列规则，它决定了如�
 demo -> priority.html
 
 <br>
+
+## CSS的组成
+```
+body {
+  color: black;
+  font-family: Helvetica;
+}
+```
+The selector and declaration block are called a A ruleset is also called 
+a it’s my observation that rule is rarely used so precisely 
+and is usually used in the plural to refer to a broader set of styles.
+
+Finally, at-rules are language constructs beginning with an “at” symbol, 
+such as @import rules or @media queries.
 
 # 常用CSS
 ## 1.  导入三方字体
