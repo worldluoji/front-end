@@ -5,7 +5,7 @@ A key part of CSS development comes down to writing rules in such a way that the
 
 <br>
 
-# 层叠
+# cascade(层叠)
 CSS的第一个"C"表示层叠，层叠就是一系列规则，它决定了如何解决冲突，是CSS的基础。
 
 The cascade is the name for this set of rules. 
@@ -30,6 +30,16 @@ css样式来源：
 
 demo -> priority.html
 
+常用selector:
+```
+id selector : #xxx
+class selector : .xxx
+[type='radio'] {
+  margin: 20px 0px 20px 0px;
+}
+
+```
+
 <br>
 
 ## CSS的组成
@@ -47,7 +57,7 @@ Finally, at-rules are language constructs beginning with an “at” symbol,
 such as @import rules or @media queries.
 
 # 常用CSS
-## 1.  导入三方字体
+## import third-part font
 To import a Google Font, you can copy the font's URL from the Google Fonts library and then paste it in your HTML. 
 For this challenge, we'll import the Lobster font. 
 To do this, copy the following code snippet and paste it into the top of your code editor (before the opening style element):
@@ -61,7 +71,7 @@ Now you can use the Lobster font in your CSS by using Lobster as the FAMILY_NAME
 font-family: FAMILY_NAME, GENERIC_NAME;
 ```
 
-## 2. font "degrade" 
+## font "degrade" 
 There are several default fonts that are available in all browsers. 
 These generic font families include monospace, serif and sans-serif
 When one font isn't available, you can tell the browser to "degrade" to another font.
@@ -75,26 +85,7 @@ p {
 ```
 Generic font family names are not case-sensitive. Also, they do not need quotes because they are CSS keywords.
 
-
-## 3. boder
-```
-.thick-green-border {
-  border-color: green;
-  border-width: 10px;
-  border-style: solid;
-  border-radius: 50%;
-}
-```
-
-## 4. id
-There are several benefits to using id attributes: You can use an id to style a single element 
-and later you'll learn that you can use them to select and modify specific elements with JavaScript.
-
-id attributes should be unique. Browsers won't enforce this, but it is a widely agreed upon best practice. 
-
-So please don't give more than one element the same id attribute.
-
-## 5. padding
+## padding、margin
 An element's padding controls the amount of space between the element's content and its border.
 ```
 padding: 40px 20px 20px 40px; 
@@ -110,26 +101,27 @@ padding: 40px 20px;
 padding: 40px 30px 20px;
 ```
 top 40px, bottom 20px, 左右30px
-## 6. margin
-an element's margin controls the amount of space between an element's border and surrounding elements.
+
+An element's margin controls the amount of space between an element's border and surrounding elements.
 用法和padding一致
 
-## 7. type selector
-[type='radio'] {
-  margin: 20px 0px 20px 0px;
-}
+## unit
+### 1) px
+Pixels are absolute units, which is what tells the browser how to size or space an item.
 
-id selector : #xxx
+There are some other absolute uintes:
+```
+1 in. = 25.4 mm = 2.54 cm = 6 pc = 72 pt = 96 px
+```
+这些绝对单位已经不再使用。
 
-class selector : .xxx
+A CSS pixel does not strictly equate to a monitor’s pixel. 
+This is notably the case on high-resolution (“retina”) displays.
 
-## 8. unit
-## 1) px:
-Pixels are a type of length unit, which is what tells the browser how to size or space an item.
+### 2) relative units
+em and rem, are not absolute, but the value of relative units changes based on external factors.
 
-## 2) relative units:
-rem是基于html元素的字体大小来决定，而em则根据使用它的元素的大小决定。比如:
-
+1. em根据使用它的元素的font-size大小决定(1 em means the font size of the current element;):
 ```
 .padded {
   font-size: 16px;
@@ -137,7 +129,7 @@ rem是基于html元素的字体大小来决定，而em则根据使用它的元�
 }
 ```
 那么，这里1em=16px，表示上下左右padding都是16px;
-如果.padded没有设置font-size, 就会继承父元素的font-size，即此时1em等于父元素的font-size。
+如果.padded没有设置font-size, 就会继承父元素的font-size，即此时1em等于父元素的font-size
 
 还有一种情况
 ```
@@ -153,15 +145,24 @@ body {
 显然font-size没有“自己的1.2倍”，这里font-size的意思就是父元素font-size的1.2倍  = 16 * 1.2 = 19.2px，
 而 padding = 1.2 * 自己的font-size = 19.2 * 1.2 = 23.04px. 
 
+Using ems can be convenient when setting properties like or border-radius 
+because these will scale evenly with the element if it inherits different font sizes, 
+or if the user changes the font settings.
 
-rem是"root em"的缩写，则相对于根元素`<html>`。
+2. rem是基于html元素的字体大小来决定
+rem是"root em"的缩写，相对于根元素`<html>`。
 值得注意的是：伪类选择器:root等价于选择了html根节点。
 
-经验：拿不准的时候，用rem设置字号，用px设置边框，用em设置padding等其它属性。
+For most browsers, the default font size is 16 px. 
+Technically, it’s the keyword value medium that calculates to 16 px.
 
-## 3) in and mm refer to inches and millimeters, respectively. 这种绝对单位已经不再使用
+3. vh, vw, vmin, vmax
+基于当前屏幕，无论手机横屏还是竖屏，vh都是可视高度，vw都是可视宽度。
+vmin是vh和vw中小的那个，vmax是vh、vw中大的那个。
 
-## 4) 视口单位：vh、vw 推荐使用
+经验：拿不准的时候，用rem设置字号，用px设置border粗细，用em设置padding、border-radius等属性。
+需要自适应的场景，比如移动端，优先使用视口单位。 -> ./basic/relativeUnit.html
+
 
 ## 9. body
 you can style your body element just like any other HTML element, 
@@ -309,7 +310,7 @@ example:
 }
 ```
 
-## 14. media query
+## media query
 使用 @media 查询，你可以针对不同的媒体类型定义不同的样式。
 @media 可以针对不同的屏幕尺寸设置不同的样式，特别是如果你需要设置设计响应式的页面，@media 是非常有用的。
 当你重置浏览器大小的过程中，页面也会根据浏览器的宽度和高度重新渲染页面。
@@ -374,17 +375,16 @@ example2:
 
 media query参考： https://developer.mozilla.org/zh-CN/docs/Web/CSS/Media_Queries/Using_media_queries
 
-
-15. input框文本居右
+## input框文本居右
 ```
 <input type="text" value="xxx"  size="100" style="text-align:right" />
 ```
 
-16. css元素重叠的方法
+## css元素重叠的方法
 1、给元素设置负margin，负margin可以让元素的占用空间变小，后面的元素可以覆盖当前的元素；
 2、使用position属性，利用绝对定位、相对定位来让多个元素进行重叠。
 
-17. bottom
+## bottom
 The effect of bottom depends on how the element is positioned (i.e., the value of the position property):
 - When position is set to absolute or fixed, the bottom property specifies the distance between the element's outer margin of bottom edge and the inner border of the bottom edge of its containing block.
 - When position is set to relative, the bottom property specifies the distance the element's bottom edge is moved above its normal position.
