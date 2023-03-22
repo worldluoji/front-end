@@ -4,28 +4,32 @@ CSS 盒模型本质上是一个盒子，盒子包裹着HTML 元素，盒子由�
 <img src="box-model.gif" />
 
 ## 如何在CSS 设置盒模型
-标准盒模型(默认)：
+1. 标准盒模型(默认)：
 ```
 box-sizing: content-box
 ```
 
-怪异盒模型：
+2. The box model with box sizing set to border-box：
 ```
 box-sizing: border-box
 ```
+这是推荐的方式。
 
 ## 宽度和高度的计算方式不同
-标准盒模型：
+1. default box model：
 ```
 width = content-width
 height = content-height 
 ```
 
-怪异盒模型:
+2. The box model with box sizing set to border-box:
 ```
 width = content-width + padding-width + border-width
 height = content-height + padding-height + border-height
 ```
+Padding doesn’t make an element wider; 
+it makes the inner content narrower. 
+It also does the same for height.
 
 ## margin合并
 margin合并，MDN是这样定义的：
