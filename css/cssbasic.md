@@ -344,10 +344,18 @@ Otherwise, both overflow-x and overflow-y are set to the same value.
 
 reference: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow
 
-# height
+## height、min-height、max-height
 1. 一般不设置height大小, height由其children决定。
 2. For percentage-based heights to work, the parent must have an explicitly defined height.（当height使用百分比时，父元素必须明确指定height大小）
 3. A better approach is to use the viewport-relative vh units, which you reviewed in chapter A height of 100 vh is exactly the height of the viewport. 
 The most common use, though, is to create columns of equal height. This too can be solved without a percentage.
 （需要设置height大小时，更建议使用vh）
-4. 当同一行两列需要等高时，使用flex布局
+4. 当同一行两列需要等高时，使用flex布局（推荐）或 table布局（不推荐）
+5. Two properties that can be immensely helpful are min-height and max-height Instead of explicitly defining a height.
+
+- min-height means the element will be at least as high as you specify, 
+and if the content doesn’t fit, the browser will allow the element to grow naturally to prevent overflow.
+- max-height allows an element to size naturally, up to a point.
+
+## vertical-align
+A vertical-align declaration only affects inline and table-cell elements.
