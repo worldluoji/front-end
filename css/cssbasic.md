@@ -331,3 +331,23 @@ The effect of bottom depends on how the element is positioned (i.e., the value o
 When both top and bottom are specified, position is set to absolute or fixed, and height is unspecified (either auto or 100%) both the top and bottom distances are respected. In all other situations, if height is constrained in any way or position is set to relative, the top property takes precedence and the bottom property is ignored.
 
 reference: https://developer.mozilla.org/en-US/docs/Web/CSS/bottom
+
+## overflow
+- visible(default): Content is not clipped and may be rendered outside the padding box.
+- hidden: Content is clipped if necessary to fit the padding box.
+- scroll: Browsers always display scrollbars whether or not any content is actually clipped, preventing scrollbars from appearing or disappearing as content changes.
+- auto: Depends on the user agent. If content fits inside the padding box, it looks the same as visible, but still establishes a new block formatting context. Desktop browsers provide scrollbars if content overflows.
+
+The overflow property is specified as one or two keywords chosen from the list of values below. 
+If two keywords are specified, the first applies to overflow-x and the second to overflow-y. 
+Otherwise, both overflow-x and overflow-y are set to the same value.
+
+reference: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow
+
+# height
+1. 一般不设置height大小, height由其children决定。
+2. For percentage-based heights to work, the parent must have an explicitly defined height.（当height使用百分比时，父元素必须明确指定height大小）
+3. A better approach is to use the viewport-relative vh units, which you reviewed in chapter A height of 100 vh is exactly the height of the viewport. 
+The most common use, though, is to create columns of equal height. This too can be solved without a percentage.
+（需要设置height大小时，更建议使用vh）
+4. 当同一行两列需要等高时，使用flex布局

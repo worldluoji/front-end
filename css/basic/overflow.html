@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OverFlow</title>
+</head>
+<body>
+    <div>
+        <code>visible</code>
+        <p class="visible">
+          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+          doloremque laudantium.
+        </p>
+    </div>
+      
+    <div>
+        <code>hidden</code>
+        <p class="hidden">
+          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+          doloremque laudantium.
+        </p>
+    </div>
+      
+    <div>
+        <code>scroll</code>
+        <p class="scroll">
+          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+          doloremque laudantium.
+        </p>
+    </div>
+      
+    <div>
+        <code>auto</code>
+        <p class="auto">
+          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+          doloremque laudantium.
+        </p>
+    </div>      
+</body>
+<style>
+body {
+  display: flex;
+  justify-content: space-around;
+}
+
+div {
+  margin: 1em;
+  font-size: 1.2em;
+}
+
+p {
+  width: 8em;
+  height: 5em;
+  border: dotted;
+}
+
+p.visible {
+  overflow: visible;
+}
+
+p.hidden {
+  overflow: hidden;
+}
+
+p.scroll {
+  overflow: scroll;
+}
+
+p.auto {
+  overflow: auto;
+}
+</style>
+</html>
