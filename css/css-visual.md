@@ -1,32 +1,35 @@
+## css visual
 1. text-align
-text-align: justify; causes all lines of text except the last line to meet the left and right edges of the line box.
-text-align: center; centers the text
-text-align: right; right-aligns the text
-And text-align: left; (the default) left-aligns the text.
+- text-align: justify; causes all lines of text except the last line to meet the left and right edges of the line box.
+- text-align: center; centers the text
+- text-align: right; right-aligns the text
+- text-align: left; (the default) left-aligns the text.
 
 2. u tag
 <u>Ph.D. students</u>
-With the u tag, the browser applies the CSS of text-decoration: underline; to the element.
-Note: Try to avoid using the u tag when it could be confused for a link. 
-Anchor tags also have a default underlined formatting.
 
 3. strong 和 em
-strong会加粗
-em更多是强调：This displays text as italicized, as the browser applies the CSS of font-style: italic; to the element
+<strong>strong会加粗</strong>, 
+<em>em更多是强调</em>
+
+This displays text as italicized, as the browser applies the CSS of font-style: italic; to the element
 
 4. s tag
-With the s tag, the browser applies the CSS of text-decoration: line-through; to the element.
+<s>Ph.D. students</s>
 
 5. hr tag 
+<hr />
 add a horizontal line across the width of its containing element.
 
 6. rgba
-you can add a background-color to the element holding the text you want to emphasize. 
+You can add a background-color to the element holding the text you want to emphasize. 
 rgba stands for:
+```
   r = red
   g = green
   b = blue
   a = alpha/level of opacity
+```
 The RGB values can range from 0 to 255. The alpha value can range from 1, 
 which is fully opaque or a solid color, to 0, which is fully transparent or clear. 
 rgba() is great to use in this case, as it allows you to adjust the opacity. 
@@ -34,24 +37,23 @@ This means you don't have to completely block out the background.
 
 7. box-shadow 
 The box-shadow property applies one or more shadows to an element.
-The box-shadow property takes values for
-
-offset-x (how far to push the shadow horizontally from the element),
-offset-y (how far to push the shadow vertically from the element),
-blur-radius,
-spread-radius and
-color, in that order.
+The box-shadow property takes values for:
+- offset-x (how far to push the shadow horizontally from the element),
+- offset-y (how far to push the shadow vertically from the element),
+- blur-radius,
+- spread-radius
+- color
+in that order.
 The blur-radius and spread-radius values are optional.
 
 Multiple box-shadows can be created by using commas to separate properties of each box-shadow element:
 box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 
-
 8. opacity 
 this property in CSS is used to adjust the opacity, or conversely, the transparency for an item.
-A value of 1 is opaque, which isn't transparent at all.
-A value of 0.5 is half see-through.
-A value of 0 is completely transparent.
+- A value of 1 is opaque, which isn't transparent at all.
+- A value of 0.5 is half see-through.
+- A value of 0 is completely transparent.
 
 9. text-transform
 The text-transform property in CSS is used to change the appearance of text. 
@@ -66,46 +68,18 @@ initial	Use the default value
 inherit	Use the text-transform value from the parent element
 none	Default: Use the original text
 
-10. font-size and font-weight
-字体大小和粗细
-
-11. line-height 
+10. line-height 
 this property to change the height of each line in a block of text.
 
-12. :hover
-a:hover {
-    color: blue;
-}
-鼠标放上去显示蓝色
-
-13. relative
-When the position of an element is set to relative, it allows you to specify how CSS should move it relative 
-to its current position in the normal flow of the page. It pairs with the CSS offset properties of left or right, 
-and top or bottom. These say how many pixels, percentages, or ems to move the item away from where 
-it is normally positioned. The following example moves the paragraph 10 pixels away from the bottom:
-p {
-    position: relative;
-    bottom: 10px;
-}
-相对于它本来应该在的位置，
-
-14. absolute
-absolute, which locks the element in place relative to its parent container.
-Unlike the relative position, this removes the element from the normal flow of the document, 
-so surrounding items ignore it.
-
-15. fixed
-fixed position, which is a type of absolute positioning that locks an element relative to the browser window.
-
-16. z-index
+11. z-index
 When elements are positioned to overlap (i.e. using position: absolute | relative | fixed | sticky), 
 the element coming later in the HTML markup will, by default, appear on the top of the other elements. 
 However, the z-index property can specify the order of how elements are stacked on top of one another. 
 It must be an integer (i.e. a whole number and not a decimal), 
 and higher values for the z-index property of an element move it higher in the stack than those with lower values.
 
-17. color theory
-1) tertiary color (第三色)
+12. color theory
+### tertiary color (第三色)
 Computer monitors and device screens create different colors by combining amounts of red, green, and blue light. 
 This is known as the RGB additive color model in modern color theory. 
 Red (R), green (G), and blue (B) are called primary colors. 
@@ -125,18 +99,18 @@ This scheme starts with a base color, then pairs it with the two colors that are
 The three colors provide strong visual contrast in a design, but are more subtle than using two complementary colors.
 即用一个base color, 找相邻颜色(有两个相邻的)的secondary color, 最终得到tertiary color。 最终，base color + 两个tertiary color 三种颜色组合。
 
-2) opposite colors
+### opposite colors
 The Complementary Colors challenge showed that opposite colors on the color wheel can make each other 
 appear more vibrant when placed side-by-side. However, the strong visual contrast can be jarring 
 if it's overused on a website, and can sometimes make text harder to read if it's placed on a complementary-colored background. 
 In practice, one of the colors is usually dominant and the complement is used to bring visual attention to certain content on the page.
 常常用来引起视觉注意，让用户关注某块内容。
 
-3) hsl
+### hsl
 Colors have several characteristics including hue, saturation, and lightness. CSS3 introduced the hsl() property 
 as an alternative way to pick a color by directly stating these characteristics.
 
-色相、饱和度、亮度：
+### 色相、饱和度、亮度：
 Hue is what people generally think of as 'color'. If you picture a spectrum of colors starting with red on the left, 
 moving through green in the middle, and blue on right, the hue is where a color fits along this line. 
 In hsl(), hue uses a color wheel concept instead of the spectrum, where the angle of the color on the circle is given 
@@ -147,7 +121,7 @@ and a minimally saturated color is almost completely gray. This is given as a pe
 
 Lightness is the amount of white or black in a color. A percentage is given ranging from 0% (black) to 100% (white), 
 where 50% is the normal color.
-
+```
 olor	HSL
 red 	hsl(0, 100%, 50%)
 yellow	hsl(60, 100%, 50%)
@@ -155,25 +129,28 @@ green	hsl(120, 100%, 50%)
 cyan	hsl(180, 100%, 50%)
 blue	hsl(240, 100%, 50%)
 magenta	hsl(300, 100%, 50%)
-
+```
 Mixing white with a pure hue creates a tint（色调） of that color, and adding black will make a shade（阴影）. 
 Alternatively, a tone is produced by adding gray or by both tinting and shading. 
 Recall that the 's' and 'l' of hsl() stand for saturation and lightness, respectively. 
 The saturation percent changes the amount of gray and the lightness percent determines how much white or black is 
 in the color. This is useful when you have a base hue you like, but need different variations of it.
 
-18. CSS Linear Gradient
+13.  CSS Linear Gradient
 基本使用方法：
+```
 background: linear-gradient(gradient_direction, color 1, color 2, color 3, ...);
-
+```
 90deg makes a horizontal gradient (from left to right) and 45deg makes a diagonal gradient (from bottom left to top right).
 
 Example:
+```
 background: linear-gradient(90deg, red, yellow, rgb(204, 204, 255));
+```
 Use a linear-gradient() for the div element's background, 
 and set it from a direction of 35 degrees to change the color from #CCFFFF to #FFCCCC.
 
-19. repeating-linear-gradient
+14. repeating-linear-gradient
 similar to linear-gradient() with the major difference that it repeats the specified gradient pattern
 example:
 div{
@@ -192,11 +169,11 @@ div{
 
 45度，0-40px黄色，40px到80px黑色，不断循环。
 
-
-20. background
+15. background
 url('https://cdn-media-1.freecodecamp.org/imgr/MJAkxbh.png') 设置背景图
 
-21. box-shadow + border-radis画一个蓝月亮
+16. box-shadow + border-radis画一个蓝月亮
+```
 <style>
   .center {
     position: absolute;
@@ -214,9 +191,9 @@ url('https://cdn-media-1.freecodecamp.org/imgr/MJAkxbh.png') 设置背景图
 
 </style>
 <div class="center"></div>
+```
 
-
-22. pseudo-elements
+17.  pseudo-elements
 the ::before and ::after pseudo-elements. 
 These pseudo-elements are used to add something before or after a selected element.
 
