@@ -20,25 +20,43 @@
     }
 
     header {
+      padding: 1em 1.5em;
       color: #fff;
       background-color: #0072b0;
       border-radius: .5em;
     }
 
+    .container {
+      display: flex;
+    }
+
     .main {
-      float: left;
       width: 70%;
       background-color: #fff;
       border-radius: .5em;
     }
 
     .sidebar {
-      float: left;
+      width: 30%;
       padding: 1.5em;
+      margin-left: 1.5em;
       background-color: #fff;
       border-radius: .5em;
-      width: calc(30% - 1.5em);
-      margin-left: 1.5em;
+    }
+
+    .button-link {
+      display: block;
+      padding: .5em;
+      color: #fff;
+      background-color: #0090C9;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    /* the adjacent sibling combinator, this appears to work The first button no longer has a top margin, so the spacing is even. */
+    .button-link + .button-link {
+      margin-top: 1.5em;
     }
 
   </style>
@@ -58,9 +76,8 @@
       </p>
     </main>
     <aside class="sidebar">
-      <div class="widget"></div>
-      <div class="widget"></div>
-      <div class="gizmo"></div>
+      <a href="/twitter" class="button-link">follow us on Twitter</a>
+      <a href="/facebook" class="button-link">like us on Facebook</a>
     </aside>
   </div>
 </body>
