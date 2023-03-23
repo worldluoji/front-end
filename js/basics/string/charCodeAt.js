@@ -10,3 +10,6 @@ const s2 = '你好世界';
 // The codePointAt() method returns a non-negative integer that is the Unicode code point value at the given position
 console.log(s2.charCodeAt(0), s2.charAt(0), s2.codePointAt(0));
 console.log(s2.charCodeAt(2), s2.charAt(2), s2.codePointAt(2));
+
+
+console.log(String.fromCharCode(20320), String.fromCodePoint(20320));
