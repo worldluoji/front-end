@@ -103,7 +103,17 @@ padding: 40px 30px 20px;
 top 40px, bottom 20px, 左右30px
 
 An element's margin controls the amount of space between an element's border and surrounding elements.
-用法和padding一致
+用法和padding一致。
+
+### margin合并（塌陷）
+margin合并是说：block的顶部外边距和相邻block底部外边距，被组合(折叠)为单个外边距，其大小是组合到其中的最大外边距，这种行为称为外边距合并。
+
+Here are ways to prevent margins from collapsing:
+- Applying overflow: auto (or any value other than to the container prevents margins inside the container from collapsing with those outside the container. This is often the least intrusive solution.
+- Adding a border or padding between two margins stops them from collapsing.
+- Margins won’t collapse to the outside of a container that is floated, that is an inline block, or that has an absolute or fixed position.
+- When using a flexbox, margins won’t collapse between elements that are part of the flex layout. This is also the case with grid layout
+- Elements with a table-cell display don’t have a margin, so they won’t collapse. This also applies to table-row and most other table display types. 
 
 ## unit
 ### 1) px
