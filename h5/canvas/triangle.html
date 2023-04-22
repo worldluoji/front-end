@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>triangle</title>
+</head>
+<body>
+    <canvas id="myCanvas"
+        width="500px" height="500px"
+        style="background-color: white;"></canvas>
+</body>
+<style>
+    body {
+        background-color: black;
+        margin: 0;
+        overflow: hidden;
+    }
+</style>
+
+<script>
+    const A = { x:0, y:0 };
+    const B = { x:90, y:120 };
+    const C = { x:B.x, y:0 }; // C.x is always the same as B.x
+
+    const myCanvas = document.getElementById('myCanvas');
+    const ctx = myCanvas.getContext('2d');
+    const offset = {
+        x: myCanvas.width / 2,
+        y: myCanvas.height / 2
+    };
+    
+    // make to center
+    ctx.translate(offset.x, offset.y);
+
+    update();
+    document.onmousemove = (event) => {
+        // current position = mouse potision - offset
+        B.x = event.x - offset.x;
+        B.y = event.y - offset.y;
+        C.x = B.x;
+        update();
+    }
+
+    function update() {
+        const c = distance(A, B);
+        const b = distance(A, C);
+        const a = distance(B, C);
+
+        const sin = a / c;
+        const cos = b / c;
+        const tan = sin / cos;
+        const arcsin = Math.asin(sin);
+
+        ctx.clearRect(-offset.x, -offset.y,
+            myCanvas.width, myCanvas.height);
+        // draw the x and y axis
+        drawCoordinateSystem(ctx, offset);
+
+        drawText('sin = a/c = ' + sin.toFixed(2),
+            { x: -offset.x / 2, y: offset.y * 0.7},
+            'red'
+        );
+
+        drawText('θ=' + arcsin.toFixed(2) + '(' + toDeg(arcsin).toFixed(2).toString().padStart(2, ' ') + '°)',
+            { x: offset.x / 2, y: offset.y * 0.7}
+        );
+
+        drawText('cos = b/c = ' + cos.toFixed(2),
+            { x: -offset.x / 2, y: offset.y * 0.8},
+            'blue'
+        );
+        
+        drawText('tan = a/b = ' + tan.toFixed(2),
+            { x: -offset.x / 2, y: offset.y * 0.9},
+            'magenta'
+        );
+
+
+        drawLine(A, B);
+        drawText('c:' + Math.round(c), average(A, B));
+        drawLine(B, C, 'red');
+        drawText('a:' + Math.round(a), average(B, C), 'red');
+        drawLine(A, C, 'blue');
+        drawText('b:' + Math.round(b), average(A, C), 'blue');
+
+        drawText('0', A);
+
+        ctx.beginPath();
+        ctx.strokeStyle='black';
+        ctx.lineWidth=2;
+        const start = B.x > A.x ? 0: Math.PI;
+        const clockwise = B.y < C.y ^ B.x > A.x;
+        let end = B.y < C.y ? -arcsin: arcsin;
+        if (B.x < A.x) {
+            end = Math.PI - end;
+        }
+        ctx.arc(0, 0, 20, start, end, !clockwise);
+        ctx.stroke();
+    }
+
+    function toDeg(rad) {
+        return rad * 180 / Math.PI;
+    }
+
+    // the center point between p1 and p2
+    function average(p1, p2) {
+        return {
+            x: (p1.x + p2.x) / 2,
+            y: (p1.y + p2.y) / 2
+        }
+    }
+
+    // the distance between p1 and p2
+    function distance(p1, p2) {
+        return Math.hypot(p1.x - p2.x, p1.y - p2.y);
+    }
+
+    function drawPoint(loc, size=20, color='black') {
+        ctx.beginPath();
+        ctx.fillStyle=color;
+        ctx.arc(loc.x, loc.y, size/2.0, 0, Math.PI * 2) // create a circle
+        ctx.fill();
+    }
+
+    function drawLine(p1, p2, color='black', lineWidth='2') {
+        ctx.beginPath();
+        ctx.strokeStyle=color;
+        ctx.lineWidth=lineWidth;
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+    }
+
+    function drawText(text, loc, color='black') {
+        ctx.beginPath();
+        ctx.fillStyle=color;
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.font='bold 18px Courier';
+        // ctx.lineWidth = 7;
+        ctx.strokeStyle='white'
+        ctx.strokeText(text, loc.x, loc.y);
+        ctx.fillText(text, loc.x, loc.y);
+    }
+
+    function drawCoordinateSystem(ctx, offset) {
+        ctx.beginPath();
+        ctx.moveTo(-offset.x, 0);
+        ctx.lineTo(ctx.canvas.width - offset.x, 0);
+        ctx.moveTo(0, -offset.y);
+        ctx.lineTo(0, ctx.canvas.height - offset.y);
+        ctx.setLineDash([4,2]);
+        ctx.strokeStyle='gray';
+        ctx.stroke(); // strokes (outlines) the current or given path with the current stroke style
+        ctx.setLineDash([]);
+    }
+</script>
+</html>
