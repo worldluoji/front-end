@@ -27,6 +27,7 @@ Each microfrontend has its own git repository, its own package.json file, and it
 技术栈无关是微前端的初衷。
 
 
-## 参考资料
-- https://qiankun.umijs.org/zh/guide
+## reference
 - https://martinfowler.com/articles/micro-frontends.html
+- https://micro-frontends.org/
+- https://qiankun.umijs.org/zh/guide
