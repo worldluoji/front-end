@@ -25,6 +25,8 @@ let col = new Array(2).fill(0).map(item => new Array<number>(3).fill(0))
 // 9 x 3 x 3 三维数组
 let sub = new Array(9).fill(0).map(item => new Array(3).fill(0).map(it => new Array(3).fill(0)))
 
+// let col = new Array(2).fill(new Array<number>(3).fill(0)) error, 这样每一行是同一个实例
+
 // 2. tuple
 let tuple: [number, string] = [1,'2']
 tuple.push('3')
