@@ -20,6 +20,10 @@ for (let i = 0; i < 2; i++) {
     let a = [0,0,0] // 3列，需要赋值0，否则会为NaN
     d2.push(a)
 }
+// 2行3列，二维数组
+let col = new Array(2).fill(0).map(item => new Array<number>(3).fill(0))
+// 9 x 3 x 3 三维数组
+let sub = new Array(9).fill(0).map(item => new Array(3).fill(0).map(it => new Array(3).fill(0)))
 
 // 2. tuple
 let tuple: [number, string] = [1,'2']
