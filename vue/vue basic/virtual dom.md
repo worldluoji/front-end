@@ -75,7 +75,7 @@ export function render(_ctx, _cache, $props, $setup, $data, $options) {
 <span>Good Morning!</span>
 <span>{{name}}</span>
 ```
-vu3对应的虚拟dom为：
+vue3对应的虚拟dom为：
 ```
 export function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (_openBlock(), _createElementBlock(_Fragment, null, [
@@ -129,6 +129,7 @@ export function render(_ctx, _cache, $props, $setup, $data, $options) {
 原来，Vue3 在 Vdom 的更新时，只会关注它有变化的部分。这样的优化使 Vue3 既跳出了 Vdom 的性能瓶颈，又依然保留了可以手写 render function 的灵活性。相当于 Vue3 既有 React 的灵活性，又有基于模板的性能保证。
 
 <br>
+
 ## 渲染器(Render)
 有了虚拟dom, 一个<strong>运行时渲染器</strong>将会遍历整个虚拟 DOM 树，并据此构建真实的 DOM 树。这个过程被称为挂载 (mount)。
 
