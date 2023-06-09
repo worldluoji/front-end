@@ -138,6 +138,8 @@ requestIdleCallback(workLoop);
 这个循环随时可以跑，随时可以停。这意味着 workLoop 既可以同步跑，也可以异步跑。
 当 workLoop 发现进行中的 Fiber 工作耗时过长时，可以根据一个 shouldYield() 标记决定是否暂停工作，释放计算资源给更紧急的任务，等完成后再恢复工作。
 
+<img src="./react%20render.png" />
+
 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestIdleCallback">requestIdleCallback()</a>方法传入一个函数，
 这个函数将在浏览器空闲时期被调用。这使开发者能够在主事件循环上执行后台和低优先级工作，而不会影响延迟关键事件，如动画和输入响应。
 
