@@ -131,9 +131,17 @@ function workLoop() {
     } while (completedWork);
   }
 }
+
+
+requestIdleCallback(workLoop);
 ```
 这个循环随时可以跑，随时可以停。这意味着 workLoop 既可以同步跑，也可以异步跑。
 当 workLoop 发现进行中的 Fiber 工作耗时过长时，可以根据一个 shouldYield() 标记决定是否暂停工作，释放计算资源给更紧急的任务，等完成后再恢复工作。
+
+<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestIdleCallback">requestIdleCallback()</a>方法传入一个函数，
+这个函数将在浏览器空闲时期被调用。这使开发者能够在主事件循环上执行后台和低优先级工作，而不会影响延迟关键事件，如动画和输入响应。
+
+但由于兼容性不好，加上该回调函数被调用的频率太低，react实际使用的是一个polyfill(自己实现的api)，而不是requestIdleCallback。
 
 <br>
 
@@ -183,6 +191,7 @@ useEffect 这样会产生副作用的 Hooks，会额外创建与 Hook 对象一�
 ## vue3如何在浏览器中跑起来的
 ->[how vue3 start up in browser](../../vue/vue%20basic/principle/how%20vue3%20start%20up%20in%20browser.md)
 
+<br>
 
 ## react不如vue？
 我们现在已经知道了react fiber是在弥补更新时“无脑”刷新，不够精确带来的缺陷, 但时也需要遍历fiber树。这是不是能说明react性能更差呢？
@@ -194,3 +203,7 @@ useEffect 这样会产生副作用的 Hooks，会额外创建与 Hook 对象一�
 另一方面vue能实现依赖收集得益于它的模版语法，实现静态编译，这是使用更灵活的JSX语法的react做不到的。
 
 在react fiber出现之前，react也提供了PureComponent、shouldComponentUpdate、useMemo,useCallback等方法给我们，来声明哪些是不需要连带更新子组件。
+
+react因为先天的不足——无法精确更新，所以需要react fiber把组件渲染工作切片；而vue基于数据劫持，更新粒度很小，没有这个压力；
+
+react fiber这种数据结构使得节点可以回溯到其父节点，只要保留下中断的节点索引，就可以恢复之前的工作进度；
