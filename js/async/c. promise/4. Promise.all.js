@@ -6,10 +6,9 @@ Promise.all([
     family('father').catch(() => { }),
     family('mother'),
     family('wife'),
-    
-]).then(() => {
-    console.log('family all agree')
-
+]).then((res) => {
+    // res returns a array contains results of every Promise in Promise.all
+    console.log('family all agree', res)
 }).catch((err) => {
     console.log(err.name + ' not agree');
 })
