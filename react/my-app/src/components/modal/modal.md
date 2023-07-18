@@ -40,3 +40,11 @@ function MainLayout() {
 如果从视觉角度出发，你会发现在使用对话框的时候，你完全不会关心它是从哪个具体的组件中弹出来的，而只会关心对框本身的内容。
 
 在定义一个对话框的时候，其定位基本会等价于定义一个具有唯一 URL 路径的页面。只是前者由弹出层实现，后者是页面的切换。
+
+
+<br>
+
+## demo
+- ModalStore.tsx: 用来存储 modal 的状态，modalId、visiable等
+- useNiceModal.ts: 自定义hooks，用来封装modal show、hide的逻辑, 实际也是通过dispatch(action)来触发 ModalStore 中数据的变化
+- NiceModal.tsx: 通过 useNiceModal 获取相关参数，结合 ant-design 的Modal组件封装

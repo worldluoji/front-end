@@ -43,6 +43,7 @@ const useNiceModal = (modalId: string) => {
       modalId,
     ])
   
+    // useSelector: A hook to access the redux store's state
     const args = useSelector((s: ModalStateType) => s[modalId])
     const hiding = useSelector((s: ModalStateType) => s.hiding[modalId])
   

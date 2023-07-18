@@ -1,12 +1,11 @@
-import { createAction, createReducer } from "@reduxjs/toolkit"
+import { createAction, createReducer, configureStore } from "@reduxjs/toolkit"
 import { ModalActionPayloadType } from './types'
-import { configureStore } from '@reduxjs/toolkit'
 
 export interface ModalStateType {
-    [key: string]: any,
-    hiding: {
-        [key: string]: any
-    }
+  [key: string]: any,
+  hiding: {
+    [key: string]: any
+  }
 }
 
 let defaultState: ModalStateType = { hiding: {} }
