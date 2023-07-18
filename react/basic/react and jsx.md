@@ -19,8 +19,8 @@ JSX lets you use the full programmatic power of JavaScript within HTML, and help
 { showAdd && <KanbanNewCard onSubmit={handleSubmit} /> }
 ```
 主要有两个地方：
-- 作为 props 值，如 <button disabled={showAdd}>添加新卡片</button>；
-- 作为 JSX 元素的子元素，如 <div className="card-title">{title}</div>。
+- 作为 props 值，如 `<button disabled={showAdd}>添加新卡片</button>`；
+- 作为 JSX 元素的子元素，如 `<div className="card-title">{title}</div>`。
 
 JSX is not valid JavaScript, JSX code must be compiled into JavaScript. The transpiler Babel is a popular tool for this process.
 
