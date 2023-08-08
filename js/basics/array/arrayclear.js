@@ -16,3 +16,5 @@ console.log(Arr1)
 
 Arr1.splice(0, Arr1.length)
 console.log(Arr1)
+
+// tips: 使用delete 删除数组的元素时，对应位置的元素变为空，并不会消失；但使用delete删除Object {} 的key 时， 会直接将对应key-value移除
