@@ -141,3 +141,9 @@ translate(tx, ty) 等价于 translateX(tx) translateX(ty)
 rotate 如果为正值，则运动将为顺时针，如果为负值，则为逆时针。180°的旋转称为点反射 (point reflection)。
 
 参考： https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function
+
+
+## 11. clip-path
+The clip-path CSS property creates a clipping region that sets what part of an element should be shown.
+
+参考： https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path
