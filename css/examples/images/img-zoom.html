@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image zoom</title>
+</head>
+<body>
+  <div class="img-container">
+    <img src="flower.jpeg" />
+  </div>
+  <style>
+    /* 定义图片容器的高度和宽度，以及设置图元溢出时隐藏 */
+    .img-container {
+      height: 300px; 
+      width: 300px; 
+      overflow: hidden;
+    }
+
+    /* 让图片填充整个容器 */
+    .img-container img {
+      height: 100%; 
+      width: 100%; 
+      /* The object-fit CSS property sets how the content of a replaced element, such as an <img> or <video>, should be resized to fit its container. */
+      object-fit: cover; 
+      transition: transform 200m ease-in;
+    }
+
+    img:hover{
+      transform: scale(1.2);
+    }
+  </style>
+</body>
+</html>
