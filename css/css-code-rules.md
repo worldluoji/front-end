@@ -2,18 +2,6 @@
 ## 1. 格式要规范
 使用两个空格缩进，字符串使用单引号，要换行
 
-bad example
-```
-.test {
-display:block;
-height:100px
-}
-a:focus, a:active {
-position: relative; top: 1px
-}
-html {font-family: "open sans", arial, sans-serif;}
-```
-
 good example
 ```
 html {
@@ -78,7 +66,7 @@ padding的简写（复合写法）的代表意思：
 margin的复合写法同padding
 
 
-## 3.  Font declarations至少包含一个通用的字体声明（建议）
+## 3. Font declarations至少包含一个通用的字体声明（建议）
 如果没有通用字体声明，就会使用浏览器的默认字体，因此建议至少设置一个通用字体，
 以减少fade(回退)到浏览器默认字体对效果的影响，
 
