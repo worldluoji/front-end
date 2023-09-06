@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Combination Selector</title>
+</head>
+<body>
+  <div>
+    <p>这里是第一个p标签</p>
+    <p>这里是第二个p标签</p>
+    <h2>标题H2</h2>
+    <p>这里是第三个p标签</p>
+    <p>这里是第四个p标签</p>
+    <p>这里是第五个p标签</p>
+  </div>
+  <hr>
+
+  <div>
+    <ul>
+      <li>List item 1</li>
+      <li>List item 2</li>
+      <li>List item 3</li>
+    </ul>
+    <ol>
+      <li>List item 1</li>
+      <li>List item 2</li>
+      <li>List item 3</li>
+    </ol>  
+  </div>
+  <hr>
+
+  <div>
+    <p>1</p>
+    <h1>
+      <span>test <span>child's child</span> </span>
+    </h1>
+    <p>2</p>
+    <p>3</p>
+  </div>
+
+  <style>
+    /* only the first p after h1 */
+    h2 + p {
+      color: red;
+    }
+
+    /* the first li after li */
+    li + li {
+      color: rgb(93, 0, 255);
+    }
+
+    /* all brothers p after h1 */
+    h1 ~ p {
+      color: rgb(79, 218, 167)
+    }
+
+    /* h1's children spans */
+    h1 > span {
+      color: blueviolet;
+    }
+
+    /* the first child of ul*/
+    ul:first-child {
+      color: rgb(233, 166, 33);
+    }
+
+    /* the first li child of ol 
+       :nth-child(n)的详细用法：
+        nth-child(3) 表示选择列表中的第三个元素。
+        nth-child(2n)表示列表中的偶数标签，即选择第2、第4、第6……标签
+        nth-child(2n-1) 表示选择列表中的奇数标签，即选择 第1、第3、第5、第7……标签
+        nth-child(n+3) 表示选择列表中的标签从第3个开始到最后（>=3）
+        nth-child(-n+3) 表示选择列表中的标签从0到3，即小于3的标签(<=3)
+        nth-last-child(3) 表示选择列表中的倒数第3个标签
+    */
+    ol > li:nth-child(1) {
+      color: aqua;
+    }
+
+    /* make the even number(2,4,6,8...) p has orange border */
+    p:nth-of-type(even) {
+      border: 1px solid orange;
+    }
+  </style>
+</body>
+</html>
