@@ -109,5 +109,14 @@ good example
 }
 ```
 
+## 5. 所有组合选择器（>, +, ~, >>）前后保留一个空格（以空格表示的后代选择器除外）
+good example
+```
+.foo > .bar + div ~ #baz {
+  color: blue;
+}
+```
+
 ## 参考资料
-https://google.github.io/styleguide/htmlcssguide.html?ref=hackernoon.com
+- https://google.github.io/styleguide/htmlcssguide.html?ref=hackernoon.com
+- https://github.com/cssdream/css-creating
