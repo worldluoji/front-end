@@ -117,6 +117,75 @@ good example
 }
 ```
 
+## 6. 避免重复修饰选择器
+在一定意义上，这会降低选择器性能。
+
+不推荐的写法：
+```
+div#search {
+  float: right;
+}
+
+ul.nav {
+  overflow: hidden;
+}
+```
+推荐的写法：
+```
+#search {
+  float: right;
+}
+
+.nav {
+  overflow: hidden;
+}
+```
+
+## 7. 可以使用 * 通用选择器。
+`*` 通用选择器效率低是一个误区，如有必要可以使用。
+例如：
+```
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+}
+```
+
+但不要在选择器末尾使用 * 通用选择器。
+CSS 选择器匹配规则是从右往左，例如：
+```
+.mod .foo * {
+  border-radius: 6px;
+}
+```
+
+## 8. 无前缀属性一定要写在最后
+由于 CSS 后面的属性会覆盖前面的，无前缀属性写在最后可以保证浏览器一旦支持了，则用标准的无前缀属性来渲染。
+
+不推荐的写法：
+```
+.foo {
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+}
+```
+推荐的写法：
+```
+.foo {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px; 
+}
+```
+
+## 其它
+- 如果需要 CSS Hacks，需详细注明解决什么问题。
+- 尽量避免使用 IE 中的 CSS filters。
+- font-weight普通字重使用normal，加粗使用bold。大部分字体只有两个字重，所以不建议使用容易混淆的数值表示方法。
+- 如无特别精确的要求，推荐使用不带单位的line-height，这样当前元素的行高只与自身font-size成比例关系，使排版更加灵活。例如line-height:1.5 line-height: 1.5 ≠ line-height: 150%
+
 ## 参考资料
 - https://google.github.io/styleguide/htmlcssguide.html?ref=hackernoon.com
 - https://github.com/cssdream/css-creating
