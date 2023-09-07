@@ -17,7 +17,7 @@ div{
 </body>
 </html>
 ```
-<img src="含有 CSS 的页面渲染流水线.webp" />
+<img src="./pics/含有 CSS 的页面渲染流水线.webp" />
 
 首先发起主页面HTML的请求，这个发起请求方可能是渲染进程，也有可能是浏览器进程，发起的请求被送到网络进程中去执行。网络进程接收到返回的 HTML 数据之后，将其发送给渲染进程，渲染进程会解析 HTML 数据并构建 DOM。
 
@@ -57,7 +57,7 @@ console.log('Hello JavaScript')
 </body>
 </html>
 ```
-<img src="含有 JavaScript 和 CSS 的页面渲染流水线.webp" />
+<img src="./pics/含有 JavaScript 和 CSS 的页面渲染流水线.webp" />
 
 从图中可以看出来，在接收到 HTML 数据之后的预解析过程中，HTML 预解析器识别出来了有 CSS 文件和 JavaScript 文件需要下载，然后就同时发起这两个文件的下载请求，需要注意的是，这两个文件的下载过程是重叠的，所以下载时间按照最久的那个文件来算。
 
