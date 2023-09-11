@@ -31,3 +31,20 @@ beforeUpdate和updated要谨慎使用，因为页面更新数据的时候都会�
 
 可以看到，在Vue3中, 多了setup composition, 其在beforeCreate之前执行。
 并且，beforeDestroy和 destroyed 变为了 beforeUnmount 和 unmounted.
+
+<br>
+
+## 新的调试钩子函数
+们还可以在Vue3中使用两个全新的钩子函数来进行调试。他们是：
+- onRenderTracked
+- onRenderTriggered
+
+这两个事件都带有一个DebuggerEvent，它使我们能够知道是什么导致了Vue实例中的重新渲染。
+```
+export default {
+  onRenderTriggered(e) {
+    debugger
+    // 检查哪个依赖项导致组件重新呈现
+  }
+}
+```
