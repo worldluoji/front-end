@@ -73,6 +73,8 @@ Now you can use the Lobster font in your CSS by using Lobster as the FAMILY_NAME
 font-family: FAMILY_NAME, GENERIC_NAME;
 ```
 
+<br>
+
 ## font "degrade" 
 There are several default fonts that are available in all browsers. 
 These generic font families include monospace, serif and sans-serif
@@ -86,6 +88,25 @@ p {
 }
 ```
 Generic font family names are not case-sensitive. Also, they do not need quotes because they are CSS keywords.
+
+再看一个例子：
+```
+h1 {
+  font-family: -apple-system,system-ui,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Arial;
+}
+```
+这么一大串到底是几个意思呢，其实只要知道这个font-faimly属性中包含两种类型值就能明白了，一种是字体名称，一种叫做字体族。顾名思义，字体族就是所有字体的一个分类，在CSS世界中一般有以下几种字体族：
+
+- 衬线字体。指的就是笔画开始、结束处有额外的装饰，并且笔画粗细不同。
+- 无衬线字体。就是没有装饰，笔画粗细相同。
+- 等宽字体。字形的宽度都相等。
+- 草书字体。模仿人类手写的字体。
+- 奇幻字体。没有归于以上四类字体的其他字体。
+
+所以诸如上面的声明中的sans-serif、Helvetica指的是字体族，前者是衬线字体，后者是无衬线字体。
+那么这其中的意思就很明确了: <strong>如果系统中有前面的字体，那就使用前面的字体，如果没有的话，尝试使用后面的衬线字体，如果没有，则继续往后面的声明中寻找可用字体。</strong>
+
+<br>
 
 ## padding、margin
 An element's padding controls the amount of space between the element's content and its border.
@@ -175,15 +196,41 @@ vmin是vh和vw中小的那个，vmax是vh、vw中大的那个。
 经验：拿不准的时候，用rem设置字号，用px设置border粗细，用em设置padding、border-radius等属性。
 需要自适应的场景，比如移动端，优先使用视口单位。 -> ./basic/relativeUnit.html
 
+<br>
+
 # line-height
-The line-height CSS property sets the height of a line box. It's commonly used to set the distance between lines of text. On block-level elements, it specifies the minimum height of line boxes within the element. 
+The line-height CSS property sets the height of a line box. 
+It's commonly used to set the distance between lines of text. 
+On block-level elements, it specifies the minimum height of line boxes within the element. 
+
 The line-height property is unusual in that it accepts both units and unitless values.
 
-When you use a unitless number, that declared value is inherited, meaning its computed value is recalculated for each inheriting child element. 
-This will almost always be the result you want. 
-Using a unitless number lets you set the line height on the body and then forget about it for the rest of the page, unless there are particular places where you want to make an exception.
+<strong>When you use a unitless number, that declared value is inherited</strong>, 
+meaning its computed value is recalculated for each inheriting child element. 
+
+Using a unitless number lets you set the line height on the body and then forget about it for the rest of the page, 
+unless there are particular places where you want to make an exception.
 
 -> ./basic/line-height.html
+
+```
+div {
+  line-height: 100px;
+  font-size: 20px;
+}
+```
+可能下意识的就以为line-height就是作用在块级盒子上的。
+实际上呢，他是作用于块级盒子中的文本上的，如果去除 div 中的文本就会看到其高度就没有 100px 了，文本也是行内元素，这点想必都是清楚的。
+
+另外则是line-height的值可以为数值（不带单位）、百分比以及数值带单位（包括例如em这样的相对单位）。
+
+<strong>当值为数值（不带单位），相对计算的是其font-size属性</strong>，
+如果font-size的值为16px，则line-height: 1.5的值就为16 * 1.5，就是24px
+
+<strong>当一个元素line-height是用带单位的值声明的（比如em,px,百分比），那么它的后代元素line-height会继承计算结果值</strong>
+对于line-height这个属性来说，如果子元素有跟父元素不一样字号大小的情况，就会导致意想不到的结果，譬如文字间的遮挡。
+
+<br>
 
 ## inherit
 you can style your body element just like any other HTML element, 
@@ -206,9 +253,18 @@ example:
 
 由于h1没有显示指定color和font-family，h1会继承color: green和font-family: monospace两个属性。
 
+一般文本类的属性都是可以继承的，例如color，font-size，font-family等。
+
+与之对应有些属性时不能继承的，例如border，padding，margin，background等。
+其实也很好理解这些属性为何不能继承，因为一旦这些属性可以继承，那么会影响到了整个布局，例如，我们在父元素上加个边框，但是其子元素，后代元素都继承了边框，那就不得不去写更多的代码来消除继承的影响，这样的结果肯定不是CSS设计的初衷。
+
+<br>
+
 ## color的16进制表示有时候可以简写
 red's hex code #FF0000 can be shortened to #F00. 
 This shortened form gives one digit for red, one digit for green, and one digit for blue.
+
+<br>
 
 ## css定义和使用变量
 To create a CSS variable, you just need to give it a name with two hyphens in front of it and assign it a value like this:
@@ -238,6 +294,8 @@ example: Improve Compatibility with Browser Fallbacks
 ```
 如果有的浏览器不支持css变量定义，就会回退到background: red;
 
+<br>
+
 ## Inherit CSS Variables
 To make use of inheritance, CSS variables are often defined in the :root element.
 example:
@@ -259,70 +317,7 @@ example:
 ```
 -> ./basic/variable.html
 
-## media query
-使用 @media 查询，你可以针对不同的媒体类型定义不同的样式。
-@media 可以针对不同的屏幕尺寸设置不同的样式，特别是如果你需要设置设计响应式的页面，@media 是非常有用的。
-当你重置浏览器大小的过程中，页面也会根据浏览器的宽度和高度重新渲染页面。
-
-语法：
-```
-@media not|only mediatype and (mediafeature and|or|not mediafeature) {
-  CSS-Code;
-}
-```
-
-not, and, 和 only 可用于联合构造复杂的媒体查询，您还可以通过用逗号分隔多个媒体查询，将它们组合为一个规则:
-- not: not 运算符用于否定媒体查询，如果不满足这个条件则返回 true，否则返回 false。 如果出现在以逗号分隔的查询列表中，它将仅否定应用了该查询的特定查询。 如果使用 not 运算符，则还必须指定媒体类型。
-- only: only 运算符仅在整个查询匹配时才用于应用样式，并且对于防止较早的浏览器应用所选样式很有用。 当不使用 only 时，旧版本的浏览器会将 screen and (max-width: 500px) 简单地解释为 screen，忽略查询的其余部分，并将其样式应用于所有屏幕。 如果使用 only 运算符，则还必须指定媒体类型。
-- , (逗号) 逗号用于将多个媒体查询合并为一个规则。 逗号分隔列表中的每个查询都与其他查询分开处理。 因此，如果列表中的任何查询为 true，则整个 media 语句均返回 true。 换句话说，列表的行为类似于逻辑或 or 运算符。
-- and: and 操作符用于将多个媒体查询规则组合成单条媒体查询，当每个查询规则都为真时则该条媒体查询为真，它还用于将媒体功能与媒体类型结合在一起。
-
-example1:
-```
-/*查询屏幕*/
-@media screen and 条件 {
-}
-/*条件的写法*/
-/*min-width:只要屏幕宽度超过这个值的设备样式就能生效*/
-/*max-width:只要屏幕宽度小于这个值的设备样式就能生效*/
-
-/* 表示可见区域大于1200px样式生效 */
-@media screen and (min-width: 1200px) {
-  .container {
-    width: 1170px;
-    background-color: red;
-  }
-}
-/* 表示可见区域大于992px小于1200px样式生效 */
-@media screen and (min-width: 992px) and (max-width: 1200px) {
-  .container {
-    width: 970px;
-    background-color: blue;
-  }
-}
-```
-
-example2:
-```
-:root {
-  --penguin-size: 300px;
-  --penguin-skin: gray;
-  --penguin-belly: white;
-  --penguin-beak: orange;
-}
-
-@media (max-width: 350px) {
-  :root {
-    /* Only change code below this line */
-    --penguin-size: 200px;
-    --penguin-skin: black;
-    /* Only change code above this line */
-  }
-}
-```
-当最大宽度为350px时，大小变为200px,且颜色变为黑色
-
-media query参考： https://developer.mozilla.org/zh-CN/docs/Web/CSS/Media_Queries/Using_media_queries
+<br>
 
 ## input框文本居右
 ```
