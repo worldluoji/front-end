@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blank node</title>
+</head>
+<body>
+  <!-- line-height设置为 0 时，文本行高为 0，那么外面的包含块，也就是父元素理论上也应该是 0，但是我们发现这里的高度是 2，
+    其实这就是所谓支柱(空白节点)的存在，存在于每个内联盒子 -->
+  <div class="line">
+    Hello Blank node!!!
+  </div>
+  <style>
+    .line {
+      line-height: 0;
+      border: 1px solid red;
+      font-size: 20px;
+    }
+  </style>
+</body>
+</html>
