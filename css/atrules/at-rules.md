@@ -26,5 +26,71 @@ There are several regular at-rules, designated by their identifiers, each with a
 
 <br>
 
+## media query
+使用 @media 查询，你可以针对不同的媒体类型定义不同的样式。
+@media 可以针对不同的屏幕尺寸设置不同的样式，特别是如果你需要设置设计响应式的页面，@media 是非常有用的。
+当你重置浏览器大小的过程中，页面也会根据浏览器的宽度和高度重新渲染页面。
+
+语法：
+```
+@media not|only mediatype and (mediafeature and|or|not mediafeature) {
+  CSS-Code;
+}
+```
+
+not, and, 和 only 可用于联合构造复杂的媒体查询，您还可以通过用逗号分隔多个媒体查询，将它们组合为一个规则:
+- not: not 运算符用于否定媒体查询，如果不满足这个条件则返回 true，否则返回 false。 如果出现在以逗号分隔的查询列表中，它将仅否定应用了该查询的特定查询。 如果使用 not 运算符，则还必须指定媒体类型。
+- only: only 运算符仅在整个查询匹配时才用于应用样式，并且对于防止较早的浏览器应用所选样式很有用。 当不使用 only 时，旧版本的浏览器会将 screen and (max-width: 500px) 简单地解释为 screen，忽略查询的其余部分，并将其样式应用于所有屏幕。 如果使用 only 运算符，则还必须指定媒体类型。
+- , (逗号) 逗号用于将多个媒体查询合并为一个规则。 逗号分隔列表中的每个查询都与其他查询分开处理。 因此，如果列表中的任何查询为 true，则整个 media 语句均返回 true。 换句话说，列表的行为类似于逻辑或 or 运算符。
+- and: and 操作符用于将多个媒体查询规则组合成单条媒体查询，当每个查询规则都为真时则该条媒体查询为真，它还用于将媒体功能与媒体类型结合在一起。
+
+example1:
+```
+/*查询屏幕*/
+@media screen and 条件 {
+}
+/*条件的写法*/
+/*min-width:只要屏幕宽度超过这个值的设备样式就能生效*/
+/*max-width:只要屏幕宽度小于这个值的设备样式就能生效*/
+
+/* 表示可见区域大于1200px样式生效 */
+@media screen and (min-width: 1200px) {
+  .container {
+    width: 1170px;
+    background-color: red;
+  }
+}
+/* 表示可见区域大于992px小于1200px样式生效 */
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+  .container {
+    width: 970px;
+    background-color: blue;
+  }
+}
+```
+
+example2:
+```
+:root {
+  --penguin-size: 300px;
+  --penguin-skin: gray;
+  --penguin-belly: white;
+  --penguin-beak: orange;
+}
+
+@media (max-width: 350px) {
+  :root {
+    /* Only change code below this line */
+    --penguin-size: 200px;
+    --penguin-skin: black;
+    /* Only change code above this line */
+  }
+}
+```
+当最大宽度为350px时，大小变为200px,且颜色变为黑色
+
+<br>
+
 ## references
-https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule
+- https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule
+- https://developer.mozilla.org/zh-CN/docs/Web/CSS/Media_Queries/Using_media_queries
