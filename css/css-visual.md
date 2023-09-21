@@ -78,6 +78,9 @@ However, the z-index property can specify the order of how elements are stacked 
 It must be an integer (i.e. a whole number and not a decimal), 
 and higher values for the z-index property of an element move it higher in the stack than those with lower values.
 
+z-index支持除static定位外的其他定位方式，这点比较好理解，因为如果是普通定位话，一般是不会产生重叠的情况，自然也就不存在所谓的层级问题。
+如果是利用负外边距产生的重叠，z-index是不起作用的，除非设置了非static的定位。
+
 12. color theory
 ### tertiary color (第三色)
 Computer monitors and device screens create different colors by combining amounts of red, green, and blue light. 
