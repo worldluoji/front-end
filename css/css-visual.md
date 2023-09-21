@@ -156,6 +156,7 @@ and set it from a direction of 35 degrees to change the color from #CCFFFF to #F
 14. repeating-linear-gradient
 similar to linear-gradient() with the major difference that it repeats the specified gradient pattern
 example:
+```
 div{
     border-radius: 20px;
     width: 70%;
@@ -169,7 +170,7 @@ div{
       black 80px
     );
 }
-
+```
 45度，0-40px黄色，40px到80px黑色，不断循环。
 
 15. background
