@@ -147,3 +147,19 @@ rotate 如果为正值，则运动将为顺时针，如果为负值，则为逆�
 The clip-path CSS property creates a clipping region that sets what part of an element should be shown.
 
 参考： https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path
+
+
+# 12. :is 和 :where
+```
+:is(选择器) 选择器 {}
+:where(选择器) 选择器 {}
+```
+相当于是一个条件，将满足条件的进行筛选，添加样式；
+
+同样的写法，两个伪类选择器的优先级不一样，:is的优先级高于:where的优先级；
+
+:is：找选择其中权重最大的一个，做为整个伪类选择器的权重；
+按照[示例](./pseudo/is-where.html)来说，会在:is(#d1, #d2, #d3, #d4)中选择一个权重最大的一个，再加上一个标签选择器的权重，组成最终的权重；
+
+:where：该伪类选择器是没有权重的，也就是它的权重为0；
+按照[示例](./pseudo/is-where.html)来说，:where(#d1, #d2, #d3, #d4)的权重为0，此时最终的权重为标签选择器的权重。

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>:is and :where demo</title>
+</head>
+<style>
+  div {
+      font-size: 30px;
+  }
+
+  /*
+    实现需求：选择前四个h1，并设置字体颜色
+  */
+
+  /* 普通做法 */
+  /* 当 id 很多的时候，代码就显得很冗余 */
+  #d1 h1,
+  #d2 h1,
+  #d3 h1,
+  #d4 h1 {
+      color: blue;
+  }
+
+  /* 使用 is 伪类选择器 */
+  /* 查找 #d1, #d2, #d3, #d4 这四个id 下面的 h1 元素 */
+  :is(#d1, #d2, #d3, #d4) h1 {
+      color: #ff004c;
+  }
+
+  /* 使用 where 选择器 */
+  /* 查找 #d1, #d2, #d3, #d4 这四个id 下面的 h1 元素 */
+  :where(#d1, #d2, #d3, #d4) h1 {
+      color: greenyellow;
+  }
+</style>
+
+<body>
+  <div id="d1">
+      <h1>hello JavaScript</h1>
+  </div>
+  <div id="d2">
+      <h1>hello php</h1>
+  </div>
+  <div id="d3">
+      <h1>hello java</h1>
+  </div>
+  <div id="d4">
+      <h2>hello Python</h2>
+  </div>
+  <div id="d5">
+      <h1>hello c++</h1>
+  </div>
+</body>
+
+</html>
