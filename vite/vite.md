@@ -204,6 +204,7 @@ Vite 能够做到快的原因，还有一部分是因为使用了 esbuild 去解
 vite官方收集的一些和vite相关的项目，包括插件，模板，都分类整理好的，地址如下：
 ```
 https://github.com/vitejs/awesome-vite
+https://vite-rollup-plugins.patak.dev/
 ```
 
 ## 术语补充
