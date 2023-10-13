@@ -44,6 +44,15 @@ export default defineConfig({
 刚刚用到的 vite-plugin-mkcert插件仅用于开发阶段，在生产环境中我们会对线上的服务器进行配置，从而开启 HTTP2 的能力，
 如 Nginx 的 HTTP2 配置。
 
+这个插件，Node 18会报错：
+```
+(node:77254) ExperimentalWarning: The Fetch API is an experimental feature. This feature could change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+```
+原因是：Since Node v18, the fetch API was implemented, and it's still an experimental feature hence the error.
+
+https://github.com/octokit/request.js/issues/526
+
 <br>
 
 ##  DNS 预解析
