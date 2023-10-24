@@ -227,3 +227,201 @@ await Promise.all(userPlugins.map((p) => p.configResolved?.(resolved)))
 比如：用户直接使用alias时，Vite 会提示使用resolve.alias。
 
 最后，resolveConfig 函数会返回 resolved 对象，也就是最后的配置集合，那么配置解析服务到底也就结束了。
+
+<br>
+
+## loadConfigFromFile
+```
+const loadResult = await loadConfigFromFile(/*省略传参*/)
+```
+根据文件后缀和模块格式可以分为下面这几类:
+- TS + ESM 格式
+- TS + CommonJS 格式
+- JS + ESM 格式
+- JS + CommonJS 格式
+
+Vite 是如何加载配置文件的？一共分两个步骤:
+- 识别出配置文件的类别
+- 根据不同的类别分别解析出配置内容
+
+### 1. 识别配置文件的类别
+首先 Vite 会检查项目的 package.json ，如果有type: "module"则打上 isESM 的标识:
+```
+try {
+  const pkg = lookupFile(configRoot, ['package.json'])
+  if (pkg && JSON.parse(pkg).type === 'module') {
+    isMjs = true
+  }
+} catch (e) {}
+```
+然后，Vite 会寻找配置文件路径，代码简化后如下:
+```
+let isTS = false
+let isESM = false
+let dependencies: string[] = []
+// 如果命令行有指定配置文件路径
+if (configFile) {
+  resolvedPath = path.resolve(configFile)
+  // 根据后缀判断是否为 ts 或者 esm，打上 flag
+  isTS = configFile.endsWith('.ts')
+  if (configFile.endsWith('.mjs')) {
+      isESM = true
+    }
+} else {
+  // 从项目根目录寻找配置文件路径，寻找顺序:
+  // - vite.config.js
+  // - vite.config.mjs
+  // - vite.config.ts
+  // - vite.config.cjs
+  const jsconfigFile = path.resolve(configRoot, 'vite.config.js')
+  if (fs.existsSync(jsconfigFile)) {
+    resolvedPath = jsconfigFile
+  }
+
+  if (!resolvedPath) {
+    const mjsconfigFile = path.resolve(configRoot, 'vite.config.mjs')
+    if (fs.existsSync(mjsconfigFile)) {
+      resolvedPath = mjsconfigFile
+      isESM = true
+    }
+  }
+
+  if (!resolvedPath) {
+    const tsconfigFile = path.resolve(configRoot, 'vite.config.ts')
+    if (fs.existsSync(tsconfigFile)) {
+      resolvedPath = tsconfigFile
+      isTS = true
+    }
+  }
+  
+  if (!resolvedPath) {
+    const cjsConfigFile = path.resolve(configRoot, 'vite.config.cjs')
+    if (fs.existsSync(cjsConfigFile)) {
+      resolvedPath = cjsConfigFile
+      isESM = false
+    }
+  }
+}
+```
+在寻找路径的同时， Vite 也会给当前配置文件打上isESM和isTS的标识，方便后续的解析。
+
+
+### 2. 根据类别解析配置
+对于 ESM 格式配置的处理代码如下:
+```
+let userConfig: UserConfigExport | undefined
+
+if (isESM) {
+  const fileUrl = require('url').pathToFileURL(resolvedPath)
+  // 首先通过 Esbuild 将配置文件编译打包成 js 代码
+  const bundled = await bundleConfigFile(resolvedPath, true)
+  dependencies = bundled.dependencies
+  // TS + ESM
+  if (isTS) {
+    // 对于 TS 配置文件来说，Vite 会将编译后的 js 代码写入临时文件，通过 Node 原生 ESM Import 来读取这个临时的内容，以获取到配置内容，再直接删掉临时文件
+    fs.writeFileSync(resolvedPath + '.js', bundled.code)
+    userConfig = (await dynamicImport(`${fileUrl}.js?t=${Date.now()}`))
+      .default
+    fs.unlinkSync(resolvedPath + '.js')
+    debug(`TS + native esm config loaded in ${getTime()}`, fileUrl)
+  } 
+  //  JS + ESM
+  else {
+    // 而对于 JS 配置文件来说，Vite 会直接通过 Node 原生 ESM Import 来读取，也是使用 dynamicImport 函数的逻辑
+    userConfig = (await dynamicImport(`${fileUrl}?t=${Date.now()}`)).default
+    debug(`native esm config loaded in ${getTime()}`, fileUrl)
+  }
+}
+```
+这种先编译配置文件，再将产物写入临时目录，最后加载临时目录产物的做法，也是 AOT (Ahead Of Time)编译技术的一种具体实现。
+```
+export const dynamicImport = new Function('file', 'return import(file)')
+```
+为什么要用 new Function 包裹？这是为了避免打包工具处理这段代码，比如 Rollup 和 TSC，类似的手段还有 eval。
+
+为什么 import 路径结果要加上时间戳 query？这其实是为了让 dev server 重启后仍然读取最新的配置，避免缓存。
+
+
+<br>
+
+对于 CommonJS 格式的配置文件，Vite 集中进行了解析:
+```
+// 对于 js/ts 均生效
+// 使用 esbuild 将配置文件编译成 commonjs 格式的 bundle 文件
+const bundled = await bundleConfigFile(resolvedPath)
+dependencies = bundled.dependencies
+// 加载编译后的 bundle 代码
+userConfig = await loadConfigFromBundledFile(resolvedPath, bundled.code)
+```
+
+loadConfigFromBundledFile:
+```
+async function loadConfigFromBundledFile(
+  fileName: string,
+  bundledCode: string
+): Promise<UserConfig> {
+  const extension = path.extname(fileName)
+  const defaultLoader = require.extensions[extension]!
+  require.extensions[extension] = (module: NodeModule, filename: string) => {
+    if (filename === fileName) {
+      ;(module as NodeModuleWithCompile)._compile(bundledCode, filename)
+    } else {
+      defaultLoader(module, filename)
+    }
+  }
+  // 清除 require 缓存
+  delete require.cache[require.resolve(fileName)]
+  const raw = require(fileName)
+  const config = raw.__esModule ? raw.default : raw
+  require.extensions[extension] = defaultLoader
+  return config
+}
+```
+大体的思路是通过拦截原生 require.extensions 的加载函数来实现对 bundle 后配置代码的加载.
+
+原生 require 对于 js 文件的加载代码是这样的:
+```
+Module._extensions['.js'] = function (module, filename) {
+  var content = fs.readFileSync(filename, 'utf8')
+  module._compile(stripBOM(content), filename)
+}
+```
+Node.js 内部也是先读取文件内容，然后编译该模块。当代码中调用 module._compile 相当于手动编译一个模块，该方法在 Node 内部的实现如下:
+```
+Module.prototype._compile = function (content, filename) {
+  var self = this
+  var args = [self.exports, require, self, filename, dirname]
+  return compiledWrapper.apply(self.exports, args)
+}
+```
+在调用完 module._compile 编译完配置代码后，进行一次手动的 require，即可拿到配置对象:
+```
+const raw = require(fileName)
+const config = raw.__esModule ? raw.default : raw
+// 恢复原生的加载方法
+require.extensions[extension] = defaultLoader
+// 返回配置
+return config
+```
+这种运行时加载 TS 配置的方式，也叫做 JIT(即时编译)，这种方式和 AOT 最大的区别在于不会将内存中计算出来的 js 代码写入磁盘再加载，
+而是通过拦截 Node.js 原生 require.extension 方法实现即时加载。
+
+
+至此，配置文件的内容已经读取完成，等后处理完成再返回即可:
+```
+// 处理是函数的情况
+const config = await (typeof userConfig === 'function'
+  ? userConfig(configEnv)
+  : userConfig)
+
+if (!isObject(config)) {
+  throw new Error(`config must export or return an object.`)
+}
+// 接下来返回最终的配置信息
+return {
+  path: normalizePath(resolvedPath),
+  config,
+  // esbuild 打包过程中搜集的依赖
+  dependencies
+}
+```
