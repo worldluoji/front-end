@@ -1,5 +1,7 @@
 # resolveConfig
-Vite 中的配置解析由 resolveConfig 函数来实现
+Vite 配置文件解析的逻辑由 resolveConfig 函数统一实现，其中经历了加载配置文件、解析用户插件、加载环境变量、创建路径解析器工厂和生成插件流水线这几个主要的流程。
+
+其次，在加载配置文件的过程中，Vite 需要处理四种类型的配置文件，其中对于 ESM 和 CommonJS 两种格式的 TS 文件，分别采用了AOT和JIT两种编译技术实现了配置加载。
 
 ## load configuration files
 ```
