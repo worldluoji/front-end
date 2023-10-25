@@ -7,6 +7,10 @@ HMR 的作用其实一样，就是在页面模块更新的时候，直接把页�
 Vite 作为一个完整的构建工具，本身实现了一套 HMR 系统，值得注意的是，这套 HMR 系统基于原生的 ESM 模块规范来实现，
 在文件发生改变时 Vite 会侦测到相应 ES 模块的变化，从而触发相应的 API，实现局部的更新。
 
+通过 HMR 的技术我们就可以<strong>实现局部刷新和状态保存</strong>。
+
+<br>
+
 ## vite HMR API 类型定义：
 ```
 interface ImportMeta {
@@ -27,6 +31,7 @@ interface ImportMeta {
 import.meta对象为现代浏览器原生的一个内置对象，Vite 所做的事情就是在这个对象上的 hot 属性中定义了一套完整的属性和方法。
 因此，在 Vite 当中，你就可以通过import.meta.hot来访问关于 HMR 的这些属性和方法，比如import.meta.hot.accept()
 
+<br>
 
 ## 模块更新时逻辑: hot.accept
 关键方法accept，它决定了 Vite 进行热更新的边界，那么如何来理解这个accept的含义呢？
@@ -34,16 +39,106 @@ import.meta对象为现代浏览器原生的一个内置对象，Vite 所做的�
 它就是用来接受模块更新的。 一旦 Vite 接受了这个更新，当前模块就会被认为是 HMR 的边界。
 那么，Vite 接受谁的更新呢？这里会有三种情况：
 - 接受自身模块的更新，当模块接受自身的更新时，则当前模块会被认为 HMR 的边界。也就是说，除了当前模块，其他的模块均未受到任何影响。
-- 接受某个子模块(依赖模块)的更新
-- 接受多个子模块的更新
+- 接受某个子模块(依赖模块)的更新, 比如main模块依赖render 模块，也就是说，main模块是render父模块，那么我们也可以在 main 模块中接受render模块的更新，此时 HMR 边界就是main模块了。
+- 接受多个子模块的更新，父模块可以接受多个子模块的更新，当其中任何一个子模块更新之后，父模块会成为 HMR 边界
 
+示例：单个模块更新
+```
+// main.ts
+import { render } from './render';
+import './state';
+render();
+if (import.meta.hot) {
+  import.meta.hot.accept('./render.ts', (newModule) => {
+    newModule.render();
+  })
+}
+```
+调用 accept 方法第一个参数传入一个依赖的路径，也就是render模块的路径，这就相当于告诉 Vite: 
+我监听了 render 模块的更新，当它的内容更新的时候，请把最新的内容传给我。
+同样的，第二个参数中定义了模块变化后的回调函数，这里拿到了 render 模块最新的内容，然后执行其中的渲染逻辑，让页面展示最新的内容。
+
+
+示例：多个模块更新
+```
+// main.ts
+import { render } from './render';
+import { initState } from './state';
+render();
+initState();
+if (import.meta.hot) {
+  import.meta.hot.accept(['./render.ts', './state.ts'], (modules) => {
+    console.log(modules);
+    const [renderModule, stateModule] = modules;
+    if (renderModule) {
+      renderModule.render();
+    }
+    if (stateModule) {
+      stateModule.initState();
+    }
+  })
+}
+```
+Vite 给我们的回调传来的参数modules其实是一个数组，和我们第一个参数声明的子模块数组一一对应。如果某个文件没有更新就会返回undefined
+
+<br>
 
 ## 模块销毁时逻辑: hot.dispose
 这个方法代表在模块更新、旧模块需要销毁时需要做的一些事情。
+示例：
+```
+// state.ts
+let timer: number | undefined;
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    if (timer) {
+      clearInterval(timer);
+    }
+  })
+}
+export function initState() {
+  let count = 0;
+  timer = setInterval(() => {
+    let countEle = document.getElementById('count');
+    countEle!.innerText =  ++count + '';
+  }, 1000);
+}
+```
+
+<br>
 
 ## 共享数据: hot.data 属性
 这个属性用来在不同的模块实例间共享一些数据。
+示例：
+```
+let timer: number | undefined;
+if (import.meta.hot) {
++  // 初始化 count
++  if (!import.meta.hot.data.count) {
++    import.meta.hot.data.count = 0;
++  }
+  import.meta.hot.dispose(() => {
+    if (timer) {
+      clearInterval(timer);
+    }
+  })
+}
+export function initState() {
++  const getAndIncCount = () => {
++    const data = import.meta.hot?.data || {
++      count: 0
++    };
++    data.count = data.count + 1;
++    return data.count;
++  };
+  timer = setInterval(() => {
+    let countEle = document.getElementById('count');
++    countEle!.innerText =  getAndIncCount() + '';
+  }, 1000);
+}
+```
 
+<br>
 
 ## 其它方法
 1. import.meta.hot.decline()
