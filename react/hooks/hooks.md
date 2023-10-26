@@ -339,6 +339,8 @@ Hooks 是逻辑重用的第一选择。
 而一旦涉及 UI 表现逻辑的重用，就有些力不从心了，而这正是 render props 擅长的地方。
 所以，即使有了 Hooks，我们也要掌握 render props 这个设计模式的用法， 见CounterRenderProps.jsx
 
+另外可参考react-use三方库，是 react 37.2k star 的自定义 hooks库。
+
 <br>
 
 ## Eslint hooks 配置
