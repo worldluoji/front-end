@@ -125,4 +125,17 @@ tsconfig.json 可以直接把配置继承过来
 ## 编译选项
 编译选项可参考 ts_in_action/src/project/06.tsconfig, 这部分基本可满足日常配置需求
 
-更多可参考：https://www.tslang.cn/docs/handbook/tsconfig-json.html
+###  isolatedModules
+While you can use TypeScript to produce JavaScript code from TypeScript code, it’s also common to use other transpilers such as Babel to do this. 
+However, other transpilers only operate on a single file at a time, 
+which means they can’t apply code transforms that depend on understanding the full type system. 
+
+These limitations can cause runtime problems with some TypeScript features like const enums and namespaces. 
+
+Setting the isolatedModules flag tells TypeScript to warn you if you write certain code that can’t be correctly interpreted by a single-file transpilation process.
+
+It does not change the behavior of your code, or otherwise change the behavior of TypeScript’s checking and emitting process.
+
+更多可参考：
+- https://www.tslang.cn/docs/handbook/tsconfig-json.html
+- https://www.typescriptlang.org/tsconfig#isolatedModules
