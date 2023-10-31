@@ -19,5 +19,10 @@ npx swc ./file.js
 
 <br>
 
+## Configurations
+https://swc.rs/docs/configuration/swcrc
+
+<br>
+
 ## reference
 https://swc.rs/docs/getting-started
