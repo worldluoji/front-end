@@ -6,6 +6,7 @@ For compilation, it takes JavaScript / TypeScript files using modern JavaScript 
 
 SWC is 20x faster than Babel on a single thread and 70x faster on four cores.
 
+<br>
 
 ## Installation
 ```
@@ -15,3 +16,8 @@ Then, you can transpile your first file and emit to stdout:
 ```
 npx swc ./file.js
 ```
+
+<br>
+
+## reference
+https://swc.rs/docs/getting-started
