@@ -11,7 +11,10 @@ module.exports = {
 			{
 				template: "./index.html"
 			}
-		]
+		],
+		minifyOptions: {
+			dropConsole: true
+		}
 	},
 	module: {
 		rules: [
