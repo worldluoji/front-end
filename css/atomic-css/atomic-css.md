@@ -111,6 +111,10 @@ It's fast, flexible, and reliable — with zero-runtime.
 By default, Tailwind will look for an optional tailwind.config.js file at the root of your project where you can define any customizations.
 -> https://www.tailwindcss.cn/docs/configuration
 
+## plugins
+Plugins let you register new styles for Tailwind to inject into the user’s stylesheet using JavaScript instead of CSS.
+-> https://tailwindcss.com/docs/plugins
+
 <br>
 
 ## 参考
