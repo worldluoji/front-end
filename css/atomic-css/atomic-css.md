@@ -87,13 +87,13 @@ using utility classes has a few important advantages over inline styles:
 With utilities, you’re choosing styles from a <strong>predefined design system</strong>, 
 which makes it much easier to build visually consistent UIs.
 
-1. Responsive design. You can’t use media queries in inline styles, 
+2. Responsive design. You can’t use media queries in inline styles, 
 but you can use Tailwind’s responsive utilities to build fully responsive interfaces easily.
 
-1. Hover, focus, and other states. Inline styles can’t target states like hover or focus, 
+3. Hover, focus, and other states. Inline styles can’t target states like hover or focus, 
 but Tailwind’s state variants make it easy to style those states with utility classes.
 
-1. IDE支持，VS Code 的 Tailwind CSS 智能提示扩展涵盖了所有的类。在编辑器内既可得到智能的自动完成建议、提示及类定义等功能，而且无需配置。
+4. IDE支持，VS Code 的 Tailwind CSS 智能提示扩展涵盖了所有的类。在编辑器内既可得到智能的自动完成建议、提示及类定义等功能，而且无需配置。
 
 -> https://tailwindcss.com/docs/utility-first#why-not-just-use-inline-styles
 
@@ -107,13 +107,25 @@ Tailwind CSS works by scanning all of your HTML files, JavaScript components, an
 generating the corresponding styles and then writing them to a static CSS file.
 It's fast, flexible, and reliable — with zero-runtime.
 
-## configuration:
+## 1. configuration:
 By default, Tailwind will look for an optional tailwind.config.js file at the root of your project where you can define any customizations.
 -> https://www.tailwindcss.cn/docs/configuration
 
-## plugins
+<br>
+
+## 2. plugins
 Plugins let you register new styles for Tailwind to inject into the user’s stylesheet using JavaScript instead of CSS.
 -> https://tailwindcss.com/docs/plugins
+
+<br>
+
+## 3. preprocessors
+It’s important to note that you don’t need to use a preprocessor with Tailwind — 
+you typically write very little CSS on a Tailwind project anyways so using a preprocessor just isn’t as beneficial as it would be in a project where you write a lot of custom CSS.
+
+TailWind CSS支持scss、less等，但是实际没有必要使用
+-> https://www.tailwindcss.cn/docs/using-with-preprocessors
+
 
 <br>
 
