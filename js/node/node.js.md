@@ -3,6 +3,10 @@ Node.js is the server-side JavaScript runtime environment.
 Node.js is built on top of the Google Chrome V8 JavaScript engine, 
 and it's mainly used to create web servers - but it's not limited to just that.
 
+Node.js 并不是语言，而是一个 JavaScript 运行时环境，它的语言是 JavaScript。
+
+<img src="./images/node-hierarchy.awebp" />
+
 <br>
 
 ## Node.js和Browser的不同点
@@ -11,6 +15,18 @@ and it's mainly used to create web servers - but it's not limited to just that.
 3. Node同时支持 CommonJS and ES module
    
 reference: https://nodejs.dev/en/learn/differences-between-nodejs-and-the-browser/
+
+<br>
+
+## Node.js 与 Web-interoperable Runtime
+Web-interoperable Runtime 简称 Winter，Web 可互操（cāo）运行时。这里有一个核心的单词叫 interoperable，就是可互操。
+什么是可互操？就是运行时之间是可以互相替代、互相兼容的。各种浏览器之间就是 interoperable，经过标准化之后，大家 API 长的都一样，这就是所谓的互通性。
+
+Winter 就是针对服务端 JavaScript 提出的一种规范。只要大家都遵循了 Winter 规范，那么整个生态又是可共享的。
+因为好多厂商都基于 V8 做了 JavaScript 的运行时，但是后来经过标准化、规范化之后，国际上的几家厂商就一起给它起了一个新的名字，
+并且开始做一些标准化的事情，组建了一个组织叫做 WinterCG（Web-interoperable Runtimes Community Group），它是由几家国际公司联合起来搞的 W3C 下的一个社区组，致力于做 Web-interoperable Runtime 标准化。
+
+大家可以在 [WinterCG 的官网首页](https://wintercg.org)上看有哪几个公司正在遵循 Winter 的标准做他们的运行时，如下图所示：
 
 <br>
 
