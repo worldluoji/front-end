@@ -1,4 +1,3 @@
-// bun add express
 import express from 'express';
 
 const app = express();
