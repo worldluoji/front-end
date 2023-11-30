@@ -56,6 +56,17 @@ https://bun.sh/docs/runtime/web-apis
 
 <br>
 
+## configurations
+Bun's behavior can be configured using its configuration file, bunfig.toml.
+
+In general, Bun relies on pre-existing configuration files like package.json and tsconfig.json to configure its behavior. 
+bunfig.toml is only necessary for configuring Bun-specific things. 
+This file is optional, and Bun will work out of the box without it.
+
+https://bun.sh/docs/runtime/bunfig
+
+<br>
+
 ## demos
 - [bun with express](./express/server.ts) 
 
