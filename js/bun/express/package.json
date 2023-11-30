@@ -3,7 +3,7 @@
   "module": "server.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run server.ts"
+    "start": "bun --watch server.ts"
   },
   "dependencies": { "express": "^4.18.2" },
   "devDependencies": {
