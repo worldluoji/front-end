@@ -19,8 +19,9 @@
     "jsx": "react-jsx", // support JSX
     "allowJs": true, // allow importing `.js` from `.ts`
 
+    "strict": false,
     // best practices
-    "strict": true,
+    // "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "composite": true,
