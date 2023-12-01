@@ -108,8 +108,8 @@ class B {
 class CC extends A {}
 let aac = new A(1, 2)
 let bbc = new B(1)
-// aa = bb
-// bb = aa
+// aac = bbc
+// bbc = aac
 let ccc = new CC(1, 2)
 aac = ccc
 ccc = aac
