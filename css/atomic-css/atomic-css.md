@@ -109,7 +109,11 @@ It's fast, flexible, and reliable — with zero-runtime.
 
 ## 1. configuration:
 By default, Tailwind will look for an optional tailwind.config.js file at the root of your project where you can define any customizations.
--> https://www.tailwindcss.cn/docs/configuration
+
+Every section of the config file is optional, so you only have to specify what you’d like to change. 
+Any missing sections will fall back to Tailwind’s default configuration.
+
+-> https://tailwindcss.com/docs/installation
 
 <br>
 
@@ -124,11 +128,26 @@ It’s important to note that you don’t need to use a preprocessor with Tailwi
 you typically write very little CSS on a Tailwind project anyways so using a preprocessor just isn’t as beneficial as it would be in a project where you write a lot of custom CSS.
 
 TailWind CSS支持scss、less等，但是实际没有必要使用
--> https://www.tailwindcss.cn/docs/using-with-preprocessors
+-> https://tailwindcss.com/docs/using-with-preprocessors
 
+<br>
+
+## 4. Browser Support
+In general, Tailwind CSS v3.0 is designed for and tested on the latest stable versions of Chrome, Firefox, Edge, and Safari. 
+It does not support any version of IE, including IE 11.
+
+-> https://tailwindcss.com/docs/browser-support
+
+<br>
+
+## 5. Optimizing for Production
+For the smallest possible production build, we recommend minifying your CSS with a tool like cssnano, 
+and compressing your CSS with Brotli
+
+-> https://tailwindcss.com/docs/optimizing-for-production
 
 <br>
 
 ## 参考
 - https://juejin.cn/post/7028841960752283656
-- https://www.tailwindcss.cn/
+- https://tailwindcss.com/
