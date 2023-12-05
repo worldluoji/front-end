@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hover and Focus demo</title>
+  <script src="./tailwindcss-with-plugins.js"></script>
+</head>
+<body>
+  <div class="flex items-center justify-center flex-col">
+    <blockquote class="text-2xl font-semibold italic text-center text-slate-900 mt-6">
+      When you look
+      <span class="before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-pink-500 relative inline-block">
+        <span class="relative text-white">annoyed</span>
+      </span>
+      all the time, people think that you're busy.
+    </blockquote>
+    <form class="w-1/2">
+      <label class="block mt-6">
+        <span class="block text-sm font-medium text-slate-700">Username</span>
+        <!-- Using form state modifiers, the classes can be identical for every input -->
+        <input type="text" value="Jole" disabled class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder:italic placeholder-slate-400
+          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+          disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+          invalid:border-pink-500 invalid:text-pink-600
+          focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+        "/>
+      </label>
+
+      <label class="block mt-3">
+        <!--using after: to add content '*'-->
+        <span class="block text-sm font-medium text-slate-700 after:content-['*'] after:ml-0.5 after:text-red-500">Email</span>
+        <!-- Using form state modifiers, the classes can be identical for every input -->
+        <input type="email" value="testhao123@163." class="peer mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+          disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+          invalid:border-pink-500 invalid:text-pink-600
+          focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+        "/>
+        <!-- When you need to style an element based on the state of a sibling element, 
+          mark the sibling with the peer class, and use peer-* modifiers like peer-invalid to style the target element: -->
+        <p class="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
+          Please provide a valid email address.
+        </p>
+      </label>
+
+      <label class="block mt-3">
+        <span class="block text-sm font-medium text-slate-700 after:content-['*'] after:ml-0.5 after:text-red-500">Phone</span>
+        <input type="number" name="phone" value="" class="is-dirty peer mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+          invalid:border-pink-500 invalid:text-pink-600
+          focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+        " required />
+        <!-- You can create one-off peer-* modifiers on the fly by providing your own selector 
+          as an arbitrary value between square brackets -->
+        <p class="mt-2 hidden peer-[.is-dirty]:peer-required:block text-pink-600 text-sm">
+          This field is required.
+        </p>
+      </label>
+
+      <fieldset>
+        <legend>Published status</legend>
+      
+        <!-- When using multiple peers, you can style something on the state of a specific peer by giving that peer a unique name using a peer/{name} class, 
+          and including that name in modifiers using classes like peer-checked/{name}: -->
+        <input id="draft" class="peer/draft" type="radio" name="status" checked />
+        <label for="draft" class="peer-checked/draft:text-sky-500">Draft</label>
+      
+        <input id="published" class="peer/published" type="radio" name="status" />
+        <label for="published" class="peer-checked/published:text-sky-500">Published</label>
+      
+        <div class="hidden peer-checked/draft:block">Drafts are only visible to administrators.</div>
+        <div class="hidden peer-checked/published:block">Your post will be publicly visible on your site.</div>
+      </fieldset>
+
+      <label class="block mt-3">
+        <span class="sr-only">Choose profile photo</span>
+        <input type="file" class="block w-full text-sm text-slate-500
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-full file:border-0
+          file:text-sm file:font-semibold
+          file:bg-violet-50 file:text-violet-700
+          hover:file:bg-violet-100
+        "/>
+      </label>
+
+      <button class="p-2 mt-3 rounded-md text-white bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300">
+        Save changes
+      </button>
+    </form>
+  </div>
+</body>
+</html>
