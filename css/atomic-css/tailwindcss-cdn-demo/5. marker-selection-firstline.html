@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>list</title>
+  <script src="./tailwindcss-with-plugins.js"></script>
+</head>
+<body>
+  <div class="flex justify-center items-center flex-col mt-6">
+    <!-- Style the counters or bullets in lists using the marker modifier -->
+    <ul role="list" class="marker:text-sky-400 list-disc pl-5 space-y-3 text-slate-400">
+      <li>5 cups chopped Porcini mushrooms</li>
+      <li>1/2 cup of olive oil</li>
+      <li>3lb of celery</li>
+    </ul>
+
+    <!-- Style the active text selection using the selection modifier -->
+    <div class="selection:bg-fuchsia-300 selection:text-fuchsia-900 mt-6 w-1/2">
+      <p>
+        So I started to walk into the water. I won't lie to you boys, I was
+        terrified. But I pressed on, and as I made my way past the breakers
+        a strange calm came over me. I don't know if it was divine intervention
+        or the kinship of all living things but I tell you Jerry at that moment,
+        I <em>was</em> a marine biologist.
+      </p>
+    </div>
+    
+    <!-- Style the first line in a block of content using the first-line modifier, and the first letter using the first-letter modifier -->
+    <div class="mt-6 w-1/2">
+      <p class="bg-fuchsia-300 first-line:uppercase first-line:tracking-widest
+        first-letter:text-7xl first-letter:font-bold first-letter:text-white
+        first-letter:mr-3
+      ">
+        Well, let me tell you something, funny boy. Y'know that little stamp, the one
+        that says "New York Public Library"? Well that may not mean anything to you,
+        but that means a lot to me. One whole hell of a lot.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
