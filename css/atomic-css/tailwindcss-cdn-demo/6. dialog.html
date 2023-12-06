@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dialog</title>
+  <script src="./tailwindcss-with-plugins.js"></script>
+</head>
+<body>
+  <dialog class="backdrop:bg-gray-80 rounded-sm">
+    <p class="p-1">This is a dialog</p>
+    <button autofocus class="p-1 my-2 mx-1 rounded-md text-white bg-violet-500 hover:bg-violet-600">close</button>
+  </dialog>
+  <button class="p-2 mt-3 ml-6 rounded-md text-white bg-violet-500 hover:bg-violet-600">open</button>
+  <script>
+    const dialog = document.querySelector("dialog");
+    const showButton = document.querySelector("dialog + button");
+    const closeButton = document.querySelector("dialog button");
+
+    showButton.addEventListener("click", () => {
+      dialog.showModal();
+    });
+
+    closeButton.addEventListener("click", () => {
+      dialog.close();
+    });
+  </script>
+</body>
+</html>
