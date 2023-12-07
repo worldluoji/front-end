@@ -9,6 +9,22 @@ xl	                1280px	        @media (min-width: 1280px) { ... }
 2xl	                1536px	        @media (min-width: 1536px) { ... }
 ```
 
+If you’d like to apply a utility only when a specific breakpoint range is active, 
+stack a responsive modifier like md with a max-* modifier to limit that style to a specific range:
+```
+<div class="md:max-xl:flex">
+  <!-- ... -->
+</div>
+```
+```
+Modifier	Media query
+max-sm	  @media not all and (min-width: 640px) { ... }
+max-md	  @media not all and (min-width: 768px) { ... }
+max-lg	  @media not all and (min-width: 1024px) { ... }
+max-xl	  @media not all and (min-width: 1280px) { ... }
+max-2xl	  @media not all and (min-width: 1536px) { ... }
+```
+
 example:
 ```
 <!-- Width of 16 by default, 32 on medium screens, and 48 on large screens -->
