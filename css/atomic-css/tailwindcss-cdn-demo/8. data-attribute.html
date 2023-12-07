@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>data attribute</title>
+  <script src="./tailwindcss-with-plugins.js"></script>
+</head>
+<body>
+  <!-- Will apply -->
+  <div id="a" data-size="large" class="data-[size=large]:p-8">
+    large
+  </div>
+
+  <!-- Will not apply -->
+  <div id="b" data-size="medium" class="data-[size=large]:p-8">
+    medium
+  </div>
+
+  <script>
+    console.log(document.getElementById("a").dataset.size);
+    console.log(document.getElementById("b").dataset.size);
+  </script>
+</body>
+</html>
