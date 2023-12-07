@@ -95,8 +95,69 @@ example2:
 ```
 当最大宽度为350px时，大小变为200px,且颜色变为黑色
 
+### prefers-reduced-motion
+CSS 媒体查询特性 prefers-reduced-motion 用于检测用户的系统是否被开启了动画减弱功能。
+```
+<div class="animation">animated box</div>
+
+.animation {
+  animation: vibrate 0.3s linear infinite both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animation {
+    animation: none;
+  }
+}
+```
+
+<br>
+
+### prefers-contrast
+The prefers-contrast CSS media feature is used to detect 
+whether the user has requested the web content to be presented with a lower or higher contrast.
+```
+<div class="contrast">low contrast box</div>
+
+.contrast {
+  width: 100px;
+  height: 100px;
+  outline: 2px dashed black;
+}
+
+@media (prefers-contrast: more) {
+  .contrast {
+    outline: 2px solid black;
+  }
+}
+```
+
+<br>
+
+### Viewport orientation
+Use the portrait and landscape modifiers to conditionally add styles when the viewport is in a specific orientation.
+
+the following rule will apply its styles if the user's device has either a minimum height of 680px or is a screen device in portrait mode
+```
+@media (min-height: 680px), screen and (orientation: portrait) {
+  /* … */
+}
+```
+
+<br>
+
+### print modifier
+Use the print modifier to conditionally add styles that only apply when the document is being printed
+```
+@media not screen and (color), print and (color) {
+  /* … */
+}
+```
+
 <br>
 
 ## references
 - https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule
-- https://developer.mozilla.org/zh-CN/docs/Web/CSS/Media_Queries/Using_media_queries
+- https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries
+- https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
+- https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast
