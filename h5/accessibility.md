@@ -53,11 +53,15 @@ Assistive technologies can access this information to provide better page summar
 <header>
   <h1>Weapons of the Ninja</h1>
 </header>
+<body>
+  <nav></nav>
+
   <main>
     
   </main>
 
-<footer></footer>
+  <footer></footer>
+</bodu>
 ```
 header shares the embedded landmark feature you saw with main, 
 allowing assistive technologies to quickly navigate to that content.
@@ -72,27 +76,87 @@ It's primarily used to contain copyright information or links to related documen
 ### 2) article、section
 article is another one of the new HTML5 elements that add semantic meaning to your markup. 
 
-article is a sectioning element and is used to wrap independent, self-contained content. 
+article is a sectioning element and is used to <strong>wrap independent, self-contained content</strong>. 
 
 The tag works well with blog entries, forum posts, or news articles.
 
-article定义页面独立的内容，它可以有自己的header、footer、sections等，专注于单个主题的博客文章，报纸文章或网页文章。article可以嵌套article，只要里面的article与外面的是部分与整体的关系
+article定义页面独立的内容，它可以有自己的header、footer、sections等，专注于单个主题的博客文章，报纸文章或网页文章。
+article可以嵌套article，只要里面的article与外面的是部分与整体的关系。
 
 The section element is also new with HTML5, and has a slightly different semantic meaning than article. 
 
-An article is for standalone content, and a section is for grouping thematically related content.
-They can be used within each other, as needed. For example, if a book is the article, then each chapter is a section.
+An article is for standalone content, and a section is for <strong>grouping thematically related content</strong>.
+They can be used within each other, as needed. 
+For example, if a book is the article, then each chapter is a section.
 
 When there's no relationship between groups of content, then use a div.
 
 section元素用于标记文档的各个部分，例如长表单文章的章节或主要部分。
+
+example:
+```
+<article class="film_review">
+  <h2>Jurassic Park</h2>
+  <section class="main_review">
+    <h3>Review</h3>
+    <p>Dinos were great!</p>
+  </section>
+  <section class="user_reviews">
+    <h3>User reviews</h3>
+    <article class="user_review">
+      <h4>Too scary!</h4>
+      <p>Way too scary for me.</p>
+      <footer>
+        <p>
+          Posted on
+          <time datetime="2015-05-16 19:00">May 16</time>
+          by Lisa.
+        </p>
+      </footer>
+    </article>
+    <article class="user_review">
+      <h4>Love the dinos!</h4>
+      <p>I agree, dinos are my favorite.</p>
+      <footer>
+        <p>
+          Posted on
+          <time datetime="2015-05-17 19:00">May 17</time>
+          by Tom.
+        </p>
+      </footer>
+    </article>
+  </section>
+  <footer>
+    <p>
+      Posted on
+      <time datetime="2015-05-15 19:00">May 15</time>
+      by Staff.
+    </p>
+  </footer>
+</article>
+```
 
 ### 3) nav
 The nav element is another HTML5 item with the embedded landmark feature for easy screen reader navigation. 
 
 This tag is meant to wrap around the main navigation links in your page.
 
-定义页面的导航链接部分区域，不是所有的链接都需要包含在<nav>中，除了页脚再次显示顶级全局导航、或者包含招聘信息等重要链接
+定义页面的导航链接部分区域，不是所有的链接都需要包含在`<nav>`中:
+
+It's not necessary for all links to be contained in a `<nav>` element. 
+`<nav>` is intended only for a major block of navigation links; 
+typically the `<footer>` element often has a list of links that don't need to be in a `<nav>` element.
+
+examples:
+```
+<nav class="menu">
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+```
 
 ### 4) audio
 HTML5's audio element gives semantic meaning when it wraps sound or audio stream content in your markup. 
@@ -325,3 +389,17 @@ Note: A negative tabindex value (typically -1) indicates that an element is focu
 
 This method is generally used to bring focus to content programmatically 
 (like when a div used for a pop-up window is activated), and is beyond the scope of these challenges.
+
+<br>
+
+## 9. detail and summary
+`<details>` 元素可创建一个组件，仅在被切换成展开状态时，它才会显示内含的信息。
+`<summary>` 元素可为该部件提供概要或者标签。
+
+example:
+```
+<details>
+  <summary>Details</summary>
+  Something small enough to escape casual notice.
+</details>
+```
