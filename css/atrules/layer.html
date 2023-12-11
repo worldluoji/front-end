@@ -8,8 +8,14 @@
 </head>
 <body>
   <div></div>
+  <p class="alert">https://developer.mozilla.org/en-US/docs/Web/CSS/@layer</p>
   <style>
-    /* A > C > B */
+    /* syntax:
+    * @layer layer-name {rules}
+    * @layer layer-name;
+    * @layer layer-name, layer-name, layer-name;
+    * @layer {rules}
+    */
     @layer B, C, A;
     div {
       width: 200px;
@@ -28,6 +34,25 @@
     @layer C {
       div {
         background: orange;
+      }
+    }
+
+    @layer module, state;
+
+    @layer state {
+      .alert {
+        background-color: brown;
+      }
+      p {
+        border: medium solid limegreen;
+      }
+    }
+
+    @layer module {
+      .alert {
+        border: medium solid violet;
+        background-color: yellow;
+        color: white;
       }
     }
   </style>
