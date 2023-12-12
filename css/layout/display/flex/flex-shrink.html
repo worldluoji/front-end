@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=
+  , initial-scale=1.0">
+  <title>flex-shrink demo</title>
+</head>
+<body>
+  <div class="container">
+    <div class="item a">
+      <p>A</p>
+      <p> width:300</p>
+      <p>flex-shrink: 1</p>
+    </div>
+    <div class="item b">
+      <p>B</p>
+      <p> width:150</p>
+      <p>flex-shrink: 2</p>
+    </div>
+    <div class="item c">
+      <p>C</p>
+      <p> width:200</p>
+      <p>flex-shrink: 3</p>
+    </div>
+  </div>
+  <style>
+    /* 子容器宽度总和为650，溢出空间为150
+      总压缩：300 * 1 + 150 * 2 + 200 * 3 = 1200
+      A的压缩率：300*1 / 1200 = 0.25
+      A的压缩值：150 * 0.25 = 37.5
+      A的实际宽度：300 - 37.5 = 262.5
+
+      如果子容器没有超出父容器，设置 flex-shrink 无效
+    */
+    .container {
+      margin:10px;
+      display: flex;
+      width: 500px;
+      height: 200px;
+      background-color: #eee;
+      color: #666;
+      text-align:center;
+    }
+    .item {
+      height: 100px;
+    }
+    .item p {
+      margin: 0;
+    }
+    .a {
+      width: 300px;
+      flex-grow: 1;
+      flex-shrink: 1;
+      background-color:#ff4466;
+    }
+    .b {
+      width: 150px;
+      flex-shrink: 2;
+      background-color:#42b983;
+    }
+    .c {
+      width: 200px;
+      flex-shrink: 3;
+      background-color:#61dafb;
+    }
+  </style>
+</body>
+</html>

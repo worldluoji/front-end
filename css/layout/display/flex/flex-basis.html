@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fle-basis demo</title>
+</head>
+<body>
+  <div class="container">
+    <div class="item a">A</div>
+    <div class="item b">B</div>
+    <div class="item c">C</div>
+  </div>
+  <style>
+    /* flex-basis 指定了 flex 元素在主轴方向上的初始大小 
+      最终元素的宽度看出几个属性的优先级关系：
+      max-width/min-width > flex-basis > width > box
+    */
+    .container {
+      margin:10px;
+      display: flex;
+      width: 500px;
+      height: 200px;
+      background-color: #eee;
+      text-align: center;
+      line-height: 100px;
+      color: #666;
+    }
+    .item {
+      width: 100px;
+      height: 100px;
+    }
+    .a {
+      flex-basis: 200px;
+      background-color:#ff4466;
+    }
+    .b {
+      max-width: 50px;
+      flex-basis: 150px;
+      background-color:#42b983;
+    }
+    .c {
+      background-color:#61dafb;
+    }
+  </style>
+</body>
+</html>

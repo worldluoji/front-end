@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <title>flex-grow demo</title>
+    <body>
+        <div>
+            <form>
+                <input type="email" name="email">
+                <button type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100">
+                        <rect width="100" height="100" style="fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)" />
+                    </svg>
+                </button>
+            </form>
+            <!--两个控件之间的间隔消失了，因为弹性布局的项目（item）默认没有间隔。-->
+        </div>
+
+        <div class="container">
+            <!-- 子容器的宽度总和只有 350px，父容器宽度为 500px，那么剩余空间就出现了，为 150px。当设置了 flex-grow 之后， A，B，C三个子容器会根据自身的 flex-grow 去“瓜分”剩余空间。 
+            以 A 为例子进行说明： A 占比剩余空间：1/(1+2+3) = 1/6，那么 A “瓜分”到的 150*1/6=25，实际宽度为100+25=125。-->
+            <div class="item a">
+              <p>A</p>
+              <p> width:100</p>
+              <p>flex-grow:1</p>
+            </div>
+            <div class="item b">
+              <p>B</p>
+              <p> width:150</p>
+              <p>flex-grow:2</p>
+            </div>
+            <div class="item c">
+              <p>C</p>
+              <p> width:100</p>
+              <p>flex-grow:3</p>
+            </div>
+        </div>        
+    </body>
+    <style type="text/css">
+		form {
+		  display: flex;
+          align-items: stretch;
+		}
+        /*
+        * 弹性布局默认不改变项目的宽度，但是它默认改变项目的高度。如果项目没有显式指定高度，就将占据容器的所有高度。
+        *
+        * 如果项目很多，一个个地设置align-self属性就很麻烦。这时，可以在容器元素（本例为表单）设置align-items属性，它的值被所有子项目的align-self属性继承
+        * <form>元素设置了align-items以后，就不用在控件上设置align-self，除非希望两者的值不一样
+        */
+
+        input  {
+          flex-grow: 1;
+          /* 如果我们希望，输入框占据当前行的所有剩余宽度，只需要指定输入框的flex-grow属性为1; 
+          flex-grow属性默认等于0，即使用本来的宽度，不拉伸。
+          等于1时，就表示该项目宽度拉伸，占据当前行的所有剩余宽度。*/
+          /* align-self: stretch; */
+          /* flex-start：顶边对齐，高度不拉伸
+             flex-end：底边对齐，高度不拉伸
+             center：居中，高度不拉伸
+             stretch：默认值，高度自动拉伸
+          */
+        }
+
+        .container {
+            margin:10px;
+            display: flex;
+            width: 500px;
+            height: 200px;
+            background-color: #eee;
+            color: #666;
+            text-align: center;
+        }
+
+        .item {
+            height: 100px;
+        }
+
+        .item p {
+            margin: 0;
+        }
+
+        .a {
+            width: 100px;
+            flex-grow: 1;
+            background-color:#ff4466;
+        }
+
+        .b {
+            width: 150px;
+            flex-grow: 2;
+            background-color:#42b983;
+        }
+
+        .c {
+            width: 100px;
+            flex-grow: 3;
+            background-color:#61dafb;
+        }
+	</style>
+</html>
