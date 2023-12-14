@@ -9,18 +9,19 @@ which you can output to a file. Each function the AST passes through may or may 
 sourcemaps will be generated to keep track of any changes.
 
 The AST provides a straightforward API that developers can use to write plugins. 
-For example, you can cycle through each rule set in a file with css.eachRule(), 
+For example, you can cycle through(循环遍历） each rule set in a file with css.eachRule(), 
 or each declaration in a rule with rule.eachDecl(). 
 You can get the selector of a rule with rule.selector, or the name of an at-rule with atRule.name. 
 From these few examples you can see that the PostCSS API makes it pretty easy to 
-work with CSS source code (much easier and more accurately than if you were to rely on regular expressions, like a chump).
+work with CSS source code.
 
 <br>
 
 ## Postcss is a preprocessor replacement？
 Of course, it isn't. PostCSS is a JavaScript tool that will read your CSS with special additional syntax, process it, and return regular CSS code. 
 What does that mean for you? It means that you can still use your favorite preprocessor like you used to do, 
-and you can also use PostCSS in the areas where preprocessors can't be helpful, such as linting, auto prefixing, or CSS4 features. 
+and you can also use PostCSS in the areas where preprocessors can't be helpful, such as <strong>linting, auto prefixing, or CSS4 features</strong>. 
+
 It means that you can write your logic in the form of a PostCSS plugin that will act as you want it. 
 
 Just remember that this isn't a preprocessor replacement, although it could replace it if you wanted it. 
