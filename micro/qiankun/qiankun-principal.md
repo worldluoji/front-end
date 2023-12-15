@@ -314,6 +314,72 @@ switch (element.tagName) {
 
 <br>
 
+## 更多的生命周期
+为了解决子应用也能独立运行的问题，qiankun 注入了一些变量，来告诉子应用说：喂，你现在是儿子，要用子应用的渲染方式。
+而当子应用获取不到这些注入的变量时，它就知道：我现在要独立运行了，用回原来的渲染方式就可以了，比如：
+```
+if (window. __POWERED_BY_QIANKUN__) {
+  console.log('微前端场景')
+  renderAsSubApp()
+} else {
+  console.log('单体场景')
+  previousRenderApp()
+}
+```
+怎么注入就是个问题了，不能简单的 window.__POWERED_BY_QIANKUN__ = true 就完事了，因为子应用会在编译时就要这个变量了。
+qiankun 在 single-spa 提供的生命周期 load, mount, unmount 前做了变量的注入，伪代码如下：
+```
+export default function getAddOn(global: Window): FrameworkLifeCycles<any> {
+  return {
+    async beforeLoad() {
+      // eslint-disable-next-line no-param-reassign
+      global.__POWERED_BY_QIANKUN__ = true;
+    },
+
+    async beforeMount() {
+      // eslint-disable-next-line no-param-reassign
+      global.__POWERED_BY_QIANKUN__ = true;
+    },
+
+    async beforeUnmount() {
+      // eslint-disable-next-line no-param-reassign
+      delete global.__POWERED_BY_QIANKUN__;
+    },
+  };
+}
+
+// loadApp
+const addOnLifeCycles = getAddOn(window)
+
+return {
+  load: [addOnLifeCycles.beforeLoad, subApp.load],
+  mount: [addOnLifeCycles.beforeMount, subApp.mount],
+  unmount: [addOnLifeCycles.beforeUnmount, subApp.unmount]
+}
+```
+新增的生命周期有：
+- beforeLoad
+- beforeMount
+- afterMount
+- beforeUnmount
+- afterUnmount
+
+<br>
+
+## 总结
+总结一下 qiankun 做了什么事情：
+- 实现 loadApp 函数，是最关键、重要的一步
+- 实现 CSS 样式隔离，主要有 Shadow DOM 和 Scoped CSS 两种方案
+- 实现沙箱，JS 隔离，主要对 window 对象、各种 listeners 和方法进行隔离
+- 提供很多生命周期，并在一些 beforeXXX 的钩子里注入 qiankun 提供的变量
+- 提供预加载，提前下载 HTML、CSS、JS，并有三种策略
+- 全部立马预加载
+- 全部在第一个加载后预加载
+- 一些立马预加载，一些在第一个加载后预加载
+- 提供全局状态管理，类似 Redux，Event Bus
+- 提供全局错误处理，主要监听 error 和 unhandledrejection 两个事件
+
+
 ## reference
 - https://zhuanlan.zhihu.com/p/379744976
 - https://github.com/kuitos/import-html-entry
