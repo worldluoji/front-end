@@ -34,9 +34,12 @@ The motivation for unload was to implement the hot-loading of entire registered 
 registerApplication会将应用程序代码映射到一个URL上：
 ```
 singleSpa.registerApplication(
-    "inspire",
-    () => import("http://localhost:3002/pages.min.js"),
-    ({ pathname }) => pathname === "/"
+    name: "inspire",
+    app: () => import("http://localhost:3002/pages.min.js"),
+    activeWhen:({ pathname }) => pathname === "/",
+    customProps: { // 自定义 props，从子应用的 bootstrap, mount, unmount 回调可以拿到
+        authToken: 'xc67f6as87f7s9d'
+    }
 );
 ```
 三个参数：
@@ -95,6 +98,8 @@ Utility： A utility is an in-browser module that (generally) has it's own repos
 Each single-spa microfrontend is an in-browser JavaScript module.
 An in-browser JavaScript module is when imports and exports are not compiled away by your build tool, but instead are resolved within the browser. This is different from build-time modules, which are supplied by your node_modules and compiled away before they touch the browser.
 
+<br>
+
 ## 总结
 ### single-spa 只做两件事
 - 提供生命周期概念，并负责调度子应用的生命周期
@@ -135,3 +140,4 @@ parcel 可大到一个 Application，也可以小到一个功能组件。与 App
 - https://single-spa.js.org/docs/microfrontends-concept
 - https://single-spa.js.org/docs/module-types
 - https://zhuanlan.zhihu.com/p/378346507
+- https://www.jianshu.com/p/23f37053c1d9
