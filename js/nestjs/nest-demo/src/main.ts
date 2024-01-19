@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-// import { NestExpressApplication } from '@nestjs/platform-express';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 import {
   FastifyAdapter,
@@ -10,13 +10,13 @@ import {
 async function bootstrap() {
   // The create() method returns an application object, which fulfills the INestApplication interface
   // use express
-  // const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   
   // use fastify
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter()
-  );
+  // const app = await NestFactory.create<NestFastifyApplication>(
+  //   AppModule,
+  //   new FastifyAdapter()
+  // );
   await app.listen(3000);
 }
 bootstrap();

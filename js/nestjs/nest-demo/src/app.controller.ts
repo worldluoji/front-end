@@ -1,12 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import { AppService } from './app.service';
+import { Request } from 'express';
 
-@Controller()
+@Controller('cats')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
+  @Get('hello')
   getHello(): string {
     return this.appService.getHello();
+  }
+
+  // The request object represents the HTTP request and has properties for the request query string, parameters, HTTP headers, and body，https://expressjs.com/en/api.html#req
+  @Get('findByType')
+  findByType(@Req() request: Request): string {
+    console.dir(request.path)
+    const type = request.query['type'] || 'orange cat'
+    return 'This action returns cats with type: ' + type;
   }
 }

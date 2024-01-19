@@ -20,5 +20,23 @@ main.ts	The entry file of the application which uses the core function NestFacto
 
 <br>
 
+## response
+Nest employs two different options for manipulating responses:
+### 1. standard
+Using this built-in method, when a request handler returns a JavaScript object or array, it will automatically be serialized to JSON. 
+When it returns a JavaScript primitive type (e.g., string, number, boolean), however, Nest will send just the value without attempting to serialize it. 
+This makes response handling simple: just return the value, and Nest takes care of the rest.
+
+Furthermore, the response's status code is always 200 by default, except for POST requests which use 201.
+We can easily change this behavior by adding the @HttpCode(...) decorator at a handler-level.
+
+### 2. libiary-specific
+We can use the library-specific (e.g., Express) response object, 
+which can be injected using the @Res() decorator in the method handler signature (e.g., findAll(@Res() response)). 
+With this approach, you have the ability to use the native response handling methods exposed by that object. 
+For example, with Express, you can construct responses using code like response.status(200).send().
+
+<br>
+
 ## reference
 - https://docs.nestjs.com/
