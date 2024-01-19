@@ -1,4 +1,4 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get, Req, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request } from 'express';
 
@@ -16,6 +16,12 @@ export class AppController {
   findByType(@Req() request: Request): string {
     console.dir(request.path)
     const type = request.query['type'] || 'orange cat'
+    return 'This action returns cats with type: ' + type;
+  }
+
+  // findByType2 is equal to findByType
+  @Get('findByType2')
+  findByType2(@Query('type') type: string): string {
     return 'This action returns cats with type: ' + type;
   }
 }
