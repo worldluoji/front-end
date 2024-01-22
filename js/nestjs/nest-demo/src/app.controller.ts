@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Query, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request } from 'express';
 
@@ -29,6 +29,7 @@ export class AppController {
   /* It's that simple. Nest provides decorators for all of the standard HTTP methods: @Get(), @Post(), @Put(), @Delete(), @Patch(), @Options(), and @Head(). 
   In addition, @All() defines an endpoint that handles all of them */
   @Post('/create')
+  @Header('Cache-Control', 'none')
   create(): string {
     return 'This action adds a new cat';
   }
@@ -47,4 +48,26 @@ export class AppController {
   findAll() {
     return 'This route uses a wildcard';
   }
+
+  // returned values will override any arguments passed to the @Redirect() decorato
+  @Get('docs')
+  @Redirect('https://docs.nestjs.com', 302)
+  getDocs(@Query('version') version: string) {
+    if (version && version === '5') {
+      return { url: 'https://docs.nestjs.com/v5/' };
+    }
+  }
+
+  // /cat/1 -> id = 1
+  @Get(':id')
+  findOne(@Param() params: any): string {
+    return `This action returns a #${params.id} cat`;
+  }
+
+  // equal to findOne
+  @Get(':id')
+  findOne2(@Param('id') id: string): string {
+    return `This action returns #${id} cat`;
+  }
+
 }
