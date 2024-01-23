@@ -6,6 +6,7 @@ import { CreateCatDto } from './dto/create-cat.dto';
 // reference: https://docs.nestjs.com/controllers
 @Controller('cats')
 export class AppController {
+  // This shorthand allows us to both declare and initialize the appService member immediately in the same location.
   constructor(private readonly appService: AppService) {}
 
   @Get('hello')
