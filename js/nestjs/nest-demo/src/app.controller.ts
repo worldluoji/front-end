@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body, Res, HttpStatus } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
 
 // reference: https://docs.nestjs.com/controllers
@@ -75,5 +75,15 @@ export class AppController {
   @Get('findAllAsync')
   async findAllAsync(): Promise<string[]> {
     return ['black cat', 'white cat', 'orange cat'];
+  }
+
+  /*
+  Though this approach works, and does in fact allow for more flexibility in some ways by providing full control of the response object (headers manipulation, library-specific features, and so on), 
+  it should be used with care. In general, the approach is much less clear and does have some disadvantages. 
+  The main disadvantage is that your code becomes platform-dependent (as underlying libraries may have different APIs on the response object), and harder to test (you'll have to mock the response object, etc.).
+  */
+  @Get('findAllWithRes')
+  findAllWithRes(@Res() res: Response) {
+    res.status(HttpStatus.OK).json([{name: 'black cat', age: 1}, {name: 'white cat', age: 2}]);
   }
 }
