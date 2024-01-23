@@ -58,16 +58,21 @@ export class AppController {
     }
   }
 
-  // /cat/1 -> id = 1
-  @Get(':id')
+  // /cat/findOne/1 -> id = 1
+  @Get('findOne/:id')
   findOne(@Param() params: any): string {
     return `This action returns a #${params.id} cat`;
   }
 
   // equal to findOne
-  @Get(':id')
+  @Get('findOne/:id')
   findOne2(@Param('id') id: string): string {
     return `This action returns #${id} cat`;
   }
 
+  // Every async function has to return a Promise. This means that you can return a deferred value that Nest will be able to resolve by itself
+  @Get('findAllAsync')
+  async findAllAsync(): Promise<string[]> {
+    return ['black cat', 'white cat', 'orange cat'];
+  }
 }
