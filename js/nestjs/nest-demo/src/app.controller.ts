@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param } from '@nestjs/common';
+import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request } from 'express';
+import { CreateCatDto } from './dto/create-cat.dto';
 
 // reference: https://docs.nestjs.com/controllers
 @Controller('cats')
@@ -30,8 +31,8 @@ export class AppController {
   In addition, @All() defines an endpoint that handles all of them */
   @Post('/create')
   @Header('Cache-Control', 'none')
-  create(): string {
-    return 'This action adds a new cat';
+  create(@Body() createCatDto: CreateCatDto): string {
+    return `This action adds a new cat ${createCatDto.name}`;
   }
 
   // The response status code is always 200 by default, except for POST requests which are 201. We can easily change this behavior by adding the @HttpCode(...) decorator at a handler level.
