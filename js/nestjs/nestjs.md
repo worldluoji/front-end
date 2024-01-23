@@ -43,6 +43,20 @@ If your class doesn't extend another class, you should always prefer using const
 constructor(private catsService: CatsService) {}
 ```
 
+### @Global()
+```
+@Global()
+@Module({
+  controllers: [CatsController],
+  providers: [CatsService],
+  exports: [CatsService],
+})
+export class CatsModule {}
+```
+The @Global() decorator makes the module global-scoped. 
+Global modules should be registered only once, generally by the root or core module. 
+In the above example, the CatsService provider will be ubiquitous, and modules that wish to inject the service will not need to import the CatsModule in their imports array.
+
 <br>
 
 ## reference
