@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 
 /**
 Each application has at least one module, a root module. 
@@ -29,4 +30,12 @@ In Nest, modules are singletons by default, and thus you can share the same inst
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  // set up the LoggerMiddleware for the /cats route handlers which method is GET
+  // The configure() method can be made asynchronous using async/await (e.g., you can await completion of an asynchronous operation inside the configure() method body).
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: 'cats/hello', method: RequestMethod.GET }, { path: 'cats/ab*cd', method: RequestMethod.ALL });
+  }
+}
