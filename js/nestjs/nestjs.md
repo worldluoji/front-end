@@ -77,5 +77,70 @@ Middleware functions can perform the following tasks:
 
 <br>
 
+## Exception process
+
+### 1. process exception in catch block
+```
+@Get()
+async findAll() {
+  try {
+    await this.service.findAll()
+  } catch (error) { 
+    throw new HttpException({
+      status: HttpStatus.FORBIDDEN,
+      error: 'This is a custom message',
+    }, HttpStatus.FORBIDDEN, {
+      cause: error
+    });
+  }
+}
+```
+Customer Exception:
+```
+export class ForbiddenException extends HttpException {
+  constructor() {
+    super('Forbidden', HttpStatus.FORBIDDEN);
+  }
+}
+```
+Built-in HTTP exceptions:
+```
+BadRequestException
+UnauthorizedException
+NotFoundException
+ForbiddenException
+NotAcceptableException
+RequestTimeoutException
+ConflictException
+GoneException
+HttpVersionNotSupportedException
+PayloadTooLargeException
+UnsupportedMediaTypeException
+UnprocessableEntityException
+InternalServerErrorException
+NotImplementedException
+ImATeapotException
+MethodNotAllowedException
+BadGatewayException
+ServiceUnavailableException
+GatewayTimeoutException
+PreconditionFailedException
+```
+throw new BadRequestException('Something bad happened', { cause: new Error(), description: 'Some error description' })
+
+
+### 2. Exception filter
+Nest comes with a built-in exceptions layer which is responsible <strong>for processing all unhandled exceptions</strong> across an application. 
+When an exception is not handled by your application code, it is caught by this layer, which then automatically sends an appropriate user-friendly response.
+
+While the base (built-in) exception filter can automatically handle many cases for you, you may want full control over the exceptions layer. 
+For example, you may want to <strong>add logging or use a different JSON schema</strong> based on some dynamic factors. 
+
+Exception filters are designed for exactly this purpose. They let you control the exact flow of control and the content of the response sent back to the client.
+
+-> [demo](./nest-demo/src/exception/http-exception.filter.ts)
+
+<br>
+
 ## reference
 - https://docs.nestjs.com/

@@ -12,6 +12,9 @@ async function bootstrap() {
   // use express
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   
+  // use global filter
+  // app.useGlobalFilters(new HttpExceptionFilter());
+
   // use fastify
   // const app = await NestFactory.create<NestFastifyApplication>(
   //   AppModule,

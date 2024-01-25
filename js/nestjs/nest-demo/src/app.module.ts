@@ -28,7 +28,13 @@ In Nest, modules are singletons by default, and thus you can share the same inst
   imports: [],
   exports: [],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
+  ],
 })
 export class AppModule {
   // set up the LoggerMiddleware for the /cats route handlers which method is GET

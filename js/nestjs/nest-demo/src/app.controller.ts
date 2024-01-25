@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body, Res, HttpStatus, HttpException, UseFilters } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request, Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
+import { HttpExceptionFilter } from './exception/http-exception.filter';
 
 // reference: https://docs.nestjs.com/controllers
 @Controller('cats')
@@ -86,5 +87,23 @@ export class AppController {
   @Get('findAllWithRes')
   findAllWithRes(@Res() res: Response) {
     res.status(HttpStatus.OK).json([{name: 'black cat', age: 1}, {name: 'white cat', age: 2}]);
+  }
+
+
+  /*
+  * The HttpException constructor takes two required arguments which determine the response:
+      The response argument defines the JSON response body. It can be a string or an object as described below.
+      The status argument defines the HTTP status code.
+    
+    By default, the JSON response body contains two properties:
+      {
+        "statusCode": 403,
+        "message": "Forbidden"
+      }
+  */
+  @Get('mockException')
+  @UseFilters(HttpExceptionFilter)
+  async mockException() {
+    throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
   }
 }
