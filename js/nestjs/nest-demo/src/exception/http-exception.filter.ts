@@ -5,6 +5,8 @@ import { Request, Response } from 'express';
 * All exception filters should implement the generic ExceptionFilter<T> interface. 
 * This requires you to provide the catch(exception: T, host: ArgumentsHost) method with its indicated signature. 
 * T indicates the type of the exception.
+* 
+* If you want to catch every unhandled exception (regardless of the exception type), leave the @Catch() decorator's parameter list empty, e.g., @Catch().
 */
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
