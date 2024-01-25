@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body, Res, HttpStatus, HttpException, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body, Res, HttpStatus, HttpException, UseFilters, ParseIntPipe } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request, Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -105,5 +105,11 @@ export class AppController {
   @UseFilters(HttpExceptionFilter)
   async mockException() {
     throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+  }
+
+  @Get('findById/:id')
+  async findById(@Param('id', ParseIntPipe) id: number) {
+    // can change status code: @Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }))
+    return 'find cat ' + id
   }
 }

@@ -142,5 +142,31 @@ Exception filters are designed for exactly this purpose. They let you control th
 
 <br>
 
+## pipes
+A pipe is a class annotated with the @Injectable() decorator, which implements the PipeTransform interface.
+
+Pipes have two typical use cases:
+- transformation: transform input data to the desired form (e.g., from string to integer)
+- validation: evaluate input data and if valid, simply pass it through unchanged; otherwise, throw an exception
+
+In both cases, pipes operate on the arguments being processed by a controller route handler. 
+
+### 1. built-in pipes
+Nest comes with nine pipes available out-of-the-box:
+```
+ValidationPipe
+ParseIntPipe
+ParseFloatPipe
+ParseBoolPipe
+ParseArrayPipe
+ParseUUIDPipe
+ParseEnumPipe
+DefaultValuePipe
+ParseFilePipe
+```
+[demo](./nest-demo/src/app.controller.ts) -> findById
+
+<br>
+
 ## reference
 - https://docs.nestjs.com/
