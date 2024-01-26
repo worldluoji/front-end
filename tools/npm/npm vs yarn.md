@@ -71,3 +71,17 @@ npx的作用：
 - 3.若不存在，意味着尚未安装该软件包，npx将安装其最新版本，然后执行它；
 
 如果运行 npx some-package --no-install，意味着告诉npx ，它应该仅执行。some-package，如果之前未安装，则不安装。
+
+
+## npm i 报错 npm ERR! code CERT_HAS_EXPIRED npm ERR! errno CERT_HAS_EXPIRED
+近期有小伙伴遇到这个报错，原因是npm淘宝的镜像https过期了，取消掉严格https验证就行，方法如下:
+```
+1.npm ERR! code CERT_HAS_EXPIRED
+2.npm ERR! errno CERT_HAS_EXPIRED
+```
+解决办法:
+```
+npm cache clean --force
+npm config set strict-ssl false
+npm install
+```
