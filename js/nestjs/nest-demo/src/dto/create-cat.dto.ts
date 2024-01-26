@@ -1,3 +1,4 @@
+import { IsString, IsInt } from 'class-validator';
 
 /**
 A DTO is an object that defines how the data will be sent over the network. 
@@ -9,7 +10,12 @@ On the other hand, since TypeScript interfaces are removed during the transpilat
 This is important because features such as Pipes enable additional possibilities when they have access to the metatype of the variable at runtime.
 */
 export class CreateCatDto {
+  @IsString()
   name: string;
+
+  @IsInt()
   age: number;
+  
+  @IsString()
   breed: string;
 }
