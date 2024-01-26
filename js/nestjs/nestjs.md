@@ -166,6 +166,32 @@ ParseFilePipe
 ```
 [demo](./nest-demo/src/app.controller.ts) -> findById
 
+
+### 2. custom pipes
+you can build your own custom pipes.
+```
+import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
+
+@Injectable()
+export class ValidationPipe implements PipeTransform {
+  transform(value: any, metadata: ArgumentMetadata) {
+    return value;
+  }
+}
+```
+`PipeTransform<T, R>` is a generic interface that must be implemented by any pipe. 
+The generic interface uses T to indicate the type of the input value, and R to indicate the return type of the transform() method.
+
+The value parameter is the currently processed method argument (before it is received by the route handling method), 
+and metadata is the currently processed method argument's metadata:
+```
+export interface ArgumentMetadata {
+  type: 'body' | 'query' | 'param' | 'custom';
+  metatype?: Type<unknown>;
+  data?: string;
+}
+```
+
 <br>
 
 ## reference
