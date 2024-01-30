@@ -34,6 +34,10 @@ In Nest, modules are singletons by default, and thus you can share the same inst
     //   provide: APP_FILTER,
     //   useClass: HttpExceptionFilter,
     // },
+    // {
+    //   provide: APP_PIPE,
+    //   useClass: ValidationPipe,
+    // },
   ],
 })
 export class AppModule {

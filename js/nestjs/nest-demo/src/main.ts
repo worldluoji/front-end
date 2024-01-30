@@ -15,6 +15,9 @@ async function bootstrap() {
   // use global filter
   // app.useGlobalFilters(new HttpExceptionFilter());
 
+  // use global pipe
+  // app.useGlobalPipes(new ValidationPipe());
+
   // use fastify
   // const app = await NestFactory.create<NestFastifyApplication>(
   //   AppModule,

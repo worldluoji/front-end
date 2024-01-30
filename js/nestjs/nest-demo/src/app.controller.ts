@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body, Res, HttpStatus, HttpException, UseFilters, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body, Res, HttpStatus, HttpException, UseFilters, ParseIntPipe, UsePipes } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request, Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { HttpExceptionFilter } from './exception/http-exception.filter';
+import { ZodValidationPipe } from './pipes/zod-validation.pip';
+import { createCatSchema } from './pipes/zod-schemas/create-cat-schema';
+import { ClassValidationPipe } from './pipes/class-validation.pip';
 
 // reference: https://docs.nestjs.com/controllers
 @Controller('cats')
@@ -33,7 +36,15 @@ export class AppController {
   In addition, @All() defines an endpoint that handles all of them */
   @Post('/create')
   @Header('Cache-Control', 'none')
+  @UsePipes(new ZodValidationPipe(createCatSchema))
   create(@Body() createCatDto: CreateCatDto): string {
+    return `This action adds a new cat ${createCatDto.name}`;
+  }
+
+  @Post('/create3')
+  @Header('Cache-Control', 'none')
+  @UsePipes(new ClassValidationPipe())
+  create3(@Body() createCatDto: CreateCatDto): string {
     return `This action adds a new cat ${createCatDto.name}`;
   }
 
