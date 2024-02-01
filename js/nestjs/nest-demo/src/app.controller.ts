@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body, Res, HttpStatus, HttpException, UseFilters, ParseIntPipe, UsePipes, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, Query, HttpCode, Header, Redirect, Param, Body, Res, HttpStatus, HttpException, UseFilters, ParseIntPipe, UsePipes, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Request, Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -9,10 +9,12 @@ import { ClassValidationPipe } from './pipes/class-validation.pip';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorator/roles.decorator';
+import { LoggingInterceptor } from './interceptor/logging.interceptor';
 
 // reference: https://docs.nestjs.com/controllers
 @Controller('cats')
 @UseGuards(AuthGuard, RolesGuard)
+@UseInterceptors(LoggingInterceptor)
 export class AppController {
   // This shorthand allows us to both declare and initialize the appService member immediately in the same location.
   constructor(private readonly appService: AppService) {}

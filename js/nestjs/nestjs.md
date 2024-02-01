@@ -194,7 +194,7 @@ export interface ArgumentMetadata {
 
 <br>
 
-## guards
+## Guards
 Guards have a single responsibility. They determine whether a given request will be handled by the route handler or not, 
 depending on certain conditions (like permissions, roles, ACLs, etc.) present at run-time. 
 This is often referred to as authorization.
@@ -205,6 +205,20 @@ But middleware, by its nature, is dumb. It doesn't know <strong>which handler wi
 On the other hand, Guards have access to the <strong>ExecutionContext</strong> instance, and thus know exactly what's going to be executed next.
 
 ->[authdemo](./nest-demo/src/guards/auth.guard.ts)
+
+<br>
+
+
+## Interceptor
+Interceptors have a set of useful capabilities which are inspired by the Aspect Oriented Programming (AOP) technique. 
+They make it possible to:
+- bind extra logic before / after method execution
+- transform the result returned from a function
+- transform the exception thrown from a function
+- extend the basic function behavior
+- completely override a function depending on specific conditions (e.g., for caching purposes)
+
+[demo](./nest-demo/src/interceptor/)
 
 <br>
 
