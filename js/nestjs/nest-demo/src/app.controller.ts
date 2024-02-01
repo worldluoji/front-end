@@ -7,10 +7,12 @@ import { ZodValidationPipe } from './pipes/zod-validation.pip';
 import { createCatSchema } from './pipes/zod-schemas/create-cat-schema';
 import { ClassValidationPipe } from './pipes/class-validation.pip';
 import { AuthGuard } from './guards/auth.guard';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from './decorator/roles.decorator';
 
 // reference: https://docs.nestjs.com/controllers
 @Controller('cats')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class AppController {
   // This shorthand allows us to both declare and initialize the appService member immediately in the same location.
   constructor(private readonly appService: AppService) {}
@@ -46,6 +48,7 @@ export class AppController {
   @Post('/create3')
   @Header('Cache-Control', 'none')
   @UsePipes(new ClassValidationPipe())
+  @Roles(['admin'])
   create3(@Body() createCatDto: CreateCatDto): string {
     return `This action adds a new cat ${createCatDto.name}`;
   }
