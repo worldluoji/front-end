@@ -22,6 +22,16 @@ or
 
 pnpm add class-validator class-transformer
 ```
+[demo] -> (./src/pipes/class-validation.pip.ts)
+
+<br>
+
+## 3. built-in ValidationPipe
+
+As a reminder, you don't have to build a generic validation pipe on your own since the ValidationPipe is provided by Nest out-of-the-box. 
+The built-in ValidationPipe offers more options, which has been kept basic for the sake of illustrating the mechanics of a custom-built pipe.
+
+https://docs.nestjs.com/techniques/validation
 
 <br>
 
