@@ -194,5 +194,20 @@ export interface ArgumentMetadata {
 
 <br>
 
+## guards
+Guards have a single responsibility. They determine whether a given request will be handled by the route handler or not, 
+depending on certain conditions (like permissions, roles, ACLs, etc.) present at run-time. 
+This is often referred to as authorization.
+
+Authorization (and its cousin, authentication, with which it usually collaborates) has typically been handled by middleware in traditional Express applications.
+
+But middleware, by its nature, is dumb. It doesn't know <strong>which handler will be executed</strong> after calling the next() function. 
+On the other hand, Guards have access to the <strong>ExecutionContext</strong> instance, and thus know exactly what's going to be executed next.
+
+->[authdemo](./nest-demo/src/guards/auth.guard.ts)
+
+<br>
+
 ## reference
 - https://docs.nestjs.com/
+- https://docs.nestjs.com/fundamentals/execution-context
