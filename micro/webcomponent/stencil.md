@@ -13,5 +13,10 @@ Stencil was originally created by the Ionic Framework team in order to build fas
 more capable components that <strong>worked across every major framework</strong>.
 
 
+## create stencil project
+```
+pnpm create stencil
+```
+
 ## reference
 https://stenciljs.com/docs/getting-started
