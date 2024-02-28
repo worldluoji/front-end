@@ -1,5 +1,6 @@
 # AST
-Babel uses an AST modified from ESTree
+Babel uses an AST modified from ESTree; 
+[estree](https://github.com/estree/estree/blob/master/es5.md) 就是 es 语法对应的标准 AST.
 ```
 function square(n) {
   return n * n;
