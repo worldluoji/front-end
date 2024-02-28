@@ -23,4 +23,5 @@ this有四种绑定方式：
 ## top 3:
 The apply() method calls the specified function with a given this value, and arguments provided as an array.
 
-call() 方法的语法和作用与 apply() 方法类似，只有一个区别，就是 call() 方法接受的是一个参数列表，而 apply() 方法接受的是一个包含多个参数的数组
+call() 方法的语法和作用与 apply() 方法类似，第一个参数都是用来改变上下文，
+只有一个区别，就是 call() 方法接受的是一个参数列表，而 apply() 方法接受的是一个包含多个参数的数组
