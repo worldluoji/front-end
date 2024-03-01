@@ -9,31 +9,6 @@ Babel 是 JavaScript 编译器，更确切地说是源码到源码的编译器�
 意思是说你为 Babel 提供一些 JavaScript 代码，Babel 更改这些代码，然后返回给你新生成的代码。
 这个处理过程中的每一步都涉及到创建或是操作抽象语法树，亦称 AST。
 
-<img src="./babel workflow.awebp" />
-
-## 1. parse阶段
-parse 这个阶段将原始代码字符串转为AST 树，parse 广义上来说包括了我们前面编译流程中讲到的 词法分析、语法分析这两个阶段。
-parse 过程中会有一些 babel 插件，让babel 可以解析出更多的语法，比如 jsx。主要通过 @babel/parser这个包进行转换。
-```
-parse(sourceCode) => AST
-```
-
-## 2. transform
-transform 阶段主要是对上一步 parse 生成的 AST 进行深度优先遍历，从而对于匹配节点进行增删改查来修改树形结构。
-在 babel 中会用所配置的 plugin 或 presets 对 AST 进行修改后，得到新的 AST。
-```
-transform(AST, BabelPlugins) => newAST 
-```
-
-## 3. generate
-AST 转换完之后就要输出目标代码字符串，这个阶段是个逆向操作，用新的 AST 来生成我们所需要的代码，
-在生成阶段本质上也是遍历抽象语法树，根据抽象语法树上每个节点的类型和属性递归调用从而生成对应的字符串代码，
-在 babel 中通过 @babel/generator 包的 api 来实现，
-```
-generate(newAST) => newSourceCode 
-```
-
-
 ## babel demo
 ```
 npm init -y
@@ -130,7 +105,7 @@ npm i @babel/runtime-corejs3 -S
 前者是编译时工具，用来转换语法和添加 Polyfill，
 后者是运行时基础库，封装了core-js、regenerator-runtime和各种语法转换用到的工具函数。
 
-<img src="useBuiltIns和transfrom-runtime方案对比.webp" />
+<img src="./images/useBuiltIns和transfrom-runtime方案对比.webp" />
 
 transform-runtime 一方面能够让我们在代码中使用非全局版本的 Polyfill，这样就避免全局空间的污染，
 这也得益于 core-js 的 pure 版本产物特性；
