@@ -121,6 +121,18 @@ setTodoList(prevState => {
 <br>
 
 ## useEffect：执行副作用
+useEffect is a React Hook that lets you [synchronize a component with an external system](https://react.dev/learn/synchronizing-with-effects).
+
+Effects let you run some code after rendering so that you can synchronize your component with some system outside of React.
+
+Before getting to Effects, you need to be familiar with two types of logic inside React components:
+- Rendering code (introduced in Describing the UI) lives at the top level of your component. This is where you take the props and state, transform them, and return the JSX you want to see on the screen. 
+Rendering code must be pure. Like a math formula, it should only calculate the result, but not do anything else.
+- Event handlers (introduced in Adding Interactivity) are nested functions inside your components that do things rather than just calculate them. 
+An event handler might update an input field, submit an HTTP POST request to buy a product, or navigate the user to another screen. 
+Event handlers contain “side effects” (they change the program’s state) caused by a specific user action (for example, a button click or typing).
+
+
 什么是副作用呢？
 第一类，函数中最常见的副作用，就是全局变量（global variable），比如在函数内改变了全局变量的值。
 
