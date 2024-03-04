@@ -143,7 +143,7 @@ requestIdleCallback(workLoop);
 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestIdleCallback">requestIdleCallback()</a>方法传入一个函数，
 这个函数将在浏览器空闲时期被调用。这使开发者能够在主事件循环上执行后台和低优先级工作，而不会影响延迟关键事件，如动画和输入响应。
 
-但由于兼容性不好，加上该回调函数被调用的频率太低，react实际使用的是一个polyfill(自己实现的api)，而不是requestIdleCallback。
+但由于兼容性不好，加上该回调函数被调用的频率太低，react实际使用的是一个[polyfill(自己实现的api)](https://juejin.cn/post/7167335700424196127)，而不是requestIdleCallback。
 
 <br>
 
