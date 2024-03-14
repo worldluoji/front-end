@@ -55,11 +55,11 @@ it's an anti-pattern in routing for many reasons, one of them being reloading th
 1. Putting the data in a store like pinia: this is relevant if the data is used across multiple pages
 即使用pinia来传递参数
 
-1. Move the data to an actual param by defining it on the route's path or pass it as query params: 
+2. Move the data to an actual param by defining it on the route's path or pass it as query params: 
 this is relevant if you have small pieces of data that can fit in the URL and should be preserved when reloading the page.
 通过路径参数或者query来传递参数
 
-1. Pass the data as state to save it to the History API state:
+3. Pass the data as state to save it to the History API state:
 History模式可以使用History state API传递参数
 ```
 <router-link :to="{ name: 'somewhere', state: { myData } }">...</router-link>
@@ -69,7 +69,7 @@ History模式可以使用History state API传递参数
 ```
 Note state is subject to History state limitations.
 
-1. Pass it as a new property to to.meta during navigation guards:
+4. Pass it as a new property to to.meta during navigation guards:
 传递
 ```
 router.beforeEach(async to => {

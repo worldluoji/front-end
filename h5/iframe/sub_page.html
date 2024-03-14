@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>subpage</title>
+</head>
+<body>
+  <div id="targetIframeContainer" class="sub">
+  </div>
+</body>
+
+<script>
+  // 实际应用场景可能需要更复杂的逻辑，比如拖放的是可视化组件而非纯文本，或者需要处理拖放过程中的视觉反馈等
+
+  // 允许iframe接受被拖拽元素
+  targetIframeContainer.addEventListener('dragover', function(e) {
+    e.preventDefault(); // 阻止默认行为，即允许放置
+    e.dataTransfer.dropEffect = 'move'; // 显示移动效果
+  });
+
+  // 处理拖放到iframe上的操作
+  targetIframeContainer.addEventListener('drop', function(e) {
+    e.preventDefault(); // 阻止默认的浏览器行为
+
+    const data = e.dataTransfer.getData('text/plain'); // 获取拖拽的数据
+
+    // 在这里根据你的需求处理拖放逻辑，例如向iframe中插入内容或触发某个动作
+    console.log('Dropped data:', data);
+
+    // 假设你要将数据作为文本插入到iframe中：
+    let newNode = document.createElement('p');
+    newNode.textContent = data;
+    targetIframeContainer.appendChild(newNode);
+  });
+
+  // drag进入该区域时触发
+  targetIframeContainer.addEventListener('dragenter', function(e) {
+    console.log('enter', e);
+  });
+
+  // drag离开该区域时触发
+  targetIframeContainer.addEventListener('dragleave', function(e) {
+    console.log('leave', e);
+  });
+</script>
+
+<style>
+  .sub {
+    width: 600px;
+    height: 400px;
+    background-color: aqua;
+  }
+
+  * {
+    margin: 0;
+    border: 0;
+  }
+</style>
+</html>

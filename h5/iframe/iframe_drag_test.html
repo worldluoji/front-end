@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iframe drag test</title>
+</head>
+<body>
+  <div class="container">
+    <div id="draggable-item" draggable="true">这是一个可拖动的组件</div>
+    <iframe class="targetIframe" src="./sub_page.html" width="600" height="400"></iframe>
+  </div>
+</body>
+
+<script>
+let draggableItem = document.getElementById('draggable-item');
+
+// 设置拖动开始时的数据
+draggableItem.addEventListener('dragstart', function(e) {
+  console.log('drag start', e);
+  e.dataTransfer.setData('text/plain', '一个组件'); // 这里可以是你想要传输的数据
+});
+
+// dragend 事件在拖放操作结束时触发（通过释放鼠标按钮或单击 escape 键）。
+draggableItem.addEventListener('dragend', function(e) {
+  console.log('drag end', e);
+});
+</script>
+
+<style>
+  .container {
+    display: flex;
+  }
+
+  #draggable-item {
+    width: 80px;
+    height: 80px;
+    background-color: red;
+    color: white;
+  }
+
+  .targetIframe {
+    margin-left: 20px;
+  }
+</style>
+</html>
