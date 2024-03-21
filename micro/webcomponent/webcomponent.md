@@ -64,11 +64,6 @@ Shadow DOM 内部的样式是不会影响到全局 CSSOM 的。另外，使用 D
 Vue3提供了一套API支持Webcomponents, 具体可参考:
 https://staging-cn.vuejs.org/guide/extras/web-components.html
 
-## 基于WebComponents的组件库
-[shoelace](https://shoelace.style/)
-
-因WebComponents浏览器原生支持，该组件库不限框架。
-
 ## 其它参考
 - https://developer.mozilla.org/zh-CN/docs/Web/Web_Components
 - https://github.com/mdn/web-components-examples/tree/main/life-cycle-callbacks
