@@ -123,7 +123,7 @@ lowcodeSandBox?.loadDataSource('getUserList', ...其他参数): Promise<any>
 在有了明确的定义结构后，我们就可以写出一个简单的Schema的数据结构:
 ```
 const schema = JSON.stringify({
-  version: 1.0.0,
+  version: '1.0.0',
   librarys: [],
   i18n: {
     zh: {},
