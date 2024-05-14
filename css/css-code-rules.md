@@ -3,7 +3,7 @@
 使用两个空格缩进，字符串使用单引号，要换行
 
 good example
-```
+```css
 html {
   font-family: 'open sans', arial, sans-serif;
 }
@@ -27,7 +27,7 @@ h3 {
 
 ## 2. 越简洁越好
 bad example:
-```
+```css
 /* Not recommended: meaningless */
 #yee-1901 {
 padding-bottom: 2em;
@@ -42,7 +42,7 @@ color: #ffffff
 ```
 
 good example:
-```
+```css
 /* Recommended: specific */
 #gallery {
   padding: 0 1em 2em;
@@ -73,7 +73,7 @@ margin的复合写法同padding
 通用字体比如：Serif, Sans-serif, cursive, fantasy, Monospace
 
 bad example
-```
+```css
 /* Noncompliant; there is no generic font family in the list */
 a {
   font-family: Helvetica, Arial, Verdana, Tahoma; 
@@ -92,7 +92,7 @@ a {
 !important
 
 bad example
-```
+```css
 @keyframes kf {
   from { margin-top: 50px; }
   50%  { margin-top: 150px !important; } /* Noncompliant; ignored */
@@ -101,7 +101,7 @@ bad example
 ```
 
 good example
-```
+```css
 @keyframes kf {
   from { margin-top: 50px; }
   50%  { margin-top: 150px; }
@@ -121,7 +121,7 @@ good example
 在一定意义上，这会降低选择器性能。
 
 不推荐的写法：
-```
+```css
 div#search {
   float: right;
 }
@@ -131,7 +131,7 @@ ul.nav {
 }
 ```
 推荐的写法：
-```
+```css
 #search {
   float: right;
 }
@@ -144,7 +144,7 @@ ul.nav {
 ## 7. 可以使用 * 通用选择器。
 `*` 通用选择器效率低是一个误区，如有必要可以使用。
 例如：
-```
+```css
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -154,7 +154,7 @@ ul.nav {
 
 但不要在选择器末尾使用 * 通用选择器。
 CSS 选择器匹配规则是从右往左，例如：
-```
+```css
 .mod .foo * {
   border-radius: 6px;
 }
@@ -164,7 +164,7 @@ CSS 选择器匹配规则是从右往左，例如：
 由于 CSS 后面的属性会覆盖前面的，无前缀属性写在最后可以保证浏览器一旦支持了，则用标准的无前缀属性来渲染。
 
 不推荐的写法：
-```
+```css
 .foo {
   -webkit-border-radius: 6px;
   border-radius: 6px;
@@ -172,7 +172,7 @@ CSS 选择器匹配规则是从右往左，例如：
 }
 ```
 推荐的写法：
-```
+```css
 .foo {
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;

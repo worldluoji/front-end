@@ -33,19 +33,18 @@ css样式来源：
 demo -> priority.html
 
 常用selector:
-```
+```css
 id selector : #xxx
 class selector : .xxx
 [type='radio'] {
   margin: 20px 0px 20px 0px;
 }
-
 ```
 
 <br>
 
 ## CSS的组成
-```
+```css
 body {
   color: black;
   font-family: Helvetica;
@@ -82,7 +81,7 @@ When one font isn't available, you can tell the browser to "degrade" to another 
 
 For example, if you wanted an element to use the Helvetica font, 
 but degrade to the sans-serif font when Helvetica isn't available, you will specify it as follows:
-```
+```css
 p {
   font-family: Helvetica, sans-serif;
 }
@@ -90,7 +89,7 @@ p {
 Generic font family names are not case-sensitive. Also, they do not need quotes because they are CSS keywords.
 
 再看一个例子：
-```
+```css
 h1 {
   font-family: -apple-system,system-ui,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Arial;
 }
@@ -110,23 +109,31 @@ h1 {
 
 ## padding、margin
 An element's padding controls the amount of space between the element's content and its border.
-```
-padding: 40px 20px 20px 40px; 
+```css
+p { 
+  padding: 40px 20px 20px 40px;
+}
 ```
 顺时针，第一个是top
 
-```
-padding: 40px 20px;
+```css
+p { 
+  padding: 40px 20px; 
+}
 ```
 上下40px, 左右20px
 
-```
-padding: 40px 30px 20px;
+```css
+p {
+  padding: 40px 30px 20px;
+}
 ```
 top 40px, bottom 20px, 左右30px
 
 An element's margin controls the amount of space between an element's border and surrounding elements.
 用法和padding一致。
+
+<br>
 
 ### margin合并（塌陷）
 margin合并是说：block的顶部外边距和相邻block底部外边距，被组合(折叠)为单个外边距，其大小是组合到其中的最大外边距，这种行为称为外边距合并。
@@ -155,7 +162,7 @@ This is notably the case on high-resolution (“retina”) displays.
 em and rem, are not absolute, but the value of relative units changes based on external factors.
 
 1. em根据使用它的元素的font-size大小决定(1 em means the font size of the current element;):
-```
+```css
 .padded {
   font-size: 16px;
   padding: 1em;
@@ -165,7 +172,7 @@ em and rem, are not absolute, but the value of relative units changes based on e
 如果.padded没有设置font-size, 就会继承父元素的font-size，即此时1em等于父元素的font-size
 
 还有一种情况
-```
+```css
 body {
   font-size: 16px;
 }
@@ -213,7 +220,7 @@ unless there are particular places where you want to make an exception.
 
 -> ./basic/line-height.html
 
-```
+```css
 div {
   line-height: 100px;
   font-size: 20px;
@@ -278,7 +285,7 @@ background: var(--penguin-skin, black);
 ```
 
 example: Improve Compatibility with Browser Fallbacks
-```
+```css
 <style>
   :root {
     --red-color: red;
@@ -299,13 +306,13 @@ example: Improve Compatibility with Browser Fallbacks
 ## Inherit CSS Variables
 To make use of inheritance, CSS variables are often defined in the :root element.
 example:
-```
+```css
 :root {
   --penguin-skin: black;
 }
 ```
 然后可以在css中通过var直接使用,其第二个参数是回退，表示--penguin-skin不存在时，回退为gray:
-```
+```css
 .penguin-top {
   top: 10%;
   left: 25%;
@@ -320,7 +327,7 @@ example:
 <br>
 
 ## input框文本居右
-```
+```css
 <input type="text" value="xxx"  size="100" style="text-align:right" />
 ```
 
@@ -365,4 +372,4 @@ and if the content doesn’t fit, the browser will allow the element to grow nat
 - max-height allows an element to size naturally, up to a point.
 
 ## vertical-align
-A vertical-align declaration only affects inline and table-cell elements.
+A vertical-align declaration only affects <strong>inline and table-cell</strong> elements.
