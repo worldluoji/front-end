@@ -34,7 +34,8 @@ mv nginx nginxold
 ```
 第二步:将nginx1.16.1安装目录编译后的objs目录下的nginx文件，拷贝到原来/usr/local/nginx/sbin目录下
 ```
-cd ~/nginx/core/nginx-1.16.1/objscp nginx /usr/local/nginx/sbin
+cd ~/nginx/core/nginx-1.16.1/objs
+cp nginx /usr/local/nginx/sbin
 ```
 第三步:发送信号USR2给nginx的1.14.2版本对应的master进程
 ```
@@ -56,12 +57,14 @@ kill -QUIT PID
 ## 方案二:使用nginx安装目录的make命令完成升级
 第一步:将1.14.2版本的sbin目录下的nginx进行备份
 ```
-cd /usr/local/nginx/sbinmv nginx nginxold
+cd /usr/local/nginx/sbin
+mv nginx nginxold
 ```
 
 第二步: 将nginx1.16.1安装目录编译后的objs目录下的nginx文件，拷贝到原来/usr/local/nginx/sbin目录下
 ```
-cd ~/nginx/core/nginx-1.16.1/objscp nginx /usr/local/nginx/sbin
+cd ~/nginx/core/nginx-1.16.1/objs
+cp nginx /usr/local/nginx/sbin
 ```
 第三步:进入到安装目录，执行
 ```
