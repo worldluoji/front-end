@@ -60,3 +60,21 @@ log_format combined '$remote_addr - $remote_user [$time_local] "$request" '
 ```
 
 你可以根据需要调整这些变量和格式来满足日志记录的具体要求。
+
+<br>
+
+4. `$proxy_add_x_forwarded_for` 和 `$http_x_forwarded_for`
+
+在 Nginx 中，`$proxy_add_x_forwarded_for` 和 `$http_x_forwarded_for` 这两个变量都与HTTP头部 `X-Forwarded-For` 相关，用于追踪客户端通过HTTP代理或负载均衡器访问Web服务器时的原始IP地址。但它们之间存在一些关键的区别：
+
+(1). **$http_x_forwarded_for**:
+   - 这个变量直接从客户端发送的HTTP请求头中获取 `X-Forwarded-For` 的值。如果客户端没有通过代理直接访问Nginx，这个值可能不存在或为空。
+   - 当客户端已经通过了一个或多个代理服务器时，每个代理服务器通常会在转发请求时将自己的IP地址追加到 `X-Forwarded-For` 头部，形成一个IP地址列表。因此，这个变量的值可能是一个由逗号分隔的IP地址列表。
+   - 由于这个值完全来源于客户端的请求头，理论上它可以被篡改，因此在安全性敏感的应用场景中需要谨慎使用。
+
+(2). **$proxy_add_x_forwarded_for**:
+   - 这个变量是Nginx自己管理的，它会自动将当前代理（即Nginx自身）接收到请求的客户端IP地址追加到 `X-Forwarded-For` 头部的已有值之后，如果这个头部存在的话。如果不存在，Nginx会新建这个头部字段。
+   - 它的设计目的是为了在多层代理的场景下，能够累积记录下所有参与转发的代理服务器的IP以及原始客户端的IP地址，从而提供更完整的请求路径信息。
+   - 相比 `$http_x_forwarded_for`，`$proxy_add_x_forwarded_for` 更为安全，因为它是在Nginx内部处理的，不太容易受到外部恶意修改的影响。
+
+总结来说，`$http_x_forwarded_for` 是直接反映请求中携带的 `X-Forwarded-For` 头部信息，可能存在被篡改的风险；而 `$proxy_add_x_forwarded_for` 是Nginx动态生成的，用于在转发请求时可靠地添加或更新客户端的IP信息到该头部，提高了在复杂网络环境中的跟踪准确性与安全性。在配置反向代理或负载均衡时，通常推荐使用 `$proxy_add_x_forwarded_for` 来正确构建或更新 `X-Forwarded-For` 头部。
