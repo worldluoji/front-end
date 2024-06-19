@@ -35,7 +35,7 @@ location /api/{
 在Nginx日志配置中，可以使用多种内置变量来记录请求和响应的详细信息。以下是一些常用的Nginx日志变量及其简要说明：
 
 1. `$remote_addr` - 客户端的IP地址。
-2. `$remote_user` - 已经经过基本认证的用户名称。
+2. `$remote_user` - 已经经过基本认证的用户名称(nginx可配置basic认证)。
 3. `$time_local` - 接收到请求时的本地时间，格式为`[19/Feb/2018:13:37:01 +0800]`。
 4. `$request` - 客户端发出的请求行，包括方法、URL和协议版本，如`GET /index.html HTTP/1.1`。
 5. `$status` - 响应状态码，如`200`表示成功。
