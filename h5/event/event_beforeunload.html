@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beforeunload test</title>
+</head>
+<body>
+    <a href="./drag.html">Click Me</a>
+    <br>
+    <button onclick="to()">test</button>
+    <p>a标签跳转、按钮跳转、刷新、关闭页面都会触发该事件</p>
+    <script>
+        window.addEventListener("beforeunload", (event) => {
+            // Cancel the event as stated by the standard.
+            event.preventDefault();
+            // Chrome requires returnValue to be set.
+            event.returnValue = "";
+            console.log('beforeunload happened', event);
+        });
+
+        function to() {
+            window.location.href='./drag.html';
+        }
+    </script>
+</body>
+</html>
