@@ -5,12 +5,59 @@ nodejs官网下载安装包安装即可
 node -v查看是否安装成功，如果出现版本号则说明安装成功
 
 ## 2. 国内镜像配置
-为了速度快，国内可以使用淘宝的npm镜像，称为cnpm：
+配置 npm 使用阿里云的镜像源（如淘宝镜像）可以通过以下步骤完成：
+
+(1). 打开终端或命令提示符。
+
+(2). 输入以下命令来设置 npm 的 registry 为阿里云镜像源：
+
+   ```bash
+   npm config set registry https://registry.npmmirror.com
+   ```
+
+   或者，如果你想永久地设置这个配置（即全局设置），可以使用 `--global` 标志：
+
+   ```bash
+   npm config set registry https://registry.npmmirror.com --global
+   ```
+
+(3). 检查你的配置是否已正确设置，可以使用以下命令：
+
+   ```bash
+   npm config get registry
+   ```
+
+   如果一切正常，你应该会看到输出的 URL 为 `https://registry.npmmirror.com`。
+
+(4). 为了确保 npm 缓存也被清理，可以运行：
+
+   ```bash
+   npm cache clean --force
+   ```
+
+   这样可以确保你在接下来的 npm 操作中使用的是阿里云镜像源中的数据。
+
+请注意，使用镜像源可能会有一些延迟或同步问题，因此某些包可能不会立即更新到最新版本。这是镜像源与官方源之间数据同步所固有的问题。
+
+如果你使用的是 yarn，也可以通过类似的方式来配置：
+
+```bash
+yarn config set registry https://registry.npmmirror.com
 ```
-http://npmmirror.coms
+
+或者全局设置：
+
+```bash
+yarn config set registry https://registry.npmmirror.com --global
 ```
-cnpm如果报错：cnpm : 无法加载文件 C:\Users\12345\AppData\Roaming\npm\cnpm.ps1，因为在此系统上禁止 运行脚本。
-则用管理员身份打开windows powershell, 输入命令 set-ExecutionPolicy RemoteSigned (Y 确认) 更改执行策略。
+
+检查配置：
+
+```bash
+yarn config get registry
+```
+
+这些命令应该在你的开发环境中运行，以确保你的项目和全局 npm/yarn 配置都指向了正确的镜像源。
 
 
 ## 3. nodejs使用npm来管理包，类似于python的pip工具
@@ -44,25 +91,3 @@ npm uninstall react --save	    yarn remove react
 npm install react --save-dev	yarn add react --dev
 npm update --save	            yarn upgrade
 ```
-
-接下来以创建一个vue项目为例。
-
-## 4. npm install -g @vue/cli 
-- vue 查看是否安装好
-- vue -v 查看版本信息是否正确
-- npm uninstall -g vue-cli 卸载
-<br>
-CLI (@vue/cli)是一个全局安装的npm包，提供了终端里的vue命令。
-它可以通过 vue create 快速搭建一个新项目，或者直接通过 vue serve 构建新想法的原型。
-你也可以通过 vue ui 通过一套图形化界面管理你的所有项目。
-
-## 5. 使用vue-cli创建项目
-```
-vue create vue-dmeo
-�  Successfully created project vue-demo.
-�  Get started with the following commands:
- $ cd vue-demo
- $ npm run serve
-```
-创建好的项目，main.js是入口文件，里面又调用了App.vue, App.vue实际就是一个
-单文件组件。
