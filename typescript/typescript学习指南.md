@@ -163,13 +163,13 @@ In general, you should never find yourself declaring an interface with no proper
 
 
 ## 9. ts中type和interface的区别
-1. type 可以作为联合 Union 类型的别名，但 interface 不可以
+(1). type 可以作为联合 Union 类型的别名，但 interface 不可以
 ```
 type Pet = Cat | Dog; // 可以
 interface IPet extends Cat | Dog {} // 不可以，会抛错
 ```
 
-2. interface 可以重复声明（Redeclaration），但 type 不可以
+(2). interface 可以重复声明（Redeclaration），但 type 不可以
 ```
 interface ICat {
   age: number
@@ -183,3 +183,12 @@ type Cat = { age: number };
 type Cat = { color: string }; // 不可以，会抛错
 ```
 越是希望组件的设计开发更封闭一些，越倾向于用 type ，越是认为组件需要更开放更灵活，越倾向于 interface。
+
+## 10. class类的作用域
+- public : 可以从类的实例中直接读取或写入
+- private : 只能在类内部被访问和修改
+- protected: 类自身及其所有子类都是可访问的，但对外部代码是隐藏的
+
+此外，如果你想让它在类的实例中可以被访问，但不能被外部修改，你可以使用 readonly 修饰符（如果适用）
+
+如果在一个类的成员变量声明中没有明确指定 public、private 或者 protected，那么默认情况下这个成员变量会被视为具有 public 访问权限。这意味着该成员可以从类的外部被访问和修改。
