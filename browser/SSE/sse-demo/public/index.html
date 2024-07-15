@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>SSE Demo</title>
+    </head>
+    
+    <body>
+        <h1>Server-Sent Events Example</h1>
+        <div id="messages"></div>
+    
+        <script>
+            const evtSource = new EventSource('/events');
+            const messages = document.getElementById('messages');
+    
+            evtSource.onmessage = function(event) {
+                const newElement = document.createElement("p");
+                const eventObject = JSON.parse(event.data);
+                newElement.textContent = "Message: " + eventObject.message + " at " + eventObject.timestamp;
+                messages.appendChild(newElement);
+            };
+        </script>
+    </body>    
+</html>
