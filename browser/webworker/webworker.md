@@ -100,7 +100,7 @@ worker.terminate();
 
 ### Worker 线程
 Worker 线程内部需要有一个监听函数，监听message事件。
-```
+```javascript
 self.addEventListener('message', function (e) {
   self.postMessage('You said: ' + e.data);
 }, false);
@@ -110,7 +110,7 @@ self.addEventListener('message', function (e) {
 除了使用self.addEventListener()指定监听函数，也可以使用self.onmessage指定。监听函数的参数是一个事件对象，它的data属性包含主线程发来的数据。self.postMessage()方法用来向主线程发送消息。
 
 据主线程发来的数据，Worker 线程可以调用不同的方法，下面是一个例子。
-```
+```javascript
 self.addEventListener('message', function (e) {
   var data = e.data;
   switch (data.cmd) {
@@ -137,7 +137,7 @@ importScripts('script1.js', 'script2.js');
 
 ## 错误处理
 主线程可以监听 Worker 是否发生错误。如果发生错误，Worker 会触发主线程的error事件。
-```
+```javascript
 worker.onerror(function (event) {
   console.log([
     'ERROR: Line ', e.lineno, ' in ', e.filename, ': ', e.message
@@ -153,7 +153,7 @@ Worker 内部也可以监听error事件。
 
 ## 关闭 Worker
 使用完毕，为了节省系统资源，必须关闭 Worker。
-```
+```javascript
 // 主线程
 worker.terminate();
 
@@ -166,7 +166,7 @@ self.close();
 
 主线程与 Worker 之间也可以交换二进制数据，比如 File、Blob、ArrayBuffer 等类型，也可以在线程之间发送。下面是一个例子。
 
-```
+```javascript
 // 主线程
 var uInt8Array = new Uint8Array(new ArrayBuffer(10));
 for (var i = 0; i < uInt8Array.length; ++i) {
@@ -184,7 +184,7 @@ self.onmessage = function (e) {
 但是，拷贝方式发送二进制数据，会造成性能问题。比如，主线程向 Worker 发送一个 500MB 文件，默认情况下浏览器会生成一个原文件的拷贝。为了解决这个问题，JavaScript 允许主线程把二进制数据直接转移给子线程，但是一旦转移，主线程就无法再使用这些二进制数据了，这是为了防止出现多个线程同时修改数据的麻烦局面。这种转移数据的方法，叫做Transferable Objects。这使得主线程可以快速把数据交给 Worker，对于影像处理、声音处理、3D 运算等就非常方便了，不会产生性能负担。
 
 如果要直接转移数据的控制权，就要使用下面的写法。
-```
+```javascript
 // Transferable Objects 格式
 worker.postMessage(arrayBuffer, [arrayBuffer]);
 
@@ -196,7 +196,7 @@ worker.postMessage(ab, [ab]);
 ## 同页面的 Web Worker
 通常情况下，Worker 载入的是一个单独的 JavaScript 脚本文件，但是也可以载入与主线程在同一个网页的代码。
 
-```
+```javascript
 <!DOCTYPE html>
   <body>
     <script id="worker" type="app/worker">
@@ -211,7 +211,7 @@ worker.postMessage(ab, [ab]);
 
 然后，读取这一段嵌入页面的脚本，用 Worker 来处理。
 
-```
+```javascript
 var blob = new Blob([document.querySelector('#worker').textContent]);
 var url = window.URL.createObjectURL(blob);
 var worker = new Worker(url);
@@ -221,3 +221,71 @@ worker.onmessage = function (e) {
 };
 ```
 上面代码中，先将嵌入网页的脚本代码，转成一个二进制对象，然后为这个二进制对象生成 URL，再让 Worker 加载这个 URL。这样就做到了，主线程和 Worker 的代码都在同一个网页上面。
+
+<br>
+
+## 实例：Worker 线程完成轮询
+有时，浏览器需要轮询服务器状态，以便第一时间得知状态改变。这个工作可以放在 Worker 里面。
+
+```javascript
+function createWorker(f) {
+  var blob = new Blob(['(' + f.toString() +')()']);
+  var url = window.URL.createObjectURL(blob);
+  var worker = new Worker(url);
+  return worker;
+}
+
+var pollingWorker = createWorker(function (e) {
+  var cache;
+
+  function compare(new, old) { ... };
+
+  setInterval(function () {
+    fetch('/my-api-endpoint').then(function (res) {
+      var data = res.json();
+
+      if (!compare(data, cache)) {
+        cache = data;
+        self.postMessage(data);
+      }
+    })
+  }, 1000)
+});
+
+pollingWorker.onmessage = function () {
+  // render data
+}
+
+pollingWorker.postMessage('init');
+```
+上面代码中，Worker 每秒钟轮询一次数据，然后跟缓存做比较。如果不一致，就说明服务端有了新的变化，因此就要通知主线程。
+
+在 Web Workers 的上下文中，`createWorker` 函数的主要目的是动态生成一个包含特定功能的 Worker。这里使用 `Blob` 和 `window.URL.createObjectURL` 是为了将函数的源代码转换成一个可以由 `Worker` 构造函数使用的 URL。让我们逐个部分解释为什么这样做：
+
+### Blob 对象
+
+`Blob` 对象表示一个不可变的、原始数据的类文件对象。浏览器中的 Blob 可以表示文本、二进制数据或者文件，它是 `File` 接口的基础，`File` 接口继承了 `Blob` 的特性并添加了一些额外的方法和属性。
+
+在 `createWorker` 函数中，`Blob` 被用来创建一个包含函数源码的二进制大对象。函数源码被转换为字符串形式，然后包裹在立即执行的函数表达式（IIFE）中，即 `'(' + f.toString() +')()'`。这确保了函数在 Worker 内部作为一个独立的作用域执行，而不是作为全局作用域的一部分。
+
+```javascript
+var blob = new Blob(['(' + f.toString() +')()']);
+```
+
+### window.URL.createObjectURL
+
+`window.URL.createObjectURL` 方法用于创建一个表示指定 Blob 对象的 URL。这个 URL 是一个只读的字符串，可以像普通 URL 一样被使用，但是它引用的是一个 Blob 对象，而不是一个文件系统上的文件。
+
+在 `createWorker` 函数中，这个 URL 被用来初始化一个新的 `Worker` 对象：
+
+```javascript
+var url = window.URL.createObjectURL(blob);
+var worker = new Worker(url);
+```
+
+这样做的原因是，`Worker` 构造函数要求一个 URL 参数，这个 URL 指向一个包含 Worker 代码的脚本文件。由于我们希望动态生成 Worker 代码，所以我们不能提前知道脚本的确切位置。通过使用 `Blob` 和 `createObjectURL`，我们可以即时创建一个虚拟的 URL，指向包含函数源码的 Blob。
+
+这种方法的一个主要优势是灵活性和动态性。我们可以随时创建新的 Worker 并加载不同的函数，而不需要事先编写并部署脚本文件。此外，这种方法还避免了跨域限制，因为生成的 Blob URL 总是与当前文档的起源相同。
+
+
+通过使用 `Blob` 和 `window.URL.createObjectURL`，`createWorker` 函数能够创建一个动态的、包含特定函数的 Worker，而无需实际的文件系统路径或预编译的脚本文件。这为开发提供了很大的灵活性，特别是在需要动态生成或更改 Worker 行为的场景下。不过，需要注意的是，一旦不再需要 Worker 或者 Blob URL，应该使用 Worker.terminate()和 `window.URL.revokeObjectURL` 方法来释放资源，避免内存泄漏。
