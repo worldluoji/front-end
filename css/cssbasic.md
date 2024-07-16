@@ -347,7 +347,7 @@ When both top and bottom are specified, position is set to absolute or fixed, an
 reference: https://developer.mozilla.org/en-US/docs/Web/CSS/bottom
 
 ## overflow
-- visible(default): Content is not clipped and may be rendered outside the padding box.
+- visible(default): Content is not clipped(剪除，剪掉) and may be rendered outside the padding box.
 - hidden: Content is clipped if necessary to fit the padding box.
 - scroll: Browsers always display scrollbars whether or not any content is actually clipped, preventing scrollbars from appearing or disappearing as content changes.
 - auto: Depends on the user agent. If content fits inside the padding box, it looks the same as visible, but still establishes a new block formatting context. Desktop browsers provide scrollbars if content overflows.
@@ -355,6 +355,18 @@ reference: https://developer.mozilla.org/en-US/docs/Web/CSS/bottom
 The overflow property is specified as one or two keywords chosen from the list of values below. 
 If two keywords are specified, the first applies to overflow-x and the second to overflow-y. 
 Otherwise, both overflow-x and overflow-y are set to the same value.
+
+overflow是基于是否超过padding box来决定行为。
+
+### 实例：打开 Modal 时禁止 body 滚动
+打开弹窗的时候，会发现背后的内容还是可以滚动，我们需要在弹窗出现时禁用滚动，在弹窗消失时恢复。
+```
+/ 打开 Modal 时，禁止 body 滚动
+document.body.style.overflow = 'hidden';
+
+// 恢复滚动
+document.body.style.removeProperty('overflow');
+```
 
 reference: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow
 
