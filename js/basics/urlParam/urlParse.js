@@ -10,3 +10,5 @@ function parse(url) {
 console.log(parse(url)) // {foo: "bar", alo: "ha"}
 
 console.log(new URL(url))
+
+// 获取 url 参数有个热门的库 query-string
