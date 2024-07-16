@@ -6,22 +6,27 @@
 - text-align: left; (the default) left-aligns the text.
 
 2. u tag
+
 <u>Ph.D. students</u>
 
 3. strong 和 em
+
 <strong>strong会加粗</strong>, 
 <em>em更多是强调</em>
 
 This displays text as italicized, as the browser applies the CSS of font-style: italic; to the element
 
 4. s tag
+
 <s>Ph.D. students</s>
 
 5. hr tag 
+
 <hr />
 add a horizontal line across the width of its containing element.
 
 6. rgba
+
 You can add a background-color to the element holding the text you want to emphasize. 
 rgba stands for:
 ```
@@ -35,7 +40,8 @@ which is fully opaque or a solid color, to 0, which is fully transparent or clea
 rgba() is great to use in this case, as it allows you to adjust the opacity. 
 This means you don't have to completely block out the background.
 
-7. box-shadow 
+7. box-shadow
+
 The box-shadow property applies one or more shadows to an element.
 The box-shadow property takes values for:
 - offset-x (how far to push the shadow horizontally from the element),
@@ -49,13 +55,15 @@ The blur-radius and spread-radius values are optional.
 Multiple box-shadows can be created by using commas to separate properties of each box-shadow element:
 box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 
-8. opacity 
+8. opacity
+
 this property in CSS is used to adjust the opacity, or conversely, the transparency for an item.
 - A value of 1 is opaque, which isn't transparent at all.
 - A value of 0.5 is half see-through.
 - A value of 0 is completely transparent.
 
 9. text-transform
+
 The text-transform property in CSS is used to change the appearance of text. 
 It's a convenient way to make sure text on a webpage appears consistently, without having to change the text content of the actual HTML elements.
 The following table shows how the different text-transformvalues change the example text "Transform me".
@@ -69,9 +77,11 @@ inherit	Use the text-transform value from the parent element
 none	Default: Use the original text
 
 10. line-height 
+
 this property to change the height of each line in a block of text.
 
 11. z-index
+
 When elements are positioned to overlap (i.e. using position: absolute | relative | fixed | sticky), 
 the element coming later in the HTML markup will, by default, appear on the top of the other elements. 
 However, the z-index property can specify the order of how elements are stacked on top of one another. 
@@ -140,6 +150,7 @@ The saturation percent changes the amount of gray and the lightness percent dete
 in the color. This is useful when you have a base hue you like, but need different variations of it.
 
 13.  CSS Linear Gradient
+
 基本使用方法：
 ```
 background: linear-gradient(gradient_direction, color 1, color 2, color 3, ...);
@@ -154,6 +165,7 @@ Use a linear-gradient() for the div element's background,
 and set it from a direction of 35 degrees to change the color from #CCFFFF to #FFCCCC.
 
 14. repeating-linear-gradient
+
 similar to linear-gradient() with the major difference that it repeats the specified gradient pattern
 example:
 ```
@@ -174,6 +186,7 @@ div{
 45度，0-40px黄色，40px到80px黑色，不断循环。
 
 15. background
+
 url('https://cdn-media-1.freecodecamp.org/imgr/MJAkxbh.png') 设置背景图
 
 16. box-shadow + border-radis画一个蓝月亮
@@ -198,6 +211,7 @@ url('https://cdn-media-1.freecodecamp.org/imgr/MJAkxbh.png') 设置背景图
 ```
 
 17.  pseudo-elements
+
 the ::before and ::after pseudo-elements. 
 These pseudo-elements are used to add something before or after a selected element.
 
@@ -209,3 +223,31 @@ but it's set to an empty string.
 利用伪元素，使用css画一个爱心：
 ./motion/transform/heart.html
 
+18. 滚动条样式
+
+自定义滚动条样式也是很常见的需求，除了通过样式，也可以通过第三方库（如 better-scroll 等）来实现自定义滚动条样式。
+```
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #fafafa;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgb(191, 191, 191);
+}
+
+// 较新的 API
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #718096 #edf2f7;
+}
+```
