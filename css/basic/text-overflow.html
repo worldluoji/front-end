@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>text-overflow demo</title>
+</head>
+<body>
+    <p class="truncate txt">1234567890qwertyuiopasdfghjklzxcvbnm,.</p>
+</body>
+<style>
+    .txt {
+        width: 60px;
+    }
+
+    .truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* .truncate {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    } */
+</style>
+</html>
