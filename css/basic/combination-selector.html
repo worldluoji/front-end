@@ -41,7 +41,7 @@
   </div>
 
   <style>
-    /* only the first p after h1 */
+    /* only the first p after h2 */
     h2 + p {
       color: red;
     }
@@ -74,6 +74,7 @@
         nth-child(n+3) 表示选择列表中的标签从第3个开始到最后（>=3）
         nth-child(-n+3) 表示选择列表中的标签从0到3，即小于3的标签(<=3)
         nth-last-child(3) 表示选择列表中的倒数第3个标签
+        li:nth-child(n + 2):nth-child(-n + 5) // 选中 2-5 的列表项
     */
     ol > li:nth-child(1) {
       color: aqua;
