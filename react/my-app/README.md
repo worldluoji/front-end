@@ -56,3 +56,6 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ```
 npm install node-sass@npm:dart-sass
 ```
+
+## 由nodejs升级引起的构建错误：0308010C:digital envelope routines::unsupported
+https://juejin.cn/post/7202639428132044858
