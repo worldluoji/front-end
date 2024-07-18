@@ -23,7 +23,7 @@ React 提供的 Hooks 其实非常少，一共只有 10 个，比如 useState、
 1. 所有 Hook 必须要被执行到，必须按顺序执行。
    
 错误示例：
-```
+```javascript
 import { Modal } from "antd";
 import useUser from "../09/useUser";
 
@@ -39,7 +39,6 @@ function UserInfoModal({ visible, userId, ...rest }) {
     </Modal>
   );
 };
-}
 ```
 修复方法：把条件判断的结果放到两个组件之中，确保真正 render UI 的组件收到的所有属性都是有值的。
 可以在 UserInfoModal 外层加一个容器，这样就能实现条件渲染了：
@@ -56,11 +55,13 @@ export default function UserInfoModalWrapper({
 }
 ```
 
-1. Hooks 作为专门为函数组件设计的机制，使用的情况只有两种，一种是在函数组件内，另外一种则是在自定义的 Hooks 里面。
+2. Hooks 作为专门为函数组件设计的机制，使用的情况只有两种，一种是在函数组件内，另外一种则是在自定义的 Hooks 里面。
 
 总结了一下：
 - Hooks 不能出现在条件语句或者循环中，也不能出现在 return 之后；
 - Hooks 只能在函数组件或者自定义 Hooks 中使用。
+
+因此，你应该把 use 开头的钩子函数都写在组件的顶部，把 JSX 都写在函数组件的最后面，并使用 [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks) 插件来保障 Hook 规则的会被正确执行。
 
 ## useState: 让函数组件具有维持状态的能力
 ```
