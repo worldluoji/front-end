@@ -11,6 +11,10 @@ npm install -g @tarojs/cli
 ```
 taro init myApp
 ```
+在某些情况下，Taro CLI 可能没有正确注册所有可用的模板。你可以尝试重新安装 Taro CLI 或者运行 taro init 命令后手动指定模板，例如创建react native工程：
+```
+taro init myProject --template=react-native
+```
 
 ## 目录结构
 ```
