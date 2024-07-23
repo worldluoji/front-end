@@ -196,3 +196,7 @@ rowRenderer 的作用就是根据类型和数据，返回对应的自定义列�
 ## 注意事项
 - 无限列表，理论上页码是无限的，不可能一次请求回来。因此，还需要对请求的数据进行分页。
 - 推荐使用 react query，帮你做列表的状态管理，只需配置一下就能帮你自动管理无限列表的分页。
+
+
+## reference
+https://github.com/Flipkart/recyclerlistview
