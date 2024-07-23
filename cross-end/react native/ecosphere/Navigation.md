@@ -1,0 +1,2 @@
+# router
+React Native 本身并没有提供路由解决方案，但社区提供了一些解决方案，包括React Navigation、React Native Navigation这两种。这两个库的名字很相似，也都是路由库，但你千万不要搞错了。目前业内主流的选择是 React Navigation，而不是 React Native Navigation，前者的下载量是后者的 20 倍之多，因此推荐直接使用 React Navigation 方案就可以了。
