@@ -49,6 +49,8 @@ workbox.routing.registerRoute(
 Stale-While-Revalidate
 <img src="./images/Stale-While-Revalidate.webp" />
 
+Stale While Revalidate 加载策略。这个策略会稍微复杂一点。在第一次请求时，没有 Cache，会先从服务端请求返回值，并将资源存放在 Cache 中。在第二次有 Cache 时，会先读取 Cache 并进行返回，在读取 Cache 的同时，会发起一个异步请求去更新 Cache。
+
 Cache First
 <img src="./images/Cache First.webp" />
 
