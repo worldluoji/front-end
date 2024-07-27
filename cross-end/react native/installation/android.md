@@ -19,5 +19,27 @@ HAXM不装的情况下模拟器也是能运行的，装了HAXM只是会提高模
 第三，当前官网已经明确说明Android Studio编译**不支持arm版windows**，arm版windows还需要等等。
 
 
+## grandle慢的问题
+一是解决相关依赖包慢的问题，替换为阿里云源，也可以替换腾讯、中科院的，
+修改文件：settings.gradle.kts
+```
+maven { url = uri("https://maven.aliyun.com/repository/public/") }
+maven { url = uri("https://maven.aliyun.com/repository/google/") }
+maven { url = uri("https://maven.aliyun.com/repository/jcenter/") }
+maven { url = uri("https://maven.aliyun.com/repository/central/") }
+maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin/") }
+```
+而是解决gradle包本身慢的问题，可以使用国内源，比如：
+```
+https://mirrors.cloud.tencent.com/gradle/
+```
+此时需要修改gradle/wrapper/gradle-wrapper.properties文件，
+修改distributionUrl：
+```
+https\://mirrors.cloud.tencent.com/gradle/gradle-8.7-all.zip
+```
+
+<br>
+
 ## 其它
 如果是 windows, 推荐使用[chocolatey](https://chocolatey.org/install)管理Node、JDK等包。
