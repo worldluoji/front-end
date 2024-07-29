@@ -21,7 +21,7 @@ HAXM不装的情况下模拟器也是能运行的，装了HAXM只是会提高模
 
 ## grandle慢的问题
 一是解决相关依赖包慢的问题，替换为阿里云源，也可以替换腾讯、中科院的，
-修改文件：settings.gradle.kts, 添加镜像源：
+修改文件：settings.gradle.kts 或 build.gradle, 添加镜像源：
 ```
 maven { url = uri("https://maven.aliyun.com/repository/public/") }
 maven { url = uri("https://maven.aliyun.com/repository/google/") }
