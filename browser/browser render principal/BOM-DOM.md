@@ -3,8 +3,12 @@
 BOM 是 Browser Object Model，浏览器对象模型。
 BOM 是为了操作文档出现的接口，那 BOM 顾名思义其实就是为了控制浏览器的行为而出现的接口。
 
-比如跳转到另一个页面、前进、后退等等，程序还可能需要获取屏幕的大小之类的参数。
-BOM 就是为了解决这些事情出现的接口。
+BOM 提供了对浏览器窗口的控制能力，主要包括以下方面：
+- 窗口操作：如打开新的窗口或标签页 (window.open), 关闭窗口 (window.close)。
+- 导航控制：如前进 (window.forward), 后退 (window.back)。
+- 窗口尺寸和位置：如设置或获取窗口的大小 (window.innerWidth, window.innerHeight) 和位置 (window.screenX, window.screenY)。
+- 定时器：如设置定时器 (window.setTimeout, window.setInterval)。
+- 用户界面交互：如处理弹出框 (alert, confirm, prompt)。
 
 ## BOM对象是什么
 - BOM：浏览器对象模型(Brower Object Model)，是用于操作浏览器而出现的API，BOM对象则是Javascript对BOM接口的实现。
@@ -23,6 +27,17 @@ BOM对象最根本的是window。
   
 DOM对象最根本的是document（实际上是window.document）。
 
+DOM 主要包括以下几个方面：
+- 节点树：文档被解析成一棵节点树，每个节点代表文档的一部分。
+- 节点操作：如创建 (document.createElement), 删除 (node.remove) 或替换节点。
+- 元素选择：如选择元素 (document.querySelector, document.querySelectorAll)。
+- 样式和属性：读取或修改元素的样式 (element.style), 属性 (element.getAttribute, element.setAttribute)。
+- 事件处理：绑定事件监听器 (element.addEventListener)
+
+
+## 总结
+- BOM 更多关注浏览器本身的功能，比如窗口管理、导航等。
+- DOM 关注文档本身，即网页内容的结构和交互。
 
 ## reference
 https://zhuanlan.zhihu.com/p/372357616
