@@ -36,7 +36,7 @@ https://mirrors.cloud.tencent.com/gradle/
 此时需要修改gradle/wrapper/gradle-wrapper.properties文件，
 修改distributionUrl：
 ```
-https\://mirrors.cloud.tencent.com/gradle/gradle-8.7-all.zip
+https://mirrors.cloud.tencent.com/gradle/gradle-8.7-bin.zip
 ```
 
 <br>
