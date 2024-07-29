@@ -11,3 +11,12 @@ npx react-native@latest init AwesomeProject
 # 如果在 Android 目录，需要 cd ../ 到根目录
 $ npx react-native start
 ```
+
+<br>
+
+## 常见问题
+启动时报错模拟器错误
+```
+AndroidStudio Android Unknown failure: Can't find service: package
+```
+解决方案：在Device Manager中，选中的你的模拟器 , 设置, 启动模式选择 Cold Boot。
