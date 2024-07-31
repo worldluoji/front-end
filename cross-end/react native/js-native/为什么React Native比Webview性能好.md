@@ -64,7 +64,7 @@ JSI 实现了引擎切换，比如在 iOS 平台运行的 JSCore，在 Andriod �
 
 JSI 作为引擎统一的通用层，JSI 会定义与 JS 引擎交互的接口以及数据转化的方法。比如在 JSI 中定义了一个执行 JS 的方法叫做 evaluateJavaScript()。具体如何执行 JS 代码其实是由各引擎实现的，通过这种方式屏蔽不同引擎间的差异，可以方便地实现 JS 引擎切换。
 
-我们看一下 evaluateJavaScript 接口基于 JSI 在不同引擎上的实现。
+比如 evaluateJavaScript 接口基于 JSI 在不同引擎上的实现。
 
 首先是 JSC 中的实现：
 ```C++
@@ -98,3 +98,13 @@ jsi::Value HermesRuntimeImpl::evaluateJavaScript(
   return evaluateJavaScriptWithSourceMap(buffer, nullptr, sourceURL);
 }
 ```
+
+##  React 引入 JSI 后新老架构对比
+
+<img src="./images/old vs new.png" />
+
+老架构：业务启动，一次性初始化全部 NativeModule。所有的调用为异步操作（同步桥除外），JS 和 Native 端通过序列化、反序列化进行通信。桥通讯由于排队、线程切换易引起阻塞。
+
+新架构：
+- JSI：增加引擎抽象层，实现引擎解耦便于切换引擎。同时支持 JS 持有 C++ HostObject 类型对象引用，实现 JS 和 Native 相互感知。
+- TurboModule：替换原有桥机制，实现 NativeModule 按需加载，和 JS<->Native 同步调用Fabric：新 UI 架构，替换原有 UIManager。
