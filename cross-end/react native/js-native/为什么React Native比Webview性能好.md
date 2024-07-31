@@ -108,3 +108,17 @@ jsi::Value HermesRuntimeImpl::evaluateJavaScript(
 新架构：
 - JSI：增加引擎抽象层，实现引擎解耦便于切换引擎。同时支持 JS 持有 C++ HostObject 类型对象引用，实现 JS 和 Native 相互感知。
 - TurboModule：替换原有桥机制，实现 NativeModule 按需加载，和 JS<->Native 同步调用Fabric：新 UI 架构，替换原有 UIManager。
+
+
+## bundles
+React Native 和传统的 Web 端 React 应用开发非常类似，因为它们都使用JavaScript 编程语言。这使得 Web 开发者能够轻松上手 RN 开发。不同之处在于，RN 的打包产物是单一的 JavaScript 文件(jsbundle)，而在 Web 中则需要部署 HTML、CSS 和 JavaScript 文件的集合体。
+
+单 Bundle 和多 Bundle 模式
+
+每次运行一个 bundle 时，RN 需要外层容器提供 JS 引擎来运行当前的jsbundle。在 RN 中，可以通过路由方案来实现页面跳转，通常情况下一个 jsbundle 对应一个或多个页面。
+
+在业务开发中，需要根据具体情况选择单 bundle 或者多个 bundle 的方式。比如有一些独立的页面，需要不同的发版流程、上线周期，或者不同的团队维护，这种情况下一个页面对应一个 bundle 比较适合。但是有一些上下关联密切的页面，或者是上下级父子页面，也可以采用一个 bundle 对应多个页面，当然现实场景下：一对一、一对多的复杂情况都有可能发生，或者共存在一个项目中。
+
+<img src="./images/bundles.png" />
+
+在同一 bundle 下，文件运行在相同的 JS 上下文中，因此可以使用 Redux 等状态管理工具在 React Native 中实现组件或页面状态的共享。
