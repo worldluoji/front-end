@@ -22,8 +22,10 @@ Android 回弹滚动涉及的结构一共有 5 种:
 const LOADING_HEIGHT = 30
 
 function PanAndScrollView() {
-  const refreshY = useSharedValue(-LOADING_HEIGHT);
-  const scrollY = useSharedValue(0); // scrollY：ScrollView 滚动偏移量
+  const refreshY = useSharedValue(-LOADING_HEIGHT); // refreshY：Animated.View 拖拽偏移量;默认 refreshY 的值为 -30，也就是 LOADING_HEIGHT 的负值，此时正好把 Loading  隐藏在屏幕外。
+  
+  const scrollY = useSharedValue(0); // scrollY：ScrollView 滚动偏移量;由于 ScrollView 的滚动偏移量是由原生平台控制的，Animated 动画库和 Gesture 手势库都控制不了，因此 scrollY 只可读、不可写。读取 scrollY 靠的是 ScrollView 的 onScroll 回调和 Reanimated 的 useAnimatedScrollHandler 的配合，整个过程在 UI 线程中进行。另外，我们也通过 scrollEventThrottle 属性，将两次 onScroll 回调的执行间隔设置为 1ms，以此来保证获取 scrollY 的时效性。
+
   const {height: windowHeight} = useWindowDimensions()
   const wrapperHeight = windowHeight + LOADING_HEIGHT
 
@@ -75,3 +77,6 @@ function PanAndScrollView() {
   );
 }
 ```
+原理图如下：
+
+<img src="./pics/gestrue scroll principal.png" />
