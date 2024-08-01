@@ -245,7 +245,7 @@ Gesture 手势库一共支持“1 + 8”个手势
 
 场景类回调参数：
 
-<img src="./pics/Gesture callback2.png" />
+<img src="./pics/Gusture callback2.png" />
 
 这 9 种手势事件、10 种回调函数、两类回调参数，都是基于 Gesture 手势 v2 版本来讲的。
 
