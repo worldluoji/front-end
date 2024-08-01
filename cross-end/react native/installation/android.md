@@ -42,5 +42,12 @@ https://mirrors.cloud.tencent.com/gradle/gradle-8.7-bin.zip
 
 <br>
 
+## 包位置
+如果不想包都在C盘，就要设置如下环境变量：
+- 变量名：ANDROID_SDK_HOME 变量值：D:\Software\Android.android
+- 变量名：GRADLE_USER_HOME 变量值：D:\Software\Android.gradle
+
+第一个是说Android SDK、模拟器等，都放到D盘对应目录，第二个是说把依赖的包放到D盘对应目录
+
 ## 其它
 如果是 windows, 推荐使用[chocolatey](https://chocolatey.org/install)管理Node、JDK等包。
