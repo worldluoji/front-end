@@ -1,0 +1,2 @@
+# Navigation
+尽管导航是开发 React Native App 必不可少的工具之一，但 React Native 框架并未将其内置，需要开发者自己进行集成。在 2018 年之前，业内用得比较多的导航是 React Native Navigation，在 2018 年之后大家用得更多的是 React Navigation。它们的名字很相似，不过你可千万不要搞混了，目前官方推荐的、主流的导航是 **React Navigation**，而不是 React Native Navigation。
