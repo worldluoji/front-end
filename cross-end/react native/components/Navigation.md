@@ -223,6 +223,16 @@ React 提供了同步执行的副作用函数 React.useLayoutEffect，把 naviga
 
 <br>
 
+## 其它导航
+在上述导航示例中，我用的例子都是大家用得最多的 Native Stack Navigator。而实际上，除了 Native Stack Navigator 这类导航之外，还有 5 类导航：
+- Stack Navigator：Stack Navigator 和 Native Stack Navigator 都属于堆栈导航，也就是每跳转一次在堆栈的最上面增加一个新页面，每回退一次在堆栈的最上面减少一个老页面。不同的是，Stack Navigator 底层使用的是 Gesture 手势库和 Reanimated 动画库实现的堆栈导航，而 Native Stack Navigator 使用的是 iOS 原生 UINavigationController 和 Android 原生 Fragment 实现的堆栈导航。一般情况下，我不推荐你使用 Stack Navigator，Native Stack Navigator 的功能更多，性能也更强大。
+- Drawer Navigator：抽屉导航，也就是从侧边栏推出的导航页面。底层也是用的 Gesture 手势库和 Reanimated 动画库实现的，类似微信首页侧滑查看收起的小程序或公众号文章，这就属于抽屉导航，具体见[文档和动图](https://reactnavigation.org/docs/drawer-navigator/)。
+- Bottom Tabs Navigator：底部标签导航。基本上每个 App 底部有好几个 Tab，这种多 Tab 的页面切换的效果在 React Native 中就可以用它来实现，具体见[文档和动图](https://reactnavigation.org/docs/bottom-tab-navigator/)。
+- Material Bottom Tabs Navigator：带 Material 样式的底部标签导航，具体见[文档和动图](https://reactnavigation.org/docs/material-bottom-tab-navigator/)。
+- Material Top Tabs Navigator：带 Material 样式的顶部标签导航，它是基于 react-native-tab-view 实现的，你可以把 Material 样式换成你自己的样式，常见的多列表 Tabs 就可以用它来实现，具体见[文档和动图](https://reactnavigation.org/docs/material-top-tab-navigator/)。
+
+<br>
+
 ## reference
 - https://reactnavigation.org/docs/7.x/getting-started
 - https://github.com/react-navigation/react-navigation/tree/main/example
