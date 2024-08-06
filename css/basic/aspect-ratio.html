@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aspect ratio demo</title>
+</head>
+<body>
+    <img src="" /> <img src="../css overview.awebp" />
+    <p>Note how the first image without replaced content keeps the 3/2 aspect ratio, 
+       while the second image after the content is loaded uses the image's natural aspect ratio.
+    </p>
+    <style>
+        img {
+            display: inline;
+            /* At least one of the box's sizes needs to be automatic in order for aspect-ratio to have any effect. If neither the width nor height is an automatic size, then the provided aspect ratio has no effect on the box's preferred sizes. */
+            width: 200px;
+            border: 2px dashed red;
+            background-color: lime;
+            vertical-align: top;
+            /* The following code sets 3/2 as the preferred width-to-height ratio and auto as a fallback. */
+            aspect-ratio: 3/2 auto;
+        }
+    </style>
+</body>
+</html>
