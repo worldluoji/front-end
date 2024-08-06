@@ -22,6 +22,20 @@
 2. **Async Hook** (异步钩子)：这些钩子允许监听器以异步的方式执行，并在完成后回调。
 
 ### Tapable 的基本使用
+```js
+const {
+    SyncHook,
+    SyncBailHook,
+    SyncWaterfallHook,
+    SyncLoopHook,
+    AsyncParallelHook,
+    AsyncParallelBailHook,
+    AsyncSeriesHook,
+    AsyncSeriesBailHook,
+    AsyncSeriesWaterfallHook
+} = require("tapable");
+```
+一共9个Hook.
 
 #### 安装 Tapable
 
