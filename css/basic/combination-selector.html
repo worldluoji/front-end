@@ -40,6 +40,68 @@
     <p>3</p>
   </div>
 
+  <article>
+    CSS组合选择器是用于结合多个选择器以更精确地定位文档中的元素。这些组合选择器可以让你通过不同的方式来选择元素，从而实现更复杂的样式规则。组合选择器通常包括以下几种类型：
+    <section>
+    1. **后代选择器（Descendant selector）**:
+      - 使用空格分隔两个或多个选择器，表示“内部的”或“里面的”元素。
+      ```css
+      div p { color: blue; }
+      ```
+    </section>
+
+    <br />
+
+    <section>
+    2. **子元素选择器（Child selector）**:
+      - 使用 `>` 符号连接两个选择器，表示直接子元素。
+      ```css
+      div > p { color: red; }
+      ```
+    </section>
+
+    <br />
+
+    <section>
+    3. **相邻兄弟选择器（Adjacent sibling selector）**:
+      - 使用 `+` 符号连接两个选择器，表示紧接在另一个元素后的元素，且二者有相同的父元素。
+      ```css
+      h1 + p { font-size: 16px; }
+      ```
+    </section>
+
+    <br />
+
+    <section>
+    4. **一般同胞选择器（General sibling selector）**:
+      - 使用 `~` 符号连接两个选择器，表示与另一个元素具有相同父元素的任何后续兄弟元素。
+      ```css
+      h1 ~ p { margin-top: 1em; }
+      ```
+    </section>
+
+    <br />
+    
+    <section>
+    5. **组合多个选择器**:
+      - 可以将以上的选择器进行组合使用，形成更复杂的模式。
+      ```css
+      div > ul:first-child li:last-child { background-color: yellow; }
+      ```
+    </section>
+
+    <br />
+
+    <section>
+    6. **并集选择器（Union selector）**:
+      - 多个选择器可以通过逗号 `,` 分隔来组合在一起，表示任何一个选择器匹配的元素都将应用样式。
+      ```css
+      h1, h2, h3 { color: green; }
+      ```
+    </section>
+    这些组合选择器可以帮助你更加灵活地控制样式，并减少CSS代码量。例如，你可以同时为多个元素指定相同的样式，或者只针对特定情况下的元素应用样式。
+  </p>
+
   <style>
     /* only the first p after h2 */
     h2 + p {
