@@ -149,7 +149,7 @@ The clip-path CSS property creates a clipping region that sets what part of an e
 参考： https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path
 
 
-# 12. :is 和 :where
+## 12. :is 和 :where
 ```
 :is(选择器) 选择器 {}
 :where(选择器) 选择器 {}
@@ -163,3 +163,40 @@ The clip-path CSS property creates a clipping region that sets what part of an e
 
 :where：该伪类选择器是没有权重的，也就是它的权重为0；
 按照[示例](./pseudo/is-where.html)来说，:where(#d1, #d2, #d3, #d4)的权重为0，此时最终的权重为标签选择器的权重。
+
+
+## 13. white-space
+`white-space` 是 CSS 中的一个属性，用于控制元素内的空白字符（如空格、制表符、换行符等）如何处理。这个属性对于文本排版和格式化非常重要，尤其是在需要控制文本自动换行或保留空白字符的情况下。
+
+### `white-space` 的值:
+
+1. **normal (默认值)**:
+   - 正常处理空白字符。
+   - 多个连续的空白字符会被压缩为一个空格。
+   - 换行符会被替换为空格。
+   - 文本会自动换行以适应容器宽度。
+
+2. **pre**:
+   - 保留所有空白字符，包括换行符。
+   - 多个连续的空白字符会被保留。
+   - 文本不会自动换行，而是根据原始文本显示，即使这会导致文本溢出容器。
+
+3. **nowrap**:
+   - 正常处理空白字符。
+   - 多个连续的空白字符会被压缩为一个空格。
+   - 换行符会被替换为空格。
+   - 文本不会自动换行，而是尽可能地保持在同一行，即使这会导致文本溢出容器。
+
+4. **pre-wrap**:
+   - 保留所有空白字符，包括换行符。
+   - 多个连续的空白字符会被保留。
+   - 文本会自动换行以适应容器宽度。
+
+5. **pre-line**:
+   - 保留换行符，但多个连续的空白字符会被压缩为一个空格。
+   - 文本会自动换行以适应容器宽度。
+
+6. **break-spaces**:
+   - 保留所有空白字符，包括换行符。
+   - 多个连续的空白字符会被保留。
+   - 在需要时会在空白字符处换行。
