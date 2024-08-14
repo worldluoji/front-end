@@ -10,21 +10,22 @@
      npm install tesseract.js
      ```
 
-2. **加载中文语言包**：
-   - `tesseract.js` 默认不会加载所有的语言包，因此你需要手动加载中文语言包。
-   - 可以使用以下命令来下载简体中文 (`chi_sim`) 或繁体中文 (`chi_tra`) 语言包：
+2. **使用worker进行OCR**：
+   - `tesseract.js 5.x` 不需要手动加载语言包 
+   - 只需要显示设置要识别的语言(`chi_sim`)简体中文 ：
      ```javascript
-     const Tesseract = require('tesseract.js');
+     import Tesseract from 'tesseract.js';
 
-     Tesseract.createWorker().then(async worker => {
-       await worker.loadLanguage('chi_sim');
-       await worker.initialize('chi_sim');
+     const imagePath = 'your_image_path';
+     Tesseract.createWorker('chi_sim').then(async worker => {
        // ... 使用 worker 进行 OCR ...
+       const result = await worker.recognize(imagePath);
+
        await worker.terminate();
      });
      ```
 
-3. **进行 OCR**：
+3. **不使用worker进行 OCR**：
    - 使用 `recognize` 方法识别图片中的文字，并指定语言为中文：
      ```javascript
      Tesseract.recognize(
