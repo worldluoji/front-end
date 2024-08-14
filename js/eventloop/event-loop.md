@@ -49,3 +49,8 @@ Event Loop是一个程序结构，用于等待和发送消息或事件 (a progra
 
 这里还需要补充一点，那就是当循环系统在执行一个任务的时候，都要为这个任务维护一个系统调用栈。
 这个系统调用栈类似于 JavaScript 的调用栈，只不过系统调用栈是 Chromium 的开发语言 C++ 来维护的。
+
+<br>
+
+## reference
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Event_loop
