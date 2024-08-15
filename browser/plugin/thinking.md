@@ -33,6 +33,7 @@ https://docs.plasmo.com/framework/customization/manifest
 
 #### background/index.ts
 ```typescript
+import Tesseract from "tesseract.js";
 // 创建一个右键菜单项
 chrome.contextMenus.create.create({
   id: "handle-image",
@@ -47,9 +48,27 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     const imageUrl = info.srcUrl;
 
     // 处理图片，例如打开新标签页显示图片
-    await chrome.tabs.create({ url: imageUrl });
+    // await chrome.tabs.create({ url: imageUrl });
 
-    // 其他处理逻辑，例如上传图片到服务器
+    // 通过ocr识别图片
+    try {
+        // 加载图片
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const image = new Image();
+        image.src = URL.createObjectURL(blob);
+
+        // 使用 Tesseract.js 进行 OCR 识别
+        const result = await Tesseract.recognize(
+            image,
+            'eng', // 语言，默认为英语
+            { logger: m => console.log(m) }
+        );
+
+        console.log(result.text); // 输出识别到的文本
+    } catch (error) {
+        console.error("Error:", error);
+    }
     // ...
   }
 });
