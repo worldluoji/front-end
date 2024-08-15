@@ -6,4 +6,8 @@ The Plasmo Framework is a battery-packed browser extension SDK made by hackers f
 pnpm create plasmo
 ```
 
-https://docs.plasmo.com/framework
+<br>
+
+## reference
+- https://docs.plasmo.com/framework
+- https://github.com/PlasmoHQ/examples/blob/main/with-background/background.ts
