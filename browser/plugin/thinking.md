@@ -33,17 +33,15 @@ https://docs.plasmo.com/framework/customization/manifest
 
 #### background/index.ts
 ```typescript
-import { create, onClicked } from "plasmo-context-menus";
-
 // 创建一个右键菜单项
-create({
+chrome.contextMenus.create.create({
   id: "handle-image",
   title: "Handle this image",
   contexts: ["image"]
 });
 
 // 监听菜单项点击事件
-onClicked.addListener(async (info, tab) => {
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "handle-image") {
     // 获取图片的URL
     const imageUrl = info.srcUrl;
@@ -85,3 +83,7 @@ onClicked.addListener(async (info, tab) => {
    - 点击该菜单项，应该会打开一个新的标签页显示选中的图片。
 
 通过以上步骤，你就成功地使用 Plasmo 开发了一个处理鼠标右键点击图片的 Chrome 浏览器插件。
+
+
+## reference
+- https://chrome.jscn.org/docs/extensions/reference/contextMenus/
