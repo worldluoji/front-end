@@ -6,19 +6,14 @@ function IndexPopup() {
   return (
     <div
       style={{
-        padding: 16
+        padding: 16,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
-      <h2>
-        Welcome to your{" "}
-        <a href="https://www.plasmo.com" target="_blank">
-          Plasmo
-        </a>{" "}
-        Extension!
-      </h2>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
-      <a href="https://docs.plasmo.com" target="_blank">
-        View Docs
-      </a>
+      <p>
+        Welcome to Image OCR Detector.
+      </p>
     </div>
   )
 }
