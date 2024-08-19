@@ -23,24 +23,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             return;
         }
 
-        // 通过ocr识别图片
-        try {
-            // 加载图片
-            // const response = await fetch(imageUrl);
-            // const blob = await response.blob();
-            //   const image = new Image();
-            //   image.src = URL.createObjectURL(blob);
-
-            // 使用 Tesseract.js 进行 OCR 识别
-            // TODO Tesseract.recognize会创建一个webworker，backgourd里无法创建，会报错
-            const result = await Tesseract.recognize(
-                imageUrl,
-                'chi_sim+eng', // 识别简体中文和英文
-            );
-
-            console.log(111, result.data); // 输出识别到的数据
-        } catch (error) {
-            console.error("Error:", error);
-        }
+        chrome.tabs.sendMessage(tab.id, { action: 'ocr',  imageUrl }, function(response) {
+            console.log(321, response);
+        });
     }
 });
