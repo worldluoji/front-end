@@ -49,7 +49,8 @@ content scripts 和 background scripts 在浏览器扩展开发中各自承担�
 <br>
 
 ## chrome.contextMenus.onClicked.addListener
-`chrome.contextMenus.onClicked.addListener` 事件监听器可以在 background script 中编写，但不建议在 content script 中使用。这是因为 context menus 事件处理器通常涉及到与浏览器扩展的整体状态或功能交互，而这些通常是在 background script 中管理的。
+`chrome.contextMenus.onClicked.addListener` 只能在 background script 中使用，
+在 content script 中使用 onClicked 会undefined
 
 ### 在 background script 中使用
 
@@ -76,9 +77,7 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 
 ### 在 content script 中使用
 
-虽然技术上可以在 content script 中创建和监听 context menus，但这不是最佳实践。content script 的作用范围限于特定的网页上下文，而 context menus 的处理通常涉及扩展的整体逻辑，这更适合在 background script 中处理。
-
-### 为什么不在 content script 中使用
+### 为什么不设计在 content script 中使用
 
 1. **作用域限制**：
    - Content scripts 只能访问当前页面的上下文。
@@ -125,5 +124,3 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 });
 ```
-
-总之，尽管技术上可以在 content script 中使用 `chrome.contextMenus.onClicked.addListener`，但由于作用域和资源管理的原因，这并不是推荐的做法。通常，你应该在 background script 中处理 context menus 的创建和监听。
