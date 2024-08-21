@@ -1,5 +1,8 @@
 # 如何开发一个Fabric组件
 TODO
+
+https://github.com/reactwg/react-native-new-architecture#guides
+
 ```ts
 import {HostComponent, type ViewProps} from 'react-native';
 import codegenNativeCommands from 'react-native/Libraries/Utilities/codegenNativeCommands';
