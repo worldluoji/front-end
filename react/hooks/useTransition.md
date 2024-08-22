@@ -1,4 +1,4 @@
-# 中，Transitions
+# useTransition
 React 18 中，Transitions 是一个强大的新特性，它为开发者提供了一种优化用户界面更新的方式，能够显著提升应用的性能和用户体验。
 
 **一、Transitions 的作用**
