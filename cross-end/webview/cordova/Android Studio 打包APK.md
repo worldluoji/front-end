@@ -1,0 +1,28 @@
+在 Android Studio 中构建一个 APK 可以按照以下步骤进行：
+
+# Android Studio 打包 APK
+**一、确保项目配置正确**
+
+1. 打开你的 Android 项目在 Android Studio 中。
+2. 检查项目的配置，包括 Gradle 文件、依赖项、资源文件等是否正确设置。确保没有错误或警告显示在项目的构建窗口中。
+
+**二、选择构建变体**
+
+1. 在 Android Studio 的左侧边栏中，点击“Build Variants”（构建变体）选项卡。
+2. 选择你想要构建的构建变体，例如“debug”（调试）或“release”（发布）。调试版本通常用于开发和测试，而发布版本用于最终分发。
+
+**三、构建 APK**
+
+1. 有以下几种方法来构建 APK：
+   - **使用 Build 菜单**：点击“Build”>“Build Bundle(s)/APK(s)”>“Build APK(s)”。这将构建一个未签名的 APK 文件，可以在项目的“build/outputs/apk/”目录中找到。
+   - **使用快捷键**：在 Windows 和 Linux 上，可以使用快捷键“Ctrl + Shift + F10”，在 Mac 上可以使用快捷键“Command + Shift + F10”来触发构建。
+   - **使用 Gradle 面板**：在 Android Studio 的右侧边栏中，点击“Gradle”选项卡。展开你的项目，然后找到并双击“assemble[Build Variant Name]”任务，例如“assembleDebug”或“assembleRelease”。这将触发相应构建变体的 APK 构建。
+
+**四、签名 APK（如果需要发布）**
+
+1. 如果你要发布你的应用，需要对 APK 进行签名。未签名的 APK 不能安装在大多数设备上。
+2. 在 Android Studio 中，可以使用“Generate Signed Bundle / APK”向导来创建一个签名的 APK。点击“Build”>“Generate Signed Bundle / APK”。
+3. 按照向导的步骤选择要签名的构建变体（通常是“release”），创建或选择一个 keystore（密钥库）文件，输入密钥库密码、别名和密钥密码等信息。
+4. 完成向导后，Android Studio 将生成一个签名的 APK 文件，可以在指定的输出目录中找到。
+
+通过以上步骤，你可以在 Android Studio 中构建一个 APK 文件。如果在构建过程中遇到问题，可以查看构建日志以获取更多详细信息，并根据错误消息进行调试。
