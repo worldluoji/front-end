@@ -1,0 +1,2 @@
+这是一个集成了cordova的安卓工程，基于Android SDK34, 可以用Android Studio直接打开使用。
+仅需要把local.properties配置为Android SDK实际的目录。
