@@ -96,9 +96,9 @@ CDN: trunk URL couldn't be downloaded: https://cdn.jsdelivr.net/cocoa/Specs/d/2/
    pod repo remove trunk
    ```
 
-2. 添加其他可靠的源，比如腾讯源：
+2. 添加其他可靠的源，比如：
    ```
-   pod repo add Specs https://mirrors.cloud.tencent.com/CocoaPods/Specs.git
+   pod repo add Specs https://gitee.com/mirrors/CocoaPods-Specs.git
    ```
 
 3. 更新源：
