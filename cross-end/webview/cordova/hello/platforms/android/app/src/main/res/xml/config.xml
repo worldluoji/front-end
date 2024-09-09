@@ -9,4 +9,10 @@
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <preference name="loglevel" value="DEBUG" />
+    <feature name="Camera">
+        <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
+    </feature>
+    <feature name="InAppBrowser">
+        <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
+    </feature>
 </widget>

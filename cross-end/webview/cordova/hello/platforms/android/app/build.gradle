@@ -336,6 +336,7 @@ dependencies {
 
     // SUB-PROJECT DEPENDENCIES START
     implementation(project(path: ":CordovaLib"))
+    implementation "androidx.core:core:1.6.+"
     // SUB-PROJECT DEPENDENCIES END
 }
 

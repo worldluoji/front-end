@@ -80,3 +80,55 @@ Logging Error: Failed to initialize logging system. Log messages may be missing.
 2. 可以通过 Mac App Store 检查是否有 Xcode 的更新，或者在 Xcode 的菜单栏中选择“Xcode”->“About Xcode”（关于 Xcode）来查看当前版本信息。
 
 如果以上方法都不能解决问题，可以尝试在开发者论坛或社区中搜索类似的问题，或者向苹果开发者支持寻求帮助。提供详细的错误信息和你已经尝试过的方法，可以帮助其他人更好地理解和解决你的问题。
+
+<br>
+
+## CocoaPods超时
+pod install 报错 CDN: trunk Repo update failed - 17 error(s):
+CDN: trunk URL couldn't be downloaded: https://cdn.jsdelivr.net/cocoa/Specs/d/2/d/Cordova/1.0.0/Cordova.podspec.json Response: Timeout was reached
+
+这个错误表示在使用 CocoaPods 进行安装时，从 CDN（内容分发网络）获取 `Cordova.podspec.json` 文件超时。可以尝试以下方法来解决这个问题：
+
+**一、更换源**
+
+1. 移除默认源：
+   ```
+   pod repo remove trunk
+   ```
+
+2. 添加其他可靠的源，比如腾讯源：
+   ```
+   pod repo add Specs https://mirrors.cloud.tencent.com/CocoaPods/Specs.git
+   ```
+
+3. 更新源：
+   ```
+   pod repo update
+   ```
+
+**二、设置超时时间**
+
+在执行 `pod install` 或 `pod update` 时，可以设置更长的超时时间，例如：
+
+```
+pod install --verbose --no-repo-update --default-timeout=120
+```
+
+这里将超时时间设置为 120 秒，可以根据实际情况调整。
+
+**三、检查网络连接**
+
+1. 确保你的网络连接稳定，没有被限制或干扰。可以尝试切换网络环境，比如从 Wi-Fi 切换到移动数据，或者使用 VPN。
+
+2. 检查防火墙设置，确保没有阻止 CocoaPods 的下载请求。
+
+**四、清理缓存并重新安装**
+
+1. 清理 CocoaPods 缓存：
+   ```
+   pod cache clean --all
+   ```
+
+2. 然后重新执行 `pod install`。
+
+如果以上方法都不能解决问题，可以尝试在开发者论坛或社区中搜索类似的问题，或者提供更详细的错误信息以便更好地诊断问题。
