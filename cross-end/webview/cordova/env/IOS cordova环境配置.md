@@ -18,3 +18,65 @@ brew install CococaPods
 echo 'export PATH="/usr/local/opt/ruby@3.3/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 ```
+
+## simulator总是下载失败
+更新到最新的xcode后，自动下载Simulator总是失败，那是因为xcode自带的下载不支持断点续传，网络有抖动就失败了。
+
+解决方法如下：
+
+从官网直接下载
+打开https://developer.apple.com/download/all/?q=ios
+
+下载：IOS xxx版本 Simulator Runtime.dmg 安装文件，这里以17.5为例
+
+手动安装
+```zsh
+sudo xcode-select -s /Applications/Xcode.app
+
+xcodebuild -runFirstLaunch 
+
+xcrun simctl runtime add 'iOS_17.5_Simulator_Runtime.dmg'
+```
+如果xcodebuild 和 xcrun命令找不到，需要在环境变量中添加：
+```zsh
+export PATH="/Applications/Xcode.app/Contents/Developer/usr/bin:$PATH"
+```
+
+<br>
+
+## Logging Error
+Logging Error: Failed to initialize logging system. Log messages may be missing. If this issue persists, try setting IDEPreferLogStreaming=YES in the active scheme actions environment variables.
+
+这个错误信息表明在开发过程中日志系统初始化失败，可能会导致日志消息缺失。以下是针对这个问题的解决方法：
+
+**一、设置环境变量**
+
+1. 打开 Xcode 项目。
+2. 选择菜单栏中的“Product”（产品）->“Scheme”（方案）->“Edit Scheme”（编辑方案）。
+3. 在弹出的窗口中，选择“Run”（运行）或“Test”（测试）选项（具体取决于你遇到问题的场景）。
+4. 然后选择“Arguments”（参数）选项卡。
+5. 在“Environment Variables”（环境变量）部分，点击左下角的“+”按钮添加一个新的环境变量。
+6. 将“Name”（名称）设置为“IDEPreferLogStreaming”，将“Value”（值）设置为“YES”。
+
+**二、检查日志权限**
+
+1. 确保你的应用有足够的权限来写入日志文件。在 iOS 中，应用的权限受到严格的限制，如果没有正确的权限，可能会导致日志无法写入。
+2. 检查你的应用的 Info.plist 文件，确保没有设置任何可能限制日志写入的权限。例如，如果你设置了“NSAppleMusicUsageDescription”等权限描述，但没有正确处理用户的授权请求，可能会影响到日志系统的正常工作。
+
+**三、清理和重新构建项目**
+
+1. 有时候，项目中的临时文件或缓存可能会导致问题。尝试清理项目的构建文件夹。
+   - 在 Xcode 中，选择“Product”（产品）->“Clean Build Folder”（清理构建文件夹）。
+2. 然后重新构建项目，看问题是否仍然存在。
+
+**四、检查其他环境变量和设置**
+
+1. 除了上述设置的环境变量外，检查你的项目中是否有其他可能影响日志系统的环境变量或设置。
+2. 例如，一些第三方库或插件可能会设置特定的环境变量，这些变量可能会与日志系统冲突。检查你的项目的依赖项和配置，确保没有冲突的设置。
+
+**五、更新 Xcode 和相关工具**
+
+1. 确保你使用的是最新版本的 Xcode 和相关的开发工具。有时候，旧版本的工具可能会存在一些已知的问题，更新到最新版本可能会解决这些问题。
+2. 可以通过 Mac App Store 检查是否有 Xcode 的更新，或者在 Xcode 的菜单栏中选择“Xcode”->“About Xcode”（关于 Xcode）来查看当前版本信息。
+
+如果以上方法都不能解决问题，可以尝试在开发者论坛或社区中搜索类似的问题，或者向苹果开发者支持寻求帮助。提供详细的错误信息和你已经尝试过的方法，可以帮助其他人更好地理解和解决你的问题。
