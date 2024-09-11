@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="simple-verify-plugin"
+    version="0.1">
+     
+    <name>SimpleVerifyPlugin</name>
+    <description>This plugin use to verify password</description>
+     
+    <js-module src="simple-verify-plugin.js">
+        <clobbers target="window.SimpleVerifyPlugin" />
+    </js-module>
+     
+    <!-- iOS -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="SimpleVerifyPlugin">
+                <param name="ios-package" value="SimpleVerifyPlugin" />
+            </feature>
+        </config-file>
+        <source-file src="src/ios/SimpleVerifyPlugin.swift" />
+    </platform>
+     
+</plugin>

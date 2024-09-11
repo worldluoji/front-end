@@ -1,0 +1,14 @@
+{
+  "name": "simple-verify-plugin",
+  "version": "1.0.0",
+  "cordova": {
+    "id": "simple-verify-plugin",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
