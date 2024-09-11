@@ -25,9 +25,10 @@ window.SimpleVerifyPlugin
 
 然后在cordova项目里，通过
 ```shell
+cordova plugin add cordova-plugin-add-swift-support
 cordova plugin add SimpleVerifyPlugin #你的插件目录
 ```
-就可以使用插件了。
+就可以使用插件了。cordova-plugin-add-swift-support是swift支持插件。
 
 js调用插件提供的swift方法示例如下：
 ```js
@@ -71,3 +72,9 @@ html如下：
 </p>
 ```
 最终实际是调用了SimpleVerifyPlugin.swift中的verifyPassword方法。
+
+<br>
+
+## reference
+- https://www.hangge.com/blog/cache/detail_1152.html#google_vignette
+- https://www.jianshu.com/p/903251258e72
