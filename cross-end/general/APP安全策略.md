@@ -89,3 +89,6 @@
    - 确保客户端与服务器之间的通信是加密的，防止 Token 在传输过程中被窃取。可以使用 HTTPS 等安全通信协议来保证通信的安全性。
 
 总之，在基于 Cordova 的 APP 中保存 Token 时，应选择安全的存储方式，并结合其他安全措施，以确保 Token 的安全性和应用的整体安全性。同时，开发人员还应密切关注安全领域的最新动态，及时更新和改进应用的安全机制。
+
+## 其它
+https://cordova.apache.org/docs/en/12.x/guide/appdev/security/index.html
