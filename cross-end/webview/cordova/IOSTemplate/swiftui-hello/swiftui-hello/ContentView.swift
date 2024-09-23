@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import KeychainSwift
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -41,7 +42,21 @@ struct ContentView: View {
         
         NavigationView {
             VStack {
-                Text("This is a SwiftUI View")
+                // 字体颜色
+                VStack {
+                    // 默认就是居中的
+                    Text("This is a SwiftUI View")
+                        .font(.title)
+                    .foregroundColor(.blue)
+                    
+                    HStack {
+                        Text("Using HStack in horizental dir")
+                        // A spacer expands to make its containing view use all of the space of its parent view, instead of having its size defined only by its contents.
+                        Spacer()
+                        Text("OK")
+                    }
+                }
+                .padding() // 两侧留出一点空隙
                 
                 Button(action: {
                     self.showUIKitView = true

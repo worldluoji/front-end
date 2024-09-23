@@ -23,6 +23,7 @@
 		0DAE350C2C9BC9840030F81D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAE350B2C9BC9840030F81D /* CoreGraphics.framework */; };
 		0DAE350E2C9BC9960030F81D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAE350D2C9BC9960030F81D /* MobileCoreServices.framework */; };
 		0DAE35112C9BF27F0030F81D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAE35102C9BF27F0030F81D /* ViewController.swift */; };
+		F3E2FB102C9ECD8800B90C04 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F3E2FB0F2C9ECD8800B90C04 /* KeychainSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3E2FB102C9ECD8800B90C04 /* KeychainSwift in Frameworks */,
 				0DAE350E2C9BC9960030F81D /* MobileCoreServices.framework in Frameworks */,
 				0DAE350C2C9BC9840030F81D /* CoreGraphics.framework in Frameworks */,
 				0DAE350A2C9BC9730030F81D /* CoreLocation.framework in Frameworks */,
@@ -216,6 +218,9 @@
 				0DAE35042C9BC93C0030F81D /* PBXTargetDependency */,
 			);
 			name = "swiftui-hello";
+			packageProductDependencies = (
+				F3E2FB0F2C9ECD8800B90C04 /* KeychainSwift */,
+			);
 			productName = "swiftui-hello";
 			productReference = 0DAE34C72C9BBEE70030F81D /* swiftui-hello.app */;
 			productType = "com.apple.product-type.application";
@@ -288,6 +293,10 @@
 				Base,
 			);
 			mainGroup = 0DAE34BE2C9BBEE70030F81D;
+			packageReferences = (
+				F3E2FB0B2C9ECB1D00B90C04 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				F3E2FB0D2C9ECBE500B90C04 /* XCRemoteSwiftPackageReference "swift-crypto" */,
+			);
 			productRefGroup = 0DAE34C82C9BBEE70030F81D /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -703,6 +712,33 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F3E2FB0B2C9ECB1D00B90C04 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.0.0;
+			};
+		};
+		F3E2FB0D2C9ECBE500B90C04 /* XCRemoteSwiftPackageReference "swift-crypto" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-crypto.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F3E2FB0F2C9ECD8800B90C04 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3E2FB0B2C9ECB1D00B90C04 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0DAE34BF2C9BBEE70030F81D /* Project object */;
 }
