@@ -1,5 +1,5 @@
 //
-//  TrunToUIKitView.swift
+//  EmbededUIKitView.swift
 //  swiftui-hello
 //
 //  Created by 罗家懿 on 2024/9/23.
@@ -7,17 +7,24 @@
 
 import SwiftUI
 
-struct TrunToUIKitView: View {
+struct EmbededUIKitView: View {
     var body: some View {
-        Button("Show UIKit View") {
-            let hostingController = UIHostingController(rootView: MyUIKitViewControllerWrapper2())
-            UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
+        NavigationView {
+            VStack {
+                HStack {
+                    Text("This is a SwiftUI View")
+                }
+                
+                // 显示 UIKit 视图控制器
+                MyUIKitViewControllerWrapper()
+            }
+            .navigationTitle("Mixed UI")
         }
     }
 }
 
 // 使用 UIViewControllerRepresentable 包装 UIKit 视图控制器
-struct MyUIKitViewControllerWrapper2: UIViewControllerRepresentable {
+struct MyUIKitViewControllerWrapper3: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> ViewController {
         return ViewController()
     }
@@ -27,7 +34,6 @@ struct MyUIKitViewControllerWrapper2: UIViewControllerRepresentable {
     }
 }
 
-
 #Preview {
-    TrunToUIKitView()
+    EmbededUIKitView()
 }
