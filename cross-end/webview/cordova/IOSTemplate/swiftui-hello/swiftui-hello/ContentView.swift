@@ -10,44 +10,23 @@ import SwiftData
 import KeychainSwift
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
     @State private var showUIKitView = false
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {	
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
-        }
-        
         NavigationView {
             VStack {
+                MapView()
+                    .frame(height: 300)
                 // 字体颜色
                 VStack {
                     // 默认就是居中的
                     Text("This is a SwiftUI View")
                         .font(.title)
                     .foregroundColor(.blue)
+                    
+                    CircleImage()
+                      .offset(y: -280)
+                      .padding(.bottom, -280)
                     
                     HStack {
                         Text("Using HStack in horizental dir")
@@ -57,6 +36,8 @@ struct ContentView: View {
                     }
                 }
                 .padding() // 两侧留出一点空隙
+                
+                Divider() // 分割线
                 
                 Button(action: {
                     self.showUIKitView = true
@@ -70,24 +51,10 @@ struct ContentView: View {
                 .sheet(isPresented: $showUIKitView, content: {
                     MyUIKitViewControllerWrapper()
                 })
+                
+                Spacer()
             }
-            .padding()
             .navigationTitle("Mixed UI")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
         }
     }
 }
@@ -106,5 +73,4 @@ struct MyUIKitViewControllerWrapper: UIViewControllerRepresentable {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
