@@ -33,6 +33,7 @@
 		F3F5AF122CA1560D00B324BB /* LandmarkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F5AF112CA1560D00B324BB /* LandmarkRow.swift */; };
 		F3F5AF162CA1590C00B324BB /* LandmarkList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F5AF152CA1590C00B324BB /* LandmarkList.swift */; };
 		F3F5AF182CA15C7400B324BB /* LandmarkDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F5AF172CA15C7400B324BB /* LandmarkDetail.swift */; };
+		F3F5AF1A2CA169F100B324BB /* EvokeUIKitSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F5AF192CA169F100B324BB /* EvokeUIKitSheetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +104,7 @@
 		F3F5AF112CA1560D00B324BB /* LandmarkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkRow.swift; sourceTree = "<group>"; };
 		F3F5AF152CA1590C00B324BB /* LandmarkList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkList.swift; sourceTree = "<group>"; };
 		F3F5AF172CA15C7400B324BB /* LandmarkDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarkDetail.swift; sourceTree = "<group>"; };
+		F3F5AF192CA169F100B324BB /* EvokeUIKitSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvokeUIKitSheetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,6 +232,7 @@
 				F3F5AF112CA1560D00B324BB /* LandmarkRow.swift */,
 				F3F5AF152CA1590C00B324BB /* LandmarkList.swift */,
 				F3F5AF172CA15C7400B324BB /* LandmarkDetail.swift */,
+				F3F5AF192CA169F100B324BB /* EvokeUIKitSheetView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -416,6 +419,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3F5AF1A2CA169F100B324BB /* EvokeUIKitSheetView.swift in Sources */,
 				0DAE34CD2C9BBEE70030F81D /* ContentView.swift in Sources */,
 				F3F5AF052CA138EC00B324BB /* MapView.swift in Sources */,
 				F3F5AF0D2CA145D500B324BB /* ModelData.swift in Sources */,
