@@ -24,6 +24,7 @@
 		0DAE350E2C9BC9960030F81D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAE350D2C9BC9960030F81D /* MobileCoreServices.framework */; };
 		0DAE35112C9BF27F0030F81D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAE35102C9BF27F0030F81D /* ViewController.swift */; };
 		F3E2FB102C9ECD8800B90C04 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F3E2FB0F2C9ECD8800B90C04 /* KeychainSwift */; };
+		F3F5AF032CA11D6000B324BB /* CircleImageSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F5AF022CA11D6000B324BB /* CircleImageSwift.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,7 @@
 		0DAE350D2C9BC9960030F81D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		0DAE350F2C9BD1600030F81D /* swiftui-hello-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "swiftui-hello-Bridging-Header.h"; sourceTree = "<group>"; };
 		0DAE35102C9BF27F0030F81D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F3F5AF022CA11D6000B324BB /* CircleImageSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImageSwift.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 				0DAE34D02C9BBEE90030F81D /* Assets.xcassets */,
 				0DAE34D22C9BBEE90030F81D /* Preview Content */,
 				0DAE35102C9BF27F0030F81D /* ViewController.swift */,
+				F3F5AF022CA11D6000B324BB /* CircleImageSwift.swift */,
 			);
 			path = "swiftui-hello";
 			sourceTree = "<group>";
@@ -367,6 +370,7 @@
 				0DAE34CD2C9BBEE70030F81D /* ContentView.swift in Sources */,
 				0DAE34CF2C9BBEE70030F81D /* Item.swift in Sources */,
 				0DAE35112C9BF27F0030F81D /* ViewController.swift in Sources */,
+				F3F5AF032CA11D6000B324BB /* CircleImageSwift.swift in Sources */,
 				0DAE34CB2C9BBEE70030F81D /* swiftui_helloApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
