@@ -15,18 +15,12 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                MapView()
-                    .frame(height: 300)
                 // 字体颜色
                 VStack {
                     // 默认就是居中的
                     Text("This is a SwiftUI View")
                         .font(.title)
                     .foregroundColor(.blue)
-                    
-                    CircleImage()
-                      .offset(y: -280)
-                      .padding(.bottom, -280)
                     
                     HStack {
                         Text("Using HStack in horizental dir")
