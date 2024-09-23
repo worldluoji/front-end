@@ -33,7 +33,8 @@ struct EvokeUIKitSheetView: View {
                         .foregroundColor(.white)
                         .cornerRadius(8)
                 }
-                .sheet(isPresented: $showUIKitView, content: {
+                // .sheet上面会空出一点灰色的东东
+                .fullScreenCover(isPresented: $showUIKitView, content: {
                     MyUIKitViewControllerWrapper()
                 })
                 
