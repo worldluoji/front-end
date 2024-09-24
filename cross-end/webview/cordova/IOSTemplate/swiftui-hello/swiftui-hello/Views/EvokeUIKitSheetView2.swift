@@ -9,9 +9,13 @@ import SwiftUI
 
 struct EvokeUIKitSheetView2: View {
     var body: some View {
-        Button("Show UIKit View") {
-            let hostingController = UIHostingController(rootView: MyUIKitViewControllerWrapper2())
-            UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true, completion: nil)
+        NavigationStack {
+            VStack {
+                NavigationLink(destination: MyUIKitViewControllerWrapper2()) {
+                    Text("Go to UIKit View")
+                }
+            }
+//            .navigationTitle("SwiftUI View")
         }
     }
 }
