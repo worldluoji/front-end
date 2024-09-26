@@ -11,10 +11,11 @@ import KeychainSwift
 
 struct ContentView: View {
     var body: some View {
-        EvokeUIKitSheetView()
+        EvokeUIKitSheetView2()
     }
 }
 
 #Preview {
     ContentView()
+        .environment(ModelData())
 }

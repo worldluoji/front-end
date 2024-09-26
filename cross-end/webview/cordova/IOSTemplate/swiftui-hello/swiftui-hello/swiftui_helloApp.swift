@@ -10,6 +10,9 @@ import SwiftData
 
 @main
 struct swiftui_helloApp: App {
+    // it initializes state in an app only once during the lifetime of the app.
+    @State private var modelData = ModelData()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -28,5 +31,6 @@ struct swiftui_helloApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+        .environment(modelData)
     }
 }
