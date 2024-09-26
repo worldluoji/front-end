@@ -245,16 +245,24 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
+		0DF3EB5F2CA5580600F4DACA /* UIKitViews */ = {
+			isa = PBXGroup;
+			children = (
+				0DAE35102C9BF27F0030F81D /* ViewController.swift */,
+				F3F5AF192CA169F100B324BB /* EvokeUIKitSheetView.swift */,
+				F3F5AF1B2CA16B5A00B324BB /* EvokeUIKitSheetView2.swift */,
+				F3F5AF1D2CA17D9D00B324BB /* EmbededUIKitView.swift */,
+			);
+			path = UIKitViews;
+			sourceTree = "<group>";
+		};
 		F3F5AF0E2CA1536500B324BB /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				0DF3EB572CA534D800F4DACA /* Landmarks */,
 				0DAE34CC2C9BBEE70030F81D /* ContentView.swift */,
-				0DAE35102C9BF27F0030F81D /* ViewController.swift */,
+				0DF3EB5F2CA5580600F4DACA /* UIKitViews */,
 				0DF3EB5E2CA5375A00F4DACA /* Helper */,
-				F3F5AF192CA169F100B324BB /* EvokeUIKitSheetView.swift */,
-				F3F5AF1B2CA16B5A00B324BB /* EvokeUIKitSheetView2.swift */,
-				F3F5AF1D2CA17D9D00B324BB /* EmbededUIKitView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
