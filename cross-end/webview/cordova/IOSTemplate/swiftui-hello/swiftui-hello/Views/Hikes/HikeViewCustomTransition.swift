@@ -1,15 +1,26 @@
-/*
-See the LICENSE.txt file for this sample’s licensing information.
-
-Abstract:
-A view displaying information about a hike, including an elevation graph.
-*/
+//
+//  HikeViewCustomTransition.swift
+//  swiftui-hello
+//
+//  Created by Luke-Surface-mac on 2024/9/27.
+//
 
 import SwiftUI
 
-struct HikeView: View {
+// Customize view transitions
+extension AnyTransition {
+    static var moveAndFade: AnyTransition {
+        // Use the asymmetric(insertion:removal:) modifier to provide different transitions for when the view appears and disappears.
+        .asymmetric(
+            insertion: .move(edge: .trailing).combined(with: .opacity),
+            removal: .scale.combined(with: .opacity)
+        )
+    }
+}
+
+struct HikeViewCustomTransition: View {
     var hike: Hike
-    @State private var showDetail = true
+    @State private var showDetail = false
 
     var body: some View {
         VStack {
@@ -26,8 +37,8 @@ struct HikeView: View {
                 Spacer()
 
                 Button {
-                    // 1s逐渐全部展示
-                    withAnimation(.easeInOut(duration: 1)) {
+                    // default animation
+                    withAnimation() {
                         showDetail.toggle()
                     }
                 } label: {
@@ -35,15 +46,14 @@ struct HikeView: View {
                         .labelStyle(.iconOnly)
                         .imageScale(.large)
                         .rotationEffect(.degrees(showDetail ? 90 : 0))
-//                        .animation(nil, value: showDetail) //prevent the rotation effect 
                         .scaleEffect(showDetail ? 1.5 : 1) //  make the button larger when the graph is visible.
                         .padding()
-                        .animation(.spring(duration: 1), value: showDetail) // turn on animation for the button’s rotation by adding an animation modifier that begins on changes of the showDetail value.
                 }
             }
 
             if showDetail {
                 HikeDetail(hike: hike)
+                    .transition(.moveAndFade)
             }
         }
     }
@@ -51,7 +61,7 @@ struct HikeView: View {
 
 #Preview {
     VStack {
-        HikeView(hike: ModelData().hikes[0])
+        HikeViewCustomTransition(hike: ModelData().hikes[0])
             .padding()
         Spacer()
     }
