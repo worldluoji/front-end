@@ -1,28 +1,20 @@
-//
-//  HexagonParameters.swift
-//  swiftui-hello
-//
-//  Created by Luke-Surface-mac on 2024/9/26.
-//
+/*
+See the LICENSE.txt file for this sample’s licensing information.
 
-import Foundation
+Abstract:
+Size, position, and other information used to draw a badge.
+*/
+
 import CoreGraphics
 
 struct HexagonParameters {
-    // Define a Segment structure to hold the three points that represent one side of the hexagon; import CoreGraphics so you can use CGPoint.
-    
-    // Each side starts where the previous ends, moves in a straight line to the first point, and then moves over a Bézier curve at the corner to the second point. The third point controls the shape of the curve.
     struct Segment {
         let line: CGPoint
         let curve: CGPoint
         let control: CGPoint
     }
-    
-    
-    // Add an adjustment value that lets you tune the shape of the hexagon.
+
     static let adjustment: CGFloat = 0.085
-    
-    // The values are stored as a fraction of a unit square having its origin in the upper left, with positive x to the right and positive y down. Later, you’ll use these fractions to find the actual points of a hexagon with a given size.
     static let segments = [
         Segment(
             line:    CGPoint(x: 0.60, y: 0.05),
