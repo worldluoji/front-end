@@ -14,6 +14,13 @@ struct ProfileHost: View {
     
     var body: some View {
         HStack {
+            if editMode?.wrappedValue == .active {
+                Button("Cancel", role: .cancel) {
+                    // 点击取消，实际没有修改modelData.profile
+                    draftProfile = modelData.profile
+                    editMode?.animation().wrappedValue = .inactive
+                }
+            }
             Spacer()
             EditButton()
         }
@@ -21,9 +28,15 @@ struct ProfileHost: View {
         
         VStack(alignment: .leading, spacing: 20) {
             if editMode?.wrappedValue == .inactive {
-               ProfileSummary(profile: modelData.profile)
+                ProfileSummary(profile: modelData.profile)
             } else {
-               Text("Profile Editor")
+                ProfileEditor(profile: $draftProfile)
+                    .onAppear {
+                        draftProfile = modelData.profile
+                    }
+                    .onDisappear {
+                        modelData.profile = draftProfile
+                    }
             }
         }
         .padding()

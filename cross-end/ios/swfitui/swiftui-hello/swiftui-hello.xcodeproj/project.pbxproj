@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D8207A02CA8DDFF00FAF27B /* ProfileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D82079F2CA8DDFF00FAF27B /* ProfileEditor.swift */; };
 		0DAE34CB2C9BBEE70030F81D /* swiftui_helloApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAE34CA2C9BBEE70030F81D /* swiftui_helloApp.swift */; };
 		0DAE34CD2C9BBEE70030F81D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAE34CC2C9BBEE70030F81D /* ContentView.swift */; };
 		0DAE34CF2C9BBEE70030F81D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DAE34CE2C9BBEE70030F81D /* Item.swift */; };
@@ -97,6 +98,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D82079F2CA8DDFF00FAF27B /* ProfileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditor.swift; sourceTree = "<group>"; };
 		0DAE34C72C9BBEE70030F81D /* swiftui-hello.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "swiftui-hello.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DAE34CA2C9BBEE70030F81D /* swiftui_helloApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swiftui_helloApp.swift; sourceTree = "<group>"; };
 		0DAE34CC2C9BBEE70030F81D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -337,6 +339,7 @@
 			children = (
 				F3DA647C2CA7DE7400EB325E /* ProfileHost.swift */,
 				F3DA647E2CA7DEC100EB325E /* ProfileSummary.swift */,
+				0D82079F2CA8DDFF00FAF27B /* ProfileEditor.swift */,
 			);
 			path = Profiles;
 			sourceTree = "<group>";
@@ -574,6 +577,7 @@
 				F3DA64892CA7E11B00EB325E /* HikeBandage.swift in Sources */,
 				0DF3EB5B2CA5370C00F4DACA /* LandmarkDetail.swift in Sources */,
 				0DAE34CB2C9BBEE70030F81D /* swiftui_helloApp.swift in Sources */,
+				0D8207A02CA8DDFF00FAF27B /* ProfileEditor.swift in Sources */,
 				F3DA647A2CA7DE2A00EB325E /* Profile.swift in Sources */,
 				0DF3EB662CA55F1700F4DACA /* BadgeBackground.swift in Sources */,
 			);
