@@ -57,3 +57,8 @@ App 混合开发，指的是一个 App 部分功能用 Native 构建，部分功
    - 在进行功能扩展和 bug 修复时，需要考虑两种技术的兼容性和交互问题。
 
 使用“npx react-native@latest init”创建的是一个纯 React Native 应用。这个命令会初始化一个全新的 React Native 项目，项目中只包含 React Native 的代码和依赖，不涉及原生平台的特定代码。
+
+<br>
+
+## 已有app整合react native
+https://reactnative.dev/docs/integration-with-existing-apps
