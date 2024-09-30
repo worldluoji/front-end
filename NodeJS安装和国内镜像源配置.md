@@ -91,3 +91,9 @@ npm uninstall react --save	    yarn remove react
 npm install react --save-dev	yarn add react --dev
 npm update --save	            yarn upgrade
 ```
+
+## 如何管理Node版本
+建议使用fnm
+```
+brew install fnm
+```
