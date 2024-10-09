@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page1</title>
+</head>
+<body>
+    <div>
+        <input type="text" id="ipt" />
+        <button id="btn">点击操作页面</button>
+    </div>
+    
+    <script>
+        btn.onclick = function() {
+            const w2 = window.open('http://localhost:52330/js/async/e.%20postMessage/two-page/page2.html');
+
+            w2.onload = function () {
+                // postMessage(message, targetOrigin)
+                w2.postMessage('页面一 发送====> 页面二', "http://localhost:52330")
+            }
+        }
+
+        window.addEventListener('message', function(e){
+            console.log(1, e.data);
+            ipt.value = e.data;
+        })
+    </script>
+
+</body>
+</html>
