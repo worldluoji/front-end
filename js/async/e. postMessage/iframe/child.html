@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>child</title>
+</head>
+<body>
+
+    <div>
+        <input type="text" id="ipt" />
+        <button id="frameBtn">iframe点击</button>
+    </div>
+
+    <script>
+        frameBtn.onclick = function(){
+            window.top.postMessage('Hello Iframe', 'http://localhost:52330');
+        }
+        window.addEventListener('message', function (e) {
+            console.log('child receive message', e.data);
+            ipt.value = e.data;
+        })
+    </script>
+</body>
+</html>

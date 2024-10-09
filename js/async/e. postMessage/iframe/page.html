@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page</title>
+</head>
+<body>
+
+    <iframe src="http://localhost:52330/js/async/e.%20postMessage/iframe/child.html" frameborder="1" width="100%" height="500px" id="Bframe"></iframe>
+
+    <script>
+        window.onload = ()=>{
+            let frame = window.frames[0];
+            frame.postMessage("父====>子", "http://localhost:52330")
+        }
+
+        window.addEventListener('message', function (e) {
+            console.log('父接收数据', e.data);
+        })
+    </script>
+
+</body>
+</html>
