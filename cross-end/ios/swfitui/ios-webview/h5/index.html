@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOS通信</title>
+</head>
+<body>
+    <h1>发送消息给Native IOS</h1>
+    <div>
+        <input type="text" placeholder="请输入message" id="messageInput" />
+        <button id="sendBtn">发送</button>
+    </div>
+    <script>
+        
+        let sendBtn = document.getElementById('sendBtn');
+        sendBtn.addEventListener('click', () => {
+            let message = document.getElementById('messageInput').value;
+            console.log('click', message);
+            if (message) {
+                if (!window.webkit || !window.webkit.messageHandlers || !window.webkit.messageHandlers.callbackHandler) {
+                    console.log('null happened');
+                    return;
+                }
+                window.webkit.messageHandlers.callbackHandler.postMessage(message);
+            }
+        })
+        
+    </script>
+</body>
+</html>
