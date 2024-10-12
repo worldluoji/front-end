@@ -36,7 +36,10 @@ struct PageViewController<Page: View>: UIViewControllerRepresentable {
         return pageViewController
     }
     
-    // 当关联的 SwiftUI 状态发生变化时，SwiftUI 会调用此方法来更新 UIPageViewController。这里设置了初始显示的视图控制器为 controllers 数组中的第一个元素，并向前动画显示。
+    /*
+        updateUIViewController(_:context:) 方法会在 currentPage 绑定变量改变时被触发。在 SwiftUI 中，当你使用 @Binding 来创建一个双向绑定时，每当这个绑定的值发生变化时，SwiftUI 会自动调用 updateUIViewController(_:context:) 方法来更新与之关联的 UIViewController。
+        具体来说，在你的 PageViewController 结构体中，currentPage 是一个 @Binding 变量。这意味着它是一个可以从外部更新的绑定。当外部代码（比如用户交互或状态变化）改变了 currentPage 的值时，SwiftUI 会检测到这个变化，并调用 updateUIViewController(_:context:) 方法来更新 UIPageViewController 的当前显示页面。
+    */
     func updateUIViewController(_ pageViewController: UIPageViewController, context: Context) {
         pageViewController.setViewControllers(
             [context.coordinator.controllers[currentPage]], direction: .forward, animated: true)
