@@ -8,13 +8,18 @@
 import SwiftUI
 import UIKit
 
-
+// PageViewController 是一个泛型结构体，其中 Page 必须符合 View 协议
 struct PageViewController<Page: View>: UIViewControllerRepresentable {
+    // pages 是一个数组，包含所有要显示的页面（每个元素都是一个符合 View 协议的视图）。
     var pages: [Page]
+
+    // currentPage 是一个绑定变量，用于跟踪当前显示的是哪个页面
     @Binding var currentPage: Int
     
     // SwiftUI calls this makeCoordinator() method before makeUIViewController(context:), so that you have access to the coordinator object when configuring your view controller.
+    // 协调器的作用是在 UIPageViewController 和 PageViewController 之间传递信息。
     func makeCoordinator() -> Coordinator {
+        // 这里其实就是把当前PageViewController传入到协调器的init方法
         Coordinator(self)
     }
     
@@ -24,6 +29,7 @@ struct PageViewController<Page: View>: UIViewControllerRepresentable {
             transitionStyle: .scroll,
             navigationOrientation: .horizontal)
         
+        // 将协调器设置为 UIPageViewController 的数据源和委托。
         pageViewController.dataSource = context.coordinator
         pageViewController.delegate = context.coordinator
         
