@@ -36,3 +36,20 @@ type RecordObj = {
     y: Obja3;
 }
 */
+
+let map1: Record<string, number> = {
+    'John': 25,
+    'Mary': 21,
+}
+
+interface PersonInfo {
+    age: number;
+    salary: number;
+}
+
+let map2: Record<string, PersonInfo> = {
+    'John': { age: 25, salary: 10},
+    'Mary': { age: 21, salary: 20}
+}
+
+console.log(map2)
