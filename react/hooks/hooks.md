@@ -306,10 +306,10 @@ Class 组件中还有其它一些比较少用的方法，比如 getSnapshotBefor
 而在过去的类组件中，你通常需要在构造函数中直接设置 this.state ，也就是设置某个值来完成初始化。
 
 虽然没有直接的机制可以做到这一点，但是利用 useRef 这个 Hook，我们可以实现一个 useSingleton 这样的一次性执行某段代码的自定义 Hook:
-```
+```jsx
 // 创建一个自定义 Hook 用于执行一次性代码
-function useSingleton(callback) {
-  // 用一个 called ref 标记 callback 是否执行过
+function useSingleton(callBack) {
+  // useRef(false) 创建了一个 { current: false } 的对象。这个对象的 current 属性可以在组件的不同渲染周期之间保持状态。
   const called = useRef(false);
   // 如果已经执行过，则直接返回
   if (called.current) return;
@@ -332,6 +332,10 @@ const MyComp = () => {
   );
 };
 ```
+- 初始状态：当组件第一次挂载时，called.current 被设置为 false。
+- 首次执行：由于 called.current 为 false，所以 callback 会被调用一次，然后将 called.current 设置为 true。
+- 后续渲染：在接下来的每次渲染过程中，虽然 useSingleton Hook 会再次运行，但 called.current 已经是 true 了，所以 callback 不会被再次调用。
+
 可以看到，自定义 Hooks 的两个特点：
 - 名字一定是以 use 开头的函数，这样 React 才能够知道这个函数是一个 Hook；
 - 函数内部一定调用了其它的 Hooks，可以是内置的 Hooks，也可以是其它自定义 Hooks。这样才能够让组件刷新，或者去产生副作用。
