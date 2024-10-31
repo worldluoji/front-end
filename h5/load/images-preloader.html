@@ -5,42 +5,37 @@
 	<body>
         <p>图片预加载</p>
 	    <div class=container>
-            <img id="img1" src="" />
+            <img id="img1" src="" alt="image1" />
         </div>
         <div class=container>
-            <img id="img2" src="" />
+            <img id="img2" src="" alt="image2" />
         </div>
         <div class=container>
-            <img id="img3" src="" />
+            <img id="img3" src="" alt="image3" />
         </div>
         <div class="hidden">
             <script>
-                function preload() {
-                    if (document.images) {
-                        let img1 = document.getElementById('img1')
-                        let img2 = document.getElementById('img2')
-                        let img3 = document.getElementById('img3')
-		                img1.src = "https://tse1-mm.cn.bing.net/th/id/OIP.mYBs-T9BgY4bSS17ezfI4QHaE8?w=251&h=180&c=7&o=5&dpr=2&pid=1.7"
-		                img2.src = "https://tse1-mm.cn.bing.net/th/id/OIP.mYBs-T9BgY4bSS17ezfI4QHaE8?w=251&h=180&c=7&o=5&dpr=2&pid=1.7"
-		                img3.src = "https://tse1-mm.cn.bing.net/th/id/OIP.mYBs-T9BgY4bSS17ezfI4QHaE8?w=251&h=180&c=7&o=5&dpr=2&pid=1.7"
-                    }
-                }
+                function preloadImages() {
+                    const imagesToLoad = [
+                        { id: 'img1', src: "https://tse1-mm.cn.bing.net/th/id/OIP.mYBs-T9BgY4bSS17ezfI4QHaE8?w=251&h=180&c=7&o=5&dpr=2&pid=1.7" },
+                        { id: 'img2', src: "https://example.com/path/to/second/image.jpg" }, // 使用实际的第二张图片URL
+                        { id: 'img3', src: "https://example.com/path/to/third/image.jpg" }  // 使用实际的第三张图片URL
+                    ];
 
-                function addLoadEvent(f) {
-                    let oldOnload = window.onload
-                    if (typeof window.onload != 'function') {
-                        window.onload = f
-                    } else {
-                        window.onload = () => {
-                            if (oldOnload) {
-                                oldOnload()
-                            }
-                            f()
+                    imagesToLoad.forEach(image => {
+                        let imgElement = document.getElementById(image.id);
+                        if (imgElement) {
+                            imgElement.src = image.src;
                         }
-                    }
+                    });
                 }
 
-                addLoadEvent(preload)
+                // 使用addEventListener来添加load事件处理程序
+                if (window.addEventListener) {
+                    window.addEventListener('load', preloadImages, false);
+                } else if (window.attachEvent) {
+                    window.attachEvent('onload', preloadImages);
+                }
             </script>
         </div>
     </body>
