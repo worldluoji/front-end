@@ -61,8 +61,9 @@ App 混合开发，指的是一个 App 部分功能用 Native 构建，部分功
 <br>
 
 ## 已有app整合react native
-https://reactnative.dev/docs/integration-with-existing-apps
-
-到了Configuring CocoaPods dependencies这一步，要写Podfile，依赖清单在`node_modules/react-native/React.podspec.`
+https://reactnative.dev/docs/integration-with-existing-apps?language=apple
 
 Podfile参考：https://juejin.cn/post/6972066694608977927
+
+现在主要是IOS，如果一点原生都不使用，应用无法上架。所以，一般注册、登陆、首页等公共模块，一般还是采用原生开发的形式，
+其余页面用RN来开发。
