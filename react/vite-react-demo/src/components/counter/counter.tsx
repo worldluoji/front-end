@@ -1,5 +1,4 @@
 
-import React from "react";
 import useCounter from "../../hooks/useCounter";
 
 interface Counter {

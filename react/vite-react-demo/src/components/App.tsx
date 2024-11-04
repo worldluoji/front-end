@@ -1,7 +1,6 @@
-import React from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import { Layout, Menu, ConfigProvider } from 'antd'
-import zh_CN from 'antd/lib/locale-provider/zh_CN'
+import zh_CN from 'antd/lib/locale/zh_CN';
 import Board from '../components/board/board'
 import Counter from '../components/counter/counter'
 import Counter2 from '../components/counter/countUseReducer'
@@ -17,7 +16,7 @@ import './App.css'
 const { Header, Content, Footer } = Layout
 
 // router/index.tsx 路由的优先级高于App里用Route配置的优先级
-const App = ({ match }: any) => {
+const App = () => {
   const defaultKey = 'board'
   return <ConfigProvider locale={zh_CN}>
     <Layout>
