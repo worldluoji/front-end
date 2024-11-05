@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useLayoutEffect, Suspense } from 'react';
-import { fetchProfileData } from './fakeApi';
+import { fetchProfileData } from './fakeApi.ts';
 
 // 使用Typescript时，需要明确指定入参字段名和类型。比如这里指定了name属性，下面JSX中Sibling组件才可以使用name属性，否则ts会报错
 interface SiblingProps {
@@ -77,7 +77,7 @@ const ProfileTimeline: React.FC<ProfileProps> = (props) => {
 }
 
 export default function ProfilePage() {
-    const [resource, setResource] = useState(initialResource);
+    const [resource, _] = useState(initialResource);
     return (
       <>
         <Suspense

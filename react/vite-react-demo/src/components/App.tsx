@@ -4,7 +4,7 @@ import zh_CN from 'antd/lib/locale/zh_CN';
 import Board from '../components/board/board'
 import Counter from '../components/counter/counter'
 import Counter2 from '../components/counter/countUseReducer'
-import ListWithMore from './listwithmore/ListWithMore'
+import ListWithMore from './listwithmore/ListWithMore.tsx'
 import Form from './form/Form'
 import Form1 from './form/Form1'
 import Modal from './modal/ModalDemo'

@@ -11,9 +11,9 @@ export function fetchProfileData() {
 // a contract like this to integrate with React.
 // Real implementations can be significantly more complex.
 // Don't copy-paste this into your project!
-function wrapPromise(promise) {
+function wrapPromise(promise: Promise<any>) {
     let status = "pending";
-    let result;
+    let result: any;
     let suspender = promise.then(
         (r) => {
             status = "success";
