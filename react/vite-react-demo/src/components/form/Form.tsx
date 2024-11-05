@@ -9,7 +9,7 @@ import useForm from '../../hooks/useForm'
 
 export default () => {
   // 使用 useForm 得到表单的状态管理逻辑
-  const { values, setFieldValue } = useForm({})
+  const { values, setFieldValue } = useForm({name: '', email: ''})
   // 处理表单的提交事件
   const handleSubmit: React.FormEventHandler = useCallback (
     (evt) => {
@@ -25,7 +25,7 @@ export default () => {
       <div>
         <label>Name: </label>
         <input
-          value={values.name || null}
+          value={values.name || ''}
           onChange={(evt) => setFieldValue("name", evt.target.value)}
         />
       </div>
@@ -33,7 +33,7 @@ export default () => {
       <div>
         <label>Email: </label>
         <input
-          value={values.email || null}
+          value={values.email || ''}
           onChange={(evt) => setFieldValue("email", evt.target.value)}
         />
       </div>

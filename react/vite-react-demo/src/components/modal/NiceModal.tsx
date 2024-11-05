@@ -1,5 +1,4 @@
 import { Modal } from 'antd'
-import React from 'react'
 import useNiceModal from './useNiceModal'
 
 interface NidcelModalInParamType {
@@ -16,7 +15,7 @@ function NiceModal({ id, children, ...rest }: NidcelModalInParamType) {
       onCancel={() => modal.hide(false)} // 默认点击 cancel 时关闭对话框
       onOk={() => modal.hide(false)} // 默认点击确定关闭对话框
       afterClose={() => modal.hide(true)} // 动画完成后真正关闭
-      visible={ !modal.hiding }
+      open={ !modal.hiding }
       { ...rest } // 允许在使用 NiceModal 时透传参数给实际的 Modal
     >
       { children }

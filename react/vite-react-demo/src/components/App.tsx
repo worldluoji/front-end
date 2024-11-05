@@ -15,6 +15,54 @@ import './App.css'
 
 const { Header, Content, Footer } = Layout
 
+const menuItems = [
+  {
+    key: 'board',
+    icon: <Link to="/board" />,
+    label: '看板'
+  },
+  {
+    key: 'counter',
+    icon: <Link to="/counter" />,
+    label: '计数器'
+  },
+  {
+    key: 'counter2',
+    icon: <Link to="/counter2" />,
+    label: '计数器2'
+  },
+  {
+    key: 'listwithmore',
+    icon: <Link to="/listwithmore" />,
+    label: 'listwithmore'
+  },
+  {
+    key: 'form',
+    icon: <Link to="/form" />,
+    label: 'Form by hooks'
+  },
+  {
+    key: 'form1',
+    icon: <Link to="/form1" />,
+    label: '非受控form'
+  },
+  {
+    key: 'modal',
+    icon: <Link to="/modal" />,
+    label: 'modal'
+  },
+  {
+    key: 'loadable',
+    icon: <Link to="/loadable" />,
+    label: 'loadable'
+  },
+  {
+    key: 'suspense',
+    icon: <Link to="/suspense" />,
+    label: 'suspense'
+  }
+]
+
 // router/index.tsx 路由的优先级高于App里用Route配置的优先级
 const App = () => {
   const defaultKey = 'board'
@@ -26,18 +74,9 @@ const App = () => {
           mode="horizontal"
           defaultSelectedKeys={[defaultKey]}
           className="menu"
-        >
-          <Menu.Item key="board"><Link to="/board">看板</Link></Menu.Item>
-          <Menu.Item key="counter"><Link to="/counter">计数器</Link></Menu.Item>
-          <Menu.Item key="counter2"><Link to="/counter2">计数器2</Link></Menu.Item>
-          <Menu.Item key="listwithmore"><Link to="/listwithmore">ListWithMore</Link></Menu.Item>
-          <Menu.Item key="form"><Link to="/form">Form by hooks</Link></Menu.Item>
-          <Menu.Item key="form1"><Link to="/form1">非受控Form</Link></Menu.Item>
-          <Menu.Item key="modal"><Link to="/modal">Modal</Link></Menu.Item>
-          <Menu.Item key="loadable"><Link to="/loadable">Loadable</Link></Menu.Item>
-          <Menu.Item key="suspense"><Link to="/suspense">Suspense</Link></Menu.Item>
-        </Menu>
-        
+          items = { menuItems }
+        />
+
       </Header>
       <Content className="contentWrap">
         <div className="content">

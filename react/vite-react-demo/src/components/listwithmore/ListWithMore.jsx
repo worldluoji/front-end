@@ -32,7 +32,7 @@ function ListWithMoreExample() {
             <div className="user-names">        
                 Liked by:{" "}        
                 <ListWithMore  renderItem={(user) => {  
-                    return <span className="user-name">{user.name}</span> 
+                    return <span className="user-name" key={user.id}>{user.name}</span> 
                 }}          
                 data={[{id: 1, name: 'luoji1'},{id: 2, name: 'luoji3'},{id: 3, name: 'luoji4'},{id: 4, name: 'luoji5'},{id: 5, name: 'luoji6'}]}          
                 max={3} />      
