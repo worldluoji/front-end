@@ -27,32 +27,101 @@ React 18 中，Transitions 是一个强大的新特性，它为开发者提供�
    - 在上面的例子中，当输入框的值发生变化时，使用 `startTransition` 函数将更新 `inputValue` 的操作标记为非紧急更新。这样，React 会优先处理紧急更新，如用户的输入交互，然后再处理非紧急的界面更新。
 
 2. 使用 `useTransition` 钩子
-   - `useTransition` 钩子返回一个数组，包含一个布尔值和一个函数。布尔值表示是否处于过渡状态，函数可以用来启动一个过渡。
-   - 例如：
-     ```javascript
-     import { useTransition } from 'react';
 
-     function MyComponent() {
-       const [isPending, startTransition] = useTransition();
-       const [data, setData] = useState([]);
+`useTransition` 钩子返回一个数组，包含一个布尔值和一个函数。布尔值表示是否处于过渡状态，函数可以用来启动一个过渡。
 
-       useEffect(() => {
-         async function fetchData() {
-           startTransition(() => {
-             setData(/* 加载数据的操作 */);
-           });
-         }
-         fetchData();
-       }, []);
+示例：
+```jsx
+import React, { useState, useTransition, useDeferredValue, useEffect } from 'react';
 
-       return (
-         <div>
-           {isPending? <Loader /> : <DataDisplay data={data} />}
-         </div>
-       );
-     }
-     ```
-   - 在上面的例子中，使用 `useTransition` 钩子来管理数据加载的过渡状态。当数据正在加载时，显示一个加载指示器，当数据加载完成后，显示数据列表。
+function App() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [users, setUsers] = useState([]);
+  const [isPending, startTransition] = useTransition();
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+
+  useEffect(() => {
+    fetchUsers().then(setUsers);
+  }, []);
+
+  useEffect(() => {
+    // 当排序方式改变时，立即显示加载状态
+    startTransition(() => {
+      setUsers(sortUsers(users, sortOrder));
+    });
+  }, [sortOrder, users, startTransition]);
+
+  function handleSearchChange(e) {
+    setSearchQuery(e.target.value);
+  }
+
+  function handleSortChange(e) {
+    setSortOrder(e.target.value);
+  }
+
+  function filterUsers(users, query) {
+    return users.filter(user =>
+      user.name.toLowerCase().includes(query.toLowerCase())
+    );
+  }
+
+  function sortUsers(users, order) {
+    return [...users].sort((a, b) => {
+      if (order === 'asc') {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
+  }
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={handleSearchChange}
+        placeholder="Search users..."
+      />
+      <select value={sortOrder} onChange={handleSortChange}>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+      {isPending && <div>Loading...</div>}
+      <UserList users={filterUsers(sortUsers(users, sortOrder), deferredSearchQuery)} />
+    </div>
+  );
+}
+
+function UserList({ users }) {
+  return (
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+function fetchUsers() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' },
+        { id: 3, name: 'Charlie' },
+        { id: 4, name: 'David' },
+        { id: 5, name: 'Eve' },
+      ]);
+    }, 1000);
+  });
+}
+
+export default App;
+```
+上面的例子中，我们有一个用户列表，用户可以输入搜索关键词来过滤列表，也可以选择不同的排序方式来重新排序列表。我们希望在用户输入搜索关键词时延迟更新列表，以减少不必要的渲染；同时，在用户选择新的排序方式时，立即显示加载状态，然后在后台异步更新列表。
+
 
 **三、Transitions 的优势**
 
