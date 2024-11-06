@@ -6,7 +6,8 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "allowUmdGlobalAccess": true
   },
   "include": [
     "**/*.ts",

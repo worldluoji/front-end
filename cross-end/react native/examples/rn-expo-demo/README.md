@@ -50,3 +50,11 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+## 目录说明
+- app directory: A special directory containing only routes and their layouts. Any files added to this directory become a screen inside our native app and a page on the web.
+- Root layout: The app/_layout.tsx file. It defines shared UI elements such as headers and tab bars so they are consistent between different routes.
+- File name conventions: Index file names, such as index.tsx, match their parent directory and do not add a path segment. For example, the index.tsx file in the app directory matches / route.
+- A route file exports a React component as its default value. It can use either .js, .jsx, .ts, or .tsx extension.
+- Android, iOS, and web share a unified navigation structure.
