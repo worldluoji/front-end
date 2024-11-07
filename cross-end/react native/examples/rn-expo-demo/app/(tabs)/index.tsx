@@ -1,6 +1,8 @@
 import { View, StyleSheet } from "react-native";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { type ImageSource } from 'expo-image';
+import * as MediaLibrary from 'expo-media-library';
+import { captureRef } from 'react-native-view-shot';
 
 import ImageViewer from "@/components/ImageViewer";
 import Button from "@/components/Button";
@@ -50,6 +52,13 @@ export default function Index() {
   const [isMoalVisible, setIsModalVisible] = useState<boolean>(false);
   const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(undefined);
 
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+  if (status == null) {
+    requestPermission();
+  }
+
+  const imageRef = useRef<View>(null);
+
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -77,14 +86,28 @@ export default function Index() {
   }
 
   const onSaveImageAsync = async () => {
-    
+    try {
+      const localUri = await captureRef(imageRef, {
+        height: 440,
+        quality: 1,
+      });
+      await MediaLibrary.saveToLibraryAsync(localUri);
+      if (localUri) {
+        alert('Saved!');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
     <GestureHandlerRootView style={ styles.container}>
       <View style={styles.imageContainer}>
-        <ImageViewer imgSource={PlaceHolderImage} selectedImage={selectedImage} />
-        { pickedEmoji && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} /> }
+        {/* the collapsable prop is set to false. This allows the <View> component to screenshot only of the background image and emoji sticker. */}
+        <View ref={imageRef} collapsable={false}>
+          <ImageViewer imgSource={PlaceHolderImage} selectedImage={selectedImage} />
+          { pickedEmoji && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} /> }
+        </View>
       </View>
       {showAppOptions ? (
         <View style={styles.optionsContainer}>
