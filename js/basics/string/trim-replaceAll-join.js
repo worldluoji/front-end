@@ -5,6 +5,7 @@ const reverseWords = (s) => {
   return strs.reverse().join(' ');
 };
 
-s = "  hello world     you ";
+let na = 'Jack';
+let s = `  hello world     ${na} `;
 
 console.log(reverseWords(s));
