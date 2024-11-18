@@ -1,5 +1,5 @@
 # download
-## 1. 使用 a 标签的 download 属性，同源才能触发下载，IE 不支持，移动端兼容性也不太好。
+## 1. 使用 a 标签的 download 属性，IE 不支持，移动端兼容性也不太好。
 ```js
 <a href="/path/to/file" download>Download</a>
 
