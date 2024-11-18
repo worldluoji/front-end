@@ -1,4 +1,5 @@
 class Secret {
+  // #secret 是一个私有字段（private field），这是 ES6 引入的一种新的类字段声明方式。私有字段使用 # 前缀来标识，只能在类的内部访问，不能在类的外部访问。这种方式提供了一种更严格的封装机制，确保类的内部状态不会被外部代码随意修改。
   #secret;
   constructor(secret) {
     this.#secret = secret;
