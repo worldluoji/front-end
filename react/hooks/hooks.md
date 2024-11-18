@@ -42,7 +42,7 @@ function UserInfoModal({ visible, userId, ...rest }) {
 ```
 修复方法：把条件判断的结果放到两个组件之中，确保真正 render UI 的组件收到的所有属性都是有值的。
 可以在 UserInfoModal 外层加一个容器，这样就能实现条件渲染了：
-```
+```jsx
 // 定义一个容器组件用于封装真正的 UserInfoModal
 export default function UserInfoModalWrapper({
   visible,
@@ -64,7 +64,7 @@ export default function UserInfoModalWrapper({
 因此，你应该把 use 开头的钩子函数都写在组件的顶部，把 JSX 都写在函数组件的最后面，并使用 [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks) 插件来保障 Hook 规则的会被正确执行。
 
 ## useState: 让函数组件具有维持状态的能力
-```
+```jsx
 // 定义一个年龄的 state，初始值是 42
 const [age, setAge] = useState(42);
 // 定义一个水果的 state，初始值是 banana
@@ -79,7 +79,7 @@ const [todos, setTodos] = useState([{ text: 'Learn Hooks' }]);
 
 调用 state 更新函数后，组件的更新是异步的，不会马上执行；在 React 18 里，更是为更新 state 加入了自动批处理功能: <strong>多个 state 更新函数调用会被合并到一次重新渲染中</strong>。
 例如，下面的代码中，组件只会重新渲染一次，而且这次渲染使用了两个 state 分别的最新值。这就是 React对多个 state 更新的自动批处理。
-```
+```jsx
 function App() {
   const [showAdd, setShowAdd] = useState(false);
   const [todoList, setTodoList] = useState([/*省略*/]);
@@ -112,7 +112,7 @@ const Search = () => {
 
 
 下面的方式，可以保证更新函数使用最新的 state 来计算新 state 值
-```
+```jsx
 setShowAdd(prevState => !prevState);
 setTodoList(prevState => {
   return [...prevState, aNewTodoItem];
@@ -144,7 +144,7 @@ Event handlers contain “side effects” (they change the program’s state) ca
 <strong>纯函数的意思是说，一个函数的返回结果的变化只依赖其入参数，并且没有副作用</strong>。
 总之，副作用就是让一个函数不再是纯函数的各类操作。
 
-```
+```jsx
 useEffect(callback, dependencies)
 ```
 第一个为要执行的函数 callback，第二个是可选的依赖项数组 dependencies。
@@ -217,14 +217,14 @@ const usersToShow = useMemo(() => {
 因为它将 usersToShow 作为了一个属性。而一旦能够缓存上次的结果，就和 useCallback 的场景一样，可以避免很多不必要的组件刷新。
 
 useMemo可以代替useCallback:
-```
- onst myEventHandler = useMemo(() => {
+```jsx
+const myEventHandler = useMemo(() => {
    // 返回一个函数作为缓存结果
    return () => {
     // 在这里进行事件处理
    }
 }, [dep1, dep2]);
- ```
+```
 
 <br>
 
@@ -236,7 +236,7 @@ useMemo可以代替useCallback:
 
 除了存储跨渲染的数据之外，useRef 还有一个重要的功能，就是保存某个 DOM 节点的引用:
 
-```
+```jsx
 function TextInputWithFocusButton() {
   const inputEl = useRef(null);
   const onButtonClick = () => {
@@ -264,7 +264,7 @@ demo见context
 
 ## Hooks和class
 hooks和class一些生命周期的关系
-```
+```jsx
 useEffect(() => {
   // componentDidMount + componentDidUpdate
   console.log('这里基本等价于 componentDidMount + componentDidUpdate');
@@ -276,7 +276,7 @@ useEffect(() => {
 ```
 
 useEffect 第二个参数传入空数组，就只在组件初始化时和销毁前分别执行一次
-```
+```jsx
 useEffect(() => {
   return () => {
     // 这里只会在组件销毁前（componentWillUnmount）执行一次
