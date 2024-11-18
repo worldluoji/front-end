@@ -1,10 +1,9 @@
-# Compilation mechanism
+# compilation mechanism
 Vue.js 经过编译后产出是 JavaScript 和 CSS 代码，也就是浏览可以直接支持运行的代码。
 
 <img src="Vue3编译结果.webp" />
 
-这个最终结果可以直接在支持 ES Modules 的浏览器环境运行，还可以将其再次经过 ES6+ 语法的编译(比如使用bebal降级)，
-最后成为能在浏览器直接运行的 ES5 代码。
+这个最终结果可以直接在支持 ES Modules 的浏览器环境运行，还可以将其再次经过 ES6+ 语法的编译(比如使用bebal降级)，最后成为能在浏览器直接运行的 ES5 代码。
 
 这个编译后的结果，也就是最原始的 Vue.js 非编译模式的运行方式，也是我们最常用的模式。
 
