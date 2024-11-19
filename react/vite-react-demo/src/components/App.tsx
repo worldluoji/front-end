@@ -65,6 +65,11 @@ const menuItems = [
     key: 'redux-cardlist',
     icon: <Link to="/cardlist" />,
     label: 'redux-cardlist'
+  },
+  {
+    key: 'carousel',
+    icon: <Link to="/carousel" />,
+    label: 'carousel'
   }
 ]
 

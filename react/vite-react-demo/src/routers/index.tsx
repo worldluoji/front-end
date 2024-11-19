@@ -6,7 +6,7 @@ import Resize from '../components/resize/resize';
 import Blog from '../components/blogdata/blogdata';
 import Timer from '../components/counter/timer';
 import ThemeContext from '../components/context/themecontext';
-import Carousel from '../components/carousel/carousel';
+import Carousel from '../components/carousel/carousel.tsx';
 import Turntable from '../components/turntable/turntable';
 import SearchBox from '../components/searchbox/SearchBox';
 import Board from '../components/board/board';
