@@ -70,6 +70,11 @@ const menuItems = [
     key: 'carousel',
     icon: <Link to="/carousel" />,
     label: 'carousel'
+  },
+  {
+    key: 'createReducer',
+    icon: <Link to="/createReducer" />,
+    label: 'createReducer'
   }
 ]
 

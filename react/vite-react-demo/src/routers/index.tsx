@@ -14,6 +14,7 @@ import CardList from '../components/redux/ReduxDemo';
 import ScrollTop from '../components/totop/ScrollTop';
 import KeyPress from '../components/keypress/KeyPress';
 import UserList from '../components/userlist/UserList';
+import CreateReducerDemo from '../components/redux/CreateReducerDemo.tsx';
 
 
 const Root = () => (
@@ -32,6 +33,7 @@ const Root = () => (
             <Route path="/totop" element={<ScrollTop />} />
             <Route path="/keypress" element={<KeyPress />} />
             <Route path="/userlist" element={<UserList />} />
+            <Route path="/createReducer" element={<CreateReducerDemo />} />
             {/* v6 router之前的老版本： <Route path=".*" component={ App }/>, 且不需要Routes包裹 */}
          </Routes>
     </BrowserRouter>
