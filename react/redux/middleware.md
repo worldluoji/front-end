@@ -5,8 +5,9 @@
 
 <img src="middleware原理.webp" />
 
-在 Redux 中，处理异步逻辑也常常被称为异步 Action,
-Redux 提供了 redux-thunk 这样一个中间件，实现了异步action. 
+在 Redux 中，处理异步逻辑也常常被称为异步 Action。
+
+redux-thunk 是一个中间件，用于处理异步操作。thunkMiddleware 是 redux-thunk 提供的中间件函数，用于增强 Redux 的 store，使其能够处理异步操作，如 AJAX 请求。
 
 它如果发现接受到的 action 是一个函数，那么就不会传递给 Reducer，
 而是执行这个函数，并把 dispatch 作为参数传给这个函数，从而在这个函数中你可以自由决定何时，如何发送 Action。
