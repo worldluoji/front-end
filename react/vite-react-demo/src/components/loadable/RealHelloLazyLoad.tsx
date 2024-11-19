@@ -1,8 +1,8 @@
-import { time } from 'console'
-import React from 'react'
 
-export default function() {
+const RealHelloLazyLoad = () => {
     return (
         <h1>Hello Loader</h1>
     )
-}
+};
+
+export default RealHelloLazyLoad
