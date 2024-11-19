@@ -1,5 +1,4 @@
 import store from './CardStore'
-import React from 'react'
 import { Provider } from 'react-redux'
 import CardList from './CardList'
 

@@ -60,6 +60,11 @@ const menuItems = [
     key: 'suspense',
     icon: <Link to="/suspense" />,
     label: 'suspense'
+  },
+  {
+    key: 'redux-cardlist',
+    icon: <Link to="/cardlist" />,
+    label: 'redux-cardlist'
   }
 ]
 

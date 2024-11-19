@@ -4,8 +4,6 @@ import {addCard, removeCard, Card, CardListDispatch} from './CardStore'
 import React, {useState} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-// store.dispatch(addCard({ title: '开发任务-1' }))
-// // [{ title: '开发任务-1' }]
 
 const CardList = () => {
     // useSelector的入参就是state, 在ts中需要指定类型
@@ -14,9 +12,11 @@ const CardList = () => {
     const dispatch: CardListDispatch = useDispatch()
 
     const [newTask, setNewTask] = useState('')
-    const onChange:React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    
+    const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         setNewTask(e.target.value)
     }
+    
     const onAdd = () => {
         if (!newTask || newTask === '') {
             alert('输入不能为空')
@@ -24,6 +24,11 @@ const CardList = () => {
         }
         dispatch(addCard({ title: newTask }))
     }
+
+    const onDelete = (title: string) => {
+        dispatch(removeCard({ title }))
+    }
+
     return (
         <div>
             <ul>
@@ -31,7 +36,7 @@ const CardList = () => {
                     return (
                         <li key={c.title}>
                             {c.title}
-                            <button onClick={() => {dispatch(removeCard({ title: c.title }))}}>删除</button>
+                            <button onClick={() => onDelete(c.title)}>删除</button>
                         </li>
                     )
                 })}
