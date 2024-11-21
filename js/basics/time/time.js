@@ -40,6 +40,7 @@ Date.prototype.nextDay = function(seperator = '-') {
   return year + seperator + month + seperator + date;
 }
 
-let d = new Date('2023-02-28');
+let d = new Date();
 console.log(d.nowDay());
 console.log(d.nextDay());
+console.log(d.getDay()); // 星期几
