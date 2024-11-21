@@ -29,3 +29,11 @@ if (en === 'Web') {
 
 console.log(b);
 console.log(a);
+
+
+let c = [10, 2, 3, 8, 1, 10, 4];
+c.sort();
+console.log(c); // [1, 10, 10, 2, 3, 4, 8]
+
+c.sort((n1, n2) => n1 - n2);
+console.log(c); // [1, 2, 3, 4, 8, 10, 10]
