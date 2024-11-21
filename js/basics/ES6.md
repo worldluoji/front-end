@@ -80,9 +80,16 @@ const arr = removeFirstTwo(source);
 Array.prototype.slice() 
 
 ## 5. 拆包
-```
+```js
 let arr1 = [1,2,3]
-let arr2 = [..arr1]
+let arr2 = [...arr1]
+```
+这里要注意，...拆包是浅拷贝，
+```js
+let a = [1,2,3,[4,5]]
+let b = [...a]
+b[3][1] = 6
+console.log(a[3][1]) // 6
 ```
 
 ## 6. 交换
