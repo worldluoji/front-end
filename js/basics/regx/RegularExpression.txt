@@ -73,6 +73,10 @@ This pattern not only matches whitespace, but also carriage return, tab, form fe
 You can think of it as similar to the character class [ \r\t\f\n\v].
 \S 非\s
 
+\b 是一个特殊的元字符，表示单词边界（word boundary）。单词边界是指单词字符（字母、数字、下划线）和非单词字符之间的位置。具体来说，\b 匹配的位置满足以下条件之一：
+（1）在一个单词字符（[a-zA-Z0-9_]）和一个非单词字符之间。
+（2）在字符串的开头或结尾，如果该位置紧邻一个单词字符。
+
 8. exercise 1
 Usernames can only use alpha-numeric characters.
 The only numbers in the username have to be at the end. There can be zero or more of them at the end. Username cannot start with the number.
