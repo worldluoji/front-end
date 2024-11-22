@@ -5,7 +5,7 @@ and it's mainly used to create web servers - but it's not limited to just that.
 
 Node.js 并不是语言，而是一个 JavaScript 运行时环境，它的语言是 JavaScript。
 
-<img src="./images/node-hierarchy.awebp" />
+<img src="./pics/node-hierarchy.awebp" />
 
 <br>
 
