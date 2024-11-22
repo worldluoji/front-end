@@ -65,6 +65,19 @@ This file is optional, and Bun will work out of the box without it.
 
 https://bun.sh/docs/runtime/bunfig
 
+解决国内镜像源慢的问题：The default registry is https://registry.npmjs.org/. 
+
+This can be globally configured in .bunfig.toml（Linux、MacOS在$HOME，windows在C:\Users\User（全局）；或者可以在项目根目录（项目级））:
+```
+[install]
+# set default registry 为阿里云镜像源
+registry = "https://registry.npmmirror.com/"
+# set a token
+registry = { url = "https://registry.npmmirror.com/", token = "123456" }
+# set a username/password
+registry = "https://username:password@registry.npmmirror.com"
+```
+
 <br>
 
 ## demos
