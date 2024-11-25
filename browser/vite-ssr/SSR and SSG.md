@@ -119,7 +119,7 @@ const xxx = await vite.ssrLoadModule('/src/entry-server.tsx')
 
 ## 项目参考 vite-ssr
 ### 项目骨架搭建
-第一步， npm init vite@latest 创建一个vite + react + ts 项目
+第一步， npm create vite 创建一个vite + react + ts 项目
 
 第二步，删除项目自带的src/main.ts，然后在 src 目录下新建entry-client.tsx和entry-server.tsx两个入口文件
 
@@ -168,9 +168,16 @@ app.use('/api', proxy('http://apiServer.com', {
 <br>
 
 ## 开箱即用产品
+
+### Vue
 Nuxt 是一个构建于 Vue 生态系统之上的全栈框架，它为编写 Vue SSR 应用提供了丝滑的开发体验。更棒的是，你还可以把它当作一个静态站点生成器来用！我们强烈建议你试一试。
 
 Quasar 是一个基于 Vue 的完整解决方案，它可以让你用同一套代码库构建不同目标的应用，如 SPA、SSR、PWA、移动端应用、桌面端应用以及浏览器插件。除此之外，它还提供了一整套 Material Design 风格的组件库。
+
+### React
+Next.js 是一个用于构建服务器渲染（Server-Side Rendering，简称 SSR）应用的 React 框架。它由 Vercel 公司开发，并且已经成为构建大型生产级应用的流行选择之一。
+
+Next.js 不仅简化了 SSR 的实现过程，还提供了许多开箱即用的功能，如自动代码分割、静态文件服务、API 路由等，使得开发者可以更加专注于业务逻辑的实现，而不需要过多地关心底层的技术细节。通过使用 Next.js，开发者可以轻松创建出高性能、SEO 友好的 Web 应用程序。
 
 ## SSG
 SSG 全称为 Static Site Generation，即静态站点生成。
