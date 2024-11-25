@@ -166,9 +166,9 @@ import {createApp} from Vue 这一步, 由于浏览器无法识别 Vue 的路径
 <br>
 
 ## 使用vite创建vue项目
-```
-npm init @vitejs/app
-yarn create @vitejs/app
+```shell
+npm create vite
+yarn create vite
 ```
 之后，在 Project name 这一行，我们输入项目的名字;
 接着，在 Select a framework 这一行输入框架的名字，这里我们选择 vue；
