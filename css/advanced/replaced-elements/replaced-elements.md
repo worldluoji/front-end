@@ -17,7 +17,7 @@ Some elements are treated as replaced elements only in specific cases:
 <option>
 <audio>
 <canvas>
-<object>
+<object> 可以加载pdf、视频
 ```
 
 <br>
