@@ -11,10 +11,17 @@
         <div class="card">
           <h2>Card title</h2>
           <p>Card content</p>
+          <p>reference: https://developer.mozilla.org/en-US/docs/Web/CSS/@container</p>
         </div>
     </div>      
 </body>
 <style>
+/*
+* A container context can be created using the container-type property, 
+* in this case using the inline-size value on the .post class. 
+* 
+* You can then use the @container at-rule to apply styles to the element with the .card class in a container that's narrower than 650px.
+*/
 .post {
   container-type: inline-size;
 }

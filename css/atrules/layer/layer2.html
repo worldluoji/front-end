@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>layer demo2</title>
+</head>
+<body>
+    <div class="box">
+        <p>Hello, world!</p>
+    </div>
+    
+    <style>
+        p {
+            color: rebeccapurple;
+        }
+
+        /*
+        * Without layers, the selector .box p would have the highest specificity, and therefore, the text Hello, world! will display in green. 
+        * As the type layer comes before the anonymous layer created to hold non-layer content, the text will be purple.
+        */
+        @layer type {
+            .box p {
+                font-weight: bold;
+                font-size: 1.3em;
+                color: green;
+            }
+        }
+    </style>
+</body>
+</html>
