@@ -1,4 +1,10 @@
 # Preload/Prefetch
+link标签常用来引入css
+```html
+<link href="/media/examples/link-element-example.css" rel="stylesheet" />
+```
+也可以用来做预加载。
+
 对于一些比较重要的资源，我们可以通过 Preload 方式进行预加载，即在资源使用之前就进行加载，而不是在用到的时候才进行加载，
 这样可以使资源更早地到达浏览器。具体使用方式如下:
 ```html
