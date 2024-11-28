@@ -15,12 +15,12 @@
 
 在 Vite 中，我们可以通过vite-plugin-mkcert在本地 Dev Server 上开启 HTTP2:
 
-```
+```shell
 npm i vite-plugin-mkcert -D
 ```
 
 vite-plugin-mkcert插件配置：
-```
+```ts
 // vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -57,13 +57,13 @@ https://github.com/octokit/request.js/issues/526
 
 ##  DNS 预解析
 浏览器在向跨域的服务器发送请求时，首先会进行 DNS 解析，将服务器域名解析为对应的 IP 地址。我们通过 dns-prefetch 技术将这一过程提前，降低 DNS 解析的延迟时间，具体使用方式如下:
-```
+```html
 <!-- href 为需要预解析的域名 -->
 <link rel="dns-prefetch" href="https://fonts.googleapis.com/"> 
-```
+```html
 一般情况下 dns-prefetch会与preconnect 搭配使用，前者用来解析 DNS，而后者用来会建立与服务器的连接，
 建立 TCP 通道及进行 TLS 握手，进一步降低请求延迟。使用方式如下所示:
-```
+```html
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
 <link rel="dns-prefetch" href="https://fonts.gstatic.com/">
 ```
@@ -74,7 +74,7 @@ https://github.com/octokit/request.js/issues/526
 ## Preload/Prefetch
 对于一些比较重要的资源，我们可以通过 Preload 方式进行预加载，即在资源使用之前就进行加载，而不是在用到的时候才进行加载，
 这样可以使资源更早地到达浏览器。具体使用方式如下:
-```
+```html
 <link rel="preload" href="style.css" as="style">
 <link rel="preload" href="main.js" as="script">
 ```
@@ -86,7 +86,7 @@ Preload的浏览器兼容性也比较好，目前 90% 以上的浏览器已经�
 <link rel="modulepreload" href="/src/app.js" />
 ```
 仅有 70% 左右的浏览器支持这个特性，不过在 Vite 中我们可以通过配置一键开启 modulepreload 的 Polyfill，从而在使所有支持原生 ESM 的浏览器(占比 90% 以上)都能使用该特性，配置方式如下:
-```
+```ts
 // vite.config.ts
 export default {
   build: {
@@ -96,17 +96,20 @@ export default {
 ```
 
 Prefetch 也是一个比较常用的优化方式，它相当于告诉浏览器空闲的时候去预加载其它页面的资源，比如对于 A 页面中插入了这样的 link 标签:
-```
+```html
 <link rel="prefetch" href="https://B.com/index.js" as="script">
 ```
-这样浏览器会在 A 页面加载完毕之后去加载B这个域名下的资源，如果用户跳转到了B页面中，浏览器会直接使用预加载好的资源，
-从而提升 B 页面的加载速度。而相比 Preload， Prefetch 的浏览器兼容性不太乐观。
+这样浏览器会在 A 页面加载完毕之后去加载B这个域名下的资源，如果用户跳转到了B页面中，浏览器会直接使用预加载好的资源，从而提升 B 页面的加载速度。而相比 Preload， Prefetch 的浏览器兼容性不太乐观。
+
+参考:
+- https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/rel/preload
+- https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/rel/prefetch
 
 <br>
 
 ## 产物分析报告
 为了能可视化地感知到产物的体积情况，推荐大家用rollup-plugin-visualizer来进行产物分析。使用方式如下:
-```
+```ts
 // 注: 首先需要安装 rollup-plugin-visualizer 依赖
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -130,7 +133,7 @@ export default defineConfig({
 ## 资源压缩
 ### JSS压缩
 在 Vite 生产环境构建的过程中，JavaScript 产物代码会自动进行压缩，相关的配置参数如下:
-```
+```ts
 // vite.config.ts
 export default {
   build: {
@@ -167,7 +170,7 @@ info?.name
 
 ### CSS 压缩
 对于 CSS 代码的压缩，Vite 中的相关配置如下:
-```
+```ts
 // vite.config.ts
 export default {
   build: {
