@@ -29,7 +29,7 @@ wget -qO- https://fnm.vercel.app/install | bash
 安装完成后，你需要将 `fnm` 添加到你的 shell 配置文件中。通常，安装脚本会自动为你完成这一步，但如果没有，你可以手动添加以下内容到你的 shell 配置文件（如 `.bashrc`、`.zshrc` 等）：
 
 ```sh
-eval "`fnm env --multi`"
+eval "`fnm env`"
 ```
 
 然后重新加载你的 shell 配置文件：
@@ -109,7 +109,7 @@ echo "14.17.0" > .node-version
 
 4. **使用指定的 Node.js 版本**：
    ```sh
-   fnm use
+   fnm use 14
    ```
 
 5. **验证当前使用的 Node.js 版本**：
