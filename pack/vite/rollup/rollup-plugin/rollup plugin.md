@@ -144,7 +144,9 @@ export default alias(options) {
   }
 }
 ```
-从这里你可以看到 resolveId 钩子函数的一些常用使用方式，它的入参分别是当前模块路径、引用当前模块的模块路径、解析参数，返回值可以是 null、string 或者一个对象，我们分情况讨论。
+resolveId 主要作用是帮助 Rollup 确定如何处理和查找模块。当 Rollup 遇到一个 import 或 require 语句时，它需要知道从哪里加载这个模块。resolveId 钩子允许插件自定义这个过程。
+
+从上面例子可以看到 resolveId 钩子函数的一些常用使用方式，它的入参分别是当前模块路径、引用当前模块的模块路径、解析参数，返回值可以是 null、string 或者一个对象，我们分情况讨论。
 
 - 返回值为 null 时，会默认交给下一个插件的 resolveId 钩子处理。
 - 返回值为 string 时，则停止后续插件的处理。这里为了让替换后的路径能被其他插件处理，特意调用了 this.resolve 来交给其它插件处理，否则将不会进入到其它插件的处理。
@@ -152,6 +154,7 @@ export default alias(options) {
 
 
 2. load 为Async + First类型，即异步优先的钩子，和resolveId类似。
+
 它的作用是通过 resolveId 解析后的路径来加载模块内容，例如image插件：
 ```
 const mimeTypes = {
