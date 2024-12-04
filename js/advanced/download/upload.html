@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>文件上传示例</title>
+</head>
+<body>
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <label for="fileInput">选择文件:</label>
+    <input type="file" id="fileInput" name="fileInput" />
+    <button type="button" onclick="uploadFile()">上传文件</button>
+</form>
+
+<p id="fileName"></p>
+
+<script>
+function uploadFile() {
+    var fileInput = document.getElementById('fileInput');
+    var fileNameElement = document.getElementById('fileName');
+
+    if (fileInput.files && fileInput.files.length > 0) {
+        // 显示所选文件的名字
+        fileNameElement.textContent = "已选择文件: " + fileInput.files[0].name;
+
+        // 创建一个新的FormData对象
+        var formData = new FormData();
+
+        // 其实 File 对象（fileInput.files[0]）就是继承了 Blob 对象，只不过加上了一些文件信息。
+        formData.append("file", fileInput.files[0]);
+
+        // 使用XMLHttpRequest来发送POST请求到服务器
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/upload', true);
+
+        // 设置响应类型
+        xhr.responseType = 'text';
+
+        // 当请求状态改变时触发
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                alert('文件上传成功！');
+            } else {
+                alert('文件上传失败，请重试。');
+            }
+        };
+
+        // 发送数据
+        xhr.send(formData);
+    } else {
+        alert('请选择一个文件进行上传。');
+    }
+}
+</script>
+
+</body>
+</html>
