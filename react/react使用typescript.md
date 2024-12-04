@@ -110,3 +110,25 @@ export default function EmojiPicker({ isVisiable, children, onClose }: Props) {
     )
 }
 ```
+
+## 4. 将 JSX 作为 Prop 传递
+```JSX
+interface LayoutProps {
+  nav: React.ReactNode;
+  children: React.ReactNode;
+}
+ 
+const Layout = (props: LayoutProps) => {
+  return (
+    <>
+      <nav>{props.nav}</nav>
+      <main>{props.children}</main>
+    </>
+  );
+};
+ 
+// 使用
+<Layout nav={<h1>My Site</h1>}>
+  <div>Hello!</div>
+</Layout>;
+```
