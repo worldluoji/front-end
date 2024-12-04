@@ -9,3 +9,5 @@ console.log('3'.includes(3)); // true
 
 console.log('24'.endsWith(4));
 console.log('24'.startsWith(2));
+
+console.log('25\r\n '.trim());
