@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>download demo</title>
+</head>
+<body>
+    <button id="downloadBtn">点击下载</button>
+    <script>
+        let downloadBtn = document.getElementById('downloadBtn');
+        downloadBtn.addEventListener('click', () => {
+            const blob = new Blob(["This is a test file."], { type: "text/plain" });
+            console.log(blob.size); // 输出 Blob 的大小
+            console.log(blob.type); // 输出 Blob 的 MIME 类型
+            blob.text().then((text) => {
+                console.log(text); // This is a test file.
+            });
+
+            blob.arrayBuffer().then((buffer) => {
+                console.log(buffer);
+            });
+
+            const url = URL.createObjectURL(blob); // 创建一个 Blob URL
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "test.txt";
+            a.click();
+            URL.revokeObjectURL(url); // 释放 URL 对象
+        });
+    </script>
+</body>
+</html>
