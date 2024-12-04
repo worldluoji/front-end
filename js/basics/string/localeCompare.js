@@ -5,3 +5,7 @@
 console.log('bcd'.localeCompare('abcde'));
 
 console.log('3'.includes(3)); // true
+
+
+console.log('24'.endsWith(4));
+console.log('24'.startsWith(2));
