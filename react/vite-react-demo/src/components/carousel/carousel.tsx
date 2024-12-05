@@ -1,7 +1,7 @@
 import React, { useState, PropsWithChildren } from 'react';
 
 import { TiChevronLeftOutline, TiChevronRightOutline } from 'react-icons/ti';
-import './carousel.scss'
+import './carousel.css'
 
 const CARDS = 8;
 const MAX_VISIBILITY = 3;

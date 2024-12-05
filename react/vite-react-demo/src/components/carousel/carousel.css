@@ -1,17 +1,17 @@
-$color-purple: #8B5CF6;
-$color-pink: #EC4899;
-$color-gray: #9CA3AF;
-$color-black: #1F2937;
-$card-size: 23rem;
 
 .carousel-app {
+  --color-purple: #8B5CF6;
+  --color-pink: #EC4899;
+  --color-gray: #9CA3AF;
+  --color-black: #1F2937;
+  --card-size: 23rem;
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-image: linear-gradient(45deg, $color-purple, $color-pink);
+  background-image: linear-gradient(45deg, var(--color-purple), var(--color-pink));
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -21,8 +21,8 @@ $card-size: 23rem;
 
 .carousel {
   position: relative;
-  width: $card-size;
-  height: $card-size;
+  width: var(--card-size);
+  height: var(--card-size);
   perspective: 500px;
   transform-style: preserve-3d;
 }
@@ -46,7 +46,7 @@ $card-size: 23rem;
   padding: 2rem;
   background-color: hsl(280deg, 40%, calc(100% - var(--abs-offset) * 50%));
   border-radius: 1rem;
-  color: $color-gray;
+  color: var(--color-gray);
   text-align: justify;
   transition: all 0.3s ease-out;
   
@@ -55,7 +55,7 @@ $card-size: 23rem;
     font-size: 2rem;
     font-weight: bold;
     margin: 0 0 0.7em;
-    color: $color-black;
+    color: var(--color-black);
   }
   
   p, h2 {
