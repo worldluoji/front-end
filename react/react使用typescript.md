@@ -132,3 +132,22 @@ const Layout = (props: LayoutProps) => {
   <div>Hello!</div>
 </Layout>;
 ```
+
+## 5. 将组件作为props传入
+最简单方法是使用 React.ComponentType
+```jsx
+const Row = (props: {
+  icon: React.ComponentType<{
+    className?: string;
+  }>;
+}) => {
+  return (
+    <div>
+      <props.icon className="h-8 w-8" />
+    </div>
+  );
+};
+ 
+<Row icon={UserIcon} />;
+```
+和前面的区别是，这里props传入组件(icon)，直接拿着icon用。上面是jsx。
