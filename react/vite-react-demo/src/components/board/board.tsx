@@ -1,10 +1,37 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
+import { css } from "@emotion/react"
 import './board.css'
 import { BoardCardProps } from "./BoardCard"
 import KanBanBoard, {COLUMN_KEY_TODO, COLUMN_KEY_ONGOING, COLUMN_KEY_DONE } from "./KanBanBoard"
 
+
 const DATA_STORE_KEY = 'kanban-data-store'
 
+// gap: row-gap column-gap; gap: 20px 50px; 设置行间距为 20px，列间距为 50px：
+const boardStyle = css`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100vh;
+    text-align: center;
+`
+
+const boardHeaderStyle = css`
+    flex: 1;
+    margin: 1rem 1rem 0; /*上 左右 下*/
+    border-radius: 1rem;
+    background-color: #282c34;
+    min-height: 5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+`
+
+const boardTitleStyle = css`
+    font-size: calc(10px + 2vmin);
+    color: white;
+`
 
 function Board() {
 
@@ -76,9 +103,9 @@ function Board() {
     }
 
     return (
-        <div className="board">
-            <header className="board-header">
-                <h1>我的看板</h1><h2><button onClick={ handleSaveAll }>保存所有卡片</button></h2>
+        <div css={ boardStyle }>
+            <header css={ boardHeaderStyle }>
+                <h1 css={ boardTitleStyle }>我的看板</h1><h2><button onClick={ handleSaveAll }>保存所有卡片</button></h2>
             </header>
             <KanBanBoard todoList={todoList} 
                          ongoingList={ongoingList} 

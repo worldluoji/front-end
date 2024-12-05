@@ -1,5 +1,5 @@
 
-import React, { useState } from "react"
+import { useState } from "react"
 // @emotion/react provide the ability of css in js
 import styled from '@emotion/styled'
 import KanBanBoardColumn from "./KanBanBoardColumn";
@@ -36,7 +36,7 @@ export default function KanBanBoard(kanBanBoardProps: KanBanBoardProps) {
     const [dragSource, setDragSource] = useState('')
     const [dragTarget, setDragTarget] = useState('')
 
-    const handleDrop = (evt: React.DragEvent<HTMLElement>) => {
+    const handleDrop = () => {
         if (!draggedItem || !dragSource || !dragTarget || dragSource === dragTarget) {
             return
         }
