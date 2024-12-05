@@ -15,7 +15,7 @@ tsc --help
 "target": "es2016", 
 "module": "commonjs", 
 ```
-target指定了编译的规范是es2016, 还可以取值es5,es3等，module指定使用的模块规范，比如commonjs,
+target指定了编译的规范是es2016, 还可以取值es5,es3等，module指定生成的模块规范，比如commonjs,
 amd,umd等。
 
 命令行里针对单个文件是这样的：
