@@ -1,4 +1,3 @@
-import React from "react"
 import useKeyPress from '../../hooks/useKeyPress'
 
 function UseKeyPressExample() {

@@ -1,12 +1,12 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 
 const getSize = () => {
     return window.innerWidth > 1000 ? "large" : "small";
 }
 const useWindowSize = () => {
     // size就是getSize的返回值，而setSize就可以动态的改变size以渲染view, 相当于getSize被hook住了。
-    const [size, setSize] = React.useState(getSize());
-    React.useEffect(() => {
+    const [size, setSize] = useState(getSize());
+    useEffect(() => {
         const handler = () => {
             setSize(getSize())
         };

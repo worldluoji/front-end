@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 import useAsync from '../../hooks/useAsync'
 
 export default function UserList() {
@@ -14,7 +14,7 @@ export default function UserList() {
     // return json.data;
 
     // mock request
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         setTimeout(function () {
             resolve({
                 data: [{id: 1, name: 'luoji1'}, {id: 2, name: 'luoji3'}]

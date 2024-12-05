@@ -1,4 +1,4 @@
-import React, { useCallback, CSSProperties} from 'react';
+import { useCallback, CSSProperties} from 'react';
 import useScroll from '../../hooks/useScroll';
 
 function ScrollTop() {

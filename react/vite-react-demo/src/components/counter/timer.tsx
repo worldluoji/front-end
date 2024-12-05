@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 
 export default function Timer() {
   // 定义 time state 用于保存计时的累积时间
