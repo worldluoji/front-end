@@ -37,6 +37,82 @@
 
 <br>
 
+## useParams 和 useNavigate
+`useParams` 和 `useNavigate` 是为了帮助开发者更方便地访问路由参数和执行导航操作。下面分别介绍这两个钩子的使用方法：
+
+### useParams
+
+`useParams` 钩子用于获取当前 URL 中的动态参数。例如，如果你有一个路径 `/users/:id`，那么 `:id` 就是一个动态参数。
+
+#### 使用示例：
+假设你有一个用户详情页面，其路径为 `/users/:id`，你可以使用 `useParams` 来获取当前用户的 ID。
+
+```jsx
+import React from 'react';
+import { useParams } from 'react-router-dom';
+
+function UserDetails() {
+  let { id } = useParams();
+
+  return (
+    <div>
+      <h1>User Details for user {id}</h1>
+      {/* 这里可以添加更多逻辑来展示特定用户的详细信息 */}
+    </div>
+  );
+}
+
+export default UserDetails;
+```
+
+### useNavigate
+
+`useNavigate` 钩子提供了编程式的导航功能，允许你在代码中触发导航行为，而不是通过点击链接或按钮等用户交互方式。
+
+#### 使用示例：
+在某些情况下，比如表单提交成功后，你可能想要重定向到另一个页面。此时就可以使用 `useNavigate`。
+
+```jsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+function LoginPage() {
+  const [username, setUsername] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // 模拟登录逻辑
+    if (username === 'admin') {
+      // 登录成功，重定向到主页或其他页面
+      navigate('/home', { replace: true });
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input 
+        type="text" 
+        value={username} 
+        onChange={(e) => setUsername(e.target.value)} 
+        placeholder="Enter username"
+      />
+      <button type="submit">Login</button>
+    </form>
+  );
+}
+
+export default LoginPage;
+```
+
+- `navigate('/home')`：导航到指定路径。
+- `navigate('/home', { replace: true })`：使用 `replace: true` 选项会替换当前条目而不向历史堆栈中添加新条目，这通常用于避免用户按返回按钮回到前一页。
+- `navigate(-1)` 或 `navigate(1)`：可以通过传递一个正数或负数来前进或后退指定数量的历史记录条目。
+
+这些钩子使得与路由的互动变得更加直观和直接，增强了应用的用户体验。
+
+<br>
+
 ## React路由选择
 - React Router：React Router仍然是处理 React 应用中路由的「第一选择」。凭借其丰富的文档和积极的社区，它继续是我们应用中声明性路由的可靠选择。
 - React Query：在 2023 年的普及基础上，Tanstack 的 React Query 将进一步增强数据获取和状态管理。它简化了在 React 应用中管理、缓存和同步数据的过程。
