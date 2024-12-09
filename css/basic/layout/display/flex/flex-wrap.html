@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flex wrap demo</title>
+</head>
+<body>
+    <div class="container">
+        <div class="item a">A</div>
+        <div class="item b">B</div>
+        <div class="item c">C</div>
+        <div class="item d">D</div>
+        <div class="item e">E</div>
+        <div class="item f">F</div>
+        <div class="item g">G</div>
+        <div class="item h">H</div>
+        <div class="item i">I</div>
+        <div class="item j">J</div>
+        <div class="item k">K</div>
+    </div>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            background-color: bisque;
+            height: 50vh;
+            align-content: center; /* align-content只有在flex-warp不是nowrap时、并且多行时才有效 */
+        }
+
+        .item {
+            width: 12vw;
+            height: 100px;
+            background-color: #0fbadc;
+            margin: 10px;
+            text-align: center;
+            line-height: 100px;
+            font-size: 30px;
+        }
+    </style>
+</body>
+</html>
