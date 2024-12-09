@@ -6,7 +6,7 @@
  var timeLimit = function(fn, t) {
     let timeOutPromise = new Promise((resolve, reject) => {
         setTimeout(() => {
-            reject('Time Limit Exceeded');
+            reject(`Time Limit Exceeded at t=${t}ms`);
         }, t);
     });
 	return async function(...args) {
@@ -19,4 +19,4 @@
 const limited = timeLimit((t) => new Promise((resolve) => setTimeout(() => resolve(123), t)), 100);
 limited(150).catch(console.log) // "Time Limit Exceeded" at t=100ms
  
-limited(99).then(console.log).catch(console.log); 
+limited(90).then(console.log).catch(console.log); 
