@@ -80,7 +80,8 @@ grid-column-gap: 20px;
 ```
 
 3. grid-column
-The grid-column property is the first one for use on the grid items themselves，前面的属性都是用在container
+The grid-column property is the first one for use on the grid items themselves，前面的属性都是用在container.
+
 use the grid-column property in conjunction with the line numbers you want the item to start and stop at:
 ```
    1___2___3___4
@@ -95,6 +96,7 @@ consuming two columns.
 grid-row同样的用法
 
 4. justify-self property on a grid item. 
+
 By default, this property has a value of stretch, which will make the content fill the whole width of the cell
 exmple:
 ```
@@ -109,6 +111,7 @@ justify-self: center;
 - align-self 同 justify-self使用，只是height方向
 
 5. justify-items：center 会让所有item都居中，写在container里
+
 对应的垂直方向还有align-items
 
 justify-self和align-self会覆盖justify-items和align-items.
