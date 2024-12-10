@@ -1,8 +1,12 @@
 import { SortOrder } from "@/app/sortorder/sort-order"
 export default function DashboardLayout({
     children, // will be a page or nested layout
+    team,
+    analytics,
   }: {
-    children: React.ReactNode
+    children: React.ReactNode,
+    team: React.ReactNode,
+    analytics: React.ReactNode
   }) {
     return (
       <section>
@@ -12,6 +16,8 @@ export default function DashboardLayout({
         <div className="ml-3">
           <SortOrder />
           {children}
+          {team}
+          {analytics}
         </div>
       </section>
     )
