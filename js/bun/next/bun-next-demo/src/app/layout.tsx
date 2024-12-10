@@ -29,7 +29,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NavLinks />
+        <div className="ml-3">
+          <NavLinks />
+        </div>
         {children}
       </body>
     </html>
