@@ -8,9 +8,10 @@ export default function DashboardLayout({
         {/* Include shared UI here e.g. a header or sidebar.
           Layouts are Server Components by default but can be set to a Client Component.
         */}
-        <p>shared content</p>
-   
-        {children}
+        <div className="ml-3">
+          <p>shared content</p>
+          {children}
+        </div>
       </section>
     )
   }
