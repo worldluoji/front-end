@@ -9,7 +9,12 @@ interface Response {
     [props: string]: string | number;
   };
 }
-export async function createUser(prevState: any, formData: FormData) {
+
+interface FormState {
+  message?: string;
+}
+
+export async function createUser(prevState: FormState, formData: FormData) {
   /*
   const res = await fetch('https://jsonplaceholder.typicode.com/users', {
     method: 'POST',
@@ -28,7 +33,7 @@ export async function createUser(prevState: any, formData: FormData) {
     setTimeout(() => {
       resolve({
         ok: false,
-        message: 'Please try again later.'
+        message: `${formData.get('email') || ''} please try again later.`
       });
     }, 1000);
   });
@@ -36,6 +41,8 @@ export async function createUser(prevState: any, formData: FormData) {
   if (!res.ok) {
     return { message: res.message };
   }
+
+  prevState.message = 'User created successfully!';
  
   redirect('/dashboard');
 }
