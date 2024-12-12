@@ -1,4 +1,6 @@
 # React Server Component
+React Server Components in React 19 are stable and will not break between major versions.
+
 React Server Components allows the server and the client (browser) </strong>to collaborate in rendering</strong> your React application.
 
 Consider the typical React element tree that is rendered for your page, which is usually composed of different React components rendering more React components.
@@ -59,7 +61,7 @@ But the most important one to keep in mind is that <strong>client components can
 
 That’s because server components cannot be run in the browser, and may have code that does not work in the browser; 
 if client components depended on server components, then we would end up pulling those illegal dependencies into the browser bundles.
-```
+```jsx
 // ClientComponent.client.jsx
 // NOT OK: client components cannot import server components
 import ServerComponent from './ServerComponent.server'
@@ -75,7 +77,7 @@ export default function ClientComponent() {
 While you can’t import and render server components from client components, you can still use composition — 
 that is, the client component can still take in props that are just opaque ReactNodes, 
 and those ReactNodes may happen to be rendered by server components. For example:
-```
+```jsx
 // ClientComponent.client.jsx
 export default function ClientComponent({ children }) {
   return (
