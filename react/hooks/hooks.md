@@ -251,6 +251,15 @@ function TextInputWithFocusButton() {
   );
 }
 ```
+Starting in React 19, you can now access ref as a prop for function components:
+```jsx
+function MyInput({placeholder, ref}) {
+  return <input placeholder={placeholder} ref={ref} />
+}
+
+//...
+<MyInput ref={ref} />
+```
 
 <br>
 
