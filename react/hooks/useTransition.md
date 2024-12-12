@@ -28,100 +28,39 @@ React 18 中，Transitions 是一个强大的新特性，它为开发者提供�
 
 2. 使用 `useTransition` 钩子
 
-`useTransition` 钩子返回一个数组，包含一个布尔值和一个函数。布尔值表示是否处于过渡状态，函数可以用来启动一个过渡。
-
 示例：
 ```jsx
-import React, { useState, useTransition, useDeferredValue, useEffect } from 'react';
-
-function App() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [users, setUsers] = useState([]);
+// Using pending state from Actions
+function UpdateName({}) {
+  const [name, setName] = useState("");
+  const [error, setError] = useState(null);
   const [isPending, startTransition] = useTransition();
-  const deferredSearchQuery = useDeferredValue(searchQuery);
 
-  useEffect(() => {
-    fetchUsers().then(setUsers);
-  }, []);
-
-  useEffect(() => {
-    // 当排序方式改变时，立即显示加载状态
-    startTransition(() => {
-      setUsers(sortUsers(users, sortOrder));
-    });
-  }, [sortOrder, users, startTransition]);
-
-  function handleSearchChange(e) {
-    setSearchQuery(e.target.value);
-  }
-
-  function handleSortChange(e) {
-    setSortOrder(e.target.value);
-  }
-
-  function filterUsers(users, query) {
-    return users.filter(user =>
-      user.name.toLowerCase().includes(query.toLowerCase())
-    );
-  }
-
-  function sortUsers(users, order) {
-    return [...users].sort((a, b) => {
-      if (order === 'asc') {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
-  }
+  const handleSubmit = () => {
+    startTransition(async () => {
+      const error = await updateName(name);
+      if (error) {
+        setError(error);
+        return;
+      } 
+      redirect("/path");
+    })
+  };
 
   return (
     <div>
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={handleSearchChange}
-        placeholder="Search users..."
-      />
-      <select value={sortOrder} onChange={handleSortChange}>
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-      </select>
-      {isPending && <div>Loading...</div>}
-      <UserList users={filterUsers(sortUsers(users, sortOrder), deferredSearchQuery)} />
+      <input value={name} onChange={(event) => setName(event.target.value)} />
+      <button onClick={handleSubmit} disabled={isPending}>
+        Update
+      </button>
+      {error && <p>{error}</p>}
     </div>
   );
 }
-
-function UserList({ users }) {
-  return (
-    <ul>
-      {users.map(user => (
-        <li key={user.id}>{user.name}</li>
-      ))}
-    </ul>
-  );
-}
-
-function fetchUsers() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        { id: 1, name: 'Alice' },
-        { id: 2, name: 'Bob' },
-        { id: 3, name: 'Charlie' },
-        { id: 4, name: 'David' },
-        { id: 5, name: 'Eve' },
-      ]);
-    }, 1000);
-  });
-}
-
-export default App;
 ```
-上面的例子中，我们有一个用户列表，用户可以输入搜索关键词来过滤列表，也可以选择不同的排序方式来重新排序列表。我们希望在用户输入搜索关键词时延迟更新列表，以减少不必要的渲染；同时，在用户选择新的排序方式时，立即显示加载状态，然后在后台异步更新列表。
+The async transition will immediately set the isPending state to true, make the async request(s), and switch isPending to false after any transitions. This allows you to keep the current UI responsive and interactive while the data is changing.
 
+这样，自动设置isPending，不用开发者去处理。
 
 **三、Transitions 的优势**
 
@@ -133,5 +72,3 @@ export default App;
 
 3. 简化代码
    - 使用 `startTransition` 和 `useTransition` 可以使代码更加清晰和易于维护。开发者可以明确地标记哪些更新是非紧急的，从而更好地控制应用的性能和用户体验。
-
-总之，React 18 的 Transitions 特性为开发者提供了一种强大的工具，可以优化应用的性能和用户体验。通过区分紧急更新和非紧急更新，并提供流畅的过渡效果，Transitions 可以让你的应用更加高效、流畅和易于使用。
