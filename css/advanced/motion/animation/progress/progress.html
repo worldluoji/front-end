@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress</title>
+</head>
+<body>
+    <div class="progress"></div>
+    <button id="finishBtn">Finish</button>
+    <script>
+        let btn = document.getElementById('finishBtn');
+        btn.onclick = function() {
+            document.body.style.setProperty('--running', 'paused, running');
+        }
+    </script>
+    <style>
+        .progress{
+            position: relative;
+            width: 300px;
+            height: 10px;
+            margin: 25px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #E4CCFF;
+            --ease: cubic-bezier(.08,.81,.29,.99); /* 默认是ease, 改为cubic-bezier, 前半段快，后面逐渐慢*/
+        }
+        @supports (animation-timing-function: linear(0, 1)) {
+            .progress {
+                --ease: linear(0 0%, 0.25 4.14%, 0.53 13.29%, 0.61 25.03%, 0.75 34.8%, 0.88 43.99%, 0.93 58.77%, 0.98 68.88%, 0.99 79.22%, 1 88.79%, 1 100%);
+            }
+        }
+
+        .progress::before{
+            position: absolute;
+            content: '';
+            width: 0%;
+            height: 100%;
+            background: #9747FF;
+            /*两个相同的动画，播放时长不同*/
+            animation: progress 10s var(--ease) forwards, progress 1s var(--ease) forwards;
+            animation-play-state: var(--running, running, paused);
+        }
+
+        @keyframes progress {
+            to {
+                width: 100%
+            }
+            99% {
+                background-color: #9747FF;
+            }
+            100% {
+                background-color: #14AE5C;
+                width: 100%;
+            }
+        }
+
+    </style>
+</body>
+</html>
