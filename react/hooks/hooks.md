@@ -260,6 +260,20 @@ function MyInput({placeholder, ref}) {
 //...
 <MyInput ref={ref} />
 ```
+ref也有了清除函数
+```jsx
+<input
+  ref={(ref) => {
+    // ref created
+
+    // NEW: return a cleanup function to reset
+    // the ref when element is removed from DOM.
+    return () => {
+      // ref cleanup
+    };
+  }}
+/>
+```
 
 <br>
 
@@ -370,12 +384,12 @@ Hooks 是逻辑重用的第一选择。
 <br>
 
 ## Eslint hooks 配置
-```
+```shell
 npm install eslint-plugin-react-hooks --save-dev
 yarn add eslint-plugin-react-hooks --save-dev
 ```
 然后eslint配置文件中加入：
-```
+```json
 {
   "plugins": [
     // ...

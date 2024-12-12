@@ -31,8 +31,8 @@ Context 用于组件跨越多个组件层次结构，向后代组件传递和共
 const MyContext = React.createContext('没路用的初始值')
 ```
 
-2) 在组件 JSX 中使用 <MyContext.Provider> 组件，定义 value 值，并将子组件声明在前者的闭合标签里
-```
+2) 在组件 JSX 中使用 `<MyContext.Provider>` 组件，定义 value 值，并将子组件声明在前者的闭合标签里
+```jsx
 function MyComponent() {
   const [state1, setState1] = useState('文本');
   const handleClick = () => {
@@ -48,9 +48,21 @@ function MyComponent() {
   )
 }
 ```
+In React 19, you can render <Context> as a provider instead of <Context.Provider>:
+```jsx
+const ThemeContext = createContext('');
+
+function App({children}) {
+  return (
+    <ThemeContext value="dark">
+      {children}
+    </ThemeContext>
+  );  
+}
+```
 
 3) 在子组件或后代组件中使用 useContext Hook 获取 MyContext 的值，这个组件就成为 MyContext 的消费者（Consumer）
-```
+```jsx
 function MyChildComponent() {
   return (
     <MyGrandchildComponent />

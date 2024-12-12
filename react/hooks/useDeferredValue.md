@@ -45,6 +45,19 @@ function SearchResults({ query }) {
 
 在这个例子中，`query` 是用户输入的即时值，而 `deferredQuery` 是 `useDeferredValue` 创建的延迟值。当 `query` 发生变化时，React 会尝试在下一个渲染周期中更新 `deferredQuery`，但如果当前有更高优先级的工作需要完成，React 会推迟这个更新直到系统空闲。
 
+React 19 为 useDeferredValue 提供了第二个参数，用于设置默认值。
+```jsx
+function Search({deferredValue}) {
+  // On initial render the value is ''.
+  // Then a re-render is scheduled with the deferredValue.
+  const value = useDeferredValue(deferredValue, '');
+  
+  return (
+    <Results query={value} />
+  );
+}
+```
+
 ### 注意事项
 
 - **不要过度使用**：虽然 `useDeferredValue` 可以帮助优化性能，但是过度使用可能会导致用户界面的响应性变差，因为用户可能注意到延迟。
