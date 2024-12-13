@@ -75,6 +75,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import("../views/DynamicFormView.vue"),
   },
+  {
+    path: "/counterhook",
+    name: "counterhook",
+    component: () =>
+      import("../views/CounterHooksView.vue"),
+  },
 ];
 
 const router = createRouter({
