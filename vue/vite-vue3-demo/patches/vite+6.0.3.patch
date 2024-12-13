@@ -1,0 +1,14 @@
+diff --git a/node_modules/vite/dist/node/chunks/dep-yUJfKD1i.js b/node_modules/vite/dist/node/chunks/dep-yUJfKD1i.js
+index 57759ca..808e3d3 100644
+--- a/node_modules/vite/dist/node/chunks/dep-yUJfKD1i.js
++++ b/node_modules/vite/dist/node/chunks/dep-yUJfKD1i.js
+@@ -1,6 +1,8 @@
+ import * as fs$8 from 'node:fs';
+ import fs__default, { promises as promises$1, existsSync as existsSync$1, readFileSync as readFileSync$1 } from 'node:fs';
+-import fsp, { constants as constants$9 } from 'node:fs/promises';
++// import fsp, { constants as constants$9 } from 'node:fs/promises';
++import fsp from 'node:fs/promises';
++import { constants as constants$9 } from 'node:fs';
+ import path$d, { posix as posix$1, isAbsolute as isAbsolute$1, join as join$1, resolve as resolve$4, normalize, dirname as dirname$2, relative as relative$2, basename as basename$2, extname as extname$1 } from 'node:path';
+ import require$$1$1, { fileURLToPath as fileURLToPath$1, URL as URL$3, pathToFileURL as pathToFileURL$1 } from 'node:url';
+ import { promisify as promisify$4, format as format$2, inspect, stripVTControlCharacters } from 'node:util';
