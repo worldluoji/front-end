@@ -8,14 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineExpose, ref, withDefaults } from "vue";
-// const props = defineProps<{
-//   color: string;
-//   text: string;
-// }>();
-// // props 是read only的
-// console.log(props.color);
-
 // defineProps无法设置默认值，可以使用withDefaults包裹
 interface Props {
   color?: string;
