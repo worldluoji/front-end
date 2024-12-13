@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 const useKeyPress = (domNode = document.body) => {
     const [key, setKey] = useState<string>()
