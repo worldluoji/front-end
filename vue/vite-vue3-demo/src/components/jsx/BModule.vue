@@ -8,7 +8,9 @@
 
 <script setup lang="ts">
 const p = defineProps<{
-    params: any
+    params: {
+        text: string
+    }
 }>()
 </script>
 
