@@ -1,5 +1,5 @@
 import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
-import clsx from 'clsx';
+import clsx from 'clsx'; // clsx is a tiny (239B) utility for constructing className strings conditionally. https://github.com/lukeed/clsx
 
 export default function InvoiceStatus({ status }: { status: string }) {
   return (
