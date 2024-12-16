@@ -45,6 +45,13 @@ Recognizing situations where middleware may not be the optimal approach is just 
 - Extensive Session Management: While Middleware can manage basic session tasks, extensive session management should be managed by dedicated authentication services or within Route Handlers.
 - Direct Database Operations: Performing direct database operations within Middleware is not recommended. Database interactions should be done within Route Handlers or server-side utilities.
 
+## Automatic code-splitting and prefetching
+To improve the navigation experience, Next.js automatically code splits your application by route segments. This is different from a traditional React SPA, where the browser loads all your application code on initial load.
+
+Splitting code by routes means that pages become isolated. If a certain page throws an error, the rest of the application will still work.
+
+Furthermore, in production, whenever `<Link>` components appear in the browser's viewport, Next.js automatically prefetches the code for the linked route in the background. By the time the user clicks the link, the code for the destination page will already be loaded in the background, and this is what makes the page transition near-instant!
+
 ## reference
 - https://nextjs.org/docs
 - https://bun.sh/guides/ecosystem/nextjs
