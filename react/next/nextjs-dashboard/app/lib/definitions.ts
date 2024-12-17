@@ -11,11 +11,11 @@ export type User = {
 
 
 /*
-CREATE TABLE `customer` (
-  `id` varchar(24) NOT NULL,
-  `name` varchar(24) NOT NULL,
-  `email` varchar(24) NOT NULL,
-  `image_url` varchar(8) NOT NULL,
+CREATE TABLE `customers` (
+  `id` varchar(60) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `email` varchar(32) NOT NULL,
+  `image_url` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 */
@@ -28,8 +28,8 @@ export type Customer = {
 
 /*
 CREATE TABLE `invoices` (
-  `id` varchar(24) NOT NULL,
-  `customer_id` varchar(24) NOT NULL,
+  `id` varchar(60) NOT NULL,
+  `customer_id` varchar(60) NOT NULL,
   `date` varchar(24) NOT NULL,
   `amount` int(11) NOT NULL,
   `status` varchar(8) NOT NULL,
