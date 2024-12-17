@@ -12,5 +12,8 @@ directory structure:
 - Config Files: You'll also notice config files such as next.config.js at the root of your application. Most of these files are created and pre-configured when you start a new project using create-next-app. You will not need to modify them in this course.
 
 
+## 数据
+项目的假数据通过 react/next/nextjs-dashboard/app/lib/insert-fake-data.ts 获取。使用的是 mariadb。
+
 ## reference
 - https://github.com/lukeed/clsx : clsx is a tiny (239B) utility for constructing className strings conditionally.  -> /app/ui/invoices/status.tsx
