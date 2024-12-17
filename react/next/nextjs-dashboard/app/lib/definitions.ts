@@ -26,6 +26,13 @@ export type Invoice = {
   status: 'pending' | 'paid';
 };
 
+
+/*
+CREATE TABLE `revenue` (
+  `month` varchar(8) NOT NULL,
+  `revenue` int(11) NOT NULL
+) ENGINE=InnoDB;
+*/
 export type Revenue = {
   month: string;
   revenue: number;
