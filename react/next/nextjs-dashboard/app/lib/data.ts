@@ -17,11 +17,9 @@ const pool = mariadb.createPool({
   port: Number(process.env.MARIADB_PORT),
 });
 
-export async function fetchRevenue() {
+export async function fetchRevenue(): Promise<Revenue[]> {
   let conn;
   try {
-
-    // const data = await sql<Revenue>`SELECT * FROM revenue`;
     conn = await pool.getConnection();
 	  const rows = await conn.query("SELECT * FROM revenue");
 
@@ -35,25 +33,28 @@ export async function fetchRevenue() {
   }
 }
 
-// export async function fetchLatestInvoices() {
-//   try {
-//     const data = await sql<LatestInvoiceRaw>`
-//       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
-//       FROM invoices
-//       JOIN customers ON invoices.customer_id = customers.id
-//       ORDER BY invoices.date DESC
-//       LIMIT 5`;
+export async function fetchLatestInvoices() {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const data = await conn.query(`SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
+      FROM invoices
+      JOIN customers ON invoices.customer_id = customers.id
+      ORDER BY invoices.date DESC
+      LIMIT 5`);
 
-//     const latestInvoices = data.rows.map((invoice) => ({
-//       ...invoice,
-//       amount: formatCurrency(invoice.amount),
-//     }));
-//     return latestInvoices;
-//   } catch (error) {
-//     console.error('Database Error:', error);
-//     throw new Error('Failed to fetch the latest invoices.');
-//   }
-// }
+    const latestInvoices = data.map((invoice: LatestInvoiceRaw) => ({
+      ...invoice,
+      amount: formatCurrency(invoice.amount),
+    }));
+    return latestInvoices;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch the latest invoices.');
+  } finally {
+    if (conn) conn.release(); //release to pool
+  }
+}
 
 // export async function fetchCardData() {
 //   try {
