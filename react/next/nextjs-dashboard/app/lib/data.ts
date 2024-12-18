@@ -102,41 +102,64 @@ export async function fetchCardData() {
   }
 }
 
-// const ITEMS_PER_PAGE = 6;
-// export async function fetchFilteredInvoices(
-//   query: string,
-//   currentPage: number,
-// ) {
-//   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+const ITEMS_PER_PAGE = 6;
+export async function fetchFilteredInvoices(
+  query: string,
+  currentPage: number,
+) {
+  let conn;
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-//   try {
-//     const invoices = await sql<InvoicesTable>`
-//       SELECT
-//         invoices.id,
-//         invoices.amount,
-//         invoices.date,
-//         invoices.status,
-//         customers.name,
-//         customers.email,
-//         customers.image_url
-//       FROM invoices
-//       JOIN customers ON invoices.customer_id = customers.id
-//       WHERE
-//         customers.name ILIKE ${`%${query}%`} OR
-//         customers.email ILIKE ${`%${query}%`} OR
-//         invoices.amount::text ILIKE ${`%${query}%`} OR
-//         invoices.date::text ILIKE ${`%${query}%`} OR
-//         invoices.status ILIKE ${`%${query}%`}
-//       ORDER BY invoices.date DESC
-//       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
-//     `;
-
-//     return invoices.rows;
-//   } catch (error) {
-//     console.error('Database Error:', error);
-//     throw new Error('Failed to fetch invoices.');
-//   }
-// }
+  try {
+    conn = await pool.getConnection();
+    // InvoicesTable
+    let invoices: InvoicesTable[];
+    if (query) {
+      invoices = await conn.query(`
+        SELECT
+          invoices.id,
+          invoices.amount,
+          invoices.date,
+          invoices.status,
+          customers.name,
+          customers.email,
+          customers.image_url
+        FROM invoices
+        JOIN customers ON invoices.customer_id = customers.id
+        WHERE
+          customers.name LIKE ${`'%${query}%'`} OR
+          customers.email LIKE ${`'%${query}%'`} OR
+          invoices.date LIKE ${`'%${query}%'`} OR
+          CONVERT(invoices.amount, CHAR) LIKE ${`'%${query}%'`} OR
+          invoices.status LIKE ${`'%${query}%'`}
+        ORDER BY invoices.date DESC
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+      `);
+    } else {
+      invoices = await conn.query(`
+        SELECT
+          invoices.id,
+          invoices.amount,
+          invoices.date,
+          invoices.status,
+          customers.name,
+          customers.email,
+          customers.image_url
+        FROM invoices
+        JOIN customers ON invoices.customer_id = customers.id
+        ORDER BY invoices.date DESC
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+      `);
+    }
+  
+    return invoices;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch invoices.');
+  } finally {
+    if (conn) conn.release();
+  }
+}
 
 // export async function fetchInvoicesPages(query: string) {
 //   try {
