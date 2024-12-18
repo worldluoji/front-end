@@ -1,5 +1,6 @@
 import SideNav from '@/app/ui/dashboard/sidenav';
- 
+
+export const experimental_ppr = true;
 /* 
 * One benefit of using layouts in Next.js is that on navigation, only the page components update while the layout won't re-render. 
 * This is called partial rendering.
