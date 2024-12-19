@@ -58,3 +58,36 @@ export async function createInvoice(formData: FormData) {
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
 }
+
+// Use Zod to update the expected types
+const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+ 
+// ...
+ 
+export async function updateInvoice(id: string, formData: FormData) {
+  const { customerId, amount, status } = UpdateInvoice.parse({
+    customerId: formData.get('customerId'),
+    amount: formData.get('amount'),
+    status: formData.get('status'),
+  });
+ 
+  const amountInCents = amount * 100;
+ 
+  let conn;
+  try  {
+      conn = await pool.getConnection();
+      const sql =  `UPDATE invoices
+    SET customer_id = (?), amount = (?), status = (?)
+    WHERE id = (?)`;
+    console.log(555, sql);
+      await conn.query(sql, [customerId, amountInCents, status, id]);
+  } catch (error) {
+      console.error('Error connecting to the database:', error);
+      throw error;
+  } finally {
+      if (conn) conn.release();
+  }
+  
+  revalidatePath('/dashboard/invoices');
+  redirect('/dashboard/invoices');
+}
