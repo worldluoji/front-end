@@ -79,7 +79,6 @@ export async function updateInvoice(id: string, formData: FormData) {
       const sql =  `UPDATE invoices
     SET customer_id = (?), amount = (?), status = (?)
     WHERE id = (?)`;
-    console.log(555, sql);
       await conn.query(sql, [customerId, amountInCents, status, id]);
   } catch (error) {
       console.error('Error connecting to the database:', error);
@@ -90,4 +89,19 @@ export async function updateInvoice(id: string, formData: FormData) {
   
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
+}
+
+export async function deleteInvoice(id: string) {
+    let conn;
+    try  {
+        conn = await pool.getConnection();
+        const sql =  `DELETE FROM invoices WHERE id = ?`;
+        await conn.query(sql, [id]);
+    } catch (error) {
+        console.error('Error connecting to the database:', error);
+        throw error;
+    } finally {
+        if (conn) conn.release();
+    }
+    revalidatePath('/dashboard/invoices');
 }
