@@ -1,4 +1,3 @@
-import mariadb from 'mariadb';
 import {
   CustomerField,
   CustomersTableType,
@@ -8,22 +7,13 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
-
-const pool = mariadb.createPool({
-  host: process.env.MARIADB_HOST,
-  user: process.env.MARIADB_USER,
-  password: process.env.MARIADB_PASSWORD,
-  database: process.env.MARIADB_DATABASE,
-  port: Number(process.env.MARIADB_PORT),
-});
+import { pool } from './pool';
 
 export async function fetchRevenue(): Promise<Revenue[]> {
   let conn;
   try {
     conn = await pool.getConnection();
 	  const rows = await conn.query("SELECT * FROM revenue");
-
-    console.log('Data fetch completed', rows);
     return rows;
   } catch (error) {
     console.error('Database Error:', error);
