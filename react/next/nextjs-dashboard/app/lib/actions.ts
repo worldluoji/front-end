@@ -9,14 +9,33 @@ import { pool } from './pool';
  
 const FormSchema = z.object({
   id: z.string(),
-  customerId: z.string(),
-  amount: z.coerce.number(),
-  status: z.enum(['pending', 'paid']),
+  customerId: z.string({
+    invalid_type_error: 'Please select a customer.',
+  }),
+  amount: z.coerce.number()
+            .gt(0, { message: 'Please enter an amount greater than $0.' }),
+  status: z.enum(['pending', 'paid'], {
+    invalid_type_error: 'Please select an invoice status.'
+  }),
   date: z.string(),
 });
  
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
-export async function createInvoice(formData: FormData) {
+
+export type State = {
+    errors?: {
+      customerId?: string[];
+      amount?: string[];
+      status?: string[];
+    };
+    message?: string | null;
+};
+
+/**
+* formData - 提交的表单数据
+* prevState - contains the state passed from the useActionState hook. You won't be using it in the action in this example, but it's a required prop.
+*/
+export async function createInvoice(prevState: State, formData: FormData) {
     // const rawFormData = Object.fromEntries(formData.entries())
     // const rawFormData = {
     //   customerId: formData.get('customerId'),
@@ -26,11 +45,20 @@ export async function createInvoice(formData: FormData) {
     // // Test it out:
     // console.log(rawFormData);
     // console.log(typeof rawFormData.amount);
-    const { customerId, amount, status } = CreateInvoice.parse({
+    const validatedFields = CreateInvoice.safeParse({
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status'),
     });
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Create Invoice.',
+        };
+    }
+
+    const { customerId, amount, status } = validatedFields.data;
 
     const amountInCents = amount * 100;
     const date = new Date().toISOString().split('T')[0];
