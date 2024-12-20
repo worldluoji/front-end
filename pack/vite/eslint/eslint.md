@@ -143,6 +143,9 @@ module.exports = {
 ```
 相信有了上述核心配置部分的讲解，你再回头看看初始化生成的 ESLint 配置文件，你也能很好地理解各个配置项的含义了。
 
+## 常用eslint插件
+- eslint-plugin-jsx-a11y: the eslint-plugin-jsx-a11y plugin in its ESLint config to help catch accessibility issues early. For example, this plugin warns if you have images without alt text, use the aria-* and role attributes incorrectly, and more.
+- eslint-plugin-react-hooks: Next.js includes the eslint-plugin-react-hooks plugin in its ESLint config to help catch bugs in React hooks.
 
 ## 参考文档
 https://juejin.cn/book/7050063811973218341/section/7058853948060336163
