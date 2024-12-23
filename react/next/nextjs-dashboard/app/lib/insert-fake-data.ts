@@ -2,6 +2,8 @@ import { customers, invoices, revenue } from './placeholder-data';
 
 import { pool } from './pool';
 
+import * as bcrypt from 'bcrypt';
+
 const insertCustomers = async () => {
   let conn;
   const query = `INSERT INTO customers (id, name, email, image_url) VALUES (?,?,?,?)`;
@@ -80,8 +82,17 @@ const insertRevenue = async () => {
     }
 };
 
+
 export const addAllFakeData = async () => {
     await insertCustomers();
     await insertInvoices();
     await insertRevenue();
 };
+
+export const getPassWordHash = () => {
+  const saltRounds = 10;
+  const myPlaintextPassword = '199114qaz';
+  bcrypt.hash(myPlaintextPassword, saltRounds, (err, hash) => {
+    console.log(hash);
+  });
+}

@@ -1,5 +1,8 @@
 'use server';
 
+import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
+
 // we'll use Zod, a TypeScript-first validation library that can simplify this task for you.
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
@@ -132,4 +135,23 @@ export async function deleteInvoice(id: string) {
         if (conn) conn.release();
     }
     revalidatePath('/dashboard/invoices');
+}
+
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+    throw error;
+  }
 }
