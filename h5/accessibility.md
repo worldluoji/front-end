@@ -1,21 +1,22 @@
 # Accessibility
+无障碍是一种让尽可能多的用户可以使用你的网站的做法。传统上我们认为这只与残疾人士有关，但提升网站的无障碍也可以让其他用户群体受益。比如使用移动设备的人群，那些使用低速网络连接的人群。
+
 https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Accessibility/CSS_and_JavaScript
 
 ## 1. alt
 An alt attribute helps in cases where the image fails to load or can't be seen by a user. 
 Search engines also use it to understand what an image contains to include it in search results. 
 Here's an example:
-```
+```html
 <img src="importantLogo.jpeg" alt="Company logo">
 ```
-sometimes images are grouped with a caption already describing them, or are used for decoration only. 
-In these cases, alt text may seem redundant or unnecessary.
+sometimes images are grouped with a caption already describing them, or are used for decoration only. In these cases, alt text may seem redundant or unnecessary.
 
 也就是说，当图片已经有别的标题，或者只是装饰作用，alt可能就是冗余的或者没有必要的。
 
 When an image is already explained with text content or does not add meaning to a page, 
 the img still needs an alt attribute, but it can be set to an empty string. Here's an example:
-```
+```html
 <img src="visualDecoration.jpeg" alt="">
 ```
 这时候如果图片加载不出来则不会显示加载不出来的图标。
@@ -33,7 +34,7 @@ a page with an h2 element followed by several subsections labeled with h4 tags w
 
 <br>
 
-## 3. h5语义化标签
+## 3. 语义化标签
 a browser renders these elements similar to the humble div. 
 However, using them where appropriate gives additional meaning to your markup. 
 
@@ -49,8 +50,8 @@ Assistive technologies can access this information to provide better page summar
 - 便于团队开发和维护: 语义化使得代码更具有可读性，让其他开发人员更加理解你的html结构，减少差异化
 - 方便其他设备解析: 如屏幕阅读器、盲人阅读器、移动设备等，以有意义的方式来渲染网页
 
-### 1) 结构
-```
+### (1) 结构
+```html
 <header>
   <h1>Weapons of the Ninja</h1>
 </header>
@@ -62,7 +63,7 @@ Assistive technologies can access this information to provide better page summar
   </main>
 
   <footer></footer>
-</bodu>
+</body>
 ```
 header shares the embedded landmark feature you saw with main, 
 allowing assistive technologies to quickly navigate to that content.
@@ -74,7 +75,7 @@ the footer element has a built-in landmark feature that allows assistive devices
 
 It's primarily used to contain copyright information or links to related documents that usually sit at the bottom of a page.
 
-### 2) article、section
+### (2) article、section
 article is another one of the new HTML5 elements that add semantic meaning to your markup. 
 
 article is a sectioning element and is used to <strong>wrap independent, self-contained content</strong>. 
@@ -95,7 +96,7 @@ When there's no relationship between groups of content, then use a div.
 section元素用于标记文档的各个部分，例如长表单文章的章节或主要部分。
 
 example:
-```
+```html
 <article class="film_review">
   <h2>Jurassic Park</h2>
   <section class="main_review">
@@ -137,7 +138,7 @@ example:
 </article>
 ```
 
-### 3) nav
+### (3) nav
 The nav element is another HTML5 item with the embedded landmark feature for easy screen reader navigation. 
 
 This tag is meant to wrap around the main navigation links in your page.
@@ -149,7 +150,7 @@ It's not necessary for all links to be contained in a `<nav>` element.
 typically the `<footer>` element often has a list of links that don't need to be in a `<nav>` element.
 
 examples:
-```
+```html
 <nav class="menu">
   <ul>
     <li><a href="#">Home</a></li>
@@ -157,9 +158,26 @@ examples:
     <li><a href="#">Contact</a></li>
   </ul>
 </nav>
+<style>
+a {
+  color: #ff0000;
+}
+
+a:hover,
+a:visited,
+a:focus {
+  color: #a60000;
+  text-decoration: none;
+}
+
+a:active {
+  color: #000000;
+  background-color: #a60000;
+}
+</style>
 ```
 
-### 4) audio
+### (4) audio
 HTML5's audio element gives semantic meaning when it wraps sound or audio stream content in your markup. 
 
 Audio content also needs a text alternative to be accessible to people who are deaf or hard of hearing.
@@ -185,7 +203,7 @@ It needs synchronized captions and a transcript so users with visual and/or audi
 Generally, a web developer is not responsible for creating the captions or transcript, but needs to know to include them.
 
 example 2:
-```
+```html
 <body>
   <header>
     <h1>Real Coding Ninjas</h1>
@@ -199,7 +217,7 @@ example 2:
 </body>
 ```
 
-### 5) figure
+### (5) figure
 HTML5 introduced the figure element and the related figcaption. Used together, 
 these items wrap a visual representation (like an image, diagram, or chart) along with its caption.
 
@@ -207,7 +225,7 @@ Wrapping these elements together gives a two-fold accessibility boost by semanti
 and providing a text alternative(可选择的、备选的、可替代的) explaining the figure.
 
 example:
-```
+```html
 <figure>
   <img src="roundhouseDestruction.jpeg" alt="Photo of Camper Cat executing a roundhouse kick">
   <br>
@@ -217,8 +235,8 @@ example:
 </figure>
 ```
 
-### 6) label for
-```
+### (6) label for
+```html
 <form>
   <label for="name">Name:</label>
   <input type="text" id="name" name="name">
@@ -226,14 +244,14 @@ example:
 ```
 label的for关联input的id
 
-### 7) fieldset
+### (7) fieldset
 The fieldset tag surrounds the entire grouping of radio buttons to achieve this. 
 It often uses a legend tag to provide a description for the grouping, which screen readers read for each choice in the fieldset element.
 
 The fieldset wrapper and legend tag are not necessary when the choices are self-explanatory, like a gender selection.Using a label with the for attribute for each radio button is sufficient.
 
 Here's an example:
-```
+```html
 <form>
   <fieldset>
     <legend>Choose one of these three items:</legend>
@@ -247,13 +265,13 @@ Here's an example:
 </form>
 ```
 
-### 8) date
-```
+### (8) date
+```html
 <input type="date" id="pickdate" name="date">
 ```
 可用于选择日期
 
-### 9) time
+### (9) time
 HTML5 also introduced the time element along with a datetime attribute to standardize times. 
 The time element is an inline element that can wrap a date or time on a page. 
 
@@ -263,24 +281,24 @@ It helps avoid confusion by stating a standardized version of a time,
 even if it's informally or colloquially written in the text.
 
 example：
-```
+```html
 <time datetime="2016-09-15">Thursday, September 15<sup>th</sup></time>
 ```
 
-### 10) strong、em
+### (10) strong、em
 strong 会加粗, 把文本定义为语气更强的强调的内容，以表示内容的重要性
 
 em 通常呈现为斜体文字, 标记内容着重点（大量用于提升段落文本语义），更多是强调
 
-### 11) abbr
+### (11) abbr
 解释缩写词。使用title属性可提供全称，只在第一次出现时使用就ok。
-```
+```html
 The <abbr title="People's Republic of China">PRC</abbr> was founded in 1949.
 ```
 
-## 12) blockquote
+## (12) blockquote
 定义块引用，浏览器会在 blockquote 元素前后添加换行，并增加外边距。cite属性可用来规定引用的来源
-```
+```html
 <blockquote cite="https://en.wikiquote.org/wiki/Marie_Curie">
     Here is a long quotation here is a long quotation here is a long quotation
     here is a long quotation here is a long quotation here is a long quotation
@@ -295,7 +313,7 @@ The <abbr title="People's Republic of China">PRC</abbr> was founded in 1949.
 This happens when information is in a visual format (like a chart), but screen reader users need an 
 alternative presentation (like a table) to access the data. 
 CSS is used to position the screen reader-only elements off the visual area of the browser window.
-
+```css
 .sr-only {
     position: absolute;
     left: -10000px;
@@ -304,7 +322,7 @@ CSS is used to position the screen reader-only elements off the visual area of t
     top: auto;
     overflow: hidden;
 }
-
+```
 Note: The following CSS approaches will NOT do the same thing:
 display: none; or visibility: hidden; hides content for everyone, including screen reader users;
 Zero values for pixel sizes, such as width: 0px; height: 0px; removes that element from the flow of your document,
@@ -376,7 +394,7 @@ It's in the same order as the elements come in the HTML source markup.
 This same functionality can be given to other elements, such as div, span, and p, by placing a tabindex="0" attribute on them. 
 
 Here's an example:
-```
+```html
 <style>
 p:focus {
   background-color: yellow;
@@ -398,7 +416,7 @@ This method is generally used to bring focus to content programmatically
 `<summary>` 元素可为该部件提供概要或者标签。
 
 example:
-```
+```html
 <details>
   <summary>Details</summary>
   Something small enough to escape casual notice.
