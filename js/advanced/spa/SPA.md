@@ -63,9 +63,9 @@ window.addEventListener('hashchange',fn)
 2014 年之后，因为 HTML5 标准发布，浏览器多了两个 API：pushState 和 replaceState。
 通过这两个 API ，<strong>我们可以改变 URL 地址，并且浏览器不会向后端发送请求</strong>，我们就能用另外一种方式实现前端路由。
 
-下面的代码中，我们监听了 popstate 事件，可以监听到通过 pushState 修改的路由的变化。并且在 fn 函数中，我们实现了页面的更新操作。
+下面的代码中，我们监听了 popstate 事件，可以监听到通过 pushState 修改的路由的变化(比如，当用户点击返回按钮，回到上一个路径时，就会触发popstate)。并且在 fn 函数中，我们实现了页面的更新操作。
 ```js
-window.addEventListener('popState', (event) => {
+window.addEventListener('popstate', (event) => {
   alert(
     "location: " +
       document.location +
