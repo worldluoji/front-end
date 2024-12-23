@@ -25,6 +25,4 @@ Page Visibility API 很好的解决了加载完成后几乎不需要刷新的 WE
 - 页面加载时，如果页面的 visibilityState 是可见的，发送 Page View 统计；
 - 如果页面的 visibilityState 是隐藏的，就监听 visibilitychange 事件，并在 visibilityState 变为可见时发送 Page View 统计；
 - 如果 visibilityState 由隐藏变为可见，并且自上次用户交互之后已经过了“足够长”的时间，就发送新的 Page View 统计；
-- 如果 URL 发生变化（仅限于 pathname 或 search 部分发送变化, hash 部分则应该忽略，因为它是用来标记页面内跳转的) 发送新的 Page View 统计；
-
-参考： https://zhuanlan.zhihu.com/p/26341409
+- 如果 URL 发生变化（仅限于 pathname 或 search 部分发送变化, hash 部分则应该忽略，因为它是用来标记页面内跳转的）发送新的 Page View 统计。
