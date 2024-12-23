@@ -16,3 +16,16 @@ select:focus {
   font-weight: bold;
 }
 ```
+
+## 2. fake-div-buttons
+如果“1”中的情况无法避免，还是使用div来实现了按钮，那么可以给我们的假 `<div>` 按钮添加 tabindex="0" 属性，使它们可以获得焦点（包括通过 tab 键）。
+
+为了通过 Enter/Return 键激活它们，我们必须添加以下 JavaScript 技巧：
+```js
+document.onkeydown = (e) => {
+  if (e.code === "Enter") {
+    // Enter/Return 键
+    document.activeElement.onclick(e);
+  }
+};
+```
