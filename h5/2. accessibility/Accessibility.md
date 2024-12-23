@@ -1,7 +1,7 @@
 # Accessibility
 无障碍是一种让尽可能多的用户可以使用你的网站的做法。传统上我们认为这只与残疾人士有关，但提升网站的无障碍也可以让其他用户群体受益。比如使用移动设备的人群，那些使用低速网络连接的人群。
 
-https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Accessibility/CSS_and_JavaScript
+https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Accessibility/What_is_accessibility
 
 ## 1. alt
 An alt attribute helps in cases where the image fails to load or can't be seen by a user. 
