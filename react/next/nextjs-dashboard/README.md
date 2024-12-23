@@ -17,3 +17,4 @@ directory structure:
 
 ## reference
 - https://github.com/lukeed/clsx : clsx is a tiny (239B) utility for constructing className strings conditionally.  -> /app/ui/invoices/status.tsx
+- https://nextjs.org/learn/dashboard-app/next-steps
