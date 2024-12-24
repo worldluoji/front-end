@@ -8,7 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import Foo from "./AFooo.vue";
 import Bar from "./ABar.vue";
 
 const view = Bar;

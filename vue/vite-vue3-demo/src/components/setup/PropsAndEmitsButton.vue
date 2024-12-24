@@ -1,13 +1,14 @@
 <template>
   <button
-    :style="{ color: color, 'border-radius': borderRadius }"
+    :style="{ color: props.color, 'border-radius': borderRadius }"
     @click="change()"
   >
-    {{ text }}
+    {{ props.text }}
   </button>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 // defineProps无法设置默认值，可以使用withDefaults包裹
 interface Props {
   color?: string;
@@ -18,7 +19,6 @@ const props = withDefaults(defineProps<Props>(), {
   color: "red",
   text: "Click Me",
 });
-console.log(props.color);
 
 // 子组件调用父组件的方法使用defineEmits
 const emit = defineEmits<{
