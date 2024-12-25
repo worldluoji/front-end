@@ -170,9 +170,11 @@ app.use('/api', proxy('http://apiServer.com', {
 ## 开箱即用产品
 
 ### Vue
-Nuxt 是一个构建于 Vue 生态系统之上的全栈框架，它为编写 Vue SSR 应用提供了丝滑的开发体验。更棒的是，你还可以把它当作一个静态站点生成器来用！我们强烈建议你试一试。
+Vue3提供了SSR的API: https://cn.vuejs.org/guide/scaling-up/ssr.html
 
-Quasar 是一个基于 Vue 的完整解决方案，它可以让你用同一套代码库构建不同目标的应用，如 SPA、SSR、PWA、移动端应用、桌面端应用以及浏览器插件。除此之外，它还提供了一整套 Material Design 风格的组件库。
+建议使用 Nuxt 或 Quasar。
+- Nuxt 是一个构建于 Vue 生态系统之上的全栈框架，它为编写 Vue SSR 应用提供了丝滑的开发体验。更棒的是，你还可以把它当作一个静态站点生成器来用！我们强烈建议你试一试。
+- Quasar 是一个基于 Vue 的完整解决方案，它可以让你用同一套代码库构建不同目标的应用，如 SPA、SSR、PWA、移动端应用、桌面端应用以及浏览器插件。除此之外，它还提供了一整套 Material Design 风格的组件库。
 
 ### React
 Next.js 是一个用于构建服务器渲染（Server-Side Rendering，简称 SSR）应用的 React 框架。它由 Vercel 公司开发，并且已经成为构建大型生产级应用的流行选择之一。
