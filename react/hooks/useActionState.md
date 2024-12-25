@@ -1,6 +1,10 @@
 # useActionState
 React 19引入
 
+```ts
+const [state, formAction, isPending] = useActionState(fn, initialState, permalink?);
+```
+
 ## what is action
 By convention, functions that use async transitions are called “Actions”. 
 Actions automatically manage submitting data for you:

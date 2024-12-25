@@ -9,3 +9,6 @@ function DesignButton() {
 }
 ```
 useFormStatus reads the status of the parent `<form>` as if the form was a Context provider.
+
+## reference
+https://react.dev/reference/react-dom/hooks/useFormStatus
