@@ -1,9 +1,9 @@
 <template>
   <button
-    :style="{ color: props.color, 'border-radius': borderRadius }"
+    :style="{ color: color, 'border-radius': borderRadius }"
     @click="change()"
   >
-    {{ props.text }}
+    {{ text }}
   </button>
 </template>
 
@@ -15,10 +15,14 @@ interface Props {
   text?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  color: "red",
-  text: "Click Me",
-});
+// const props = withDefaults(defineProps<Props>(), {
+//   color: "red",
+//   text: "Click Me",
+// });
+
+// Vue 3.5可以不再使用withDefaults包裹，直接使用对象解构。这样不仅代码更加简洁，还少使用了一个函数。
+const { color="red", text="Click Me" } =  defineProps<Props>()
+
 
 // 子组件调用父组件的方法使用defineEmits
 const emit = defineEmits<{
