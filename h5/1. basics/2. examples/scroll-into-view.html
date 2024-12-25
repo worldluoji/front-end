@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Scroll Into View Example</title>
+        <style>
+            .section {
+                height: 100vh; /* 每个部分占据整个视口高度 */
+                margin-bottom: 20px;
+                padding: 20px;
+                border: 1px solid #ccc;
+            }
+            #section1 { background-color: lightcoral; }
+            #section2 { background-color: lightblue; }
+            #section3 { background-color: lightgreen; }
+        </style>
+    </head>
+    <body>
+
+    <button id="scrollButton">Scroll to Section 3</button>
+
+    <div id="section1" class="section">Section 1</div>
+    <div id="section2" class="section">Section 2</div>
+    <div id="section3" class="section">Section 3</div>
+
+    <script>
+        document.getElementById('scrollButton').addEventListener('click', function() {
+        // 获取目标元素
+        var targetElement = document.getElementById('section3');
+        
+        // 调用 scrollIntoView 方法
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+    });
+    </script>
+
+    </body>
+</html>
