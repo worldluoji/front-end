@@ -81,6 +81,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import("../views/CounterHooksView.vue"),
   },
+  {
+    path: "/fallthroughbtn",
+    name: "fallthroughbtn",
+    component: () =>
+      import("../views/FallThroughButtonView.vue"),
+  },
 ];
 
 const router = createRouter({

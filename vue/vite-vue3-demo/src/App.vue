@@ -11,7 +11,8 @@
     <router-link to="/jsx">jsx</router-link> |
     <router-link to="/dynmd">dynmd</router-link> |
     <router-link to="/dyform">dyform</router-link> |
-    <router-link to="/counterhook">counterhook</router-link>
+    <router-link to="/counterhook">counterhook</router-link> |
+    <router-link to="/fallthroughbtn">fallthroughbtn</router-link> |
   </nav>
   <router-view />
 </template>
