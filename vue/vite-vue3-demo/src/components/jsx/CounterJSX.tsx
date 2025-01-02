@@ -9,7 +9,7 @@ const Counter = defineComponent({
       count: 0
     });
     const onClick = () => {
-      state.count ++;
+      state.count++;
     }
     return {
       state,
@@ -17,7 +17,7 @@ const Counter = defineComponent({
     }
   },
 
-  render(ctx) {
+  render(ctx: { state: {count: number}; onClick: () => void; }) {
     const { state, onClick } = ctx;
     return (
       <div class="counter">

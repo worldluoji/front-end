@@ -61,7 +61,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/jsx",
     name: "jsx",
     component: () =>
-      import("../components/jsx/CounterJSX"),
+      import("../components/jsx/CounterJSX.tsx"),
   },
   {
     path: "/dynmd",
