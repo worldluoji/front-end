@@ -48,3 +48,6 @@ export default {
   }
 }
 ```
+
+## reference
+https://cn.vuejs.org/api/composition-api-lifecycle.html
