@@ -87,6 +87,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import("../views/FallThroughButtonView.vue"),
   },
+  {
+    path: "/shallowref",
+    name: "shallowref",
+    component: () =>
+      import("../views/ShallowRefView.vue"),
+  },
 ];
 
 const router = createRouter({
