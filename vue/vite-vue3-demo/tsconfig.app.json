@@ -7,6 +7,13 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
+    /* baseUrl 是解析非相对模块名称的基础目录。通常将它设置为项目的根目录或源代码所在的目录（如 src）*/
+    "baseUrl": "./",
+    /* paths 选项用于映射模块名称到实际文件路径。 这里让所有以 @ 开头的导入路径都映射到 src 目录下 */
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
