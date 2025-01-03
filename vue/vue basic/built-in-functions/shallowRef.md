@@ -44,5 +44,46 @@ const replaceUser = () => {
 
 需要注意的是，如果你确实需要对 `shallowRef` 包装的对象内部属性进行响应式处理，你可以考虑使用 `triggerRef` 函数来手动触发更新。此外，如果你不确定是否需要浅层响应性，通常更安全的做法是使用普通的 `ref`，因为它总是深度响应式的。
 
+## shallowReactive
+```js
+const state = shallowReactive({
+  foo: 1,
+  nested: {
+    bar: 2
+  }
+})
+
+// 更改状态自身的属性是响应式的
+state.foo++
+
+// ...但下层嵌套对象不会被转为响应式
+isReactive(state.nested) // false
+
+// 不是响应式的
+state.nested.bar++
+```
+
+## shallowReadonly
+```js
+const state = shallowReadonly({
+  foo: 1,
+  nested: {
+    bar: 2
+  }
+})
+
+// 更改状态自身的属性会失败
+state.foo++
+
+// ...但可以更改下层嵌套对象
+isReadonly(state.nested) // false
+
+// 这是可以通过的
+state.nested.bar++
+```
+
+## toRaw
+toRaw() 可以返回由 reactive()、readonly()、shallowReactive() 或者 shallowReadonly() 创建的代理对应的原始对象。
+
 ## reference
 https://cn.vuejs.org/api/reactivity-advanced.html
