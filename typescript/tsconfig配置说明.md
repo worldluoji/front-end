@@ -136,6 +136,10 @@ Setting the isolatedModules flag tells TypeScript to warn you if you write certa
 
 It does not change the behavior of your code, or otherwise change the behavior of TypeScript’s checking and emitting process.
 
+## 配置生效
+有时候配置tsconfig.json配置不生效，可尝试重启:
+VSCode：按 Ctrl + Shift + P，然后选择 TypeScript: Restart TS server。
+
 更多可参考：
 - https://www.tslang.cn/docs/handbook/tsconfig-json.html
 - https://www.typescriptlang.org/tsconfig#isolatedModules
