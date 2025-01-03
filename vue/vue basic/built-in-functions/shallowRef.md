@@ -43,3 +43,6 @@ const replaceUser = () => {
 在这个例子中，点击“更新名字”按钮将不会触发视图更新，因为这是对 `user` 对象内部属性的一个修改。然而，点击“替换用户对象”按钮将会替换整个 `user` 对象，因此会触发视图更新。
 
 需要注意的是，如果你确实需要对 `shallowRef` 包装的对象内部属性进行响应式处理，你可以考虑使用 `triggerRef` 函数来手动触发更新。此外，如果你不确定是否需要浅层响应性，通常更安全的做法是使用普通的 `ref`，因为它总是深度响应式的。
+
+## reference
+https://cn.vuejs.org/api/reactivity-advanced.html
