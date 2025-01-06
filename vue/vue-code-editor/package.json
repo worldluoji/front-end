@@ -1,0 +1,31 @@
+{
+  "name": "vue-code-editor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "emmet-monaco-es": "^5.5.0",
+    "lodash-es": "^4.17.21",
+    "monaco-editor": "^0.52.2",
+    "postcss": "^8.4.49",
+    "postcss-nested": "^7.0.2",
+    "randombytes": "^2.1.0",
+    "vite-plugin-commonjs": "^0.10.4",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
+    "@vitejs/plugin-legacy": "^6.0.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.5",
+    "vue-tsc": "^2.2.0"
+  }
+}
