@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import router from './router/router';
 // 引入epic-designer样式
 import "epic-designer/dist/style.css";
 
@@ -10,4 +11,6 @@ import { setupElementPlus } from "epic-designer/dist/ui/elementPlus";
 // 注册Element UI
 setupElementPlus();
 
-createApp(App).mount('#app')
+createApp(App)
+    .use(router)
+    .mount('#app')
