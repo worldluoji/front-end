@@ -1,6 +1,6 @@
 <template>
     <div class="epic-designer-container">
-      <EDesigner @save="handleSubmit" />
+      <EDesigner @save="handleSubmit" title="设计项目" :hidePreviewConfirm="true"/>
     </div>
   </template>
   
