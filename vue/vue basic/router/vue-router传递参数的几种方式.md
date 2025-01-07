@@ -5,7 +5,7 @@
 <br>
 
 ## 编程式的导航 router.push
-```
+```js
 // query传参 参数会在链接后面显示
 this.$router.push({
     path: "/home",
@@ -23,7 +23,7 @@ this.$router.push({
 - params 的自动编码/解码。
 - 防止你在 url 中出现打字错误。
 - 绕过路径排序（如显示一个）
-```
+```js
 const routes = [
   {
     path: '/user/:username',
@@ -33,12 +33,12 @@ const routes = [
 ]
 ```
 To link to a named route, you can pass an object to the router-link component's to prop:
-```
+```vue
 <router-link :to="{ name: 'user', params: { username: 'erina' }}">
   User
 </router-link>
 ```
-```
+```js
 router.push({ name: 'user', params: { username: 'erina' } })
 ```
 In both cases, the router will navigate to the path /user/erina.
@@ -61,7 +61,7 @@ this is relevant if you have small pieces of data that can fit in the URL and sh
 
 3. Pass the data as state to save it to the History API state:
 History模式可以使用History state API传递参数
-```
+```vue
 <router-link :to="{ name: 'somewhere', state: { myData } }">...</router-link>
 <button
   @click="$router.push({ name: 'somewhere', state: { myData } })"
@@ -71,7 +71,7 @@ Note state is subject to History state limitations.
 
 4. Pass it as a new property to to.meta during navigation guards:
 传递
-```
+```js
 router.beforeEach(async to => {
   if (to.meta.shouldFetch) {
     // name `data` whatever you want
@@ -85,6 +85,74 @@ https://router.vuejs.org/guide/advanced/meta.html
 
 ## 声明式的导航
 router-link标签跳转传参 ：
-```
+```vue
 <router-link :to="{name:'home', params:{id:1}}">跳转</router-link>
+```
+
+## composition api
+### useRouter and useRoute
+注意useRouter和useRoute的区别：
+```vue
+<script setup>
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+
+function pushWithQuery(query) {
+  router.push({
+    name: 'search',
+    query: {
+      ...route.query,
+      ...query,
+    },
+  })
+}
+</script>
+```
+
+当参数变化时重新获取用户数据：
+```vue
+<script setup>
+import { useRoute } from 'vue-router'
+import { ref, watch } from 'vue'
+
+const route = useRoute()
+const userData = ref()
+
+// fetch the user information when params change
+watch(
+  () => route.params.id,
+  async newId => {
+    userData.value = await fetchUser(newId)
+  }
+)
+</script>
+```
+
+### onBeforeRouteLeave and onBeforeRouteUpdate
+```vue
+<script setup>
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
+import { ref } from 'vue'
+
+// same as beforeRouteLeave option but with no access to `this`
+onBeforeRouteLeave((to, from) => {
+  const answer = window.confirm(
+    'Do you really want to leave? you have unsaved changes!'
+  )
+  // cancel the navigation and stay on the same page
+  if (!answer) return false
+})
+
+const userData = ref()
+
+// same as beforeRouteUpdate option but with no access to `this`
+onBeforeRouteUpdate(async (to, from) => {
+  // only fetch the user if the id changed as maybe only the query or the hash changed
+  if (to.params.id !== from.params.id) {
+    userData.value = await fetchUser(to.params.id)
+  }
+})
+</script>
 ```
