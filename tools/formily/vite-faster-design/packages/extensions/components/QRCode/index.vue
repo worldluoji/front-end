@@ -3,5 +3,6 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-ignore
 import VueQr from 'vue-qr/src/packages/vue-qr.vue'
 </script>

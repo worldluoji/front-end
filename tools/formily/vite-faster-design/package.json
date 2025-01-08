@@ -8,7 +8,8 @@
     "build": "pnpm --filter designer build",
     "dev:runtime": "pnpm --filter runtime dev",
     "build:runtime": "pnpm --filter runtime build",
-    "preview": "vite preview"
+    "preview": "pnpm --filter designer preview",
+    "preview:runtime": "pnpm --filter runtime preview"
   },
   "dependencies": {
     "element-plus": "^2.9.2",
