@@ -9,7 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "extensions": "workspace:extensions@*"
+    "@vitejs/plugin-legacy": "^6.0.0",
+    "autoprefixer": "^10.4.20",
+    "extensions": "workspace:extensions@*",
+    "postcss": "^8.4.49"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
