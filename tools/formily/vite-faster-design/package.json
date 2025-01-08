@@ -9,7 +9,10 @@
     "dev:runtime": "pnpm --filter runtime dev",
     "build:runtime": "pnpm --filter runtime build",
     "preview": "pnpm --filter designer preview",
-    "preview:runtime": "pnpm --filter runtime preview"
+    "preview:runtime": "pnpm --filter runtime preview",
+    "dev:docs": "pnpm --filter docs docs:dev",
+    "build:docs": "pnpm --filter docs docs:build",
+    "preview:docs": "pnpm --filter docs docs:preview"
   },
   "dependencies": {
     "element-plus": "^2.9.2",
