@@ -1,5 +1,5 @@
 {
-  "name": "designer",
+  "name": "runtime",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,8 +15,6 @@
     "@vue/tsconfig": "^0.7.0",
     "typescript": "~5.6.2",
     "vite": "^6.0.5",
-    "vue-tsc": "^2.2.0",
-    "vite-plugin-monaco-editor": "^1.1.0",
-    "unplugin-vue-components": "^0.28.0"
+    "vue-tsc": "^2.2.0"
   }
 }
