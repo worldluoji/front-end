@@ -26,6 +26,15 @@ const pageSchema = {
           },
           id: "gbm1xhrrj5s00",
         },
+        {
+          "label": "二维码",
+          "type": "QRCode",
+          "componentProps": {
+            "size": "200",
+            "text": "https://cn.bing.com/"
+          },
+          "id": "QRCode_nez2ppym"
+        }
       ],
       componentProps: {
         style: {
