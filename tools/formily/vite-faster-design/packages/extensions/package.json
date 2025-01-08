@@ -9,5 +9,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "postcss": "^8.4.49",
+    "postcss-nested": "^7.0.2"
+  }
 }
