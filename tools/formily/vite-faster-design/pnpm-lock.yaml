@@ -35,6 +35,10 @@ importers:
         version: 2.2.0(typescript@5.6.3)
 
   packages/designer:
+    dependencies:
+      extensions:
+        specifier: workspace:extensions@*
+        version: link:../extensions
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.2.1
@@ -54,6 +58,30 @@ importers:
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
         version: 1.1.0(monaco-editor@0.52.2)
+      vue-tsc:
+        specifier: ^2.2.0
+        version: 2.2.0(typescript@5.6.3)
+
+  packages/extensions: {}
+
+  packages/runtime:
+    dependencies:
+      extensions:
+        specifier: workspace:extensions@*
+        version: link:../extensions
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^5.2.1
+        version: 5.2.1(vite@6.0.7)(vue@3.5.13(typescript@5.6.3))
+      '@vue/tsconfig':
+        specifier: ^0.7.0
+        version: 0.7.0(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+      typescript:
+        specifier: ~5.6.2
+        version: 5.6.3
+      vite:
+        specifier: ^6.0.5
+        version: 6.0.7
       vue-tsc:
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.6.3)

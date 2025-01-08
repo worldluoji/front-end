@@ -8,6 +8,10 @@ import "epic-designer/dist/style.css"
 import "element-plus/dist/index.css"
 
 import { setupElementPlus } from "epic-designer/dist/ui/elementPlus"
+import { setupDesignerExtensions } from "extensions"
+
+// 执行扩展函数
+setupDesignerExtensions();
 
 // 注册Element UI
 setupElementPlus()

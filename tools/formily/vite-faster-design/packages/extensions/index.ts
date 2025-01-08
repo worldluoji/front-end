@@ -1,5 +1,5 @@
 import { pluginManager } from "epic-designer"
-import { setupPublicMethod } from './script/index.ts'
+import { setupPublicMethod } from './script/index.js'
 
 // 安装扩展
 export function setupDesignerExtensions(): void {
