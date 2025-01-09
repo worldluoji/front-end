@@ -11,9 +11,7 @@
   "dependencies": {
     "@vitejs/plugin-legacy": "^6.0.0",
     "autoprefixer": "^10.4.20",
-    "extensions": "workspace:extensions@*",
-    "postcss": "^8.4.49",
-    "postcss-nested": "^7.0.2"
+    "extensions": "workspace:extensions@*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

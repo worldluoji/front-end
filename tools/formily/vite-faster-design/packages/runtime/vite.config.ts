@@ -3,6 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import legacy from '@vitejs/plugin-legacy'
 import autoprefixer from 'autoprefixer'
 import postcssNested from 'postcss-nested'
+import Components from 'unplugin-vue-components/vite'
+import NutUIResolver from '@nutui/auto-import-resolver'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -10,7 +12,10 @@ export default defineConfig({
     vue(),
     legacy({
       targets: ['last 2 versions', '> 0.2%', 'not dead'],
-    })
+    }),
+    Components({
+      resolvers: [NutUIResolver()],
+    }),
   ],
   css: {
     postcss: {

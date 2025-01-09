@@ -18,13 +18,18 @@
     "element-plus": "^2.9.2",
     "epic-designer": "^0.9.28",
     "vue": "^3.5.13",
-    "vue-qr": "^4.0.9"
+    "vue-qr": "^4.0.9",
+    "@nutui/nutui": "^4.3.13",
+    "postcss": "^8.4.49",
+    "postcss-nested": "^7.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "typescript": "~5.6.2",
     "vite": "^6.0.5",
-    "vue-tsc": "^2.2.0"
+    "vue-tsc": "^2.2.0",
+    "@nutui/auto-import-resolver": "^1.0.0",
+    "unplugin-vue-components": "^0.28.0"
   }
 }
