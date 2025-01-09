@@ -3,7 +3,7 @@ import { type ComponentConfigModel } from "epic-designer";
 export default {
   component: async () => await import("./index.vue"),
   groupName: "自定义",
-  icon: "icon-chukusaomiao",
+  icon: "icon-fastdesignerweima",
   defaultSchema: {
     label: "二维码",
     type: "QRCode",
