@@ -6,7 +6,7 @@ interface ComponentModule {
      default: any;
 }
 
-const components = import.meta.glob<ComponentModule>('./components/**/*.ts', { eager: true })
+const components = import.meta.glob<ComponentModule>('./components/**/index.ts', { eager: true })
 
 // 安装扩展
 export function setupDesignerExtensions(): void {
