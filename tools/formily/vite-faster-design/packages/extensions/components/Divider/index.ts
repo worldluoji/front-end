@@ -3,7 +3,7 @@ import { type ComponentConfigModel } from "epic-designer";
 export default {
   component: async () => await import("./index.vue"),
   groupName: "布局",
-  icon: "icon-chukusaomiao",
+  icon: "icon-fastdesignfengexian",
   defaultSchema: {
     label: "分割线",
     type: "Divider",
