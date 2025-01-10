@@ -49,5 +49,52 @@ export default {
 }
 ```
 
+## 父子组件生命周期
+在Vue.js中，父子组件的生命周期钩子按照一定的顺序触发。当一个父组件被创建或更新时，它的子组件也会相应地经历创建或更新的过程。以下是父子组件生命周期钩子的大致顺序：
+
+### 父组件挂载阶段
+
+1. `beforeCreate` 父组件
+2. `created` 父组件
+3. `beforeMount` 父组件
+
+此时父组件开始编译，如果在这个过程中需要渲染子组件，则会进入到子组件的生命周期。
+
+4. `beforeCreate` 子组件
+5. `created` 子组件
+6. `beforeMount` 子组件
+7. `mounted` 子组件
+
+8. `mounted` 父组件
+
+### 父组件更新阶段
+
+当父组件的状态发生变化并导致重新渲染时：
+
+1. `beforeUpdate` 父组件
+
+接着是子组件的更新过程（如果子组件依赖的数据发生了变化）：
+
+2. `beforeUpdate` 子组件
+3. `updated` 子组件
+
+4. `updated` 父组件
+
+### 销毁阶段
+
+当父组件被销毁时，它会先销毁所有的子组件：
+
+1. `beforeDestroy` 子组件
+2. `destroyed` 子组件
+
+然后才会销毁自己：
+
+3. `beforeDestroy` 父组件
+4. `destroyed` 父组件
+
+请注意，在Vue 3中，`beforeDestroy` 和 `destroyed` 钩子已经被重命名为 `beforeUnmount` 和 `unmounted`，但它们的功能和触发时机保持不变。
+
+每个组件的生命周期钩子提供了在不同阶段执行代码的机会，比如可以在 `mounted` 钩子中发起网络请求获取数据，或者在 `beforeDestroy` 中清理定时器等。
+
 ## reference
 https://cn.vuejs.org/api/composition-api-lifecycle.html
