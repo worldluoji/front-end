@@ -56,6 +56,41 @@ export default {
 }
 ```
 
+还可以使用renderSlot()来渲染插槽：
+```typescript
+import { defineComponent, h, renderSlot, type PropType } from 'vue'
+import { Row } from '@nutui/nutui'
+import { type ComponentSchema } from 'epic-designer'
+export default defineComponent({
+  props: {
+    componentSchema: {
+      type: Object as PropType<ComponentSchema>,
+      required: true,
+      default: () => ({})
+    }
+  },
+  setup (props, { attrs, slots }) {
+    return () => {
+      const componentSchema = {
+        ...props.componentSchema,
+        title: props.componentSchema?.label,
+      } as ComponentSchema
+      const children = componentSchema.children ?? []
+      delete componentSchema.children
+
+      return h(Row, componentSchema, {
+        default: () =>
+          renderSlot(slots, 'edit-node', {}, () =>
+            children.map((node: ComponentSchema) =>
+              renderSlot(slots, 'node', { componentSchema: node })
+            )
+          )
+      })
+    }
+  }
+})
+```
+
 <br>
 
 ## 3. 约束
