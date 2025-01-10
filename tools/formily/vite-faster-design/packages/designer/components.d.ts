@@ -8,5 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     NutDivider: typeof import('@nutui/nutui')['Divider']
+    NutImage: typeof import('@nutui/nutui')['Image']
   }
 }
