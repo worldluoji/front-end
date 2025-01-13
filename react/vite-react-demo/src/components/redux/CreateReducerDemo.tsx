@@ -24,7 +24,7 @@ interface StateType {
    A extends { type: any }：代表动作类型（Action Type），并且动作类型必须有一个 type 属性。
    这里的 as 断言是一个类型断言，用于告诉 TypeScript 编译器我们希望 createReducer(thunk) 返回的函数具有特定的类型。
 */
-const useThunkReducer = createReducer(thunk) as <S, A extends { type: any }>(
+const useThunkReducer = createReducer(thunk) as <S, A extends { type: string }>(
   reducer: (state: S, action: A) => S,
   initialState: S,
   initializer?: (value: S) => S
