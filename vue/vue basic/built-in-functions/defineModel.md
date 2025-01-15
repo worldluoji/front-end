@@ -63,6 +63,46 @@ const emit = defineEmits(['update:modelValue'])
 
 `defineModel()` 也支持在一个组件上同时绑定多个 `v-model` 实例，只需为每个模型指定不同的名称即可。例如，可以在一个表单组件中同时绑定用户的姓名和地址。
 
-### 总结
 
-`defineModel()` 是 Vue 3.4 中的一个重要改进，它不仅简化了代码，还提高了可读性和维护性。对于频繁使用 `v-model` 的场景来说，这是一个非常实用的新特性。如果你正在开发基于 Vue 3 的项目，建议尝试使用 `defineModel()` 来提升开发体验。
+## 原理解析
+先看看上面的子组件使用defineModel编译成js的代码：
+```js
+import { useModel as _useModel, defineComponent as _defineComponent } from 'vue'
+
+const __sfc__ = /*@__PURE__*/_defineComponent({
+  __name: 'App',
+  props: {
+    "test": {},
+    "testModifiers": {},
+  },
+  emits: ["update:test"],
+  setup(__props, { expose: __expose }) {
+    __expose();
+
+    const inputValue = _useModel(__props, 'test');
+
+    const __returned__ = { inputValue }
+    Object.defineProperty(__returned__, '__isScriptSetup', { enumerable: false, value: true })
+    return __returned__
+  }
+});
+
+import { vModelText as _vModelText, withDirectives as _withDirectives, openBlock as _openBlock, createElementBlock as _createElementBlock } from "vue"
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return _withDirectives((_openBlock(), _createElementBlock("input", {
+    "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($setup.inputValue) = $event))
+  }, null, 512 /* NEED_PATCH */)), [
+    [_vModelText, $setup.inputValue]
+  ])
+}
+__sfc__.render = render
+__sfc__.__file = "src/App.vue"
+export default __sfc__
+```
+- defineModel宏函数经过编译后会给vue组件对象上面增加modelValue的props选项和update:modelValue的emits选项，执行defineModel宏函数的代码会变成执行useModel函数.
+
+- useModel函数的返回值是一个ref对象。注意这个是ref对象不是props，所以我们才可以在组件内直接修改defineModel的返回值。
+
+- 当我们对这个ref对象进行“读操作”时，会像Proxy一样被拦截到ref对象的get方法。在get方法中会返回本地维护localValue变量（即上面例子中的inputValue），localValue变量依靠watchSyncEffect让localValue变量始终和父组件传递的modelValue的props值一致。
+
+- 对返回值进行“写操作”会被拦截到ref对象的set方法中，在set方法中会将最新值同步到本地维护localValue变量，调用vue实例上的emit方法抛出update:modelValue事件给父组件，由父组件去更新父组件中v-model绑定的变量。
