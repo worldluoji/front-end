@@ -12,6 +12,20 @@ Vue.js 经过编译后产出是 JavaScript 和 CSS 代码，也就是浏览可�
 ## Vue.js 非编译模式是如何运行的？
 1. 使用h函数，见 h.html
 
+h函数定义如下：
+```ts
+export function h<P>(
+  type: Component<P>,
+  props?: (RawProps & P) | null,
+  children?: RawChildren | RawSlots,
+): VNode
+
+export type RawSlots = {
+  [name: string]: unknown
+  // ...省略
+}
+```
+
 2. 使用createElementVNode，不推荐，比使用h复杂。
 
 3. 使用模版的非编译模式, 见tmp.html
