@@ -64,3 +64,40 @@ const { text } = state;
 - Vue2 收集依赖的过程中会产生很多的 Dep 对象，Vue3 可以节省这部分的内存开销；
 - Vue2 无法监听数组、对象的动态添加、删除，需要通过 $set、$delete，增加学习成本；
 - Vue2 无法监听 Set、Map，只能处理普通对象。
+
+## 为什么在template里使用ref包裹的变量不需要.value
+```vue
+<template>
+  <p>{{ msg }}</p>
+  <button @click="msg = 'Hello Vue3'">change msg</button>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+
+const msg = ref("Hello World");
+
+console.log(msg.value);
+</script>
+```
+msg被ref包裹，在js里需要.value, 但是在template里不需要。
+
+在template中使用ref变量无需使用.value，是因为在Proxy的get拦截中已经帮我们自动处理了.value。
+
+```ts
+const shallowUnwrapHandlers = {
+  get: (target, key, receiver) => unref(Reflect.get(target, key, receiver)),
+  set: (target, key, value, receiver) => {
+    const oldValue = target[key];
+    if (isRef(oldValue) && !isRef(value)) {
+      oldValue.value = value;
+      return true;
+    } else {
+      return Reflect.set(target, key, value, receiver);
+    }
+  },
+};
+```
+- Reflect.get(target, key, receiver)的作用是获取target对象的key属性，在我们这里就是获取setup返回值对象的msg属性，也就是我们定义的msg变量。并且这个msg变量是一个ref。
+- 将Reflect.get方法拿到的msg变量传给unref函数，这个unref函数同样是暴露出来的一个API。如果参数是 ref，则返回内部值，否则返回参数本身。这是 val = isRef(val) ? val.value : val 计算的一个语法糖。
+- 经过unref函数的处理后，在get拦截中return的就是.value后的内容，也就是msg.value。
