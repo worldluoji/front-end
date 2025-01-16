@@ -107,3 +107,89 @@ export default __sfc__
 - 当我们对这个ref对象进行“读操作”时，会像Proxy一样被拦截到ref对象的get方法。在get方法中会返回本地维护localValue变量（即上面例子中的inputValue），localValue变量依靠watchSyncEffect让localValue变量始终和父组件传递的modelValue的props值一致。
 
 - 对返回值进行“写操作”会被拦截到ref对象的set方法中，在set方法中会将最新值同步到本地维护localValue变量，调用vue实例上的emit方法抛出update:modelValue事件给父组件，由父组件去更新父组件中v-model绑定的变量。
+
+## useModel
+defineModel实际使用了useModel,而useModel是一个Vue3.4新引入的宏函数，用于简化组件中响应式状态的管理。
+它返回一个ref对象，该ref对象可以像其他响应式引用一样被访问和修改，并且它会自动处理与父组件变量之间的双向绑定。
+
+通过[debug调试](../experience/如何debug查看源码.md)查看useModel的源码：
+```js
+function useModel(props, name, options = EMPTY_OBJ) {
+  const i = getCurrentInstance();
+  if (!i) {
+    warn$1(`useModel() called without active instance.`);
+    return ref();
+  }
+  const camelizedName = camelize(name);
+  if (!i.propsOptions[0][camelizedName]) {
+    warn$1(`useModel() called with prop "${name}" which is not declared.`);
+    return ref();
+  }
+  const hyphenatedName = hyphenate(name);
+  const modifiers = getModelModifiers(props, camelizedName);
+  const res = customRef((track2, trigger2) => {
+    let localValue;
+    let prevSetValue = EMPTY_OBJ;
+    let prevEmittedValue;
+    watchSyncEffect(() => {
+      const propValue = props[camelizedName];
+      if (hasChanged(localValue, propValue)) {
+        localValue = propValue;
+        trigger2();
+      }
+    });
+    return {
+      get() {
+        track2();
+        return options.get ? options.get(localValue) : localValue;
+      },
+      set(value) {
+        const emittedValue = options.set ? options.set(value) : value;
+        if (!hasChanged(emittedValue, localValue) && !(prevSetValue !== EMPTY_OBJ && hasChanged(value, prevSetValue))) {
+          return;
+        }
+        const rawProps = i.vnode.props;
+        if (!(rawProps && // check if parent has passed v-model
+        (name in rawProps || camelizedName in rawProps || hyphenatedName in rawProps) && (`onUpdate:${name}` in rawProps || `onUpdate:${camelizedName}` in rawProps || `onUpdate:${hyphenatedName}` in rawProps))) {
+          localValue = value;
+          trigger2();
+        }
+        i.emit(`update:${name}`, emittedValue);
+        if (hasChanged(value, emittedValue) && hasChanged(value, prevSetValue) && !hasChanged(emittedValue, prevEmittedValue)) {
+          trigger2();
+        }
+        prevSetValue = value;
+        prevEmittedValue = emittedValue;
+      }
+    };
+  });
+  res[Symbol.iterator] = () => {
+    let i2 = 0;
+    return {
+      next() {
+        if (i2 < 2) {
+          return { value: i2++ ? modifiers || EMPTY_OBJ : res, done: false };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  };
+  return res;
+}
+```
+useModel函数中使用到的API，分别是getCurrentInstance、customRef、watchSyncEffect，这三个API都是从vue中import导入的。
+
+首先来看看getCurrentInstance函数，他的作用是返回当前的vue实例。
+为什么要调用这个函数呢？因为在setup中this是拿不到vue实例的，后面对值进行写操作时会调用vue实例上面的emit方法抛出update事件。
+
+接着我们来看watchSyncEffect函数，。他的作用是立即运行一个函数，同时响应式地追踪其依赖，并在依赖更改时立即重新执行这个函数。
+比如下面这段代码，会立即执行console，当count变量的值改变后，也会立即执行console。
+```js
+const count = ref(0)
+
+watchSyncEffect(() => console.log(count.value))
+// -> 输出 0
+```
+
+至于customRef，看[这里](./customRef.md)
