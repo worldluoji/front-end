@@ -71,7 +71,18 @@ webpack和vite本身是没有能力处理vue文件的，其实实际背后生效
 
 然后在vitejs/plugin-vue插件使用的地方打上断点，启动debug，step into进入。
 
-可以发现，实际使用了 Vue3提供的 vue/compiler-sfc 包暴露出来的parse函数对 vue文件进行解析。
+vitejs/plugin-vue的transform钩子会走到[transformMain函数](https://github.com/vitejs/vite-plugin-vue/blob/main/packages/plugin-vue/src/main.ts)进行处理。
+
+transformMain做了以下几个事：
+- 根据源代码code字符串调用createDescriptor函数生成一个descriptor对象。
+- 调用genScriptCode函数传入第一步生成的descriptor对象将`<script setup>`模块编译为浏览器可执行的js代码。
+- 调用genTemplateCode函数传入第一步生成的descriptor对象将`<template>`模块编译为render函数。
+- 调用genStyleCode函数传入第一步生成的descriptor对象将`<style scoped>`模块编译为类似这样的import语句，import "/src/App.vue?vue&type=style&index=0&scoped=7a7a37b1&lang.css";。
+
+
+再看[createDescriptor的源码](https://github.com/vitejs/vite-plugin-vue/blob/main/packages/plugin-vue/src/utils/descriptorCache.ts)
+
+实际使用了 Vue3提供的 **vue/compiler-sfc** 包暴露出来的parse函数对 vue文件进行解析。
 ```ts
 export function parse(
 source: string,
@@ -102,6 +113,7 @@ export interface SFCDescriptor {
 ```
 返回的descriptor对象中主要有三个属性，template属性包含了.vue文件中的template模块code字符串和AST抽象语法树，scriptSetup属性包含了.vue文件中的`<script setup>`模块的code字符串，styles属性包含了.vue文件中`<style>`模块中的code字符串。
 
+拿到descriptor后，就是分别对template、scriptSetup、styles模块分别进行编译生成浏览器能识别的代码了。
 
 ## reference
 - https://juejin.cn/post/7343139078486982710
