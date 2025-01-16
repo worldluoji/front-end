@@ -65,7 +65,7 @@ const emit = defineEmits(['update:modelValue'])
 
 
 ## 原理解析
-先看看上面的子组件使用defineModel编译成js的代码：
+先看看上面的子组件使用defineModel编译成js的代码（通过https://play.vuejs.org/）：
 ```js
 import { useModel as _useModel, defineComponent as _defineComponent } from 'vue'
 
@@ -79,6 +79,7 @@ const __sfc__ = /*@__PURE__*/_defineComponent({
   setup(__props, { expose: __expose }) {
     __expose();
 
+    // 第一个参数为子组件接收的props对象，第二个参数是写死的字符串modelValue
     const inputValue = _useModel(__props, 'test');
 
     const __returned__ = { inputValue }
