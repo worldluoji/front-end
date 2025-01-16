@@ -193,3 +193,8 @@ watchSyncEffect(() => console.log(count.value))
 ```
 
 至于customRef，看[这里](./customRef.md)
+
+在defineModel这个场景中，track手动收集的依赖就是render函数，trigger手动触发会导致render函数重新执行，进而完成页面刷新。
+
+
+我们可以看到：useModel的返回值就是customRef函数的返回值，也就是一个ref变量对象。我们看到返回值对象中有get和set方法，还有在customRef函数中使用了watchSyncEffect函数。
