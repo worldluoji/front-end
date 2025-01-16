@@ -13,7 +13,8 @@
     <router-link to="/dyform">dyform</router-link> |
     <router-link to="/counterhook">counterhook</router-link> |
     <router-link to="/fallthroughbtn">fallthroughbtn</router-link> |
-    <router-link to="/shallowref">shallowref</router-link>
+    <router-link to="/shallowref">shallowref</router-link> |
+    <router-link to="/defineModel">defineModel</router-link>
   </nav>
   <router-view />
 </template>

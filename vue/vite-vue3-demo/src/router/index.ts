@@ -93,6 +93,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import("../views/ShallowRefView.vue"),
   },
+  {
+    path: "/defineModel",
+    name: "defineModel",
+    component: () =>
+      import("../views/DefineModelView.vue"),
+  },
 ];
 
 const router = createRouter({
