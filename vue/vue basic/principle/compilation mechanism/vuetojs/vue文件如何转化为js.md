@@ -71,6 +71,37 @@ webpack和vite本身是没有能力处理vue文件的，其实实际背后生效
 
 然后在vitejs/plugin-vue插件使用的地方打上断点，启动debug，step into进入。
 
+可以发现，实际使用了 Vue3提供的 vue/compiler-sfc 包暴露出来的parse函数对 vue文件进行解析。
+```ts
+export function parse(
+source: string,
+options: SFCParseOptions = {},
+): SFCParseResult {}
+```
+parse函数接收两个参数，第一个参数为vue文件的源代码，也就是.vue中的code字符串，第二个参数是一些options选项。
+
+再来看看parse函数的返回值SFCParseResult，主要有类型为SFCDescriptor的descriptor属性需要关注。
+```ts
+export interface SFCParseResult {
+  descriptor: SFCDescriptor
+  errors: (CompilerError | SyntaxError)[]
+}
+
+export interface SFCDescriptor {
+  filename: string
+  source: string
+  template: SFCTemplateBlock | null
+  script: SFCScriptBlock | null
+  scriptSetup: SFCScriptBlock | null
+  styles: SFCStyleBlock[]
+  customBlocks: SFCBlock[]
+  cssVars: string[]
+  slotted: boolean
+  shouldForceReload: (prevImports: Record<string, ImportBinding>) => boolean
+}
+```
+返回的descriptor对象中主要有三个属性，template属性包含了.vue文件中的template模块code字符串和AST抽象语法树，scriptSetup属性包含了.vue文件中的`<script setup>`模块的code字符串，styles属性包含了.vue文件中`<style>`模块中的code字符串。
+
 
 ## reference
 - https://juejin.cn/post/7343139078486982710
