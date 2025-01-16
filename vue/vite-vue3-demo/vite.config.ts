@@ -6,7 +6,10 @@ import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [
+    vue(), 
+    vueJsx()
+  ],
   resolve: {
     alias: {
       '@': path.join(__dirname, '/src')
