@@ -1,0 +1,77 @@
+# vue文件如何转化为js
+以如下.vue文件为例
+```vue
+<template>
+  <h1 class="msg">{{ msg }}</h1>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+
+const msg = ref("hello word");
+</script>
+
+<style scoped>
+.msg {
+  color: red;
+  font-weight: bold;
+}
+</style>
+```
+经过编译后(https://play.vuejs.org/)的js
+```js
+import { defineComponent as _defineComponent } from 'vue'
+import { ref } from "vue";
+
+
+const __sfc__ = /*@__PURE__*/_defineComponent({
+  __name: 'App',
+  setup(__props, { expose: __expose }) {
+  __expose();
+
+const msg = ref("hello word");
+
+const __returned__ = { msg }
+Object.defineProperty(__returned__, '__isScriptSetup', { enumerable: false, value: true })
+return __returned__
+}
+
+});
+import { toDisplayString as _toDisplayString, openBlock as _openBlock, createElementBlock as _createElementBlock } from "vue"
+
+const _hoisted_1 = { class: "msg" }
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (_openBlock(), _createElementBlock("h1", _hoisted_1, _toDisplayString($setup.msg), 1 /* TEXT */))
+}
+__sfc__.render = render
+__sfc__.__scopeId = "data-v-7ba5bd90"
+__sfc__.__file = "src/App.vue"
+export default __sfc__
+```
+经过编译后的css
+```
+.msg[data-v-7ba5bd90] {
+  color: red;
+  font-weight: bold;
+}
+```
+编译后的js代码中我们可以看到主要有三部分，想必你也猜到了这三部分刚好对应vue文件的那三块。
+
+- _sfc_对象的setup方法对应vue文件中的`<script setup lang="ts">`模块。
+- render函数对应vue文件中的`<template>`模块。
+- css样式，对应vue文件中的`<style scoped>`模块。
+
+
+## 通过debug解析原理
+webpack和vite本身是没有能力处理vue文件的，其实实际背后生效的是vue-loader和@vitejs/plugin-vue，后面以vitejs/plugin-vue为例。
+
+编译.vue文件在nodejs环境下运行, 要在node端打断点，我们需要启动一个debug 终端。这里以vscode举例，首先我们需要打开终端，然后点击终端中的+号旁边的下拉箭头，在下拉中点击Javascript Debug Terminal就可以启动一个debug终端。
+
+通过，vite.config.ts文件中使用@vitejs/plugin-vue的地方开始debug，我们就能够梳理清楚完整的工作流程。
+
+然后在vitejs/plugin-vue插件使用的地方打上断点，启动debug，step into进入。
+
+
+## reference
+- https://juejin.cn/post/7343139078486982710
+- https://play.vuejs.org/
