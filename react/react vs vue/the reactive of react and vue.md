@@ -8,7 +8,7 @@ react和vue都是响应式的，state（react需要调用setState、useReducer�
 而vue则是直接修改保存状态的那块原始内存。
 所以经常能看到react相关的文章里经常会出现一个词"immutable"，翻译过来就是不可变的。
 
-数据修改了，接下来就要更新视图：react中，调用setState方法后，会自顶向下重新渲染组件，自顶向下的含义是，该组件以及它的子组件全部需要渲染；
+数据修改了，接下来就要更新视图：react中，调用setState方法后，会自顶向下重新渲染组件，自顶向下的含义是，**该组件以及它的子组件全部需要渲染**；
 而vue使用Object.defineProperty（vue3迁移到了Proxy）对数据的设置（setter）和获取（getter）做了劫持。
 也就是说，vue能准确知道视图模版中哪一块用到了这个数据，并且在这个数据修改时，告诉这个视图，你需要重新渲染了。
 
@@ -187,6 +187,66 @@ useEffect 这样会产生副作用的 Hooks，会额外创建与 Hook 对象一�
 
 ## 协调引擎的 Diffing 算法在哪里？
 其实从渲染到提交阶段，到处都在利用 memoizedProps 和 memoizedState 与新的 props、state 做比较，以减少不必要的工作，进而提高性能。
+
+如果diff时，节点类型不相同， 直接将 原 VDOM 树上该节点以及该节点下所有的后代节点 全部删除，然后替换为新 VDOM 树上同一位置的节点，当然这个节点的后代节点也全都跟着过来了。
+
+如果类型相同，
+### 都是 DOM 节点的情况
+```jsx
+<div className="old" title="老节点" />
+
+<div className="new" title="新节点" />
+```
+通过比对这两个元素，React 知道需要修改 DOM 元素上的 className 属性和 title 属性。
+
+处理完该节点后，React 继续对子节点进行递归。
+
+### 都是组件的情况
+即组件实例保持不变，更新 props。值得注意的是，这时候调用类组件实例的 componentWillReceiveProps () 方法。然后通过 shouldComponentUpdate 返回值决定是否调用 render 方法。
+函数组件则直接比较props或state是否有变化。
+
+处理完该节点后，依然继续对子节点进行递归。
+
+### 特殊情况讨论：遍历子元素列表
+引入 key 值
+
+首先，我们往列表末尾插入一个元素:
+```jsx
+<ul>
+  <li>1</li>
+  <li>2</li>
+</ul>
+```
+变为：
+```jsx
+<ul>
+  <li>1</li>
+  <li>2</li>
+  <li>3</li>
+</ul>
+```
+React 会先匹配两个对应的树，最后插入第三个元素，没有任何问题。
+
+但如果插入在头部，此时前两个元素和原来都不一样，第三个元素被当作新增的节点，明明只需要更新 1 个节点，现在更新了 3 个。这样的情况效率是非常低的。
+
+于是，React 引入了 key 值的概念。
+```jsx
+<ul>
+  <li key="first">1</li>
+  <li key="second">2</li>
+</ul>
+```
+插入后变为
+```jsx
+<ul>
+  <li key="third">3</li>
+  <li key="first">1</li>
+  <li key="second">2</li>
+</ul>
+```
+现在 React 通过 key 得知 1 和 2 原来是存在的，现在只是换了位置，因此不需要更新整个节点了，只需要移动位置即可，大大提升效率。
+
+key 选取的原一般是 不需要全局唯一，但必须列表中保持唯一。有很多人喜欢用数组元素的下标作为 key 值，在元素顺序不改变的情况是没有问题的，但一旦顺序发生改变，diff 效率就有可能骤然下降。
 
 <br>
 
