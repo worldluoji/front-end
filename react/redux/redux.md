@@ -30,10 +30,42 @@ Redux 鼓励全局只有单一 store，所以比较适合管理全局状态。
 ## create Redux store
 The Redux store is an object which holds and manages application state. 
 
-- There is a method called createStore() on the Redux object, which you use to create the Redux store. This method takes a reducer function as a required argument.
-- You can retrieve the current state held in the Redux store object with the getState() method.
+createStore，顾名思义，是要创建一个仓库，是 redux 的核心所在， 它最后要返回四个非常重要的属性，分别是 getState,subscribe,dispatch,replaceReducer。
+```js
+export default function createStore (reducer, preloadedState, enhancer) {
+  //reducer 必须是函数
+  // 当前 reducer
+  let currentReducer = reducer
+  //state 数据，redux 的根本
+  let currentState = preloadedState
+  // 订阅者集合
+  let currentListeners = []
+  // 虽然不起眼，但是是一个关键的设计
+  let nextListeners = currentListeners
+  // 是否正在有 dispatch 在运行
+  let isDispatching = false
+  
+  //...
 
+  return {
+    getState,// 获取到 state
+    subscribe,// 采用发布订阅模式，这个方法进行观察者的订阅
+    dispatch,// 派发 action
+    replaceReducer// 用新的 reducer 替换现在的
+  }
+}
 ```
+getState
+```js
+function getState () {
+  // 如果有 dispatch 正在执行则报错
+  if (isDispatching) throw new Error ("xxxx 具体信息省略")
+  return currentState
+}
+```
+
+示例：
+```jsx
 const reducer = (state = 5) => {
   return state;
 }
@@ -48,7 +80,7 @@ let currentState = store.getState()
 In Redux, all state updates are triggered by dispatching actions.
 
 example: create and deliver action
-```
+```jsx
 define an action store
 const store = Redux.createStore (
   (state = {login: false}) => state
@@ -65,7 +97,33 @@ const loginAction = () => {
 store.dispatch(loginAction()) // 等价于 store.dispatch({ type: 'LOGIN' });
 
 ```
-总结：使用createStore创建一个store, action就是一个对象，action creator就是一个返回对象的函数，store通过dispatch方法触发一个action.
+dispath做了什么？
+```js
+function dispatch (action) {
+  //action 必须是一个对象
+  //action.type 不能为 undefined
+
+  if (isDispatching) {
+    throw new Error ('Reducers may not dispatch actions.')
+  }
+
+  try {
+    isDispatching = true
+    // 看到没有？执行 reducer 后返回的状态直接成为 currentState 了
+    currentState = currentReducer (currentState, action)
+  } finally {
+    isDispatching = false
+  }
+
+  const listeners = (currentListeners = nextListeners)
+  for (let i = 0; i < listeners.length; i++) {
+    const listener = listeners [i]
+    listener ()
+  }
+
+  return action
+}
+```
 
 
 ## Reducer
@@ -83,7 +141,7 @@ In other words, the reducer function must always return a new copy of state and 
 
 example: Handle Multiple Actions
 
-```
+```jsx
 const defaultState = {
   authenticated: false
 };
@@ -130,9 +188,7 @@ store.dispatch(logoutUser())
 
 ## Register a Store Listener
 Another method you have access to on the Redux store object is store.subscribe(). This allows you to subscribe listener functions to the store, which are called whenever an action is dispatched against the store.
-
-
-```
+```js
 const ADD = 'ADD';
 
 const reducer = (state = 0, action) => {
@@ -162,10 +218,45 @@ store.dispatch({type: ADD});
 console.log(count);
 ```
 
+subscribe函数实现如下：
+```js
+function ensureCanMutateNextListeners () {
+  // 如果 next 和 current 数组是一个引用，那这种情况是危险的，原因上面已经谈到，我们需要 next 和 current 保持各自独立
+  if (nextListeners === currentListeners) {
+    nextListeners = currentListeners.slice ()
+  }
+}
+
+function subscribe (listener) {
+  if (typeof listener !== 'function') {
+    throw new Error ('Expected the listener to be a function.')
+  }
+  // 如果正在有 dispatch 执行则报错
+  if (isDispatching) {
+    throw new Error ("xxx")
+  }
+  let isSubscribed = true
+  ensureCanMutateNextListeners ()
+  nextListeners.push (listener)
+  // 返回的是一个退订的方法，将特定的 listener 从订阅者集合中删除
+  return function unsubscribe () {
+    // 已经退订了就不管了
+    if (!isSubscribed) return;
+    if (isDispatching) throw new Error ("xxx 具体信息省略")
+
+    isSubscribed = false
+    ensureCanMutateNextListeners ()
+    const index = nextListeners.indexOf (listener)
+    nextListeners.splice (index, 1)
+  }
+}
+```
+是每次调用这个函数的时候，都会产生一个闭包，里面存储着 isSubscribed 的值，调用 n 次就会产生 n 个这样的闭包，用来存储 n 个不同的订阅情况。 仔细想想还是比较巧妙的做法。
+
 ## combine multiple reducers
 In order to let us combine multiple reducers together, Redux provides the combineReducers() method.
 
-```
+```jsx
 const INCREMENT = 'INCREMENT';
 const DECREMENT = 'DECREMENT';
 
@@ -205,10 +296,48 @@ const rootReducer = Redux.combineReducers({
 
 const store = Redux.createStore(rootReducer);
 ```
+combineReducers做了什么
+```js
+export default function combineReducers (reducers) {
+  // 以上面例子来讲，reducerKeys 就是 ['count', 'auth']
+  const reducerKeys = Object.keys (reducers)
+  //finalReducers 是 reducers 过滤后的结果
+  // 确保 finalReducers 里面每一个键对应的值都是函数
+  const finalReducers = {}
+  for (let i = 0; i < reducerKeys.length; i++) {
+    const key = reducerKeys [i]
+
+    if (typeof reducers [key] === 'function') {
+      finalReducers [key] = reducers [key]
+    }
+  }
+  const finalReducerKeys = Object.keys(finalReducers)
+
+  // 最后依然返回一个纯函数
+  return function combination (state = {}, action) {
+    // 这个标志位记录初始的 state 是否和经过 reducer 后是一个引用，如果不是则 state 被改变了
+    let hasChanged = false
+    const nextState = {}
+    for (let i = 0; i < finalReducerKeys.length; i++) {
+      const key = finalReducerKeys[i]
+      const reducer = finalReducers[key]
+      // 原来的状态树中 key 对应的值
+      const previousStateForKey = state[key]
+      // 调用 reducer 函数，获得该 key 值对应的新状态
+      const nextStateForKey = reducer(previousStateForKey, action)
+      nextState [key] = nextStateForKey
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey
+    }
+    // 如果没改变直接把原始的 state 返回即可
+    return hasChanged ? nextState : state
+  }
+}
+```
+
 
 ## Send Action Data to the Store
 You can also send specific data along with your actions. 
-```
+```jsx
 const ADD_NOTE = 'ADD_NOTE';
 
 const notesReducer = (state = 'Initial State', action) => {
@@ -248,7 +377,7 @@ To include Redux Thunk middleware, you pass it as an argument to Redux.applyMidd
 
 Redux 提供了 redux-thunk 这样一个中间件，它如果发现接受到的 action 是一个函数，那么就不会传递给 Reducer，而是执行这个函数，并把 dispatch 作为参数传给这个函数，从而在这个函数中你可以自由决定何时，如何发送 Action。
 
-```
+```jsx
 const REQUESTING_DATA = 'REQUESTING_DATA'
 const RECEIVED_DATA = 'RECEIVED_DATA'
 
@@ -302,7 +431,7 @@ https://cloud.tencent.com/developer/section/1374199
 ## 不能改变state
 
 example1
-```
+```jsx
 const ADD_TO_DO = 'ADD_TO_DO';
 
 // A list of strings representing tasks to do:
@@ -335,7 +464,7 @@ const store = Redux.createStore(immutableReducer);
 ```
 
 example2: 删除下标为index的元素并返回
-```
+```jsx
 const immutableReducer = (state = [0,1,2,3,4,5], action) => {
   switch(action.type) {
     case 'REMOVE_ITEM':
@@ -359,11 +488,11 @@ const store = Redux.createStore(immutableReducer);
 ```
 
 example3:
-```
+```js
 const newObject = Object.assign({}, obj1, obj2);
 ```
 This creates newObject as a new object, which contains the properties that currently exist in obj1 and obj2.
-```
+```jsx
 const defaultState = {
   user: 'CamperBot',
   status: 'offline',
