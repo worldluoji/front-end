@@ -1,0 +1,22 @@
+/* 设置滚动容器的尺寸 */
+#wrapper {
+    width: 300px;
+    height: 400px; /* 你可以根据需要调整高度 */
+    overflow: hidden;
+    border: 1px solid #ccc;
+    margin: 50px auto;
+  }
+  
+  #scroll-content {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+  
+  #scroll-content li {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+  }
