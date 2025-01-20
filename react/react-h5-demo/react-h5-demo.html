@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>React H5 Demo</title>
+  <!-- 引入React和ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- 引入Babel编译器以支持JSX语法 -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+
+<!-- 定义一个DOM容器 -->
+<div id="root"></div>
+
+<!-- 编写React组件并渲染 -->
+<script type="text/babel">
+  // 定义一个简单的React组件
+  function HelloWorld(props) {
+    return <h1>Hello, {props.name}!</h1>;
+  }
+
+  // 渲染React组件到页面上的DOM容器中
+  // ReactDOM.render(<HelloWorld name="World" />, document.getElementById('root'));
+  ReactDOM.createRoot(document.getElementById('root')).render(<HelloWorld name="React" />);
+</script>
+
+</body>
+</html>
