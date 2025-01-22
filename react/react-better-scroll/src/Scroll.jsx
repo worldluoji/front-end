@@ -27,6 +27,10 @@ const Scroll = forwardRef((
 
   const scrollContaninerRef = useRef();
 
+  /*
+  * useEffect 钩子用于处理副作用（side effects），如数据获取、订阅或手动修改 DOM。
+  * 对于 BetterScroll 这样的第三方库，初始化和销毁实例、监听事件等操作都属于副作用，因此需要放在 useEffect 中进行管理。
+  */
   useEffect (() => {
     /*
     对于 v2.1.0 版本，对 probeType 做了一次统一
@@ -51,7 +55,7 @@ const Scroll = forwardRef((
       setBScroll(null);
     }
     //eslint-disable-next-line
-  }, []);
+  }, []); // 依赖项为空数组，确保只在组件挂载时执行
 
   useEffect (() => {
     if (!bScroll || !onScroll) return;
