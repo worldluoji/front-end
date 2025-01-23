@@ -227,15 +227,28 @@ div {
 }
 ```
 可能下意识的就以为line-height就是作用在块级盒子上的。
-实际上呢，他是作用于块级盒子中的文本上的，如果去除 div 中的文本就会看到其高度就没有 100px 了，文本也是行内元素，这点想必都是清楚的。
+实际上呢，他是作用于块级盒子中的文本上的，如果去除 div 中的文本就会看到其高度就没有 100px 了，文本也是行内元素。
 
 另外则是line-height的值可以为数值（不带单位）、百分比以及数值带单位（包括例如em这样的相对单位）。
+- 当值为数值（不带单位），相对计算的是其font-size属性，如果font-size的值为16px，则line-height: 1.5的值就为16 * 1.5，就是24px;
+```css
+.example {
+  font-size: 16px;
+  line-height: 1.5; /* 1.5 * 16px = 24px */
+}
+```
+- 当一个元素line-height是用带单位的值声明的（比如em,px,百分比），那么它的后代元素line-height会继承计算结果值。
+```css
+.parent {
+  font-size: 16px;
+  line-height: 150%; /* 24px，百分比和em都是相对于font-size计算 */
+}
 
-<strong>当值为数值（不带单位），相对计算的是其font-size属性</strong>，
-如果font-size的值为16px，则line-height: 1.5的值就为16 * 1.5，就是24px
-
-<strong>当一个元素line-height是用带单位的值声明的（比如em,px,百分比），那么它的后代元素line-height会继承计算结果值</strong>
-对于line-height这个属性来说，如果子元素有跟父元素不一样字号大小的情况，就会导致意想不到的结果，譬如文字间的遮挡。
+.child {
+  font-size: 20px;
+  /* 继承的 line-height 为 24px，而不是 150% * 20px = 30px */
+}
+```
 
 <br>
 
