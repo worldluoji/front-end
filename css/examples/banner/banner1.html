@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner1</title>
+    <style>
+        img {
+            height: 100px;
+        }
+        
+        .slider {
+            height: 100px;
+            width: 100px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="slider">
+          <img src="./assets/l1.png">
+          <img src="./assets/l2.png">
+          <img src="./assets/l3.png">
+        </div>
+        <div class="arrows">
+          <button id="prev">prev</button>
+          <button id="next">next</button>
+        </div>
+      </div>    
+</body>
+<script>
+    let slider = document.querySelector('.slider');
+    let nextBtn = document.getElementById('next');
+    
+    nextBtn.addEventListener('click', () => {
+        // 将slider 元素内的第一个 img 子元素从其当前位置移动到 slider 元素内子元素列表的末尾。
+        slider.append(slider.querySelector('img:first-child'));
+    });
+
+    let prevBtn = document.getElementById('prev');
+    prevBtn.addEventListener('click', () => {
+        slider.prepend(slider.querySelector('img:last-child'));
+    });
+</script>
+</html>
