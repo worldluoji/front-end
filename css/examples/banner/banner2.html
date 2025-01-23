@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .banner {
+            position: relative;
+            width: 400px;
+            overflow: hidden;
+        }
+
+        .slider {
+            position: relative;
+            width: 100%;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slides img {
+            width: 100%;
+            object-fit: fill;
+        }
+
+        .arrows {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .arrows button {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .arrows button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="slider">
+            <div class="slides">
+                <img src="./assets/l1.png" alt="Image 1">
+                <img src="./assets/l2.png" alt="Image 2">
+                <img src="./assets/l3.png" alt="Image 3">
+            </div>
+        </div>
+        <div class="arrows">
+            <button id="prev">prev</button>
+            <button id="next">next</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const slider = document.querySelector('.slider');
+    const slides = document.querySelector('.slides');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const slideWidth = slider.clientWidth;
+    let currentIndex = 0;
+
+    // 初始化 slides 的宽度
+    // slides.style.width = `${slides.children.length * slideWidth}px`;
+
+    // 更新 slides 的 transform 属性
+    const updateSlidesPosition = () => {
+        slides.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
+    };
+
+    // 下一张图片
+    nextBtn.addEventListener('click', () => {
+        if (currentIndex < slides.children.length - 1) {
+            currentIndex++;
+            updateSlidesPosition();
+        }
+    });
+
+    // 上一张图片
+    prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateSlidesPosition();
+        }
+    });
+});
+</script>
+</html>
