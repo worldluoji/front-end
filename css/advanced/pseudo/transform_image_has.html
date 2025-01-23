@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform Image Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            box-sizing: border-box;
+        }
+        
+        .layout-container {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            width: 100%;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .layout-container .item {
+            transition: .5s;
+            filter: brightness(0);
+            width: 150px;
+            height: 150px;
+            position: relative;
+            margin-right: 2px;
+        }
+
+        .layout-container .item:hover {
+            filter: brightness(1);
+            transform: translateZ(200px);
+        }
+
+        .layout-container .item:hover + * {
+            filter: brightness(0.4);
+            transform: translateZ(70px) rotateY(20deg);
+        }
+
+        /* 选中鼠标移入的元素的上一个元素 */
+        .layout-container .item:has(+ *:hover) {
+            filter: brightness(0.6);
+            transform: translateZ(150px) rotateY(-40deg);
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-container">
+        <div class="item">
+            <img src="../../examples/banner/assets/l1.png" />
+        </div>
+        <div class="item">
+            <img src="../../examples/banner/assets/l2.png" />
+        </div>
+        <div class="item">
+            <img src="../../examples/banner/assets/l3.png" />
+        </div>
+        <div class="item">
+            <img src="../../examples/banner/assets/l1.png" />
+        </div>
+        <div class="item">
+            <img src="../../examples/banner/assets/l2.png" />
+        </div>
+        <div class="item">
+            <img src="../../examples/banner/assets/l3.png" />
+        </div>
+    </div>
+</body>
+</html>

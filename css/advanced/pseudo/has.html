@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>has demo</title>
+    <style>
+        /* .box:has(.selected)这串代码的意思是选中box中类名为selected的元素 */
+        .box:has(.selected){
+            background-color: red;
+        }
+
+        .box {
+            display: grid;
+            place-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <span class="selected">我是被选中的元素🚀</span>
+    </div>    
+</body>
+</html>
