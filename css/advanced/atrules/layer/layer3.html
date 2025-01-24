@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theme Switcher with @layer</title>
+  <style id="theme-styles">
+    @layer light-theme, dark-theme;
+
+    @layer light-theme {
+      body {
+        background-color: white;
+        color: black;
+      }
+      .button {
+        background-color: blue;
+        color: white;
+      }
+    }
+
+    @layer dark-theme {
+      body {
+        background-color: black;
+        color: white;
+      }
+      .button {
+        background-color: darkblue;
+        color: white;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="button" id="toggle-theme">Toggle Theme</button>
+  <script>
+    const toggleButton = document.getElementById('toggle-theme');
+    const themeStyles = document.getElementById('theme-styles');
+
+    toggleButton.addEventListener('click', () => {
+      const currentStyles = themeStyles.textContent;
+      if (currentStyles.includes('@layer light-theme, dark-theme')) {
+        themeStyles.textContent = `
+          @layer dark-theme, light-theme;
+
+          @layer light-theme {
+            body {
+              background-color: white;
+              color: black;
+            }
+            .button {
+              background-color: blue;
+              color: white;
+            }
+          }
+
+          @layer dark-theme {
+            body {
+              background-color: black;
+              color: white;
+            }
+            .button {
+              background-color: darkblue;
+              color: white;
+            }
+          }
+        `;
+      } else {
+        themeStyles.textContent = `
+          @layer light-theme, dark-theme;
+
+          @layer light-theme {
+            body {
+              background-color: white;
+              color: black;
+            }
+            .button {
+              background-color: blue;
+              color: white;
+            }
+          }
+
+          @layer dark-theme {
+            body {
+              background-color: black;
+              color: white;
+            }
+            .button {
+              background-color: darkblue;
+              color: white;
+            }
+          }
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
