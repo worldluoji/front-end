@@ -150,7 +150,7 @@ let a = [1] // 自动推断
 而{}会被推导成any，任何类型都可以赋值给它
 ```
 <script setup lang="ts">
-    let o = [] // type of o is any
+    let o = {} // type of o is any
 ...
 </script>
 ```
