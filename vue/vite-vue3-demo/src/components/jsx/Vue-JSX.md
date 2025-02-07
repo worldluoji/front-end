@@ -6,5 +6,18 @@ Vue 的 JSX 转换方式与 React 中 JSX 的转换方式不同，因此你不�
 
 当使用 TSX 语法时，确保在 tsconfig.json 中配置了 "jsx": "preserve"，这样的 TypeScript 就能保证 Vue JSX 语法转换过程中的完整性。
 
+## 使用JSX实现插槽功能
+```jsx
+import { defineComponent, withModifiers } from 'vue';
+
+const Parent = defineComponent({
+  setup(_, { slots }) {
+    return () => <div>{slots.default && slots.default()}</div>;
+  },
+});
+
+export default Parent;
+```
+
 ## reference
 https://cn.vuejs.org/guide/extras/render-function.html#JSX%20/%20TSX
