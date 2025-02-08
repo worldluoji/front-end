@@ -96,9 +96,11 @@ IFC 只有在一个块元素中仅包含内联级别元素时才会生成。
 - 如果行内元素能在一行装下，子元素的排列方式由 text-align 决定。
 - 如果行内元素不能在一行装下，默认此行内框会被分割，根据 white-space 决定。
 
-内部元素水平方向上的 margin、padding、border 有效，垂直方向上无效。
+内联元素水平方向上的 margin、padding 有效，垂直方向上无效。
 
 垂直方向上有多种对齐方式: 顶部、底部、基线，根据 vertical-align 属性决定。默认是baseline基线对齐。
+
+vertical-align 属性用来指定行内（inline）、行内区块（inline-block）、表格单元格（table-cell）盒子的垂直对齐方式。
 
 vertical-align除了设置位置值，也就是除了top，middle，bottom这些关键字，还可以设置具体的数值，百分数，
 也可以设置负数值，负数值其实就是向下偏移指定的值，百分数就是相对line-height的值设定。

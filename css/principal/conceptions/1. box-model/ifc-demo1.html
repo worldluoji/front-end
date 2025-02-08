@@ -9,12 +9,12 @@
 <body>
     <div style="background-color:#e5edff">
         <div
-            style="display:inline-block;width: 100px;height: 100px;background-color: orange"
+            style="display:inline-block;width: 100px;height: 100px;background-color: orange; margin: 2px; border: 1px solid #000;"
         >
             content
         </div>
         <div
-            style="display:inline-block;width: 100px;height: 100px;background-color: red"
+            style="display:inline-block;width: 100px;height: 100px;background-color: red; border: 1px solid #000;"
         ></div><span style="background-color: red;">x</span>
     </div>
     <div>
@@ -28,7 +28,7 @@
             </ul>
             解决办法：
             <ul>
-            <li>1、给第二个盒子加一个空白节点，如：&nbsp</li>
+            <li>1、给第二个盒子加一个空白节点，如：/* nsbp */</li>
             <li>2、改变两个盒子的 vertical-align 对齐方式，如 top bottom middle 都可以（如果只改一个，也会出现问题 1 中的问题）</li>
             </ul>
         </p>
