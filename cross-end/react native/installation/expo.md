@@ -23,6 +23,14 @@ The Expo Go app is a great tool to get started — it exists to help developers 
 
 If you want to run your app on the iOS Simulator or an Android Virtual Device, please refer to the instructions for "React Native CLI Quickstart" to learn how to install Xcode or set up your Android development environment.
 
+## a0.dev
+Expo 出了一个 [a0.dev](https://a0.dev/)，可以一句话生成一个 react native App
+
+核心思路很简单：
+- 预先构建好一个最小化的 React Native 模板，包含 Expo 生态里的各种默认配置。
+- 使用 Turbo 模块技术，加速包管理和初始化过程，让项目能在几秒钟内搭建完成。
+- 自动配置 TypeScript、ESLint、Prettier、Metro 等各种开发工具，避免手动折腾。
+
 ## reference
 - https://docs.expo.dev/
-- https://reactnative.dev/docs/environment-setup?guide=quickstart
+- https://juejin.cn/post/7470426236615966755
