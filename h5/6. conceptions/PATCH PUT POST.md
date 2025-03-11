@@ -1,10 +1,7 @@
 # PATCH PUT POST
-1. The HTTP PATCH request method applies <strong>partial modifications</strong> to a resource.
-A PATCH is not necessarily idempotent, although it can be. 
-Contrast this with PUT; which is always idempotent.
+1. A PATCH serves as a set of instructions for modifying a resource, whereas PUT represents a complete replacement of the resource. A PUT request is always idempotent.
 
-2. The HTTP PUT request method <strong>creates a new resource or replaces</strong> a representation of 
-the target resource with the request payload.
+2. The HTTP PUT request method <strong>creates a new resource or replaces</strong> a representation of the target resource with the request payload.
 
 3. The HTTP POST method <strong>sends data(or create data)</strong> to the server. 
 The type of the body of the request is indicated by the Content-Type header.
