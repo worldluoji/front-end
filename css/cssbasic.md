@@ -3,7 +3,7 @@ CSS (Cascading Style Sheets，层叠样式表），本质上就是声明规则�
 
 A key part of CSS development comes down to writing rules in such a way that they’re predictable.
 
-<image src="css overview.awebp" />
+<image src="./assets/css overview.awebp" />
 
 <br>
 
