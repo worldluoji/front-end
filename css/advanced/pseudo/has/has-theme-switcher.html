@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS :has() Theme Switcher</title>
+  <style>
+    :root {
+      --background-light: white;
+      --text-light: black;
+      --background-dark: black;
+      --text-dark: white;
+    }
+
+    .main {
+      background: var(--background-light);
+      color: var(--text-light);
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .main:has(.theme option[value="dark"]:checked) {
+      background: var(--background-dark);
+      color: var(--text-dark);
+    }
+  </style>
+</head>
+<body class="main">
+  <select class="theme">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+  <p>Enjoy seamless theme switching with just CSS!</p>
+</body>
+</html>
