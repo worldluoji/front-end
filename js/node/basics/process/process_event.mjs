@@ -1,4 +1,4 @@
-const process =  require('process'); 
+import process from "node:process";
 
 process.on('beforeExit', (code) => {
   console.log('Process beforeExit event with code: ', code);

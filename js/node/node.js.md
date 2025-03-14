@@ -10,9 +10,9 @@ Node.js 并不是语言，而是一个 JavaScript 运行时环境，它的语言
 <br>
 
 ## Node.js和Browser的不同点
-1. DOM、Cookie等操作在Node中不存在
-2. Node比浏览器更新快，新的ES功能能够早用
-3. Node同时支持 CommonJS and ES module
+- DOM、Cookie 等操作在 Node 中不存在
+- Node比浏览器更新快，新的ES功能能够早用
+- Node同时支持 CommonJS and ES module（最新的趋势是只支持ES module）
    
 reference: https://nodejs.dev/en/learn/differences-between-nodejs-and-the-browser/
 
@@ -86,3 +86,22 @@ Node.js中可以利用多进程或多线程来缓解该问题。
 
 一般来说，在大并发的场景，我们一般不会选择 Node.js,而应该使用Go、Java。
 Node.js一般用于中间层或者非大并发的场景。
+
+
+## Node.js 命令
+除了常用的
+```shell
+node my.js
+```
+默认情况下，进程的标准输入输出都绑定到运行的命令行环境上。但实际上，标准输入输出有丰富的利用方式。最基本的方法是重定向输入输出到文件。
+```shell
+node my.js > output.txt < input.txt
+```
+- > output.txt：将 my.js 的标准输出（stdout）重定向到 output.txt。
+- < input.txt：将 input.txt 的内容作为标准输入（stdin）传递给 my.js。
+- 在 my.js 中，可以通过 process.stdin 或 readline 模块读取输入内容。
+
+我们还可以利用 | 运算，把一个程序的标准输出给到另一个程序的标准输入：
+```shell
+node my1.js | node my2.js
+```
