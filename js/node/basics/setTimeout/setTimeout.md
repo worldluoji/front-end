@@ -8,7 +8,7 @@ Node.js 的 setTimeout() 并不完全按规范来实现。
 还有一个就是网上常有的八股问题，如果嵌套层级大于 5，超时时间小于 4，则定义超时时间最小为 4——这个八股问题对 Node.js 同样不生效。
 
 在 Node.js 中，setTimeout() 实际上是生成一个 Timeout 类的实例，在其内部控制定时器并触发回调，并且这个函数返回的也是该实例，并不是整数。
-```
+```js
 function setTimeout(callback, after, arg1, arg2, arg3) {
   // ...
 
@@ -20,7 +20,7 @@ function setTimeout(callback, after, arg1, arg2, arg3) {
 ```
 第一个是 args 的生成。我们看到 Node.js 声明 setTimeout 的时候，其参数除了前两个外，后面还额外附加了 arg1、arg2 和 arg3。
 这个是根据经验定的 3 个调用参数，基本上的情况下，调用 setTimeout() 回调函数的参数不会超过 3 个，于是这里显示声明 3 个，为生成 args 用。
-```
+```js
 let i, args;
 switch (arguments.length) {
   // fast cases
