@@ -1,4 +1,4 @@
-const { Worker } = require('worker_threads')
+import { Worker } from 'worker_threads';
 
 const runWorker = (workerData) => {
     return new Promise((resolve, reject) => {
