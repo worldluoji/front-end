@@ -6,7 +6,7 @@ Buffer 类被引入作为 Node.js API 的一部分，使其可以在 TCP 流或�
 ```
 
 example:
-```
+```js
 // 创建一个大小为10的空buffer
 // 这个buffer只能承载10个字节的内容
 
