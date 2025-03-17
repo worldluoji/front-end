@@ -45,7 +45,16 @@ buf1.toString() // 'Buffer rea'
 //比较两个buffers
 ```
 
-<br>
+---
+
+## SharedArrayBuffer
+JavaScript 中有 SharedArrayBuffer，能够允许我们在不同的 Worker 中访问同一块内存区域。
+
+[示例](./shared-array-buffer.mjs)
+
+但是要注意，这种 worker 通讯的方式虽然高效，但是会产生临界区（多线程编程领域的概念），所以一般要用到 Atomic 这个包来控制内存资源的竞争。
+
+在实践中，建议控制好 SharedArrayBuffer 的使用场景，确保仅仅在确实需要大规模传递数据或者高性能要求的场景使用它，并且应该由团队内较为资深的、有多线程开发经验的工程师做好代码评审。
 
 ## reference
 https://nodejs.cn/api/buffer.html
