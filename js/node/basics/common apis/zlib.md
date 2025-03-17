@@ -1,11 +1,11 @@
 # zlib
 nodejs 的 zlib 模块提供了资源压缩功能。例如在 http 传输过程中常用的 gzip，能大幅度减少网络传输流量，提高速度。
 
-```
+```js
 const zlib = require("zlib");
 const fs = require("fs");
 
-// 雅座
+// 压缩
 const gzip = zlib.createGzip();
 
 const rs = fs.createReadStream("./db.json");
