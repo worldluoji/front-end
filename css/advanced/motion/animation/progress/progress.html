@@ -11,6 +11,7 @@
     <script>
         let btn = document.getElementById('finishBtn');
         btn.onclick = function() {
+            // 根据 animation-play-state 的定义，它只会使用第一个值 paused，因此动画会暂停
             document.body.style.setProperty('--running', 'paused, running');
         }
     </script>
@@ -37,8 +38,9 @@
             width: 0%;
             height: 100%;
             background: #9747FF;
-            /*两个相同的动画，播放时长不同*/
+            /*两个相同的动画，播放时长不同，先第一个，再第二个*/
             animation: progress 10s var(--ease) forwards, progress 1s var(--ease) forwards;
+            /* 如果 --running 未定义，则默认为 running */
             animation-play-state: var(--running, running, paused);
         }
 
