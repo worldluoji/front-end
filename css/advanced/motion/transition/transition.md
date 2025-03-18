@@ -2,8 +2,13 @@
 transition CSS 属性是 transition-property，transition-duration，transition-timing-function 和 transition-delay 的一个简写属性。
 用来实现“过渡”的效果。
 
+- transition-property 要变换的属性；
+- transition-duration 变换的时长；
+- transition-timing-function 时间曲线；
+- transition-delay 延迟。
+
 ## 语法
-```
+```css
 /* Apply to 1 property */
 /* property name | duration */
 transition: margin-right 4s;

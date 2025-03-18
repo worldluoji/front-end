@@ -1,29 +1,52 @@
 # animation
 To animate an element, you need to know about the <strong>animation properties and the @keyframes rule</strong>. 
 
+---
+
+## animation properties
 The animation properties control how the animation should behave and the @keyframes rule controls 
 
-what happens during that animation. There are eight animation properties in total.
+animation 的示例：
+```css
+@keyframes mykf
+{
+  from {background: red;}
+  to {background: yellow;}
+}
 
-1) animation-name : sets the name of the animation, which is later used by @keyframes to tell CSS which rules go with which animations.
+div
+{
+    animation:mykf 5s infinite;
+}
+```
 
-2) animation-duration : sets the length of time for the animation.
+实际上 animation 分成六个部分：
+- animation-name 动画的名称，这是一个 keyframes 类型的值；
+- animation-duration 动画的时长；
+- animation-timing-function	动画的时间曲线；
+- animation-delay	动画开始前的延迟；
+- animation-iteration-count	动画的播放次数；
+- animation-direction	动画的方向。
 
-3) animation-fill-mode : specifies the style applied to an element when the animation has finished.
-
-4) opacity: you'll change the opacity of an animated element so it gradually fades 
-as it reaches the right side of the screen.
-
-5) animation-iteration-count: which allows you to control how many times you would like to loop through the animation.
-
-6) animation-timing-function: controls how quickly an animated element changes over the duration of the animation.
 
 There are a number of predefined keywords available for popular options. 
 For example, the default value is ease, which starts slow, speeds up in the middle, and then slows down again in the end. 
 
 Other options include ease-out, which is quick in the beginning then slows down, ease-in, which is slow in the beginning, then speeds up at the end, or linear, which applies a constant animation speed throughout.
 
+---
+
+## @keyframes
 @keyframes is how to specify exactly what happens within the animation over the duration. 
+
+```css
+@keyframes mykf {
+  0% { top: 0; }
+  50% { top: 30px; }
+  75% { top: 10px; }
+  100% { top: 0; }
+}
+```
 
 This is done by giving CSS properties for specific "frames" during the animation, with percentages ranging from 0% to 100%.
 
@@ -33,7 +56,7 @@ The CSS properties for 100% is how the element appears at the end, right before 
 
 Then CSS applies the magic to transition the element over the given duration to act out the scene.
 
-<br>
+---
 
 ## examples
 example 1：矩形颜色随进度变化，位置上下移动
@@ -49,8 +72,7 @@ example 3: opacity 球从左到右逐渐消失, 重复3次
 
 ./animation_demo3.html
 
-
-<br>
+---
 
 ## cubic-bezier
 In CSS animations, Bezier curves are used with the cubic-bezier function. 
