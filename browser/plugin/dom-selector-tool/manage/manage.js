@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const outputDataContainer = document.getElementById("outputData");
     const saveOutputButton = document.getElementById("saveOutput");
     const clearOutputButton = document.getElementById("clearOutput");
+
+    const exportButton = document.getElementById("export");
   
     let targetPageUrl = "";
     let selectedItems = [];
@@ -113,5 +115,21 @@ document.addEventListener("DOMContentLoaded", () => {
         targetPageUrl = targetPageUrlInput.value;
         chrome.storage.local.set({ targetPageUrl });
         alert("Target Page URL Saved!");
+    };
+
+     // 导出按钮
+     exportButton.onclick = async () => {
+        const output = await chrome.storage.local.get(["output"]);
+        if (!output.output || output.output.length === 0) {
+          alert("No data to export.");
+          return;
+        }
+    
+        const json = JSON.stringify(output.output, null, 2);
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+    
+        window.open(url);
+        chrome.storage.local.set({ output: [] });
     };
 });
