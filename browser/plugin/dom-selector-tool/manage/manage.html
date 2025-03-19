@@ -32,6 +32,13 @@
       border: 1px solid #ccc;
       border-radius: 3px;
     }
+    .add-item-form input {
+      margin-left: 10px;
+      margin-right: 10px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
     .item button {
       margin-left: 10px;
       padding: 5px 10px;
@@ -60,6 +67,12 @@
     #outputData {
         margin-bottom: 10px;
     }
+
+    .add-item-form {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -71,6 +84,11 @@
 
   <div class="section">
     <h3>Manage Selected Items</h3>
+    <div class="add-item-form">
+        <input type="text" id="newItemKey" placeholder="Enter key">
+        <input type="text" id="newItemSelector" placeholder="Enter selector">
+        <button id="addItem">Add Item</button>
+    </div>
     <div id="selectedItems"></div>
     <button id="saveSelectedItems">Save Changes</button>
   </div>

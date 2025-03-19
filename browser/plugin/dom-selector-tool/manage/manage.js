@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const clearOutputButton = document.getElementById("clearOutput");
 
     const exportButton = document.getElementById("export");
+    
+    const addItemButton = document.getElementById("addItem");
+    const newItemKeyInput = document.getElementById("newItemKey");
+    const newItemSelectorInput = document.getElementById("newItemSelector");
   
     let targetPageUrl = "";
     let selectedItems = [];
@@ -149,5 +153,21 @@ document.addEventListener("DOMContentLoaded", () => {
     
         window.open(url);
         chrome.storage.local.set({ output: [] });
+    };
+
+    // 添加新的 selectedItem
+    addItemButton.onclick = () => {
+        const key = newItemKeyInput.value.trim();
+        const selector = newItemSelectorInput.value.trim();
+
+        if (key === "" || selector === "") {
+            alert("Please enter both key and selector.");
+            return;
+        }
+
+        selectedItems.push({ key, selector });
+        renderSelectedItems();
+        newItemKeyInput.value = "";
+        newItemSelectorInput.value = "";
     };
 });
