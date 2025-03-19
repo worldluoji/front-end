@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM Selector Tool</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 10px; }
+    .item { display: flex; align-items: center; margin-bottom: 5px; }
+    .item input { margin-left: 10px; flex-grow: 1; }
+    button { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h3>Selected Items</h3>
+  <div id="items"></div>
+  <button id="save">Save</button>
+  <button id="export">Export</button>
+
+  <h3>Target Page URL</h3>
+  <input type="text" id="targetPageUrl" placeholder="Enter target page URL">
+  <button id="saveTargetPageUrl">Save URL</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>
