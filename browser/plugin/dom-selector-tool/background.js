@@ -1,10 +1,13 @@
 let selectedItems = [];
 
-// 创建右键菜单项
-chrome.contextMenus.create({
-  id: "copySelector",
-  title: "Copy Selector",
-  contexts: ["all"]
+// 清理所有现有的右键菜单项
+chrome.contextMenus.removeAll(() => {
+    // 创建右键菜单项
+    chrome.contextMenus.create({
+      id: "copySelector",
+      title: "Copy Selector",
+      contexts: ["all"]
+    });
 });
 
 // 监听右键菜单点击事件

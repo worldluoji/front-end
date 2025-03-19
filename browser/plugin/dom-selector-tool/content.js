@@ -13,10 +13,11 @@ chrome.storage.local.get(["selectedItems", "output", "targetPageUrl"], (data) =>
     setTimeout(() => {
       const record = selectedItems.map((item) => {
         const element = document.querySelector(item.selector);
-        return element ? element.textContent : null;
+        return element ? element.textContent : '';
       });
-      output.push(record);
+      output.push(record.join(','));
+
       chrome.storage.local.set({ output });
-    }, 6000);
+    }, 0);
   }
 });

@@ -31,9 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
         input.oninput = (e) => {
           selectedItems[index].key = e.target.value;
         };
+        input.style.width = "60px";
+        input.style.marginRight = "3px";
   
         const span = document.createElement("span");
         span.textContent = item.selector;
+        span.style.marginRight = "3px";
   
         const removeButton = document.createElement("button");
         removeButton.textContent = "Remove";
