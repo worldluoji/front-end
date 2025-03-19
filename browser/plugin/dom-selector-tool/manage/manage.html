@@ -5,11 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Selected Items</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 10px; }
-    .section { margin-bottom: 20px; }
-    .item { display: flex; align-items: center; margin-bottom: 5px; }
-    .item input { margin-left: 10px; flex-grow: 1; }
-    button { margin-top: 10px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+      background-color: #f4f4f9;
+    }
+    .section {
+      margin-bottom: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+    }
+    h3 {
+      margin-top: 0;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .item input {
+      margin-left: 10px;
+      margin-right: 10px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    .item button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      border: none;
+      background-color: #ff4d4f;
+      color: #fff;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .item button:hover {
+      background-color: #ff7875;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #1890ff;
+      color: #fff;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #40a9ff;
+    }
+
+    #outputData {
+        margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
