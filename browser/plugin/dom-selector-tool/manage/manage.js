@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const saveTargetPageUrlButton = document.getElementById("saveTargetPageUrl");
+    const targetPageUrlInput = document.getElementById("targetPageUrl");
+
     const selectedItemsContainer = document.getElementById("selectedItems");
     const saveSelectedItemsButton = document.getElementById("saveSelectedItems");
   
@@ -6,13 +9,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveOutputButton = document.getElementById("saveOutput");
     const clearOutputButton = document.getElementById("clearOutput");
   
+    let targetPageUrl = "";
     let selectedItems = [];
     let output = [];
   
     // 加载缓存数据
-    chrome.storage.local.get(["selectedItems", "output"], (data) => {
+    chrome.storage.local.get(["selectedItems", "output", "targetPageUrl"], (data) => {
       selectedItems = data.selectedItems || [];
       output = data.output || [];
+      targetPageUrl = data.targetPageUrl || "";
+      targetPageUrlInput.value = targetPageUrl;
       renderSelectedItems();
       renderOutputData();
     });
@@ -101,4 +107,11 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Output data cleared!");
       });
     };
-  });
+
+    // 保存目标页面 URL
+    saveTargetPageUrlButton.onclick = () => {
+        targetPageUrl = targetPageUrlInput.value;
+        chrome.storage.local.set({ targetPageUrl });
+        alert("Target Page URL Saved!");
+    };
+});
