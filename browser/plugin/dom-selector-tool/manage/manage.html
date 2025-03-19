@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Selected Items</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 10px; }
+    .section { margin-bottom: 20px; }
+    .item { display: flex; align-items: center; margin-bottom: 5px; }
+    .item input { margin-left: 10px; flex-grow: 1; }
+    button { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="section">
+    <h3>Manage Selected Items</h3>
+    <div id="selectedItems"></div>
+    <button id="saveSelectedItems">Save Changes</button>
+  </div>
+
+  <div class="section">
+    <h3>Manage Output Data</h3>
+    <div id="outputData"></div>
+    <button id="saveOutput">Save Output</button>
+    <button id="clearOutput">Clear Output</button>
+  </div>
+
+  <script src="manage.js"></script>
+</body>
+</html>

@@ -1,61 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const itemsContainer = document.getElementById("items");
-    const saveButton = document.getElementById("save");
+    const manageItemsButton = document.getElementById("manageItems");
     const exportButton = document.getElementById("export");
     const targetPageUrlInput = document.getElementById("targetPageUrl");
     const saveTargetPageUrlButton = document.getElementById("saveTargetPageUrl");
   
-    let selectedItems = [];
     let targetPageUrl = "";
   
     // 加载缓存数据
-    chrome.storage.local.get(["selectedItems", "output", "targetPageUrl"], (data) => {
-      selectedItems = data.selectedItems || [];
-      output = data.output || [];
+    chrome.storage.local.get(["targetPageUrl"], (data) => {
       targetPageUrl = data.targetPageUrl || "";
       targetPageUrlInput.value = targetPageUrl;
-      renderItems();
     });
   
-    // 渲染列表
-    function renderItems() {
-      itemsContainer.innerHTML = "";
-      selectedItems.forEach((item, index) => {
-        const div = document.createElement("div");
-        div.className = "item";
-  
-        const input = document.createElement("input");
-        input.type = "text";
-        input.value = item.key;
-        input.placeholder = "Enter key";
-        input.oninput = (e) => {
-          selectedItems[index].key = e.target.value;
-        };
-        input.style.width = "60px";
-        input.style.marginRight = "3px";
-  
-        const span = document.createElement("span");
-        span.textContent = item.selector;
-        span.style.marginRight = "3px";
-  
-        const removeButton = document.createElement("button");
-        removeButton.textContent = "Remove";
-        removeButton.onclick = () => {
-          selectedItems.splice(index, 1);
-          renderItems();
-        };
-  
-        div.appendChild(input);
-        div.appendChild(span);
-        div.appendChild(removeButton);
-        itemsContainer.appendChild(div);
-      });
-    }
-  
-    // 保存按钮
-    saveButton.onclick = () => {
-      chrome.storage.local.set({ selectedItems });
-      alert("Saved!");
+    // 管理按钮
+    manageItemsButton.onclick = () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL("manage/manage.html") });
     };
   
     // 导出按钮
