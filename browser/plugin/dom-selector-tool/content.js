@@ -11,12 +11,38 @@ chrome.storage.local.get(["selectedItems", "output", "targetPageUrl"], (data) =>
   // 检查是否进入指定页面
   if (targetPageUrl && window.location.href.startsWith(targetPageUrl)) {
     setTimeout(() => {
-      const record = selectedItems.map((item) => {
+      let uniqueIndice = [];
+      let uniqueValues = [];
+      const record = selectedItems.map((item, index) => {
         const element = document.querySelector(item.selector);
-        return element ? element.textContent : '';
+        const elementText = element ? element.textContent : '';
+        if (item.unique) {
+            uniqueIndice.push(index);
+            uniqueValues.push(elementText);
+        }
+        return elementText;
       });
-      output.push(record.join(','));
 
+      // 勾选了 unique，则检查是否重复, 如果重复则替换
+      let exitFlag = false;
+      if (uniqueIndice.length && output.length) {
+        for (let oi = 0; oi < output.length; oi++) {
+            for (let i of uniqueIndice) {
+                let o_record = output[oi].split(',');
+                if (o_record[i] === uniqueValues[i]) {
+                    output[oi] = record.join(',');
+                    exitFlag = true;
+                    break;
+                }
+            }
+            if (exitFlag) {
+                break;
+            }
+        }
+      } 
+      if (!exitFlag) {
+        output.push(record.join(','));
+      }
       chrome.storage.local.set({ output });
     }, 0);
   }

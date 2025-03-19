@@ -43,6 +43,22 @@ document.addEventListener("DOMContentLoaded", () => {
         const span = document.createElement("span");
         span.textContent = item.selector;
   
+
+        const uniqueCheckbox = document.createElement("input");
+        uniqueCheckbox.type = "checkbox";
+        uniqueCheckbox.id = "unique";
+        uniqueCheckbox.name = "unique";
+        uniqueCheckbox.style.margin = "0 0.4rem";
+        uniqueCheckbox.checked = item.unique;
+        uniqueCheckbox.addEventListener('click', (e) => {
+            selectedItems[index].unique = e.target.checked;
+        });
+
+        const uniqueLabel = document.createElement("label");
+        uniqueLabel.setAttribute("for", "unique");
+        uniqueLabel.textContent = "Unique";
+        uniqueLabel.style.marginRight = "0.2rem";
+
         const removeButton = document.createElement("button");
         removeButton.textContent = "Remove";
         removeButton.onclick = () => {
@@ -52,6 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
         div.appendChild(input);
         div.appendChild(span);
+        div.appendChild(uniqueCheckbox);
+        div.appendChild(uniqueLabel);
         div.appendChild(removeButton);
         selectedItemsContainer.appendChild(div);
       });
