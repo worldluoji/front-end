@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM Selector Tool - Instructions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      padding: 0;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    p, ul {
+      color: #555;
+    }
+    a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .language-switch {
+      text-align: right;
+      margin: 20px 0px;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      padding: 5px 10px;
+      border: none;
+      background-color: #ff4d4f;
+      color: #fff;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff7875;
+    }
+  </style>
+</head>
+<body>
+  <div class="language-switch">
+    <button onclick="switchLanguage('en')">EN</button>
+    <button onclick="switchLanguage('zh')">CN</button>
+  </div>
+
+  <!-- 英文内容 -->
+  <div id="content-en">
+    <h1>DOM Selector Tool User Guide</h1>
+
+    <h2>Introduction</h2>
+    <p>
+      DOM Selector Tool is a browser extension that allows you to select DOM elements on web pages, save them, and export their text content. It helps developers and users quickly extract information from web pages.
+    </p>
+
+    <h2>Features</h2>
+    <ul>
+      <li><strong>Select DOM Elements</strong>: Click or use the context menu to select elements on a web page.</li>
+      <li><strong>Save Selected Content</strong>: Save selected DOM elements and their text content to local storage.</li>
+      <li><strong>Export Data</strong>: Export saved content as JSON.</li>
+    </ul>
+
+    <h2>How to Use</h2>
+    <ol>
+      <li>
+        <strong>Install the Extension</strong>:
+        <p>Download and install DOM Selector Tool from the browser extension store.</p>
+      </li>
+      <li>
+        <strong>Launch the Extension</strong>:
+        <p>Click the extension icon in the browser toolbar to open the popup window.</p>
+      </li>
+      <li>
+        <strong>Select DOM Elements</strong>:
+        <p>Right-click on the target element on the web page and choose "Select with DOM Selector Tool".</p>
+      </li>
+      <li>
+        <strong>View and Manage Data</strong>:
+        <p>Click the extension icon to access the management page and view saved DOM elements and their text content.</p>
+      </li>
+      <li>
+        <strong>Export Data</strong>:
+        <p>On the management page, click the "Export" button to save the data as a JSON.</p>
+      </li>
+    </ol>
+
+    <h2>Frequently Asked Questions</h2>
+    <ul>
+      <li>
+        <strong>Why can't I select certain elements?</strong>
+        <p>It may be because the element is hidden or restricted by browser security policies.</p>
+      </li>
+      <li>
+        <strong>How do I clear saved data?</strong>
+        <p>On the management page, click the "Clear Data" button.</p>
+      </li>
+    </ul>
+
+    <h2>Contact Us</h2>
+    <p>
+      If you have any questions or suggestions, please contact us via:
+      <ul>
+        <li>Email: <a href="mailto:qq1132416@outlook.com">qq1132416@outlook.com</a></li>
+      </ul>
+    </p>
+  </div>
+
+  <!-- 中文内容 -->
+  <div id="content-zh" class="hidden">
+    <h1>DOM Selector Tool 使用说明</h1>
+
+    <h2>简介</h2>
+    <p>
+      DOM Selector Tool 是一款浏览器插件，用于选择网页中的 DOM 元素，保存它们，并导出其文本内容。它可以帮助开发者和普通用户快速提取网页中的信息。
+    </p>
+
+    <h2>功能概述</h2>
+    <ul>
+      <li><strong>选择 DOM 元素</strong>：通过点击或右键菜单选择网页中的元素。</li>
+      <li><strong>保存选中内容</strong>：将选中的 DOM 元素及其文本内容保存到本地缓存。</li>
+      <li><strong>导出数据</strong>：支持将保存的内容导出为 JSON。</li>
+    </ul>
+
+    <h2>如何使用</h2>
+    <ol>
+      <li>
+        <strong>安装插件</strong>：
+        <p>从浏览器扩展商店下载并安装 DOM Selector Tool。</p>
+      </li>
+      <li>
+        <strong>启动插件</strong>：
+        <p>点击浏览器工具栏中的插件图标，打开弹出窗口。</p>
+      </li>
+      <li>
+        <strong>选择 DOM 元素</strong>：
+        <p>在网页上右键单击目标元素，选择“使用 DOM Selector Tool 选择”选项。</p>
+      </li>
+      <li>
+        <strong>查看和管理数据</strong>：
+        <p>点击插件图标，进入管理页面，查看已保存的 DOM 元素及其文本内容。</p>
+      </li>
+      <li>
+        <strong>导出数据</strong>：
+        <p>在管理页面中，点击“导出”按钮，将数据保存为 JSON。</p>
+      </li>
+    </ol>
+
+    <h2>常见问题</h2>
+    <ul>
+      <li>
+        <strong>为什么无法选择某些元素？</strong>
+        <p>可能是因为该元素被隐藏或受浏览器安全策略限制。</p>
+      </li>
+      <li>
+        <strong>如何清除保存的数据？</strong>
+        <p>在管理页面中，点击“清除数据”按钮即可。</p>
+      </li>
+    </ul>
+
+    <h2>联系我们</h2>
+    <p>
+      如果您有任何问题或建议，请通过以下方式联系我们：
+      <ul>
+        <li>邮箱：<a href="mailto:qq1132416@outlook.com">qq1132416@outlook.com</a></li>
+      </ul>
+    </p>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 DOM Selector Tool. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // 默认显示英文内容
+    document.getElementById('content-zh').classList.add('hidden');
+
+    function switchLanguage(lang) {
+      if (lang === 'en') {
+        document.getElementById('content-en').classList.remove('hidden');
+        document.getElementById('content-zh').classList.add('hidden');
+      } else if (lang === 'zh') {
+        document.getElementById('content-zh').classList.remove('hidden');
+        document.getElementById('content-en').classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

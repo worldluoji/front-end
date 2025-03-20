@@ -22,12 +22,28 @@
       font-size: 1.5em;
       min-width: 160px;
     }
+
+    .instructions {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .instructions > a {
+      text-decoration: none; 
+      color: #007BFF;
+    }
   </style>
 </head>
 <body>
   <h3>DOM Selector Tool</h3>
   <button id="manageItems">Manage Items</button>
   <button id="export">Export Data</button>
+
+  <div class="instructions">
+    <a href="docs/instruction.html" target="_blank">
+      View Instructions
+    </a>
+  </div>
 
   <script src="popup.js"></script>
 </body>
