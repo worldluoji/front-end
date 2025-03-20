@@ -1,5 +1,10 @@
 let selectedItems = [];
 
+// 加载缓存数据
+chrome.storage.local.get(["selectedItems"], (data) => {
+  selectedItems = data.selectedItems || [];
+});
+
 // 清理所有现有的右键菜单项
 chrome.contextMenus.removeAll(() => {
     // 创建右键菜单项
