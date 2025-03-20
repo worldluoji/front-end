@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test CSS Selector Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/css-selector-generator@3.6.9/build/index.min.js"></script>
+</head>
+<body>
+    <div id="example" class="example-class">Example Element</div>
+    <script>
+        // 确认 CssSelectorGenerator 是否定义
+        if (CssSelectorGenerator) {
+            console.log("CssSelectorGenerator is defined.");
+
+            // 获取 DOM 元素
+            const element = document.getElementById("example");
+
+            // 生成 CSS 选择器
+            const selector = CssSelectorGenerator.getCssSelector(element);
+            console.log("Generated Selector:", selector);
+        } else {
+            console.log("CssSelectorGenerator is not defined or not a constructor.");
+        }
+    </script>
+</body>
+</html>

@@ -17,37 +17,17 @@ chrome.contextMenus.removeAll(() => {
 
 // 监听右键菜单点击事件
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === "copySelector") {
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: getSelector
-    }, (results) => {
-      const selector = results[0].result;
-      if (selector) {
-        selectedItems.push({ selector, key: "" });
-        chrome.storage.local.set({ selectedItems });
+  if (info.menuItemId === "copySelector" && tab.id) {
+    // 向内容脚本发送消息以获取选择器
+    chrome.tabs.sendMessage(
+      tab.id,
+      { action: "getSelector", x: info.x || 0, y: info.y || 0 }, // 发送鼠标点击坐标
+      (response) => {
+        if (response && response.selector) {
+          selectedItems.push({ selector: response.selector, key: "" });
+          chrome.storage.local.set({ selectedItems }); // 存储选择器
+        }
       }
-    });
+    );
   }
 });
-
-// 获取当前元素的 CSS Selector
-function getSelector() {
-  function getPathTo(element) {
-    if (element.id !== "") return `#${element.id}`;
-    if (element === document.body) return element.tagName;
-
-    // 递归构建选择器路径
-    let ix = 0;
-    const siblings = element.parentNode.childNodes;
-    for (let i = 0; i < siblings.length; i++) {
-      const sibling = siblings[i];
-      if (sibling === element)
-        return `${getPathTo(element.parentNode)} > ${element.tagName}:nth-child(${ix + 1})`;
-      if (sibling.nodeType === 1 && sibling.tagName === element.tagName) ix++;
-    }
-  }
-
-  // window.getSelection() 返回一个 Selection 对象，表示用户选择的文本范围或光标的当前位置。
-  return getPathTo(window.getSelection().anchorNode.parentElement);
-}

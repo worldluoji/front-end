@@ -31,12 +31,15 @@
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
-        "js": ["content.js"]
+        "js": [
+          "tools/css-selector-generator.min.js",
+          "content.js"
+        ]
       }
     ],
     "web_accessible_resources": [
       {
-        "resources": ["manage/manage.html", "manage/manage.js", "docs/instruction.html", "docs/instruction.js"],
+        "resources": ["manage/manage.html", "manage/manage.js", "docs/instruction.html", "docs/instruction.js", "tools/css-selector-generator.min.js"],
         "matches": ["<all_urls>"]
       }
     ]

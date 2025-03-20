@@ -1,3 +1,30 @@
+
+// 获取当前元素的 CSS Selector
+function getSelector(element) {
+  if (!element) {
+    return null;
+  }
+  return CssSelectorGenerator?.getCssSelector(element, { selectors: ["class","tag","nthchild","nthoftype"] });
+}
+
+// 监听来自后台脚本的消息
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "getSelector") {
+    let selection = window.getSelection();
+    if (!selection) {
+      return;
+    }
+    const targetElement = selection.anchorNode;
+    if (!targetElement) {
+      return;
+    }
+
+    // console.log(666, targetElement.parentElement);
+    const selector = getSelector(targetElement.parentElement); // 使用 CssSelectorGenerator 生成选择器
+    sendResponse({ selector }); // 将选择器返回给后台脚本
+  }
+});
+
 let selectedItems = [];
 let output = [];
 let targetPageUrl = "";
