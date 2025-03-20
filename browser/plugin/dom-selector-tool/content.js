@@ -14,8 +14,13 @@ chrome.storage.local.get(["selectedItems", "output", "targetPageUrl"], (data) =>
       let uniqueIndice = [];
       let uniqueValues = [];
       const record = selectedItems.map((item, index) => {
+        if (!item.selector && item.defaultValue) {
+          return item.defaultValue;
+        }
+
         const element = document.querySelector(item.selector);
         const elementText = element ? element.textContent : '';
+
         if (item.unique) {
             uniqueIndice.push(index);
             uniqueValues.push(elementText);

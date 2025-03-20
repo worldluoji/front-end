@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const addItemButton = document.getElementById("addItem");
     const newItemKeyInput = document.getElementById("newItemKey");
     const newItemSelectorInput = document.getElementById("newItemSelector");
+    const newItemDefaultValueInput = document.getElementById("newItemDefaultValue");
   
     let targetPageUrl = "";
     let selectedItems = [];
@@ -46,7 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
         const span = document.createElement("span");
         span.textContent = item.selector;
-  
 
         const uniqueCheckbox = document.createElement("input");
         uniqueCheckbox.type = "checkbox";
@@ -63,6 +63,15 @@ document.addEventListener("DOMContentLoaded", () => {
         uniqueLabel.textContent = "Unique";
         uniqueLabel.style.marginRight = "0.2rem";
 
+
+        const defaultInput = document.createElement("input");
+        defaultInput.type = "text";
+        defaultInput.value = item.defaultValue || "";
+        defaultInput.placeholder = "Default Value when not found";
+        defaultInput.oninput = (e) => {
+          selectedItems[index].defaultValue = e.target.value;
+        };
+
         const removeButton = document.createElement("button");
         removeButton.textContent = "Remove";
         removeButton.onclick = () => {
@@ -74,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         div.appendChild(span);
         div.appendChild(uniqueCheckbox);
         div.appendChild(uniqueLabel);
+        div.appendChild(defaultInput);
         div.appendChild(removeButton);
         selectedItemsContainer.appendChild(div);
       });
@@ -159,15 +169,23 @@ document.addEventListener("DOMContentLoaded", () => {
     addItemButton.onclick = () => {
         const key = newItemKeyInput.value.trim();
         const selector = newItemSelectorInput.value.trim();
+        const defaultValue = newItemDefaultValueInput.value.trim();
 
-        if (key === "" || selector === "") {
-            alert("Please enter both key and selector.");
-            return;
+        if (key === "") {
+          alert("Please enter key.");
+          return;
         }
 
-        selectedItems.push({ key, selector });
+        if (selector === "" && defaultValue === "") {
+          alert("Please enter selector or defaultValue.");
+          return;
+        }
+       
+
+        selectedItems.push({ key, selector, defaultValue });
         renderSelectedItems();
         newItemKeyInput.value = "";
         newItemSelectorInput.value = "";
+        defaultValue.value = "";
     };
 });
