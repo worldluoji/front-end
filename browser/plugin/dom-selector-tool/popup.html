@@ -32,12 +32,21 @@
       text-decoration: none; 
       color: #007BFF;
     }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch; /* 让子元素拉伸以填满容器 */
+    }
   </style>
 </head>
 <body>
   <h3>DOM Selector Tool</h3>
-  <button id="manageItems">Manage Items</button>
-  <button id="export">Export Data</button>
+
+  <div class="button-container">
+    <button id="manageItems">Manage Items</button>
+    <button id="export">Export Data</button>
+  </div>
 
   <div class="instructions">
     <a href="docs/instruction.html" target="_blank">
