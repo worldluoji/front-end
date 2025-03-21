@@ -30,65 +30,112 @@ document.addEventListener("DOMContentLoaded", () => {
       renderOutputData();
     });
   
-    // 渲染 selectedItems 列表
+    // render selectedItems to a table
     function renderSelectedItems() {
+      // clear the container
       selectedItemsContainer.innerHTML = "";
+
+      // create table
+      const table = document.createElement("table");
+      table.style.width = "100%";
+      table.style.borderCollapse = "collapse";
+      table.style.marginBottom = "5px";
+
+      // create table header
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+      headerRow.innerHTML = `
+        <th style="border: 1px solid #ddd; padding: 8px;">Key</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Selector</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Unique</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Default Value</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Actions</th>
+      `;
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      // create table content
+      const tbody = document.createElement("tbody");
       selectedItems.forEach((item, index) => {
-        const div = document.createElement("div");
-        div.className = "item";
-  
-        const input = document.createElement("input");
-        input.type = "text";
-        input.value = item.key;
-        input.placeholder = "Enter key";
-        input.oninput = (e) => {
+        const row = document.createElement("tr");
+
+        // Key column
+        const keyCell = document.createElement("td");
+        keyCell.style.border = "1px solid #ddd";
+        keyCell.style.padding = "8px";
+        keyCell.style.textAlign = "center";
+        const keyInput = document.createElement("input");
+        keyInput.type = "text";
+        keyInput.value = item.key;
+        keyInput.placeholder = "Enter key";
+        keyInput.oninput = (e) => {
           selectedItems[index].key = e.target.value;
         };
-  
-        const span = document.createElement("span");
-        span.textContent = item.selector;
+        keyCell.appendChild(keyInput);
+        row.appendChild(keyCell);
 
+        // Selector column
+        const selectorCell = document.createElement("td");
+        selectorCell.style.border = "1px solid #ddd";
+        selectorCell.style.padding = "8px";
+        selectorCell.textContent = item.selector;
+        selectorCell.style.textAlign = "center";
+        row.appendChild(selectorCell);
+
+        // Unique column
+        const uniqueCell = document.createElement("td");
+        uniqueCell.style.border = "1px solid #ddd";
+        uniqueCell.style.padding = "8px";
+        uniqueCell.style.textAlign = "center";
         const uniqueCheckbox = document.createElement("input");
         uniqueCheckbox.type = "checkbox";
-        uniqueCheckbox.id = "unique";
-        uniqueCheckbox.name = "unique";
-        uniqueCheckbox.style.margin = "0 0.4rem";
         uniqueCheckbox.checked = item.unique;
-        uniqueCheckbox.addEventListener('click', (e) => {
-            selectedItems[index].unique = e.target.checked;
+        uniqueCheckbox.addEventListener("click", (e) => {
+          selectedItems[index].unique = e.target.checked;
         });
+        uniqueCell.appendChild(uniqueCheckbox);
+        row.appendChild(uniqueCell);
 
-        const uniqueLabel = document.createElement("label");
-        uniqueLabel.setAttribute("for", "unique");
-        uniqueLabel.textContent = "Unique";
-        uniqueLabel.style.marginRight = "0.2rem";
-
-
-        const defaultInput = document.createElement("input");
-        defaultInput.type = "text";
-        defaultInput.value = item.defaultValue || "";
-        defaultInput.placeholder = "Default Value when not found";
-        defaultInput.oninput = (e) => {
+        // Default Value column
+        const defaultValueCell = document.createElement("td");
+        defaultValueCell.style.border = "1px solid #ddd";
+        defaultValueCell.style.padding = "8px";
+        defaultValueCell.style.textAlign = "center";
+        const defaultValueInput = document.createElement("input");
+        defaultValueInput.type = "text";
+        defaultValueInput.value = item.defaultValue || "";
+        defaultValueInput.placeholder = "Default Value when not found";
+        defaultValueInput.oninput = (e) => {
           selectedItems[index].defaultValue = e.target.value;
         };
+        defaultValueCell.appendChild(defaultValueInput);
+        row.appendChild(defaultValueCell);
 
+        // Actions column
+        const actionsCell = document.createElement("td");
+        actionsCell.style.border = "1px solid #ddd";
+        actionsCell.style.padding = "8px";
+        actionsCell.style.textAlign = "center";
         const removeButton = document.createElement("button");
         removeButton.textContent = "Remove";
         removeButton.onclick = () => {
           selectedItems.splice(index, 1);
           renderSelectedItems();
         };
-  
-        div.appendChild(input);
-        div.appendChild(span);
-        div.appendChild(uniqueCheckbox);
-        div.appendChild(uniqueLabel);
-        div.appendChild(defaultInput);
-        div.appendChild(removeButton);
-        selectedItemsContainer.appendChild(div);
+        actionsCell.appendChild(removeButton);
+        row.appendChild(actionsCell);
+
+        // add row to body
+        tbody.appendChild(row);
       });
+
+      // add body to table
+      table.appendChild(tbody);
+
+      // add table to container
+      selectedItemsContainer.appendChild(table);
     }
-  // 渲染 output 数据
+  // render output data
   function renderOutputData() {
     outputDataContainer.innerHTML = "";
     if (output.length === 0) {
@@ -119,21 +166,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   
-    // 保存 selectedItems
+    // save selectedItems
     saveSelectedItemsButton.onclick = () => {
       chrome.storage.local.set({ selectedItems }, () => {
         alert("Selected items saved!");
       });
     };
   
-    // 保存 output 数据
+    // save output data
     saveOutputButton.onclick = () => {
       chrome.storage.local.set({ output }, () => {
         alert("Output data saved!");
       });
     };
   
-    // 清空 output 数据
+    // clear output data
     clearOutputButton.onclick = () => {
       chrome.storage.local.set({ output: [] }, () => {
         output = [];
@@ -142,14 +189,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
-    // 保存目标页面 URL
+    // save target URL
     saveTargetPageUrlButton.onclick = () => {
         targetPageUrl = targetPageUrlInput.value;
         chrome.storage.local.set({ targetPageUrl });
         alert("Target Page URL Saved!");
     };
 
-     // 导出按钮
+     // export button
      exportButton.onclick = async () => {
         const output = await chrome.storage.local.get(["output"]);
         if (!output.output || output.output.length === 0) {
@@ -165,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chrome.storage.local.set({ output: [] });
     };
 
-    // 添加新的 selectedItem
+    // add new selectedItem
     addItemButton.onclick = () => {
         const key = newItemKeyInput.value.trim();
         const selector = newItemSelectorInput.value.trim();
