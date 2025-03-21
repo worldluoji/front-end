@@ -1,13 +1,13 @@
 let selectedItems = [];
 
-// 加载缓存数据
+// Load cached data
 chrome.storage.local.get(["selectedItems"], (data) => {
   selectedItems = data.selectedItems || [];
 });
 
-// 清理所有现有的右键菜单项
+// Remove all existing context menu items
 chrome.contextMenus.removeAll(() => {
-    // 创建右键菜单项
+    // Create context menu item
     chrome.contextMenus.create({
       id: "copySelector",
       title: "Copy Selector",
@@ -15,17 +15,17 @@ chrome.contextMenus.removeAll(() => {
     });
 });
 
-// 监听右键菜单点击事件
+// Listen for context menu click events
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "copySelector" && tab.id) {
-    // 向内容脚本发送消息以获取选择器
+    // Send message to content script to get selector
     chrome.tabs.sendMessage(
       tab.id,
-      { action: "getSelector", x: info.x || 0, y: info.y || 0 }, // 发送鼠标点击坐标
+      { action: "getSelector", x: info.x || 0, y: info.y || 0 }, // Send mouse click coordinates
       (response) => {
         if (response && response.selector) {
           selectedItems.push({ selector: response.selector, key: "" });
-          chrome.storage.local.set({ selectedItems }); // 存储选择器
+          chrome.storage.local.set({ selectedItems }); // Store selector
         }
       }
     );
