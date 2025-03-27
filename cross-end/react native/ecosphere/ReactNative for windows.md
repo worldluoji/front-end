@@ -2,4 +2,6 @@
 
 可用于开发window、mac的桌面应用。比PyWebview、Electron性能更好。
 
-https://microsoft.github.io/react-native-windows/
+windows参考： https://microsoft.github.io/react-native-windows/
+
+macos参考：https://microsoft.github.io/react-native-windows/docs/rnm-getting-started
