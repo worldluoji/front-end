@@ -14,6 +14,27 @@ function ControlledTextInput() {
 ```
 
 对于非受控组件来说，用户输入文字和文字展示到屏幕的过程，全部都是在宿主应用层面进行的，JavaScript 业务代码是没有参与的。
+```jsx
+const UncontrolledTextInput = () => {
+  const inputRef = useRef(null);
+
+  const handleSubmit = () => {
+    // 通过 ref 直接获取输入框的当前值
+    console.log('Input Value:', inputRef.current.value);
+  };
+
+  return (
+    <View>
+      <TextInput
+        ref={inputRef}
+        defaultValue="Initial Value"  // 初始值（仅设置一次）
+        placeholder="Type something..."
+      />
+      <Button title="Submit" onPress={handleSubmit} />
+    </View>
+  );
+};
+```
 
 <img src="./pics/Controlled and UnControlled.webp" />
 
@@ -23,7 +44,7 @@ function ControlledTextInput() {
 
 更新两次的好处在于，**可以更加自由地控制输入的文本，比如语音输入文字、通过地图定位填写详细地址**。这些复杂场景下，用户既可以自由输入文字，也可以引入程序参与进来。而非受控组件只适用于用户自由输入的场景。
 
-<br>
+---
 
 ## 输入框的焦点
 ```JSX
@@ -33,7 +54,7 @@ TextInput 的 autoFocus 属性，就是用于控制自动对焦用的，其默�
 
 
 页面只有一个搜索框的场景下 ，autoFocus 是好用的。但当一个页面有多个输入框时，autoFocus 就没法实现焦点的转移。
-```
+```JSX
 function AutoNextFocusTextInputs() {
   const ref1 = React.useRef<TextInput>(null);
 
@@ -84,7 +105,7 @@ const MyInput = forwardRef(function MyInput(props, ref) {
 
 在上方的代码中，MyInput 的 ref 会接收到 `<input>` DOM 节点。然而，你可以选择暴露一个自定义的值。为了修改被暴露的句柄，在你的顶层组件调用 useImperativeHandle.
 
-举例来说，假设你不想暴露出整个 <input> DOM 节点，但你想要它其中两个方法：focus 和 scrollIntoView。为此，用单独额外的 ref 来指向真实的浏览器 DOM。然后使用 useImperativeHandle 来暴露一个句柄，它只返回你想要父组件去调用的方法：
+举例来说，假设你不想暴露出整个 `<input>` DOM 节点，但你想要它其中两个方法：focus 和 scrollIntoView。为此，用单独额外的 ref 来指向真实的浏览器 DOM。然后使用 useImperativeHandle 来暴露一个句柄，它只返回你想要父组件去调用的方法：
 
 ```JSX
 // MyInput.js
@@ -134,7 +155,7 @@ export default function Form() {
 }
 ```
 
-<br>
+---
 
 ## 联动键盘的体验
 ### 1. “置灰置蓝”的功能
