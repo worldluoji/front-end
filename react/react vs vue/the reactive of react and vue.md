@@ -14,6 +14,8 @@ react和vue都是响应式的，state（react需要调用setState、useReducer�
 
 所以当一个数据改变，react的组件渲染是很消耗性能的——父组件的状态更新了，所有的子组件得跟着一起渲染，它不能像vue一样，精确到当前组件的粒度。
 
+---
+
 ## react fiber
 React 组件会渲染出一棵元素树。
 每次有 props、state 等数据变动时，组件会渲染出新的元素树，React 框架会与之前的树做 Diffing 对比，将元素的变动最终体现在浏览器页面的 DOM 中。这一过程就称为协调（Reconciliation）。
@@ -32,7 +34,7 @@ Fiber 协调引擎做的事情基本上贯穿了 React 应用的整个生命周�
 在协调过程中存在着各种动作，如调用生命周期方法或 Hooks，这在 Fiber 协调引擎中被称作是工作（Work）。
 Fiber 中最基本的模型是 FiberNode，用于描述一个组件需要做的或者已完成的工作，每个组件可能对应一个或多个 FiberNode。
 FiberNode 的数据结构大致如下：
-```
+```ts
 type Fiber = {
   // ---- Fiber类型 ----
 
@@ -110,7 +112,7 @@ FiberNode 与 FiberNode 之间，并没有按照传统的 parent-children 方式
 
 这样做的好处是，可以在协调引擎进行工作的过程中，避免递归遍历 Fiber 树，而仅仅用两层循环来完成深度优先遍历，
 这个用于遍历 Fiber 树的循环被称作 workLoop。workLoop示意代码如下：
-```
+```js
 let workInProgress;
 
 function workLoop() {
@@ -145,7 +147,7 @@ requestIdleCallback(workLoop);
 
 但由于兼容性不好，加上该回调函数被调用的频率太低，react实际使用的是一个[polyfill(自己实现的api)](https://juejin.cn/post/7167335700424196127)，而不是requestIdleCallback。
 
-<br>
+---
 
 ## 渲染阶段
 
@@ -161,7 +163,7 @@ requestIdleCallback(workLoop);
 useEffect 这样会产生副作用的 Hooks，会额外创建与 Hook 对象一一对应的 Effect 对象，赋值给 Hook.memoizedState 属性。
 此外，也会在 FiberNode.updateQueue 属性上，维护一个由 Effect.next 属性连接的单向链表，并把这个 Effect 对象加入到链表末尾。
 
-<br>
+---
 
 ## 提交阶段
 当 Fiber 树所有节点都完成工作后，WorkInProgress 节点会被改称为 FinishedWork（已完成）节点，WorkInProgress 树也会被改称为 FinishedWork树。
@@ -176,6 +178,29 @@ useEffect 这样会产生副作用的 Hooks，会额外创建与 Hook 对象一�
   - 引擎用 FinishedWork 树替换 Current 树，供下次渲染阶段使用。
 - 布局（Layout）子阶段。这个子阶段真实 DOM 树已经完成了变更，会调用 useLayoutEffect 的副作用回调函数，和类组件的 componentDidMount 方法。
 
+假设我们有一个函数组件，使用了 useLayoutEffect 来读取 DOM 的滚动位置，并在 DOM 更新前保存该值：
+```jsx
+function MyComponent() {
+  const ref = React.useRef(null);
+
+  React.useLayoutEffect(() => {
+    // DOM 更新后执行
+    console.log("Updated scroll position:", ref.current.scrollTop);
+    return () => {
+      // DOM 更新前执行
+      console.log("Before update, current scroll position:", ref.current.scrollTop);
+    };
+  });
+
+  return <div ref={ref} style={{ overflow: "scroll", height: "100px" }}>
+    {/* 大量内容 */}
+  </div>;
+}
+```
+useLayoutEffect 的清除函数会在变更子阶段执行。
+
+---
+
 引擎还会多次异步或同步调用 flushPassiveEffects() 。这个函数会先后两轮按深度优先遍历 Fiber 树上每个节点:
 - 第一轮：如果节点的 updateQueue 链表中有待执行的、由 useEffect 定义的副作用，则顺序执行它们的清除函数；
 - 第二轮：如果节点的 updateQueue 链表中有待执行的、由 useEffect 定义的副作用，则顺序执行它们的副作用回调函数，并保存清除函数，供下一轮提交阶段执行。
@@ -183,7 +208,54 @@ useEffect 这样会产生副作用的 Hooks，会额外创建与 Hook 对象一�
 这个flushPassiveEffects() 函数真正的执行时机，是在上述提交阶段的三个同步子阶段之后，下一次渲染阶段之前。
 引擎会保证在下一次渲染之前，执行完所有待执行的副作用。
 
-<br>
+以下是伪代码，帮助理解：
+```js
+function commitRoot(finishedWork) {
+  // (1) 变更前子阶段
+  commitBeforeMutationEffects(finishedWork);
+
+  // (2) 变更子阶段
+  commitMutationEffects(finishedWork);
+
+  // 切换 Fiber 树
+  root.current = finishedWork;
+
+  // (3) 布局子阶段
+  commitLayoutEffects(finishedWork);
+
+  // 异步处理 useEffect 的副作用
+  flushPassiveEffects();
+}
+
+// 变更前子阶段
+function commitBeforeMutationEffects(finishedWork) {
+  // 调用 getSnapshotBeforeUpdate
+  invokeGetSnapshotBeforeUpdate(finishedWork);
+}
+
+// 变更子阶段
+function commitMutationEffects(finishedWork) {
+  // 删除旧 DOM 节点
+  removeDeletedNodes(finishedWork);
+
+  // 添加新 DOM 节点或重新排序
+  applyDOMUpdates(finishedWork);
+
+  // 执行 useLayoutEffect 的清除函数
+  invokeLayoutEffectUnmounts(finishedWork);
+}
+
+// 布局子阶段
+function commitLayoutEffects(finishedWork) {
+  // 调用 componentDidMount 或 componentDidUpdate
+  invokeComponentDidMountOrUpdate(finishedWork);
+
+  // 执行 useLayoutEffect 的回调函数
+  invokeLayoutEffectMounts(finishedWork);
+}
+```
+
+---
 
 ## 协调引擎的 Diffing 算法在哪里？
 其实从渲染到提交阶段，到处都在利用 memoizedProps 和 memoizedState 与新的 props、state 做比较，以减少不必要的工作，进而提高性能。
@@ -203,7 +275,8 @@ useEffect 这样会产生副作用的 Hooks，会额外创建与 Hook 对象一�
 
 ### 都是组件的情况
 即组件实例保持不变，更新 props。值得注意的是，这时候调用类组件实例的 componentWillReceiveProps () 方法。然后通过 shouldComponentUpdate 返回值决定是否调用 render 方法。
-函数组件则直接比较props或state是否有变化。
+
+对于函数组件，props 或 state 发生变化时，React 会重新执行整个函数组件。Hooks 帮助优化性能和管理复杂逻辑。
 
 处理完该节点后，依然继续对子节点进行递归。
 
@@ -248,12 +321,12 @@ React 会先匹配两个对应的树，最后插入第三个元素，没有任�
 
 key 选取的原一般是 不需要全局唯一，但必须列表中保持唯一。有很多人喜欢用数组元素的下标作为 key 值，在元素顺序不改变的情况是没有问题的，但一旦顺序发生改变，diff 效率就有可能骤然下降。
 
-<br>
+---
 
 ## vue3如何在浏览器中跑起来的
 ->[how vue3 start up in browser](../../vue/vue%20basic/principle/how%20vue3%20start%20up%20in%20browser.md)
 
-<br>
+---
 
 ## react不如vue？
 我们现在已经知道了react fiber是在弥补更新时“无脑”刷新，不够精确带来的缺陷, 但时也需要遍历fiber树。这是不是能说明react性能更差呢？
