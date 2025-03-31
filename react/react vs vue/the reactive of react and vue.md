@@ -294,7 +294,7 @@ function commitLayoutEffects(finishedWork) {
 ## 协调引擎的 Diffing 算法在哪里？
 其实从渲染到提交阶段，到处都在利用 memoizedProps 和 memoizedState 与新的 props、state 做比较，以减少不必要的工作，进而提高性能。
 
-如果diff时，节点类型不相同， 直接将 原 VDOM 树上该节点以及该节点下所有的后代节点 全部删除，然后替换为新 VDOM 树上同一位置的节点，当然这个节点的后代节点也全都跟着过来了。
+如果diff时，节点类型不相同（若新旧节点类型不同（如 div -> span 或 ComponentA -> ComponentB））， 直接将 原 VDOM 树上该节点以及该节点下所有的后代节点 全部删除，然后替换为新 VDOM 树上同一位置的节点，当然这个节点的后代节点也全都跟着过来了。
 
 如果类型相同，
 ### 都是 DOM 节点的情况
