@@ -22,6 +22,8 @@ function ChangeName({ name, setName }) {
     async (previousState, formData) => {
       const error = await updateName(formData.get("name"));
       if (error) {
+        // You can return any result of the action.
+        // Here, we return only the error.
         return error;
       }
       redirect("/path");
