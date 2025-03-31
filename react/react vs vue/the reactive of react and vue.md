@@ -113,33 +113,67 @@ FiberNode 与 FiberNode 之间，并没有按照传统的 parent-children 方式
 这样做的好处是，可以在协调引擎进行工作的过程中，避免递归遍历 Fiber 树，而仅仅用两层循环来完成深度优先遍历，
 这个用于遍历 Fiber 树的循环被称作 workLoop。workLoop示意代码如下：
 ```js
-let workInProgress;
+let workInProgress; // 当前正在处理的 FiberNode
 
 function workLoop() {
   while (workInProgress && !shouldYield()) {
-    const child = workWork(workInProgress);
+    // 处理当前 FiberNode，返回其子节点（如果有）
+    const child = performUnitOfWork(workInProgress);
+
     if (child) {
+      // 如果有子节点，将其设置为下一个要处理的 FiberNode
       workInProgress = child;
-      continue;
+    } else {
+      // 如果没有子节点，完成当前 FiberNode 的工作，并处理其兄弟节点或返回父节点
+      completeUnitOfWork(workInProgress);
     }
-    
-    let completedWork = workInProgress;
-    do {
-      if (completedWork.sibling) {
-        workInProgress = completedWork.sibling;
-        break;
-      }
-      completedWork = completedWork.return;
-    } while (completedWork);
+  }
+
+  // 如果所有工作都已完成，可以调度下一次 workLoop
+  if (!workInProgress) {
+    scheduleCallback(workLoop);
   }
 }
 
+function performUnitOfWork(fiber) {
+  // 根据当前 FiberNode 的类型（函数组件、类组件、DOM 元素等），执行相应的操作。
+  switch (fiber.tag) {
+    case FunctionComponent:
+      return updateFunctionComponent(fiber);
+    case ClassComponent:
+      return updateClassComponent(fiber);
+    case HostComponent:
+      return updateHostComponent(fiber);
+    // 其他类型的 FiberNode
+    default:
+      return null;
+  }
+}
 
-requestIdleCallback(workLoop);
+function completeUnitOfWork(fiber) {
+  // 执行当前 FiberNode 的完成工作
+  while (fiber) {
+    // 调用完成回调（如 useEffect 的清除函数）
+    completeWork(fiber);
+
+    // 如果有兄弟节点，处理兄弟节点
+    if (fiber.sibling) {
+      workInProgress = fiber.sibling;
+      return;
+    }
+
+    // 如果没有兄弟节点，返回父节点
+    fiber = fiber.return;
+  }
+
+  // 所有工作已完成
+  workInProgress = null;
+}
 ```
 这个循环随时可以跑，随时可以停。这意味着 workLoop 既可以同步跑，也可以异步跑。
-当 workLoop 发现进行中的 Fiber 工作耗时过长时，可以根据一个 shouldYield() 标记决定是否暂停工作，释放计算资源给更紧急的任务，等完成后再恢复工作。
-
+- 只要 workInProgress 存在且当前没有时间片用完（!shouldYield()），循环就会a继续。
+- shouldYield()：这是一个调度函数，用于判断是否需要暂停当前的工作，以让出主线程给其他任务（如动画、用户输入等）。
+a
 <img src="./react%20render.png" />
 
 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestIdleCallback">requestIdleCallback()</a>方法传入一个函数，
