@@ -4,7 +4,7 @@
 1. 解释HTML5的"内容模型"(Content Model)概念，并对比HTML4.01的文档类型定义（3分）
 2. 阐述Shadow DOM与普通DOM的核心区别及适用场景（3分）
 3. 详述Web Workers与Service Worker的技术差异及各自的典型应用场景（4分）
-4. 解释`<meta>`标签的`charset`、`http- equiv`和`viewport`属性的底层作用机制（3分）
+4. 解释`<meta>`标签的`charset`、`http-equiv`和`viewport`属性的底层作用机制（3分）
 5. 对比分析Web Storage的sessionStorage与localStorage在浏览器隐私模式下的行为差异（3分）
 6. 阐述Content Security Policy(CSP)在HTML5中的实现原理及防御的常见攻击类型（4分）
 
@@ -43,7 +43,7 @@
 **题目4：Web组件开发（12分）**
 创建包含以下功能的自定义元素：
 ```html
-<sortable- table data- url="/api/data"></sortable- table>
+<sortable-table data-url="/api/data"></sortable-table>
 ```
 要求：
 - Shadow DOM封装样式
