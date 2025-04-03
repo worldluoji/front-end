@@ -4,7 +4,7 @@
 1. 解释HTML5的"内容模型"(Content Model)概念，并对比HTML4.01的文档类型定义（3分）
 2. 阐述Shadow DOM与普通DOM的核心区别及适用场景（3分）
 3. 详述Web Workers与Service Worker的技术差异及各自的典型应用场景（4分）
-4. 解释`<meta>`标签的`charset`、`http-equiv`和`viewport`属性的底层作用机制（3分）
+4. 解释`<meta>`标签的`charset`、`http- equiv`和`viewport`属性的底层作用机制（3分）
 5. 对比分析Web Storage的sessionStorage与localStorage在浏览器隐私模式下的行为差异（3分）
 6. 阐述Content Security Policy(CSP)在HTML5中的实现原理及防御的常见攻击类型（4分）
 
@@ -30,26 +30,26 @@
 
 **题目2：Canvas性能优化（10分）**
 编写一个通过离屏Canvas优化动画性能的示例，要求：
-• 实现60FPS的粒子动画
-• 包含双缓冲机制
-• 使用requestAnimationFrame
+- 实现60FPS的粒子动画
+- 包含双缓冲机制
+- 使用requestAnimationFrame
 
 **题目3：响应式媒体（7分）**
 使用`<picture>`元素实现：
-• 桌面端显示WebP格式图片
-• 移动端显示压缩版JPEG
-• 兼容旧浏览器回退方案
+- 桌面端显示WebP格式图片
+- 移动端显示压缩版JPEG
+- 兼容旧浏览器回退方案
 
 **题目4：Web组件开发（12分）**
 创建包含以下功能的自定义元素：
 ```html
-<sortable-table data-url="/api/data"></sortable-table>
+<sortable- table data- url="/api/data"></sortable- table>
 ```
 要求：
-• Shadow DOM封装样式
-• 支持列排序
-• 数据懒加载
-• 键盘导航
+- Shadow DOM封装样式
+- 支持列排序
+- 数据懒加载
+- 键盘导航
 
 **题目5：离线应用（13分）**
 构建支持离线的单页应用，要求：
@@ -67,20 +67,20 @@
 ### 第五部分：综合设计（30分）
 设计一个实时协作的白板应用，要求：
 1. 技术方案包含：
-   • WebSocket双向通信
-   • Canvas绘图协同
-   • 操作历史栈
-   • 冲突解决机制
+   - WebSocket双向通信
+   - Canvas绘图协同
+   - 操作历史栈
+   - 冲突解决机制
 
 2. 编写核心模块的伪代码：
-   • 笔迹数据序列化
-   • 增量同步协议
-   • 版本合并算法
+   - 笔迹数据序列化
+   - 增量同步协议
+   - 版本合并算法
 
 3. 性能保障措施：
-   • 带宽优化
-   • 渲染层优化
-   • 心跳检测机制
+   - 带宽优化
+   - 渲染层优化
+   - 心跳检测机制
 
 ### 第六部分：代码审查（15分）
 分析以下代码并提出优化建议：
@@ -129,5 +129,3 @@ function animate() {
   requestAnimationFrame(animate);
 }
 ```
-
-建议您先尝试完成题目，然后针对具体问题进行深入讨论。每个题目都对应不同的HTML5核心技术点，完成过程中遇到难题时可随时提出，我会提供分步骤的指导建议。
