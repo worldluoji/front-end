@@ -1,58 +1,103 @@
-# attributes and properties
-When writing HTML source code, you can define attributes on your HTML elements. 
-Then, once the browser parses your code, a corresponding DOM node will be created. 
-This node is an object, and therefore it has properties.
+# HTML 属性（Attributes）和 DOM 属性（Properties）的区别
 
-For instance, this HTML element:
+在 HTML 中，`attributes` 和 `properties` 是两个容易混淆的概念。为了帮助你更好地理解它们的区别，我们可以通过一个生活中的比喻来说明。
+
+---
+
+## **1. Attributes 是“出生时的标签”，Properties 是“成长后的状态”**
+
+想象一下，HTML 元素就像一个人，`attributes` 就是这个人出生时贴在他身上的标签，比如“性别：男”、“身高：180cm”。这些标签记录了他刚出生时的状态。
+
+而 `properties` 则是这个人成长过程中实时的状态，比如“目前体重：75kg”、“今天穿的衣服颜色：蓝色”。这些状态会随着时间和环境的变化而改变。
+
+### 举个例子：
 ```html
-<input type="text" value="Name:">
+<input type="text" value="初始值">
 ```
-has 2 attributes (type and value).
 
-Once the browser parses this code, a HTMLInputElement object will be created, 
-and this object will contain dozens of properties like: accept, accessKey, align, alt, attributes, autofocus, baseURI, checked, childElementCount, childNodes, children, classList, className, clientHeight, etc.
+- **Attributes**：`type="text"` 和 `value="初始值"` 就像是这个输入框“出生时”的标签，告诉浏览器它是一个文本输入框，并且初始值是“初始值”。
+- **Properties**：当用户在这个输入框中输入内容后，比如输入了“你好”，那么它的 `value` 属性（property）就会变成“你好”，但它的 `value` 属性（attribute）仍然是“初始值”。
 
-<br>
+---
 
-For a given DOM node object, properties are the properties of that object, 
-and attributes are the elements of the attributes property of that object.
+## **2. Attributes 和 Properties 的关系**
 
-When a DOM node is created for a given HTML element, many of its properties relate to attributes with the same or similar names, 
-but <strong>it's not a one-to-one relationship</strong>. For instance, for this HTML element:
+虽然 `attributes` 和 `properties` 看起来很像，但它们并不是一一对应的。我们可以把它们的关系分为以下几种情况：
+
+### **(1) 完全一致的映射**
+有些属性（properties）和特性（attributes）是完全同步的，就像“身份证号码”一样，写在标签上和实际存储的内容是一样的。
+
+- 比如 `id`：
+  ```html
+  <input id="myInput">
+  ```
+  - `getAttribute('id')` 返回 `"myInput"`。
+  - `theInput.id` 也返回 `"myInput"`。
+
+### **(2) 名字不同但意义相同**
+有些属性（properties）和特性（attributes）名字不一样，但表达的是同一个东西，就像“昵称”和“真实姓名”。
+
+- 比如 `class` 和 `className`：
+  ```html
+  <div class="box"></div>
+  ```
+  - `getAttribute('class')` 返回 `"box"`。
+  - `theDiv.className` 也返回 `"box"`。
+
+### **(3) 受限制的映射**
+有些属性（properties）会根据规则对特性（attributes）的值进行限制或修改，就像“年龄”不能是负数。
+
+- 比如 `type`：
+  ```html
+  <input type="foo">
+  ```
+  - `getAttribute('type')` 返回 `"foo"`。
+  - `theInput.type` 返回 `"text"`，因为浏览器认为 `"foo"` 不是一个合法的输入类型。
+
+### **(4) 完全不同的行为**
+有些属性（properties）和特性（attributes）的行为完全不同，就像“出生地”和“现在居住的城市”。
+
+- 比如 `value`：
+  ```html
+  <input type="text" value="初始值">
+  ```
+  - 如果用户在输入框中输入了“你好”：
+    - `getAttribute('value')` 返回 `"初始值"`（出生时的标签）。
+    - `theInput.value` 返回 `"你好"`（当前的状态）。
+
+---
+
+## **3. 如何选择使用 Attributes 还是 Properties？**
+
+- **Attributes**：如果你想了解元素“出生时”的状态，或者需要读取 HTML 源代码中的原始值，就用 `getAttribute()`。
+- **Properties**：如果你想了解元素“当前”的状态，或者需要操作动态变化的内容，就直接访问 DOM 对象的属性。
+
+### 示例：
 ```html
-<input id="the-input" type="text" value="Name:">
+<input type="text" value="初始值">
 ```
-the corresponding DOM node will have id,type, and value properties (among others):
 
-<strong>The id property is a reflected property for the id attribute: Getting the property reads the attribute value</strong>,
-and setting the property writes the attribute value. id is a pure reflected property, it doesn't modify or limit the value.
+假设用户在输入框中输入了“你好”：
 
-The type property is a reflected property for the type attribute: Getting the property reads the attribute value, and setting the property writes the attribute value. 
-type isn't a pure reflected property because it's limited to known values (e.g., the valid types of an input).
+- **获取初始值**：
+  ```js
+  theInput.getAttribute('value'); // 返回 "初始值"
+  ```
 
-If you had `<input type="foo">`, then theInput.getAttribute("type") gives you "foo" but theInput.type gives you "text".
+- **获取当前值**：
+  ```js
+  theInput.value; // 返回 "你好"
+  ```
 
-In contrast, the value property doesn't reflect the value attribute. 
-Instead, it's the current value of the input. When the user manually changes the value of the input box, the value property will reflect this change. 
-So if the user inputs "John" into the input box, then:
-```js
-theInput.value // returns "John"
-```
-whereas:
-```js
-theInput.getAttribute('value') // returns "Name:"
-```
-The value property reflects the current text-content inside the input box, 
-whereas the value attribute contains the initial text-content of the value attribute from the HTML source code.
+- **获取默认值**：
+  ```js
+  theInput.defaultValue; // 返回 "初始值"
+  ```
 
-So if you want to know what's currently inside the text-box, read the property. 
-If you, however, want to know what the initial value of the text-box was, read the attribute. 
-Or you can use the defaultValue property, which is a pure reflection of the value attribute:
-- theInput.value                 // returns "John"
-- theInput.getAttribute('value') // returns "Name:"
-- theInput.defaultValue          // returns "Name:"
+---
 
-There are several properties that directly reflect their attribute (rel, id), 
-some are direct reflections with slightly-different names (htmlFor reflects the for attribute, className reflects the class attribute), 
-many that reflect their attribute but with restrictions/modifications (src, href, disabled, multiple), and so on. 
-The spec covers the various kinds of reflection.
+## **4. 总结**
+
+- **Attributes** 是 HTML 元素的“出生标签”，记录了元素的初始状态。
+- **Properties** 是 DOM 对象的“实时状态”，反映了元素当前的情况。
+- 它们之间的关系可以是完全一致、名字不同、受限制的映射，甚至是完全不同的行为。
