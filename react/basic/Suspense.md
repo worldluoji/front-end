@@ -72,7 +72,7 @@ React 的 **Suspense** 是用于管理异步操作（如组件懒加载、数据
 
 ### 四、最佳实践
 1. **结合错误边界（Error Boundary）**  
-   使用错误边界捕获异步操作中的异常，防止整个应用崩溃：  
+   ErrorBoundary是一个React组件，可以捕获子组件中的错误，防止整个应用崩溃。：  
    ```jsx
    <ErrorBoundary>
      <Suspense fallback={<Loading />}>
