@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useLayoutEffect, Suspense } from 'react';
 import { fetchProfileData } from './fakeApi.ts';
+import type { FakeUser, FakePost } from './fakeApi.ts';
 
 // 使用Typescript时，需要明确指定入参字段名和类型。比如这里指定了name属性，下面JSX中Sibling组件才可以使用name属性，否则ts会报错
 interface SiblingProps {
@@ -47,12 +48,12 @@ function ProfileDetails(props: ProfileProps) {
         console.log("Cleanup ProfileDetails");
       };
     });
-    const user = props.resource.user.read();
+    const user = props.resource.user.read() as FakeUser;
     return <h1>{user.name}</h1>;
 }
 
 const ProfileTimeline: React.FC<ProfileProps> = (props) => {
-    const posts = props.resource.posts.read();
+    const posts = props.resource.posts.read() as FakePost[];
     useLayoutEffect(() => {
       console.log("Layout effect ProfileTimeline");
       return () => {
@@ -77,7 +78,7 @@ const ProfileTimeline: React.FC<ProfileProps> = (props) => {
 }
 
 export default function ProfilePage() {
-    const [resource, _] = useState(initialResource);
+    const [resource] = useState(initialResource);
     return (
       <>
         <Suspense
