@@ -17,7 +17,7 @@ Hooks 和  Class 两种方式在 React 开发中几乎是完全等价的，没�
 
 React 提供的 Hooks 其实非常少，一共只有 10 个，比如 useState、useEffect、useCallback、useMemo、useRef、useContext 等等。
 
-<br>
+---
 
 ## Hooks使用规则
 1. 所有 Hook 必须要被执行到，必须按顺序执行。
@@ -119,7 +119,7 @@ setTodoList(prevState => {
 });
 ```
 
-<br>
+---
 
 ## useEffect：执行副作用
 useEffect is a React Hook that lets you [synchronize a component with an external system](https://react.dev/learn/synchronizing-with-effects).
@@ -226,7 +226,7 @@ const myEventHandler = useMemo(() => {
 }, [dep1, dep2]);
 ```
 
-<br>
+---
 
 ## useRef：在多次渲染之间共享数据
 我们可以把 useRef 看作是在函数组件之外创建的一个容器空间。
@@ -275,15 +275,18 @@ ref也有了清除函数
 />
 ```
 
-<br>
+---
 
 ## useContext：定义全局状态
 demo见context
 
 在 React 的开发中，除了像 Theme、Language 等一目了然的需要全局设置的变量外，我们很少会使用 Context 来做太多数据的共享。
+
 需要再三强调的是，Context 更多的是提供了一个强大的机制，让 React 应用具备定义全局的响应式数据的能力。
 
-<br>
+从 React 19 开始，在组件中提供 context 不再需要 .Provider 后缀
+
+---
 
 ## Hooks和class
 hooks和class一些生命周期的关系
@@ -321,7 +324,7 @@ Class 组件中还有其它一些比较少用的方法，比如 getSnapshotBefor
 
 卸载阶段。主要是执行 Effect 的清理函数。函数组件也有错误处理阶段，但没有对应的生命周期 Hooks，错误处理依赖于父组件或祖先组件提供的错误边界。
 
-<br>
+---
 
 ### Hooks实现类似Class构造函数的只初始化一次的功能
 函数组件基本上没有统一的初始化需要，因为 Hooks 自己会负责自己的初始化。
@@ -371,7 +374,7 @@ const MyComp = () => {
 做法很简单，就是尽量将相关的逻辑做成独立的 Hooks，然后在函数组中使用这些 Hooks，通过参数传递和返回值让 Hooks 之间完成交互。
 我们要真正把 Hooks 就看成普通的函数，能隔离的尽量去做隔离，从而让代码更加模块化，更易于理解和维护。
 
-<br>
+---
 
 ## 其它说明
 Hooks 是逻辑重用的第一选择。 
@@ -381,7 +384,7 @@ Hooks 是逻辑重用的第一选择。
 
 另外可参考react-use三方库，是 react 37.2k star 的自定义 hooks库。
 
-<br>
+---
 
 ## Eslint hooks 配置
 ```shell
