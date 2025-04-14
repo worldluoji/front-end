@@ -20,6 +20,27 @@ React 的 **Suspense** 是用于管理异步操作（如组件懒加载、数据
    ```
    当组件加载时，Suspense 显示 `fallback`，加载完成后无缝切换。
 
+   但光有上面的代码还不够。在 React.lazy() 回调函数被触发后，Promise 被解决之前，FormButtons 组件会进入挂起（Suspend）状态。对进入挂起状态的组件，React 在它的祖先组件中寻找最近的 Suspense 边界，用这个 Suspense 指定的后备视图来替代 Suspense 的子组件树。
+   ```JSX
+    import React, { Suspense } from 'react';
+
+    const FormButtons = React.lazy(() => import('./FormButtons.jsx'));
+
+    function App() {
+        // 省略
+        return (
+            <form action={formAction}>
+            <input type="text" name="name" placeholder="联系人名称" />
+            <Suspense fallback={<span>加载中...</span>}>
+                <FormButtons />
+            </Suspense>
+            {/* 省略 */}
+            </form>
+        );
+    }
+   ```
+   这样实现的效果是在首次展示页面时，文本框会先显示出来，而按钮位置会显示“加载中”字样，直到分割的 JS 文件读取完成，才会渲染为按钮组件。
+
 3. **数据获取支持**  
    在 React 18 中，Suspense 可配合支持异步的数据库（如 Relay、React Query）等待数据加载完成，避免手动管理 `isLoading` 状态。
 
