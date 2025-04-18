@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>input demo</title>
+</head>
+<body>
+    <form action="#" method="GET">
+        <!-- ​​浏览器会完全忽略 pattern 属性​​，因为 number 类型输入框有独立的校验逻辑（如 min、max、step），而非使用正则表达式。 -->
+        <!-- 手机号：<input type=number pattern="[0-9]{11}" placeholder="11位手机号" required> -->
+        <!-- pattern 仅对 text、tel、email、password、search 等文本类输入类型有效。 -->
+        手机号：<input type=text pattern="[0-9]{11}" placeholder="11位手机号" required>
+        <button type="submit">提交</button>
+    </form>
+    <br>
+    <!-- 扩展email规则（禁止某些域名） -->
+    邮&nbsp;&nbsp;箱：<input type="email" placeholder="邮箱" required>
+    <script>
+      let emailInput = document.querySelector("input[type=email]")
+      emailInput.addEventListener("change", (e) => {
+        validateEmail(e.target);
+      });
+      function validateEmail(input) {
+        const forbiddenDomains = ["example.com", "test.org"];
+        if (input.value.indexOf('@') === -1) {
+            console.log("请输入正确的邮箱地址");
+            // 以下这句代码无效，只有在表单form内部提交时才起作用
+            input.setCustomValidity("请输入正确的邮箱地址");
+            return;
+        }
+        const domain = input.value.split('@')[1];
+        console.log(forbiddenDomains.includes(domain) ? "禁止域名" : "验证通过");
+      }
+
+      document.querySelector("input[type=text]").addEventListener('invalid', function(e) {
+        if (e.target.validity.patternMismatch) {
+            e.target.setCustomValidity('请输入11位纯数字手机号！');
+        } else {
+            e.target.setCustomValidity('');
+        }
+      });
+    </script>
+</body>
+</html>

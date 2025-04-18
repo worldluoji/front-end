@@ -95,26 +95,33 @@
 #### 四、开发者自定义验证
 
 1. **覆盖浏览器默认规则**：
-   ```html
-   <!-- 自定义tel格式（如中国手机号） -->
-   <input type="tel" pattern="[0-9]{11}" title="11位手机号">
-
-   <!-- 扩展email规则（禁止某些域名） -->
-   <input type="email" oninput="validateEmail(this)">
-   <script>
-     function validateEmail(input) {
-       const forbiddenDomains = ["example.com", "test.org"];
-       const domain = input.value.split('@')[1];
-       input.setCustomValidity(forbiddenDomains.includes(domain) ? "禁止域名" : "");
-     }
-   </script>
-   ```
+  ```html
+    手机号：<input type=text pattern="[0-9]{11}" placeholder="11位手机号" required>
+    <br>
+    <!-- 扩展email规则（禁止某些域名） -->
+    邮&nbsp;&nbsp;箱：<input type="email" placeholder="邮箱" required>
+    <script>
+      let emailInput = document.querySelector("input[type=email]")
+      emailInput.addEventListener("change", (e) => {
+        validateEmail(e.target);
+      });
+      function validateEmail(input) {
+        const forbiddenDomains = ["example.com", "test.org"];
+        if (input.value.indexOf('@') === -1) {
+            console.log("请输入正确的邮箱地址");
+            return;
+        }
+        const domain = input.value.split('@')[1];
+        console.log(forbiddenDomains.includes(domain) ? "禁止域名" : "验证通过");
+      }
+    </script>
+  ```
 
 2. **国际化扩展**：
    ```html
    <!-- 接受带中文的email -->
    <input type="email" pattern="[\p{L}0-9._%+-]+@[\p{L}0-9.-]+\.[\p{L}]{2,}$" 
-          title="支持国际化邮箱">
+          placeholder="支持国际化邮箱">
    ```
 
 ---
