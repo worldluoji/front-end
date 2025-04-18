@@ -140,3 +140,6 @@
 ---
 
 通过分析可见，虽然三种输入类型均基于HTML5规范，但浏览器在实现细节、安全策略和国际化支持上存在显著差异。开发者需结合目标平台特性设计验证逻辑，并在关键场景（如支付、登录）中补充服务端验证。
+
+## references
+https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input
