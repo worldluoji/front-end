@@ -53,7 +53,12 @@
 
 ### **四、高级特性题**  
 1. **条件类型与映射类型**  
-   • **题目**：用条件类型 `Exclude<T, U>` 实现一个工具类型 `OptionalProps<T>`，将 `T` 的所有属性变为可选。  
+   • **题目**：实现一个工具类型 `OptionalProps<T>`，将 `T` 的所有属性变为可选。
+    ```typescript
+        type OptionalProps<T> = {
+            [P in keyof T]?: T[P]
+        }
+    ```  
 
 2. **装饰器与元编程**  
    • **题目**：实现一个类装饰器 `@LogMethod`，在调用类方法时打印日志。  
