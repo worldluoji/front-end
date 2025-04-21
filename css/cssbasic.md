@@ -5,7 +5,7 @@ A key part of CSS development comes down to writing rules in such a way that the
 
 <image src="./assets/css overview.awebp" />
 
-<br>
+---
 
 # cascade(层叠)
 CSS的第一个"C"表示层叠，层叠就是一系列规则，它决定了如何解决冲突，是CSS的基础。
@@ -30,18 +30,9 @@ css样式来源：
 - 通用选择器*和组合选择器(> + ~) 对优先级没有影响。
 - 前面的条件都一样的情况下，位于页面较晚位置出现的胜出（后面的覆盖前面的）
 
-demo -> priority.html
+[priority-demo](./basic/priority.html)
 
-常用selector:
-```css
-id selector : #xxx
-class selector : .xxx
-[type='radio'] {
-  margin: 20px 0px 20px 0px;
-}
-```
-
-<br>
+---
 
 ## CSS的组成
 ```css
@@ -57,22 +48,24 @@ and is usually used in the plural to refer to a broader set of styles.
 Finally, at-rules are language constructs beginning with an “at” symbol, 
 such as @import rules or @media queries.
 
+---
+
 # 常用CSS
 ## import third-part font
 To import a Google Font, you can copy the font's URL from the Google Fonts library and then paste it in your HTML. 
 For this challenge, we'll import the Lobster font. 
 To do this, copy the following code snippet and paste it into the top of your code editor (before the opening style element):
-```
+```js
 <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
 ```
 
 Now you can use the Lobster font in your CSS by using Lobster as the FAMILY_NAME as in the following example:
 
-```
+```css
 font-family: FAMILY_NAME, GENERIC_NAME;
 ```
 
-<br>
+---
 
 ## font "degrade" 
 There are several default fonts that are available in all browsers. 
@@ -105,7 +98,7 @@ h1 {
 所以诸如上面的声明中的sans-serif、Helvetica指的是字体族，前者是衬线字体，后者是无衬线字体。
 那么这其中的意思就很明确了: <strong>如果系统中有前面的字体，那就使用前面的字体，如果没有的话，尝试使用后面的衬线字体，如果没有，则继续往后面的声明中寻找可用字体。</strong>
 
-<br>
+---
 
 ## padding、margin
 An element's padding controls the amount of space between the element's content and its border.
@@ -133,7 +126,7 @@ top 40px, bottom 20px, 左右30px
 An element's margin controls the amount of space between an element's border and surrounding elements.
 用法和padding一致。
 
-<br>
+---
 
 ### margin合并（塌陷）
 margin合并是说：block的顶部外边距和相邻block底部外边距，被组合(折叠)为单个外边距，其大小是组合到其中的最大外边距，这种行为称为外边距合并。
@@ -203,7 +196,7 @@ vmin是vh和vw中小的那个，vmax是vh、vw中大的那个。
 经验：拿不准的时候，用rem设置字号，用px设置border粗细，用em设置padding、border-radius等属性。
 需要自适应的场景，比如移动端，优先使用视口单位。 -> ./basic/relativeUnit.html
 
-<br>
+---
 
 # line-height
 The line-height CSS property sets the height of a line box. 
@@ -250,14 +243,14 @@ div {
 }
 ```
 
-<br>
+---
 
 ## inherit
 you can style your body element just like any other HTML element, 
 and all your other elements will inherit your body element's styles.
 
 example:
-```
+```html
 <style>
   body {
     background-color: black;
@@ -278,13 +271,13 @@ example:
 与之对应有些属性时不能继承的，例如border，padding，margin，background等。
 其实也很好理解这些属性为何不能继承，因为一旦这些属性可以继承，那么会影响到了整个布局，例如，我们在父元素上加个边框，但是其子元素，后代元素都继承了边框，那就不得不去写更多的代码来消除继承的影响，这样的结果肯定不是CSS设计的初衷。
 
-<br>
+---
 
 ## color的16进制表示有时候可以简写
 red's hex code #FF0000 can be shortened to #F00. 
 This shortened form gives one digit for red, one digit for green, and one digit for blue.
 
-<br>
+---
 
 ## css定义和使用变量
 To create a CSS variable, you just need to give it a name with two hyphens in front of it and assign it a value like this:
@@ -314,7 +307,7 @@ example: Improve Compatibility with Browser Fallbacks
 ```
 如果有的浏览器不支持css变量定义，就会回退到background: red;
 
-<br>
+---
 
 ## Inherit CSS Variables
 To make use of inheritance, CSS variables are often defined in the :root element.
@@ -337,16 +330,20 @@ example:
 ```
 -> ./basic/variable.html
 
-<br>
+---
 
 ## input框文本居右
 ```css
 <input type="text" value="xxx"  size="100" style="text-align:right" />
 ```
 
+---
+
 ## css元素重叠的方法
 1、给元素设置负margin，负margin可以让元素的占用空间变小，后面的元素可以覆盖当前的元素；
 2、使用position属性，利用绝对定位、相对定位来让多个元素进行重叠。
+
+---
 
 ## bottom
 The effect of bottom depends on how the element is positioned (i.e., the value of the position property):
@@ -359,6 +356,8 @@ When both top and bottom are specified, position is set to absolute or fixed, an
 
 reference: https://developer.mozilla.org/en-US/docs/Web/CSS/bottom
 
+---
+
 ## overflow
 - visible(default): Content is not clipped(剪除，剪掉) and may be rendered outside the padding box.
 - hidden: Content is clipped if necessary to fit the padding box.
@@ -369,7 +368,7 @@ The overflow property is specified as one or two keywords chosen from the list o
 If two keywords are specified, the first applies to overflow-x and the second to overflow-y. 
 Otherwise, both overflow-x and overflow-y are set to the same value.
 
-overflow是基于是否超过padding box来决定行为。
+overflow是基于是否超过**padding box**来决定行为。
 
 ### 实例：打开 Modal 时禁止 body 滚动
 打开弹窗的时候，会发现背后的内容还是可以滚动，我们需要在弹窗出现时禁用滚动，在弹窗消失时恢复。
@@ -383,18 +382,34 @@ document.body.style.removeProperty('overflow');
 
 reference: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow
 
+---
+
 ## height、min-height、max-height
-1. 一般不设置height大小, height由其children决定。
+1. 默认不显式设置 height, 元素高度默认由子元素内容撑开（流式布局特性）, 显式设置 height 容易导致内容溢出或布局僵化
+
 2. For percentage-based heights to work, the parent must have an explicitly defined height.（当height使用百分比时，父元素必须明确指定height大小）
+
 3. A better approach is to use the viewport-relative vh units, which you reviewed in chapter A height of 100 vh is exactly the height of the viewport. 
 The most common use, though, is to create columns of equal height. This too can be solved without a percentage.
-（需要设置height大小时，更建议使用vh）
-4. 当同一行两列需要等高时，使用flex布局（推荐）或 table布局（不推荐）
-5. Two properties that can be immensely helpful are min-height and max-height Instead of explicitly defining a height.
 
-- min-height means the element will be at least as high as you specify, 
-and if the content doesn’t fit, the browser will allow the element to grow naturally to prevent overflow.
-- max-height allows an element to size naturally, up to a point.
+4. 当同一行两列需要等高时，使用 flex布局（推荐）或 table布局（不推荐）
+
+5. min-height: 保证最小高度，内容超量时自动扩展
+```css
+.card {
+  min-height: 200px; /* 最小200px，可向上自适应 */
+}
+```
+
+6. max-height: 限制最大高度，配合 overflow 使用
+```css
+.scroll-box {
+  max-height: 400px;
+  overflow-y: auto;
+}
+```
+
+---
 
 ## vertical-align
 A vertical-align declaration only affects <strong>inline and table-cell</strong> elements.
