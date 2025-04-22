@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Sanp Type demo</title>
+</head>
+<body>
+    <main>
+        <section class="x mandatory-scroll-snapping" dir="ltr">
+          <div>X Mand. LTR</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+        </section>
+        <section class="x proximity-scroll-snapping" dir="ltr">
+          <div>X Prox. LTR</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+        </section>
+        <section class="y mandatory-scroll-snapping" dir="ltr">
+          <div>Y Mand. LTR</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+        </section>
+        <section class="y proximity-scroll-snapping" dir="ltr">
+          <div>Y Prox. LTR</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+        </section>
+        <section class="x mandatory-scroll-snapping" dir="rtl">
+          <div>X Mand. RTL</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+        </section>
+        <section class="x proximity-scroll-snapping" dir="rtl">
+          <div>X Prox. RTL</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+        </section>
+        <section class="y mandatory-scroll-snapping" dir="rtl">
+          <div>Y Mand. RTL</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+        </section>
+        <section class="y proximity-scroll-snapping" dir="rtl">
+          <div>Y Prox. RTL</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+        </section>
+    </main>      
+</body>
+<style>
+main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-flow: column nowrap;
+  font-family: monospace;
+}
+section {
+  display: flex;
+  margin: 1em auto;
+  outline: 1px dashed lightgray;
+  flex: none;
+  overflow: auto;
+}
+.x {
+  width: 100%;
+  height: 128px;
+  flex-flow: row nowrap;
+  overflow-y: hidden;
+}
+.y {
+  width: 256px;
+  height: 256px;
+  flex-flow: column nowrap;
+  overflow-x: hidden;
+}
+
+/* scroll-snap */
+.x.mandatory-scroll-snapping {
+  scroll-snap-type: x mandatory;
+}
+.x.proximity-scroll-snapping {
+  scroll-snap-type: x proximity;
+}
+.y.mandatory-scroll-snapping {
+  scroll-snap-type: y mandatory;
+}
+.y.proximity-scroll-snapping {
+  scroll-snap-type: y proximity;
+}
+
+div {
+  text-align: center;
+  scroll-snap-align: center;
+  flex: none;
+}
+
+.x div {
+  line-height: 128px;
+  font-size: 64px;
+  width: 100%;
+  height: 128px;
+}
+.y div {
+  line-height: 256px;
+  font-size: 128px;
+  width: 256px;
+  height: 100%;
+}
+
+/* appearance fixes */
+.y div:first-child {
+  line-height: 1.3;
+  font-size: 64px;
+}
+
+/* coloration */
+div:nth-child(even) {
+  background-color: #87ea87;
+}
+div:nth-child(odd) {
+  background-color: #87ccea;
+}
+</style>
+</html>
