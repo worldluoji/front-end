@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Theme switcher </title>
+</head>
+<body class="main">
+    <p>Enjoy seamless theme switching with just CSS!</p>
+    <select class="theme">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+    <section>
+        <article>
+          <h1>Morning Times</h1>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </article>
+        <article>
+          <h1>Morning Times</h1>
+          <h2>Delivering you news every morning</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </article>
+    </section>
+</body>
+<style>
+    .main {
+      background: white;
+      color: black;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+    
+    .main:has(.theme option[value="dark"]:checked) {
+        /* invert() 函数用于反转输入图像中的颜色。参数定义了转换的程度。
+        如果参数是 1（或者 100%），则会完全反转颜色，即每个颜色通道的值都会被替换为其补色。
+        例如：黑色变成白色，白色变为黑色等。
+        
+        当使用 hue-rotate(180deg) 时，意味着所有颜色都会在其原始位置基础上沿着色轮顺时针方向移动 180 度。
+        比如红色会变成青色、绿色变成洋红色、蓝色变成黄色等，因为这些是在色轮上相对的颜色。
+
+        结合起来看，首先通过 invert(1) 将图像的所有颜色都进行了反转处理，
+        然后通过 hue-rotate(180deg) 再进行一次颜色的大幅度调整，这种组合可以产生非常独特的视觉效果。
+        */
+
+        filter: invert(1) hue-rotate(180deg);
+
+        /*对不需要反转的元素进行复原，可按照自己需求追加*/
+        img,
+        video,
+        .avatar,
+        .image,
+        .thumb
+        .icon {
+            filter: none;
+        }
+        background-color: black;
+    }
+</style>
+</html>
