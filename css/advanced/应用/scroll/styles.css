@@ -5,18 +5,18 @@
     overflow: hidden;
     border: 1px solid #ccc;
     margin: 50px auto;
-  }
-  
-  #scroll-content {
+}
+
+#scroll-content {
     padding: 0;
     margin: 0;
     list-style-type: none;
-  }
-  
-  #scroll-content li {
+}
+
+#scroll-content li {
     height: 50px;
     line-height: 50px;
     text-align: center;
     background-color: #f0f0f0;
     border-bottom: 1px solid #ccc;
-  }
+}

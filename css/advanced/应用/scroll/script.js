@@ -18,4 +18,4 @@ document.addEventListener('DOMContentLoaded', function () {
     scroll.on('scroll', function (pos) {
       console.log(`Scroll position: x=${pos.x}, y=${pos.y}`);
     });
-  });
+});
