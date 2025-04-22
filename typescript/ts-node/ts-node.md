@@ -51,5 +51,16 @@ This transformation will respect your tsconfig.json as if you had compiled via t
 
 We also register a few other hooks to apply sourcemaps to stack traces and remap from .js imports to .ts.
 
+---
+
+## 同类产品
+esno
+```shell
+npx esno hello.ts
+```
+
+---
+
 ## reference
-https://typestrong.org/ts-node/docs/
+- https://typestrong.org/ts-node/docs/
+- https://www.npmjs.com/package/esno
