@@ -153,6 +153,25 @@ HTML5 引入了许多新的语义化标签，这些标签不仅使 HTML 更具�
 
 ---
 
+## 10. select支持通过optgroup分组
+```html
+<label for="dino-select">Choose a dinosaur:</label>
+<select id="dino-select">
+  <optgroup label="Theropods">
+    <option>Tyrannosaurus</option>
+    <option>Velociraptor</option>
+    <option>Deinonychus</option>
+  </optgroup>
+  <optgroup label="Sauropods">
+    <option>Diplodocus</option>
+    <option>Saltasaurus</option>
+    <option>Apatosaurus</option>
+  </optgroup>
+</select>
+```
+
+---
+
 ## 总结
 本文介绍了 HTML 中一些常用的元素及其功能，包括标题、段落、注释、语义化标签、链接、列表和表单等。掌握这些基础知识可以帮助你快速构建结构清晰、语义明确的网页。
 

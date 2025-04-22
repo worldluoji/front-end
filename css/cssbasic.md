@@ -415,22 +415,3 @@ The most common use, though, is to create columns of equal height. This too can 
 
 ## vertical-align
 A vertical-align declaration only affects <strong>inline and table-cell</strong> elements.
-
----
-
-## select支持通过optgroup分组
-```html
-<label for="dino-select">Choose a dinosaur:</label>
-<select id="dino-select">
-  <optgroup label="Theropods">
-    <option>Tyrannosaurus</option>
-    <option>Velociraptor</option>
-    <option>Deinonychus</option>
-  </optgroup>
-  <optgroup label="Sauropods">
-    <option>Diplodocus</option>
-    <option>Saltasaurus</option>
-    <option>Apatosaurus</option>
-  </optgroup>
-</select>
-```
