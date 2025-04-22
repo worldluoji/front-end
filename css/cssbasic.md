@@ -30,6 +30,8 @@ css样式来源：
 - 通用选择器*和组合选择器(> + ~) 对优先级没有影响。
 - 前面的条件都一样的情况下，位于页面较晚位置出现的胜出（后面的覆盖前面的）
 
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity
+
 [priority-demo](./basic/priority.html)
 
 ---

@@ -11,12 +11,16 @@ clamp() 函数接收三个用逗号分隔的表达式作为参数，按最小值
 - 当首选值介于最小值和最大值之间时，用首选值。
 - 当首选值比最大值要大时，则使用最大值。
 
+---
+
 ## 2. background-clip : Determines the background painting area
 background-clip  设置元素的背景（背景图片或颜色）是否延伸到边框、内边距盒子、内容盒子下面。
 
 background-position 10% 30% => 两个值的语法： 一个定义 x 坐标，另一个定义 y 坐标
 
 参考：https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-clip
+
+---
 
 ## 3. linear-gradient
 ```
@@ -32,12 +36,16 @@ linear-gradient(0deg, blue, green 40%, red);
 
 参考资料：https://developer.mozilla.org/zh-CN/docs/Web/CSS/gradient/linear-gradient
 
+---
+
 ## 4. background-position 
 background-position  属性为每一个背景图片设置初始位置。这个位置是相对于由 background-origin 定义的位置图层的。
 
 background-position 默认值: 0% 0%, 效果等同于 left top。
 
 参考资料：https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-position
+
+---
 
 ## 5. background-origin
 ```
@@ -51,6 +59,8 @@ background-origin: inherit
 - content-box: 背景图片的摆放以 content 区域为参考
 
 参考资料：https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-origin
+
+---
 
 ## 6. background
 简写的顺序如下: bg-color || bg-image || bg-position [ / bg-size]? || bg-repeat || bg-attachment || bg-origin || bg-clip
@@ -79,6 +89,8 @@ background-color background-position / background-size
 
 参考资料：https://juejin.cn/post/6844903463273381901
 
+---
+
 ## 7. transform-style
 transform-style 设置元素的子元素是位于 3D 空间中还是平面中。
 ```
@@ -90,6 +102,7 @@ transform-style: preserve-3d;
 
 参考：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-style
 
+---
 
 ## 8. filter
 filter表示滤镜，通常用于调整图像、背景和边框的渲染
@@ -112,6 +125,8 @@ filter: contrast(175%) brightness(3%);
 ```
 参考：https://developer.mozilla.org/zh-CN/docs/Web/CSS/filter
 
+---
+
 ## 9. :nth-of-type  :nth-child(an+b)
 :nth-of-type(n) 针对具有一组兄弟节点的标签，用 n 来筛选出在一组兄弟节点的位置
 ```
@@ -126,6 +141,8 @@ p:nth-of-type(4n) {
 参考： 
 - https://developer.mozilla.org/zh-CN/docs/Web/CSS/:nth-of-type
 - https://developer.mozilla.org/zh-CN/docs/Web/CSS/:nth-child
+
+---
 
 ## 10. 关于transform
 tanslate 3d变换中的移动，z中的正方向面向用户,值越大，越靠近用户。
@@ -142,30 +159,16 @@ rotate 如果为正值，则运动将为顺时针，如果为负值，则为逆�
 
 参考： https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function
 
+---
 
 ## 11. clip-path
 The clip-path CSS property creates a clipping region that sets what part of an element should be shown.
 
 参考： https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path
 
+---
 
-## 12. :is 和 :where
-```
-:is(选择器) 选择器 {}
-:where(选择器) 选择器 {}
-```
-相当于是一个条件，将满足条件的进行筛选，添加样式；
-
-同样的写法，两个伪类选择器的优先级不一样，:is的优先级高于:where的优先级；
-
-:is：找选择其中权重最大的一个，做为整个伪类选择器的权重；
-按照[示例](./pseudo/is-where.html)来说，会在:is(#d1, #d2, #d3, #d4)中选择一个权重最大的一个，再加上一个标签选择器的权重，组成最终的权重；
-
-:where：该伪类选择器是没有权重的，也就是它的权重为0；
-按照[示例](./pseudo/is-where.html)来说，:where(#d1, #d2, #d3, #d4)的权重为0，此时最终的权重为标签选择器的权重。
-
-
-## 13. white-space
+## 12. white-space
 `white-space` 是 CSS 中的一个属性，用于控制元素内的空白字符（如空格、制表符、换行符等）如何处理。这个属性对于文本排版和格式化非常重要，尤其是在需要控制文本自动换行或保留空白字符的情况下。
 
 ### `white-space` 的值:
