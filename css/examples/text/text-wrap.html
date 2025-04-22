@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Wrap Demo</title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="wrap" contenteditable="true">
+            The default behavior; the text in the heading wraps "normally"
+        </h2>
+        
+        <h2 class="nowrap" contenteditable="true">
+            In this case the text in the heading doesn't wrap, and overflows the container
+        </h2>
+        
+        <h2 class="balance" contenteditable="true">
+            In this case the text in the heading is nicely balanced across lines
+        </h2>
+    </div>
+    
+    <style>
+        .container {
+            width: 400px;
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        .wrap {
+            text-wrap: wrap;
+        }
+
+        .nowrap {
+            text-wrap: nowrap;
+        }
+
+        .balance {
+            text-wrap: balance;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-family: sans-serif;
+        }
+    </style>
+</body>
+</html>
