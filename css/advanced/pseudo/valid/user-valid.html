@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user-input demo</title>
+</head>
+<body>
+    <form>
+        <label for="email">Email *: </label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          value=""
+          required />
+        <span></span>
+    </form>      
+</body>
+<style>
+input:user-valid {
+  border: 2px solid green;
+}
+
+input:user-invalid {
+  border: 2px dashed red;
+}
+
+input:user-valid + span::before {
+  content: "✓";
+  color: green;
+}
+</style>
+</html>
