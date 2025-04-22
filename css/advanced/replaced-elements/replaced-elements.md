@@ -20,11 +20,15 @@ Some elements are treated as replaced elements only in specific cases:
 <object>
 ```
 
+---
+
 ## embed
 加载视频
 ```html
 <embed type="video/webm" src="/media/cc0-videos/flower.mp4" width="250" height="200" />
 ```
+
+---
 
 ## object
 加载pdf:
@@ -42,7 +46,9 @@ Some elements are treated as replaced elements only in specific cases:
 </object>
 ```
 
-## vieo
+---
+
+## vedio
 ```html
 <video controls width="250">
   <source src="/media/cc0-videos/flower.webm" type="video/webm" />
@@ -62,7 +68,7 @@ Some elements are treated as replaced elements only in specific cases:
 - 使用 `<embed>` 标签：如果你需要嵌入特定插件（如Flash、QuickTime）的内容，可以使用 `<embed>` 标签。
 - 使用 `<object>` 标签：如果你需要更复杂的嵌入逻辑，或者需要嵌入多种类型的资源（如PDF、Flash、音频），可以使用 `<object>` 标签。
 
-<br>
+---
 
 ## Controlling object position within the content box
 Certain CSS properties can be used to specify how the object contained within the replaced element should be positioned within the element's box area. These are defined by the CSS Images specification:
@@ -91,7 +97,7 @@ Specifies the alignment of the replaced element's content object within the elem
 ### notice
 Note: The object-fit property has no effect on `<iframe>`, `<embed>`, and `<fencedframe>` elements.
 
-<br>
+---
 
 ## reference
 - https://developer.mozilla.org/en-US/docs/Web/CSS/Replaced_element
