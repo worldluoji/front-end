@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Behavior Demo</title>
+</head>
+<body>
+    <nav>
+        <a href="#page-1">1</a>
+        <a href="#page-2">2</a>
+        <a href="#page-3">3</a>
+    </nav>
+    <div class="scroll-container">
+        <div class="scroll-page" id="page-1">1</div>
+        <div class="scroll-page" id="page-2">2</div>
+        <div class="scroll-page" id="page-3">3</div>
+    </div>
+
+    <style>
+        a {
+            display: inline-block;
+            width: 50px;
+            text-decoration: none;
+        }
+        nav,
+        .scroll-container {
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+        }
+        nav {
+            width: 339px;
+            padding: 5px;
+            border: 1px solid black;
+        }
+        .scroll-container {
+            width: 350px;
+            height: 200px;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+        }
+        .scroll-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 5em;
+        }
+    </style>
+</body>
+</html>
