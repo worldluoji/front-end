@@ -78,8 +78,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const selectorCell = document.createElement("td");
         selectorCell.style.border = "1px solid #ddd";
         selectorCell.style.padding = "8px";
-        selectorCell.textContent = item.selector;
         selectorCell.style.textAlign = "center";
+        const selectorInput = document.createElement("input");
+        selectorInput.type = "text";
+        selectorInput.value = item.selector || "";
+        selectorInput.addEventListener("change", (e) => {
+          selectedItems[index].selector = e.target.value;
+        });
+        selectorCell.appendChild(selectorInput);
         row.appendChild(selectorCell);
 
         // Unique column
@@ -118,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
         actionsCell.style.textAlign = "center";
         const removeButton = document.createElement("button");
         removeButton.textContent = "Remove";
+        removeButton.style.backgroundColor = '#ff7875';
         removeButton.onclick = () => {
           selectedItems.splice(index, 1);
           renderSelectedItems();
@@ -155,9 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
       removeButton.onclick = () => {
         output.splice(index, 1);
         renderOutputData();
-        chrome.storage.local.set({ output }, () => {
-          alert("Output record removed!");
-        });
       };
 
       div.appendChild(span);
