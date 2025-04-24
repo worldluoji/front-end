@@ -62,6 +62,9 @@ Some elements are treated as replaced elements only in specific cases:
   video.
 </video>
 ```
+When using `<source>` elements, the browser attempts to load each source sequentially. If a source fails (e.g., due to an invalid URL or unsupported format), the next source is attempted, and so on. An error event fires on the `<video>` element after all sources have failed; error events are not fired on each individual `<source>` element.
+
+---
 
 ## 对比
 - 视频推荐使用 `<video>` 标签：如果你只是需要嵌入标准视频格式（如 MP4、WebM、OGG），并且希望使用内置的播放控件，`<video>` 标签是最简单和最标准的选择。
