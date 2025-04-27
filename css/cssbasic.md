@@ -415,3 +415,21 @@ The most common use, though, is to create columns of equal height. This too can 
 
 ## vertical-align
 A vertical-align declaration only affects <strong>inline and table-cell</strong> elements.
+
+---
+
+## opacity
+```css
+/* 完全不透明 */
+opacity: 1;
+opacity: 1;
+
+/* 半透明 */
+opacity: 0.6;
+
+/* 完全透明 */
+opacity: 0;
+opacity: 0;
+
+opacity: inherit;
+```
