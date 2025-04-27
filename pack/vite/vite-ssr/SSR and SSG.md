@@ -35,7 +35,7 @@ SSR是Server Side Render简称；页面上的内容是通过服务端渲染生�
 3. 更好的 SEO
 搜索引擎爬虫可以直接看到完全渲染的页面。
 
-<br>
+---
 
 ## SSR权衡
 使用 SSR 时还有一些权衡之处需要考量：
@@ -52,7 +52,7 @@ SSR是Server Side Render简称；页面上的内容是通过服务端渲染生�
 
 一般建议大家，<strong>除非你的项目特别依赖搜索引擎流量，或者对首屏时间有特殊的要求</strong>，否则不建议使用 SSR。
 
-<br>
+---
 
 ## SSR 之所以能够实现，本质上是因为虚拟 DOM 的存在
 SSR 的工程中，代码会在客户端和服务器端各执行一次。你可能会想，这没什么问题，都是 JavaScript 代码，
@@ -66,7 +66,7 @@ SSR 的工程中，代码会在客户端和服务器端各执行一次。你可�
 在服务器，我可以操作 JavaScript 对象，判断环境是服务器环境，把虚拟 DOM 映射成字符串输出；
 在客户端，我也可以操作 JavaScript 对象，判断环境是客户端环境，我就直接将虚拟 DOM 映射成真实 DOM，完成页面挂载。
 
-<br>
+---
 
 ## SSR 应用的两大生命周期: 构建时和运行时
 ### 构建时
@@ -96,7 +96,7 @@ console.log(styles)
    
 4. HTML 拼接。在组件渲染完成之后，我们需要拼接完整的 HTML 字符串，并将其作为响应返回给浏览器。
 
-<br>
+---
 
 ## Vite SSR
 Vite 作为一个构建工具，是如何支持 SSR 构建的呢？换句话说，它是如何让前端的代码也能顺利在 Node.js 中成功跑起来的呢？
@@ -115,7 +115,7 @@ const xxx = await vite.ssrLoadModule('/src/entry-server.tsx')
 ```
 这样 Vite 会专门为 SSR 打包出一份构建产物。因此你可以看到，大部分 SSR 构建时的事情，Vite 已经帮我们提供了开箱即用的方案，我们后续直接使用即可。
 
-<br>
+---
 
 ## 项目参考 vite-ssr
 ### 项目骨架搭建
@@ -145,7 +145,7 @@ npm run build及npm run preview进行生产环境的预览，会发现 SSR 可�
 这样我们可以通过 CDN 直接访问到静态资源，而不需要加上服务端的处理。
 不过作为本地的生产环境预览而言，serve-static还是一个不错的静态资源处理手段。
 
-<br>
+---
 
 ## Node 只是一个中间层
 在 SSR 架构中，一般 Node 只是一个中间层，用来做服务器端渲染，而 Node 需要的数据通常由 API 服务器单独提供。
@@ -165,7 +165,7 @@ app.use('/api', proxy('http://apiServer.com', {
   }
 }));
 
-<br>
+---
 
 ## 开箱即用产品
 
@@ -177,6 +177,25 @@ Vue3提供了SSR的API: https://cn.vuejs.org/guide/scaling-up/ssr.html
 - Quasar 是一个基于 Vue 的完整解决方案，它可以让你用同一套代码库构建不同目标的应用，如 SPA、SSR、PWA、移动端应用、桌面端应用以及浏览器插件。除此之外，它还提供了一整套 Material Design 风格的组件库。
 
 ### React
+React 也提供了 SSR 的 API：
+
+服务端：
+```jsx
+import { renderToString } from 'react-dom/server';
+
+
+const html = renderToString(<App />);
+```
+
+客户端：
+```jsx
+import { hydrateRoot } from 'react-dom/client';
+
+
+hydrateRoot(document.getElementById('root'), <App />);
+```
+建议使用Next.js.
+
 Next.js 是一个用于构建服务器渲染（Server-Side Rendering，简称 SSR）应用的 React 框架。它由 Vercel 公司开发，并且已经成为构建大型生产级应用的流行选择之一。
 
 Next.js 不仅简化了 SSR 的实现过程，还提供了许多开箱即用的功能，如自动代码分割、静态文件服务、API 路由等，使得开发者可以更加专注于业务逻辑的实现，而不需要过多地关心底层的技术细节。通过使用 Next.js，开发者可以轻松创建出高性能、SEO 友好的 Web 应用程序。
@@ -193,6 +212,8 @@ SSG 全称为 Static Site Generation，即静态站点生成。
 你可以试想一个 10 分钟刷新一次的榜单，如果使用 SSG 方案，那么项目会进行频繁的构建和部署，并且也做不到良好的时效性。
 
 因此，SSG 更加适合一些数据变化频率较低的站点，比如文档站、官方站点、博客等等。
+
+---
 
 ## 参考
 - https://staging-cn.vuejs.org/guide/scaling-up/ssr.html
