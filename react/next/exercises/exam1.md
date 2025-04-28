@@ -27,9 +27,9 @@ Next.js的三种渲染策略分别是______、______、______。
 说明`getStaticProps`与`getServerSideProps`的核心差异与应用场景。  
 
 答案：  
-- `getStaticProps`：构建时执行，生成静态HTML，适用于内容不变页面（如博客）。  
+- `getStaticProps`：[getStaticProps](https://nextjs.org/docs/pages/api-reference/functions/get-static-props) is a Next.js function that allows you to pre-render a page at build time using props returned from the function.  
 
-- `getServerSideProps`：每次请求时执行，返回动态数据（如用户仪表盘）。  
+- `getServerSideProps`：[getServerSideProps](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props) is a Next.js function that enables Server-side Rendering (SSR), where page HTML is generated on **each request** rather than at build time。  
 
 
 ---
