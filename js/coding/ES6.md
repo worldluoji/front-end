@@ -9,7 +9,7 @@ const声明一个数组，还是可以改变其下标的值，和Java一样。�
 Once the object is frozen, you can no longer add, update, or delete properties from it. 
 
 Any attempt at changing the object will be rejected without an error.
-```
+```js
  let obj = {
     name:"FreeCodeCamp",
     review:"Awesome"
@@ -21,13 +21,13 @@ Any attempt at changing the object will be rejected without an error.
 ```
  
 ## 2. lambda赋默认值
-```
+```js
 const increment = (number, value=1) => number + value;
 ```
 则有 increment(2) = 3
 
 ## 3. 任意参数求和
-```
+```js
 const sum = (...args) => {
     return args.reduce((pre, current) => pre + current, 0);
 }
@@ -37,7 +37,7 @@ const sum = (...args) => {
 除了reduce外，还有map和filter，一个用于转换，一个用于过滤。
 
 ## 4. ES6批量赋值
-```
+```js
 const HIGH_TEMPERATURES = {
   yesterday: 75,
   today: 77,
@@ -49,24 +49,24 @@ const { today,tomorrow } = HIGH_TEMPERATURES;
 
 
 还可以左映射，相当于定义了变量highToday和highTomorrow，值分别为HIGH_TEMPERATURES.today和HIGH_TEMPERATURES.tomorrow
-```
+```js
 const {today:highToday, tomorrow:highTomorrow} = HIGH_TEMPERATURES;
 ```
 
 进一步：
-```
+```js
 const LOCAL_FORECAST = {
     yesterday: { low: 61, high: 75 },
     today: { low: 64, high: 77 },
     tomorrow: { low: 68, high: 80 }
-  };
+};
   
 const {today: {low: lowToday, high: highToday}} = LOCAL_FORECAST;
 ```
 则lowToday = 64， highToday=77
 
 再进一步：
-```
+```js
 const source = [1,2,3,4,5,6,7,8,9,10];
 function removeFirstTwo(list) {
   // Only change code below this line
@@ -96,7 +96,7 @@ console.log(a[3][1]) // 6
 [a,b] = [b,a]
 
 ## 7. 对象作为参数
-```
+```js
 const stats = {
     max: 56.78,
     standard_deviation: 4.34,
@@ -110,18 +110,18 @@ const half = ({max, min}) => (max + min) / 2.0;
 ```
 
 这样，入参可以传入stats
-```
+```js
 half(stats) = (56.78 - 0.75) / 2.0
 ```
 
 ## 8. 字符串
-```
+```js
 `<li class="text-warning">${item}</li>`
 ```
 其中item是一个变量
 
 ## 9. lambda简洁的创建一个对象
-```
+```js
 const createPerson = (name, age, gender) => ({
   name,
   age,
@@ -130,7 +130,7 @@ const createPerson = (name, age, gender) => ({
 ```
 
 ## 10. ES6函数定义简化
-```
+```js
 const bicycle = {
   gear: 2,
   setGear (newGear) {
@@ -143,7 +143,7 @@ console.log(bicycle.gear);
   
 
 ## 11. class
-```
+```js
 // Only change code below this line
 class Thermostat {
   constructor(temperature) {
@@ -171,7 +171,7 @@ Note: It is convention to precede the name of a private variable with an undersc
 However, the practice itself does not make a variable private.
 
 ## 12. export and import
-```
+```js
 const uppercaseString = (string) => {
   return string.toUpperCase();
 }
@@ -188,7 +188,7 @@ lowercaseString("WORLD!");
 ```
   
 Use * to Import Everything from a File:
-```
+```js
 import * as stringFunctions from './string_functions.js';
 stringFunctions.uppercaseString("hello");
 stringFunctions.lowercaseString("WORLD!");
@@ -197,7 +197,7 @@ stringFunctions.lowercaseString("WORLD!");
 export default is used to declare a fallback value for a module or file, 
 you can only have one value be a default export in each module or file. 
 Additionally, you cannot use export default with var, let, or const:
-```
+```js
 export default function subtract(a,b) {
     return a - b;
 }
@@ -206,7 +206,7 @@ import subtract from './math_functions.js';
 ```
 
 ## 13. Promise
-```
+```js
 const makeServerRequest = new Promise((resolve, reject) => {
   // responseFromServer is set to false to represent an unsuccessful response from a server
   let responseFromServer = false;
