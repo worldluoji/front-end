@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Import Demo</title>
+</head>
+<body>
+    <h1>Dynamic Import Test</h1>
+    <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/import">reference</a>
+    <script type="module">
+        import("./my-module.js").then((mod) => {
+            console.log(mod);
+            (mod.default)();
+            const p = document.createElement("p")
+            p.textContent = mod.content;
+            document.body.appendChild(p);
+        });
+    </script>
+</body>
+</html>
