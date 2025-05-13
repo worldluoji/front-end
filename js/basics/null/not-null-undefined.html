@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?? demo</title>
+</head>
+<body>
+    <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing" target="_blank">reference</a>
+    <script>
+        // 空值合并运算符（??）是一个逻辑运算符，当左侧的操作数为 null 或者 undefined 时，返回其右侧操作数，否则返回左侧操作数。
+        const foo = null ?? "default string";
+        console.log(foo);
+        // Expected output: "default string"
+
+        const baz = 0 ?? 42;
+        console.log(baz);
+        // Expected output: 0
+
+        const p1 = document.createElement('p')
+        p1.textContent = foo;
+
+        document.body.appendChild(p1);
+
+        const p2 = document.createElement('p')
+        p2.textContent = baz;
+
+        document.body.appendChild(p2);
+    </script>
+</body>
+</html>
