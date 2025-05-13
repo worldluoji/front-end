@@ -54,7 +54,7 @@ setTimeout(() => {
   });
 
   // 6. close callbacks 阶段：处理资源关闭的回调
-  // server.close() 的回调在 当前轮次的 close callbacks 阶段 执行。2. readFile 的异步操作 未能在当前轮次完成，导致其回调延迟到下一轮事件循环的 poll 阶段执行
+  // server.close() 的回调在 当前轮次的 close callbacks 阶段 执行。2. readFile 的异步操作 未能在当前轮次完成，导致其回调延迟到下一轮事件循环(nextTick)的 poll 阶段执行
   const server = createServer().listen(8080, () => {
     server.close(() => {
       logWithTick('Close callback');
