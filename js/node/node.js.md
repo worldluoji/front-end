@@ -5,9 +5,9 @@ and it's mainly used to create web servers - but it's not limited to just that.
 
 Node.js 并不是语言，而是一个 JavaScript 运行时环境，它的语言是 JavaScript。
 
-<img src="./pics/node-hierarchy.awebp" />
+![node-hierarchy](./assets/node-hierarchy.awebp)
 
-<br>
+---
 
 ## Node.js和Browser的不同点
 - DOM、Cookie 等操作在 Node 中不存在
@@ -16,7 +16,7 @@ Node.js 并不是语言，而是一个 JavaScript 运行时环境，它的语言
    
 reference: https://nodejs.dev/en/learn/differences-between-nodejs-and-the-browser/
 
-<br>
+---
 
 ## Node.js 与 Web-interoperable Runtime
 Web-interoperable Runtime 简称 Winter，Web 可互操（cāo）运行时。这里有一个核心的单词叫 interoperable，就是可互操。
@@ -28,7 +28,7 @@ Winter 就是针对服务端 JavaScript 提出的一种规范。只要大家都�
 
 大家可以在 [WinterCG 的官网首页](https://wintercg.org)上看有哪几个公司正在遵循 Winter 的标准做他们的运行时，如下图所示：
 
-<br>
+---
 
 ## Node.js with V8
 V8 is the name of the JavaScript engine that powers Google Chrome. 
@@ -50,7 +50,7 @@ Node.js与v8版本的对应关系：
 node -p process.versions.v8
 ```
 
-<br>
+---
 
 ## The difference between development and production
 Node.js assumes it's always running in a development environment. 
@@ -71,7 +71,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 ```
 
-<br>
+---
 
 ## Node.js单线程的问题
 在 Node.js 环境里，默认单线程执行程序。

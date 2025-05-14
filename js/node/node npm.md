@@ -7,7 +7,7 @@ JavaScript Package Manager，这是其在 GitHub 组织、仓库的描述。
 
 在 npm 官网上，它还在继续为 npm 缩写进行挽尊，在左上角会随机一个缩写为 npm 的词组，Needy Poetic Mothers、Nothing Precedes Matter……
 
-<br>
+---
 
 ## Node.js 下的npm
 对于 Node.js 来说，你包是通过什么东西安装，从什么途径安装，等等问题是不关心的，它只关心它眼下的内容——通过模块寻径规则能找到模块即可。
@@ -30,7 +30,7 @@ Node.js 中，如果在 require 或 import 模块时，其标识不以相对路�
 
 例子：npm3为例（npm 由 2 变 3，最大的目的是更好地服务前端包。npm 发展至今日，已经到达 npm 9 了，但它的安装目录结构仍是由 npm 3 演进而来的）
 
-<img src="./pics/npm包依赖示意图.awebp" />
+![npm包依赖示意图](./assets/npm包依赖示意图.awebp)
 
 设我当前是 C@2 中的 index.js，它的目录则是 ./node_modules/A/node_modules/C/index.js，这个时候，它需要去 require('D')，那么寻径的流程为：
 - 在当前目录的 node_modules 下找，即 ./node_modules/A/node_modules/C/node_modules/D，不存在；
@@ -40,13 +40,13 @@ Node.js 中，如果在 require 或 import 模块时，其标识不以相对路�
 于是就是 ./node_modules/D 了。我们在之前模块机制详解（中）提到过，这个寻径过程是 Node.js 通过 Module._resolveLookupPaths() 先生成后，再逐一遍历判断的。
 这里显然判断到 ./node_modules/D 就命中了，退出遍历。
 
-<br>
+---
 
 在判断命中的逻辑中，当我们到达 ./node_modules/D 的时候，由于没有指定具体哪个文件，则需要通过两种方式来判断命中文件：
 - 读取当前目录的 package.json，从 main 字段获取映射，判断文件是否存在；
 - 若无 package.json 或 main，则默认以 index 加各种后缀尝试。
 
-<br>
+---
 
 ## npm究竟是什么
 其实 npm 有多重语义在，在不同语义中代表不同含义。就官方言论，一个 npm 分别可以是：
