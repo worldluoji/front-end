@@ -17,6 +17,8 @@ console.log(process.argv.slice(2));
 console.log('Current Working Directory:', process.cwd());
 
 
+console.log('import.meta.url in node is ', import.meta.url);
+
 // Get the file URL of the current module
 const __filename = fileURLToPath(import.meta.url);
 
