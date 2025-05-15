@@ -3,7 +3,7 @@
 而 os 模块提供了与操作系统相关的实用方法和属性。一个是当前进程相关内容，
 一个是一些系统操作级的 API。这俩货一个比较依赖 V8，一个比较依赖 libuv.
 
-<br>
+---
 
 ## process
 process 是Node中的线程容器，每一个Node应用会有一个process，开发者可以通过process对象控制和获取当前Node的进程。
@@ -12,7 +12,7 @@ Note
 每一个npm run start起的项目都是一个Node应用，都会拥有一个process对象。
 ```
 
-<br>
+---
 
 ## process event
 process的Event其实是Node中的EventEmitter的一个实例化对象, Node中的EventEmitter，Node的event基本都遵循EventEmitter格式。
@@ -35,6 +35,8 @@ exit的回调方法必须是同步方法。Node的进程在exit事件执行后�
 ### 3. disconnect 事件
 如果Node的process是通过IPC渠道(Child Process or Cluster)产生的,在IPC渠道被关闭时会触发disconnect事件
 
+---
+
 ### unhandledRejection and uncaughtException
 这是 Node.js 中很重要的两个错误处理事件。虽然我经常不大建议大家使用，但毕竟万事无绝对嘛。
 ```
@@ -45,7 +47,7 @@ exit的回调方法必须是同步方法。Node的进程在exit事件执行后�
 不过这仅代表个人观点。就跟诡秘一样，虽然刀了一点，但是受污染的超凡者只能是被毁灭，否则它处于一个失控状态，可能带来更严重的后果。——“原来,原来我已经变成了怪物……”“我们既是守护者，也是一群时刻对抗着疯狂与失控的可怜虫。”
 ```
 example:
-```
+```js
 process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
 });
@@ -58,7 +60,7 @@ process.on('uncaughtException', (err, type) => {
 Promise.reject(new Error('Explosion!'));
 ```
 
-<br>
+---
 
 ##  process.argv
 process的argv属性是一个在当前进程中，在命令行中输入的命令的数组，当开发cli或者运用cli时，执行的命令行代码，
@@ -71,7 +73,7 @@ process的argv属性是一个在当前进程中，在命令行中输入的命令
 2: run
 3: start
 ```
-<br>
+---
 
 ## process.env
 该属性返回一个包含用户环境变量的对象。
@@ -81,7 +83,7 @@ Node.js 的环境变量能力来自 libuv。libuv 有一系列 API 叫 uv_os_get
 
 在 UNIX 类的系统（包括 macOS）中，获取环境变量的 API 是 getenv()；在 Windows 下，该 API 则是 GetEnvironmentVariableW()。
 
-<br>
+---
 
 ## reference
 https://nodejs.org/api/process.html#process
