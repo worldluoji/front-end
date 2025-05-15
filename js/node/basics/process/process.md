@@ -85,5 +85,11 @@ Node.js 的环境变量能力来自 libuv。libuv 有一系列 API 叫 uv_os_get
 
 ---
 
+## process.cwd()
+process.cwd()方法是流程模块的内置应用程序编程接口，
+用于获取node.js流程的当前工作目录, 即启动nodejs程序的目录。
+
+---
+
 ## reference
 https://nodejs.org/api/process.html#process

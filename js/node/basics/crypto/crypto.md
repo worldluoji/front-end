@@ -1,7 +1,7 @@
 # crypto
 Node.js 中 Legacy 的密码学模块 crypto。其提供了用于处理加密功能的类和函数，包括哈希函数、HMAC、加密、解密、签名、以及验证等功能。
 
-<br>
+---
 
 ## crypto.getHashes() 
 它返回的是 Node.js 所支持的哈希（Hash）算法数组，也称摘要（Digest）算法。
@@ -16,7 +16,7 @@ Node.js 中 Legacy 的密码学模块 crypto。其提供了用于处理加密功
 这是哈希函数在密码学和数据完整性校验中的重要应用。
 ```
 
-<br>
+---
 
 ## createHash()
 ```
@@ -27,10 +27,10 @@ hash.update('some data to hash');
 console.log(hash.digest('hex'));
 ```
 
-<br>
+---
 
 ## aes
-```
+```js
 // crypto module
 const crypto = require("crypto");
 

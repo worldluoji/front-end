@@ -56,5 +56,7 @@ JavaScript 中有 SharedArrayBuffer，能够允许我们在不同的 Worker 中�
 
 在实践中，建议控制好 SharedArrayBuffer 的使用场景，确保仅仅在确实需要大规模传递数据或者高性能要求的场景使用它，并且应该由团队内较为资深的、有多线程开发经验的工程师做好代码评审。
 
+---
+
 ## reference
 https://nodejs.cn/api/buffer.html
