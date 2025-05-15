@@ -26,7 +26,7 @@ Winter 就是针对服务端 JavaScript 提出的一种规范。只要大家都�
 因为好多厂商都基于 V8 做了 JavaScript 的运行时，但是后来经过标准化、规范化之后，国际上的几家厂商就一起给它起了一个新的名字，
 并且开始做一些标准化的事情，组建了一个组织叫做 WinterCG（Web-interoperable Runtimes Community Group），它是由几家国际公司联合起来搞的 W3C 下的一个社区组，致力于做 Web-interoperable Runtime 标准化。
 
-大家可以在 [WinterCG 的官网首页](https://wintercg.org)上看有哪几个公司正在遵循 Winter 的标准做他们的运行时，如下图所示：
+大家可以在 [WinterCG 的官网首页](https://wintercg.org)上看有哪几个公司正在遵循 Winter 的标准做他们的运行时。
 
 ---
 
