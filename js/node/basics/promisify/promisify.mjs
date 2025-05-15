@@ -1,5 +1,5 @@
-const fs = require('fs')
-const util = require('util')
+import { readFile } from 'fs';
+import { promisify, callbackify } from 'util';
 
 // fs.readFile('./package.json', function callback(err, buf) {
 //   const obj = JSON.parse(buf.toString('utf8'))
@@ -7,9 +7,9 @@ const util = require('util')
 // })
 
 // 将 fs.readFile() 转换为一个接受相同参数但返回 Promise 的函数。
-const readFileAsync = util.promisify(fs.readFile)
+const readFileAsync = promisify(readFile)
 
-readFileAsync('./2. promisify and callbackify.md').then(res => {
+readFileAsync('./promisify and callbackify.md').then(res => {
   console.log(res.toString());
 })
 
@@ -17,7 +17,7 @@ async function fn() {
   return 'hello callbackify';
 }
 
-const callbackFunction = util.callbackify(fn);
+const callbackFunction = callbackify(fn);
 
 callbackFunction((err, ret) => {
   if (err) {
