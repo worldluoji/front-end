@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload by Stream</title>
+</head>
+<body>
+    <input type="file" id="file" />
+    <button id="upload-button">上传</button>
+    <script>
+        const uploadButton = document.getElementById('upload-button');
+        uploadButton.addEventListener('click', async () => {
+            const file = document.getElementById('file').files[0];
+            await uploadFile(file);
+        });
+
+        async function uploadFile(file) {
+            const chunkSize = 1 * 1024 * 1024; // 1MB/片
+            let start = 0;
+            while (start < file.size) {
+                const chunk = file.slice(start, start + chunkSize);
+                console.log('Chunk type:', chunk.constructor.name); // Confirm "Blob"
+                await fetch('http://127.0.0.1:8094/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/octet-stream',
+                        'Content-Range': `bytes ${start}-${start + chunkSize - 1}/${file.size}` 
+                    },
+                    body: chunk
+                });
+                start += chunkSize;
+            }
+        }
+    </script>
+</body>
+</html>
