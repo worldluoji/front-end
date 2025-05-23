@@ -8,7 +8,13 @@ const fastify = Fastify({
 });
 
 // 此配置允许服务器明确接受二进制流类型, application/octet-stream 默认不在fastify白名单中，需要单独处理
+// payload is the raw request body stream, and payload is part of req.raw. We ignore it here because we’re passing the entire request object (req) to the route handler.
 fastify.addContentTypeParser('application/octet-stream', (req, payload, done) => {
+    /*
+        done(null, req) means:
+        No error (null).
+        Pass the raw request object (req) to the route handler.
+    */
     done(null, req);
 });
 
