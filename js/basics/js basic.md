@@ -3,10 +3,10 @@
 - 弱类型，意味着你不需要告诉 JavaScript 引擎这个或那个变量是什么数据类型，JavaScript 引擎在运行代码的时候自己会计算出来。
 - 动态，意味着你可以使用同一个变量保存不同类型的数据。
 
-<img src="语言类型.webp" />
+<img src="./types/语言类型.webp" />
 
 ### JavaScript 中的数据类型一种有 8 种
-<img src="JS的8种数据类型.webp" />
+<img src="./types/JS的8种数据类型.webp" />
 
 需要注意以下几点：
 - 使用 typeof 检测 Null 类型时，返回的是 Object。这是当初 JavaScript 语言的一个 Bug，一直保留至今，之所以一直没修改过来，主要是为了兼容老的代码。
