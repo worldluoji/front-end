@@ -195,6 +195,10 @@ Technically, it’s the keyword value medium that calculates to 16 px.
 基于当前屏幕，无论手机横屏还是竖屏，vh都是可视高度，vw都是可视宽度。
 vmin是vh和vw中小的那个，vmax是vh、vw中大的那个。
 
+另外还有动态视口单位dvh、dvw, 现代浏览器已经可以广泛使用：https://developer.mozilla.org/zh-CN/docs/Web/CSS/length#%E5%8A%A8%E6%80%81%E8%A7%86%E5%8F%A3%E5%8D%95%E4%BD%8D
+
+dvh它能够自动适应浏览器工具栏的显示与隐藏：当工具栏显示时，dvh接近svh；当工具栏隐藏时，dvh接近lvh。可以说，dvh真正实现了开发者期待的动态 "100vh" 效果。lvh表示视窗的最大高度，即浏览器工具栏完全隐藏时的高度。svh代表视窗的最小高度，也就是浏览器工具栏完全展开时的高度。
+
 经验：拿不准的时候，用rem设置字号，用px设置border粗细，用em设置padding、border-radius等属性。
 需要自适应的场景，比如移动端，优先使用视口单位。 -> ./basic/relativeUnit.html
 
