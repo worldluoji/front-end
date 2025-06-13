@@ -28,9 +28,19 @@ wget -qO- https://fnm.vercel.app/install | bash
 
 安装完成后，你需要将 `fnm` 添加到你的 shell 配置文件中。通常，安装脚本会自动为你完成这一步，但如果没有，你可以手动添加以下内容到你的 shell 配置文件（如 `.bashrc`、`.zshrc` 等）：
 
+执行命令：
 ```sh
 eval "`fnm env`"
 ```
+.zshrc中配置：
+```zsh
+# 替换原 eval 命令（推荐此写法）
+eval "$(fnm env --use-on-cd)"
+```
+​说明​：
+- $(...) 替代反引号，避免解析错误。
+- --use-on-cd 使进入含 .nvmrc 的目录时自动切换 Node 版本。
+- 若需多 Shell 支持（如同时开多个终端），改用 --multi
 
 然后重新加载你的 shell 配置文件：
 ```sh
