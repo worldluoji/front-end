@@ -117,3 +117,20 @@ echo "14.17.0" > .node-version
    node -v
    ```
 
+---
+
+## fnm 的常见问题
+报错 error: Having a hard time listing the remote versions: error sending request for url (https://nodejs.org/dist/index.json) 是典型的 ​网络访问问题，通常由连接 Node.js 官方源失败引起。
+
+解决方案，使用国内镜像源：
+```bash
+# 临时生效（当前终端）
+export FNM_NODE_DIST_MIRROR="https://npmmirror.com/mirrors/node/"
+
+# 永久生效（写入 Shell 配置文件）
+echo 'export FNM_NODE_DIST_MIRROR="https://npmmirror.com/mirrors/node/"' >> ~/.bashrc  # Bash, 如果是zsh终端，则在.zshrc文件中配置
+echo '$env:FNM_NODE_DIST_MIRROR="https://npmmirror.com/mirrors/node/"' >> $PROFILE    # PowerShell
+source ~/.bashrc   # 或重启终端[9,11](@ref)
+```
+- 阿里云：https://npmmirror.com/mirrors/node/
+- 腾讯云：https://mirrors.cloud.tencent.com/nodejs-release/
