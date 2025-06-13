@@ -1,0 +1,19 @@
+{
+  "name": "h3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "h3": "^2.0.0-beta.0"
+  },
+  "engines": {
+    "node": ">=23.0.0"
+  }
+}
