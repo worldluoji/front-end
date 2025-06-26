@@ -8,7 +8,7 @@ TestCafe 打开某些版本的Chrome浏览器时，Chrome浏览器会自动将 H
 ```bash
 testcafe "chrome --disable-features=HttpsUpgrades" tests/
 ```
---disable-features=HtsUpgrades：显式关闭 HTTPS 自动升级。
+--disable-features=HttpsUpgrades：显式关闭 HTTPS 自动升级。
 ​适用场景​：临时测试 HTTP 站点。
 
 目前edge没有发现有问题。
