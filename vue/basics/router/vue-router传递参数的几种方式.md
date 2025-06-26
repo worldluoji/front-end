@@ -14,7 +14,7 @@ this.$router.push({
  
 // params传参 参数不会显示在链接后面
 this.$router.push({
-    name: "/home",
+    name: "home",
     params: { id: 1 },
 });
 ```
