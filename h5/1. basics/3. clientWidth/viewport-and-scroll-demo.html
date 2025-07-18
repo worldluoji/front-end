@@ -1,56 +1,72 @@
 <!DOCTYPE html>
 <html>
-        <head>
-                <title>视口尺寸 (client/inner) 和 scrollTop 滚动事件示例</title>
-        </head>
-        <body>
-                <div id="container">
-                        <p id="client"></p>
-                        <p id="inner"></p>
-                        <p>
-                                Far out in the uncharted backwaters of the unfashionable end of the western
-                                spiral arm of the Galaxy lies a small unregarded yellow sun. Orbiting this
-                                at a distance of roughly ninety-two million miles is an utterly
-                                insignificant little blue green planet whose ape-descended life forms are so
-                                amazingly primitive that they still think digital watches are a pretty neat
-                                idea.
-                        </p>
-                </div>
-                <div id="output">scrollTop: 0</div>
-        </body>
-        <script>
-                // 都可以获取浏览器的可视高度和可视宽度，但是inner的方式兼容性更好
-                let clientHeight = document.documentElement.clientHeight;
-                let clientWidth = document.documentElement.clientWidth;
-                let innerHeight = window.innerHeight;
-                let innerWidth = window.innerWidth;
-                let pClient = document.getElementById("client");
-                pClient.innerText =  `client: ${clientHeight} : ${clientWidth}`;
-                let pInner = document.getElementById("inner");
-                pInner.innerText = `inner: ${innerHeight} : ${innerWidth}`;
+  <head>
+    <title>视口尺寸 (client/inner) 和 scrollTop 滚动事件示例</title>
+  </head>
+  <body>
+    <div id="container">
+      <p id="client"></p>
+      <p id="inner"></p>
+      <p>
+        打开 HTML 文件后，按下 Shift + Alt + F（Windows/Linux）或 Shift + Option
+        + F（Mac）， VS Code 会自动按默认规则调整代码缩进和换行。 Far out in the
+        uncharted backwaters of the unfashionable end of the western spiral arm
+        of the Galaxy lies a small unregarded yellow sun. Orbiting this at a
+        distance of roughly ninety-two million miles is an utterly insignificant
+        little blue green planet whose ape-descended life forms are so amazingly
+        primitive that they still think digital watches are a pretty neat idea.
+      </p>
+    </div>
+    <div id="output">scrollTop: 0</div>
+  </body>
+  <script>
+    // 都可以获取浏览器的可视高度和可视宽度，但是inner的方式兼容性更好
+    let clientHeight = document.documentElement.clientHeight;
+    let clientWidth = document.documentElement.clientWidth;
+    let innerHeight = window.innerHeight;
+    let innerWidth = window.innerWidth;
+    let pClient = document.getElementById("client");
+    pClient.innerText = `client: ${clientHeight} : ${clientWidth}`;
+    let pInner = document.getElementById("inner");
+    pInner.innerText = `inner: ${innerHeight} : ${innerWidth}`;
 
-                const container = document.querySelector("#container");
-                const output = document.querySelector("#output");
+    const container = document.querySelector("#container");
+    const output = document.querySelector("#output");
 
-                container.addEventListener("scroll", (event) => {
-                //     console.log('scrollTop: ' + event.srcElement.scrollTop);
-                    output.textContent = `scrollTop: ${container.scrollTop}`;
-                });
+    container.addEventListener("scroll", (event) => {
+      //     console.log('scrollTop: ' + event.srcElement.scrollTop);
+      output.textContent = `scrollTop: ${container.scrollTop}`;
+    });
 
-        </script>
+    window.addEventListener("scroll", (event) => {
+        console.log(document.documentElement.clientWidth, window.innerWidth)
+    });
+  </script>
 
-        <style>
-        #container {
-          overflow: scroll;
-          height: 150px;
-          width: 150px;
-          border: 5px dashed orange;
-        }
+  <style>
+    /* 强制页面出现垂直滚动条 */
+    html {
+      overflow-y: auto;
+    }
 
-        #output {
-          padding: 1rem 0;
-        }
-        </style>
+    body {
+      margin: 0;
+      height: 200vh; /* 视口高度的2倍，触发垂直滚动条 */
+      padding: 20px;
+    }
+
+    #container {
+      overflow: scroll;
+      height: 100px;
+      width: 100%;
+      border: 5px dashed orange;
+      background-color: green;
+    }
+
+    #output {
+      padding: 1rem 0;
+    }
+  </style>
 </html>
 
 <!-- 
