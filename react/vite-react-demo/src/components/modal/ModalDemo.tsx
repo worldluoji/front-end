@@ -31,7 +31,7 @@ function ModalExample() {
   )
 }
 
-export default () => {
+export default function ModalDemo() {
   return (
     <Provider store={ store }>
       <h1>Nice Modal</h1>
