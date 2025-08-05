@@ -2,13 +2,13 @@ import { createAction, createReducer, configureStore } from "@reduxjs/toolkit"
 import { ModalActionPayloadType } from './types'
 
 export interface ModalStateType {
-  [key: string]: any,
+  [key: string]: boolean | Record<string, unknown> | undefined,
   hiding: {
-    [key: string]: any
+    [key: string]: boolean
   }
 }
 
-let defaultState: ModalStateType = { hiding: {} }
+const defaultState: ModalStateType = { hiding: {} }
 
 /*
 这段代码的主要思路就是通过 Redux 的 store 去存储每个对话框状态和参数。
@@ -23,9 +23,9 @@ const modalReducer = createReducer(defaultState, (builder) => {
       const { modalId, args } = action.payload
       return {
         ...state,
-        // 如果存在 modalId 对应的状态，就显示这个对话框
+        // 如果存在 modalId 对应的状态，就显示这个对话框。If args exist, store them as the modal's state
         [modalId]: args || true,
-        // 定义一个 hiding 状态用于处理对话框关闭动画
+        // 定义一个 hiding 状态用于处理对话框关闭动画，“[modalId]: false“ indicates the modal is not in hiding state (it's visible)
         hiding: {
           ...state.hiding,
           [modalId]: false,
@@ -43,7 +43,7 @@ const modalReducer = createReducer(defaultState, (builder) => {
          }
        : { ...state, hiding: { [modalId]: true } }
     })
-    .addDefaultCase((state, action) => state)
+    .addDefaultCase((state) => state)
 })
 
 const modalStore = configureStore({
