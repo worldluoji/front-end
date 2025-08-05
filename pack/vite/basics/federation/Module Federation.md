@@ -1,5 +1,5 @@
 # Module Federation
-Module Federation，即模块联邦，用于解决模块复用问题。
+Module Federation，即模块联邦，用于解决模块复用问题。最初由webpack5引入。
 
 模块联邦中主要有两种模块: 本地模块和远程模块。
 - 本地模块即为普通模块，是当前构建流程中的一部分
