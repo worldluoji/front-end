@@ -79,6 +79,17 @@ export default {
    - `keep-alive` 会根据 `include` 和 `exclude` 属性来决定是否缓存某个组件。
    - 如果设置了 `max` 属性，当缓存数量超过限制时，会根据 LRU 算法移除最旧的缓存。
 
-### 总结
 
-`keep-alive` 通过缓存组件实例来避免不必要的重新渲染，从而提高应用的性能。它利用 Vue 的生命周期钩子来管理组件的激活和去激活过程，并提供了灵活的缓存策略。理解 `keep-alive` 的实现原理有助于更好地在实际项目中应用这一特性。
+---
+
+## keep-alive嵌套
+在 Vue 中， keep-alive  用于缓存组件，而  onActivated  钩子会在组件被激活（从缓存中取出显示）时触发。当  keep-alive  嵌套两次时，组件被激活的场景会增加，从而导致  onActivated  可能被多次触发，具体原因如下：
+
+核心原因：嵌套的  keep-alive  会形成多层缓存上下文
+
+- 外层  keep-alive  和内层  keep-alive  是两个独立的缓存容器，各自维护自己的缓存组件。
+- 当组件处于内层  keep-alive  中时，它的显示/隐藏可能同时受到外层和内层  keep-alive  的影响：
+1. 当内层  keep-alive  切换组件时，若当前组件从内层缓存中被激活，会触发一次  onActivated 。
+2. 若外层  keep-alive  也发生切换（例如外层包裹的组件整体被激活），内层的组件可能会再次从外层缓存中被激活，导致  onActivated  再次触发。
+
+简单来说，嵌套的  keep-alive  让组件处于“多层缓存”中，每次从任意一层缓存中被激活时， onActivated  都会执行，因此可能出现多次触发的情况。
