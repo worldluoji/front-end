@@ -1,12 +1,7 @@
 import { Modal } from 'antd'
-import { PropsWithChildren } from 'react';
+import { NidcelModalInParamType } from './types';
 import useNiceModal from './useNiceModal'
 
-
-type NidcelModalInParamType = PropsWithChildren<{
-  id: string;
-  [x: string]: any;
-}>;
 
 // 实现 NiceModal 这样一个组件，去封装通用的对话框操作逻辑。比如关闭按钮，确定按钮的事件处理，等等
 function NiceModal({ id, children, ...rest }: NidcelModalInParamType) {
@@ -24,16 +19,5 @@ function NiceModal({ id, children, ...rest }: NidcelModalInParamType) {
   )
 }
 
-
-export const createNiceModal = (modalId: string, Comp: React.ComponentType<any>) => {
-  return (props: any) => {
-    const { visible, args } = useNiceModal(modalId)
-    if (!visible) { 
-      return null 
-    }
-    const safeArgs = typeof args === 'object' && args !== null ? args : {}
-    return <Comp {...safeArgs} {...props} />
-  }
-}
 
 export default NiceModal

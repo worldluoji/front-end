@@ -1,6 +1,7 @@
-import { Button } from "antd"
+import { Button } from 'antd'
 
-import NiceModal, { createNiceModal } from "./NiceModal"
+import NiceModal from './NiceModal'
+import { createNiceModal } from './createNiceModal'
 
 import useNiceModal from './useNiceModal'
 
@@ -9,7 +10,7 @@ import { Provider } from "react-redux"
 import store from './ModalStore'
 
 
-const MyModal = createNiceModal("my-modal", () => {
+const MyModal = createNiceModal('my-modal', () => {
   return (
     <NiceModal id="my-modal" title="Nice Modal">
       Hello NiceModal!!!
@@ -19,7 +20,7 @@ const MyModal = createNiceModal("my-modal", () => {
 })
 
 function ModalExample() {
-  const modal = useNiceModal("my-modal");
+  const modal = useNiceModal('my-modal');
   return (
     <>
       <Button type="primary" onClick={() => modal.show('')}>
