@@ -1,5 +1,7 @@
 # Error Boundary
-React 的 **Error Boundary（错误边界）** 原生仅支持类组件实现，但通过第三方库或特定技巧，可以间接在函数组件中使用。以下是具体分析：
+React 的 **Error Boundary（错误边界）** 主要用来捕获其子组件树在渲染期间（以及部分生命周期方法中）发生的 JavaScript 错误，防止这些错误导致整个 React 应用崩溃​（出现白屏）。它的核心作用类似于 JavaScript 中的 try...catch 语句，但专门为 React 的组件渲染流程设计。
+
+原生仅支持类组件实现，但通过第三方库或特定技巧，可以间接在函数组件中使用。以下是具体分析：
 
 ---
 
@@ -10,6 +12,7 @@ React 的 **Error Boundary（错误边界）** 原生仅支持类组件实现，
     class ErrorBoundary extends React.Component {
         state = { hasError: false };
 
+        // 当子组件抛出错误时调用。它接收错误对象作为参数，并应返回一个状态对象（如 { hasError: true }），用于更新组件状态从而触发渲染回退 UI。
         static getDerivedStateFromError(error) {
             return { hasError: true }; // 触发备用 UI 渲染
         }
