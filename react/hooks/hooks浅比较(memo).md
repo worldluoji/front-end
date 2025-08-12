@@ -169,8 +169,8 @@ function Parent() {
 ---
 
 ## 验证工具
-- React DevTools Profiler：检测子组件的渲染次数和原因
-​- Why Did You Render：通过 npm install @welldone-software/why-did-you-render 安装，分析不必要的渲染：
+- React DevTools Profiler：检测子组件的渲染次数和原因;
+- Why Did You Render：通过 npm install @welldone-software/why-did-you-render 安装，分析不必要的渲染：
 ```jsx
 // 在子组件中启用
 MemoChild.whyDidYouRender = true;
