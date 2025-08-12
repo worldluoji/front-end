@@ -53,3 +53,15 @@ let map2: Record<string, PersonInfo> = {
 }
 
 console.log(map2)
+
+// 定义一个具体函数
+function getUser() {
+  return { name: "Alice", age: 30 };
+}
+
+// 提取返回值类型
+type User3 = ReturnType<typeof getUser>;
+// User = { name: string; age: number }
+
+// 使用推断的类型
+const user3: User3 = { name: "Bob", age: 25 }; // 匹配返回的结构
