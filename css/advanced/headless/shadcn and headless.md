@@ -106,6 +106,12 @@ function App() {
 
 这种设计使得 `shadcn` 既保持了高度的灵活性，又能满足不同项目的 UI 需求。
 
+---
+
+### 其它
+shadcn是 React生态的 Headless UI库，Vue 生态对应有​ Reka UI​.
+
+---
 
 ## references
 https://ui.shadcn.com/
