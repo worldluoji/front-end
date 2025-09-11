@@ -90,6 +90,77 @@ checkAppInstalled('myapp', 'https://a.app.qq.com/o/simple.jsp?pkgname=com.yourco
 
 ---
 
+## 示例
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<meta name="format-detection"content="telephone=no"> 
+<title></title>
+<link rel="stylesheet" type="text/css" href="css/apk.css">
+ <script type="text/javascript">
+ 		var android_url="<your_android_url>";
+ 		var ios_url="<your_ios_url>";
+    	//var first=true;
+		window.alert = function(name){
+			const iframe = document.createElement("IFRAME");
+			iframe.style.display = "none";
+			// iframe.setAttribute('src','data:text/plain,');
+            iframe.src = 'your_app_page_appUrl';
+			document.documentElement.appendChild(iframe);
+			window.frames[0].window.alert(name);
+			iframe.parentNode.removeChild(iframe);
+		};
+    	function down_apk(){
+    		choice_dev();
+    	}
+    	function choice_dev(){
+    		function is_weixin() {  // 在微信中扫面二维码,提示用户在浏览器中打开
+                var ua = navigator.userAgent.toLowerCase();  
+                if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                    return true;  
+                } else {  
+                    return false;  
+                }  
+            } 
+            var isWeixin = is_weixin();
+    		if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) { 
+//				return;
+	            downloadUrl=ios_url;
+	            if(isWeixin){
+					alert("点击右上角按钮，然后在弹出的菜单中，点击在浏览器中打开，即可安装")
+	                return;
+	            }
+	        } else if (/(Android)/i.test(navigator.userAgent)) {
+	            downloadUrl=android_url;  
+				if(isWeixin){  
+					alert("点击右上角按钮，然后在弹出的菜单中，点击在浏览器中打开，即可安装")
+	                return;
+	            }
+	        } else { 
+				alert('暂未开放！');
+                return;				
+	        };
+            
+	        window.location.href = downloadUrl;
+	    }
+    </script>
+</head>
+<body>
+<div>
+	<div class="logo_image1" align="center">
+		<input type="image" src="images/download.png" onclick="down_apk()" height="50" width="242" />
+	</div>
+</div>
+</body>
+</html>
+```
+
+---
+
 ### 注意事项和局限性
 
 1.  **隐私限制**： 尤其是iOS，浏览器严禁网页直接获取用户设备的安装列表，所以所有方案都是“投机”或“推断”的，并非100%准确。
