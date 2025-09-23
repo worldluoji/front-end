@@ -13,7 +13,7 @@ setTimeout(() => {
 
 console.log('right now');
 ```
-如果这一段代码中有一段死循环卡住了,那么就会困死在当前 Tick 中，永远等不到下一个黎明:
+在 JavaScript 的事件循环机制中，setTimeout(fn, 0) 确实会被推迟到下一个事件循环的 "tick" 执行，即使延迟时间设置为 0。如果这一段代码中有一段死循环卡住了,那么就会困死在当前 Tick 中，永远等不到下一个黎明:
 -> [demo](./settimeout_dead_cycles.js)
 
 
