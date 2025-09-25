@@ -13,4 +13,4 @@ util.callbackify(original) 将 async 异步函数（或者一个返回值为 Pro
 ---
 
 ## 示例
--> [demo](./promisify.js)
+-> [demo](./promisify.mjs)
