@@ -3,7 +3,7 @@ import { Worker } from 'worker_threads';
 const runWorker = (workerData) => {
     return new Promise((resolve, reject) => {
         // 引入 workerExample.js `工作线程`脚本文件
-        const worker = new Worker('./workerExample.js', { workerData });
+        const worker = new Worker('./workerExample.mjs', { workerData });
         worker.on('message', resolve);
         worker.on('error', reject);
         worker.on('exit', (code) => {
