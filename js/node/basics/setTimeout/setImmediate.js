@@ -11,7 +11,8 @@ const start = () => {
     console.log(resolve);
     process.nextTick(zoo);
   });
+
+  //  Node.js 事件循环中 process.nextTick 队列的优先级高于 Promise 微任务队列。
   process.nextTick(foo);
-  // Event loop executes tasks in process.nextTick queue first, and then executes promises microtask queue, and then executes macrotask queue.
 };
 start();
