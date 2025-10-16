@@ -9,6 +9,13 @@ let age: string | number;
 age = 26;
 age = '26';
 
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type ApiEndpoint = `/api/${string}`;
+type FullUrl = `${HttpMethod} ${ApiEndpoint}`;
+const validUrl: FullUrl = 'GET /api/users'; // ✅ 有效
+// const invalidUrl: FullUrl = 'PATCH /api/users'; // ❌ 错误：PATCH 不在 HttpMethod 中
+
+
 // 1. array
 let arr: number[] = [1,2,3]
 let arr2: Array<number> = [4,5,6]
