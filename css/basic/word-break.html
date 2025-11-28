@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 断行属性实例</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            text-align: left;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .example-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .example-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .example-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .text-box {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px dashed #bdc3c7;
+            border-radius: 6px;
+            overflow-wrap: break-word;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .property-value {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-right: 5px;
+        }
+        
+        .explanation {
+            font-size: 0.95rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f1f2f6;
+            border-radius: 6px;
+        }
+        
+        .interactive-demo {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .demo-text {
+            width: 100%;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            min-height: 150px;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+        
+        .test-text {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSS 断行属性实例</h1>
+            <div class="subtitle">word-break 与 overflow-wrap 的对比与使用</div>
+            <div class="description">
+                <p>本页面展示了CSS中控制文本断行的两个重要属性：<strong>word-break</strong> 和 <strong>overflow-wrap</strong>。通过对比不同属性值的效果，您可以直观地了解它们如何影响文本的换行行为。</p>
+            </div>
+        </header>
+        
+        <div class="comparison-grid">
+            <div class="example-box">
+                <h3 class="example-title">1. 默认情况 (normal)</h3>
+                <div class="code">word-break: normal;<br>overflow-wrap: normal;</div>
+                <div class="text-box" style="word-break: normal; overflow-wrap: normal;">
+                    ThisisaverylongEnglishwordthatdoesn'thavespaces 这是一个普通的中文句子没有任何空格。Anotherlongword: Supercalifragilisticexpialidocious
+                </div>
+                <div class="explanation">
+                    <span class="property-value">normal</span> 是默认值。英文只在空格处换行，长单词会溢出容器。中文可以在任意字符间换行。
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h3 class="example-title">2. word-break: break-all</h3>
+                <div class="code">word-break: break-all;</div>
+                <div class="text-box" style="word-break: break-all;">
+                    ThisisaverylongEnglishwordthatdoesn'thavespaces 这是一个普通的中文句子没有任何空格。Anotherlongword: Supercalifragilisticexpialidocious
+                </div>
+                <div class="explanation">
+                    <span class="property-value">break-all</span> 允许在任意字符间断行，防止文本溢出。适合处理长URL或代码字符串。
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h3 class="example-title">3. word-break: keep-all</h3>
+                <div class="code">word-break: keep-all;</div>
+                <div class="text-box" style="word-break: keep-all;">
+                    ThisisaverylongEnglishwordthatdoesn'thavespaces 这是一个普通的中文句子没有任何空格。Anotherlongword: Supercalifragilisticexpialidocious
+                </div>
+                <div class="explanation">
+                    <span class="property-value">keep-all</span> 对CJK文本不允许在字符间换行，只能在空格或标点处换行。英文行为同normal。
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h3 class="example-title">4. overflow-wrap: break-word</h3>
+                <div class="code">overflow-wrap: break-word;</div>
+                <div class="text-box" style="overflow-wrap: break-word;">
+                    ThisisaverylongEnglishwordthatdoesn'thavespaces 这是一个普通的中文句子没有任何空格。Anotherlongword: Supercalifragilisticexpialidocious
+                </div>
+                <div class="explanation">
+                    <span class="property-value">break-word</span> 先尝试正常换行，如果不行则在单词内换行。适合自然语言文本。
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h3 class="example-title">5. word-break: break-all + overflow-wrap</h3>
+                <div class="code">word-break: break-all;<br>overflow-wrap: break-word;</div>
+                <div class="text-box" style="word-break: break-all; overflow-wrap: break-word;">
+                    ThisisaverylongEnglishwordthatdoesn'thavespaces 这是一个普通的中文句子没有任何空格。Anotherlongword: Supercalifragilisticexpialidocious
+                </div>
+                <div class="explanation">
+                    同时使用 <span class="property-value">break-all</span> 和 <span class="property-value">break-word</span>，效果以word-break为主，因为break-all更激进。
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h3 class="example-title">6. 组合使用场景</h3>
+                <div class="code">word-break: break-all;<br>overflow-wrap: anywhere;</div>
+                <div class="text-box" style="word-break: break-all; overflow-wrap: anywhere;">
+                    ThisisaverylongEnglishwordthatdoesn'thavespaces 这是一个普通的中文句子没有任何空格。Anotherlongword: Supercalifragilisticexpialidocious
+                </div>
+                <div class="explanation">
+                    <span class="property-value">anywhere</span> 是overflow-wrap的新值，行为类似break-word，但允许在任意点断行，即使是为了最小化内容溢出。
+                </div>
+            </div>
+        </div>
+        
+        <div class="interactive-demo">
+            <h2>交互式演示</h2>
+            <p>尝试不同的属性组合，实时查看效果：</p>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="wordBreak">word-break 属性：</label>
+                    <select id="wordBreak">
+                        <option value="normal">normal</option>
+                        <option value="break-all">break-all</option>
+                        <option value="keep-all">keep-all</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="overflowWrap">overflow-wrap 属性：</label>
+                    <select id="overflowWrap">
+                        <option value="normal">normal</option>
+                        <option value="break-word">break-word</option>
+                        <option value="anywhere">anywhere</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="demo-text" id="interactiveText">
+                ThisisaverylongEnglishwordthatdoesn'thavespaces 这是一个普通的中文句子没有任何空格。Anotherlongword: Supercalifragilisticexpialidocious
+                
+                <div class="test-text">测试文本：这是一个非常长的中文句子这里没有任何空格用于测试换行效果。同时也有英文测试：Pneumonoultramicroscopicsilicovolcanoconiosis。</div>
+                
+                URL示例：https://www.example.com/very/long/url/path/that/needs/to/break/properly
+            </div>
+            
+            <div class="code" id="currentCode">
+                /* 当前应用的CSS */
+            </div>
+        </div>
+        
+        <footer>
+            <p>CSS 断行属性实例 - 演示 word-break 和 overflow-wrap 的不同效果</p>
+            <p>提示：调整浏览器窗口大小可以更清楚地观察不同断行方式的效果</p>
+        </footer>
+    </div>
+
+    <script>
+        // 交互式演示功能
+        const wordBreakSelect = document.getElementById('wordBreak');
+        const overflowWrapSelect = document.getElementById('overflowWrap');
+        const interactiveText = document.getElementById('interactiveText');
+        const currentCode = document.getElementById('currentCode');
+        
+        function updateDemo() {
+            const wordBreakValue = wordBreakSelect.value;
+            const overflowWrapValue = overflowWrapSelect.value;
+            
+            // 应用样式
+            interactiveText.style.wordBreak = wordBreakValue;
+            interactiveText.style.overflowWrap = overflowWrapValue;
+            
+            // 更新代码显示
+            currentCode.textContent = `word-break: ${wordBreakValue};\noverflow-wrap: ${overflowWrapValue};`;
+        }
+        
+        // 初始更新
+        updateDemo();
+        
+        // 添加事件监听
+        wordBreakSelect.addEventListener('change', updateDemo);
+        overflowWrapSelect.addEventListener('change', updateDemo);
+    </script>
+</body>
+</html>
