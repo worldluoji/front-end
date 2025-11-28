@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            display: flex;
+            width: 300px; /* 设置容器宽度 */
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .text-container {
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* 限制显示为三行 */
+            line-clamp: 3; /* 标准属性，提升兼容性*/
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="text-container">
+            这是一个示例文本，用于演示如何使用Flexbox和CSS来限制文本显示为三行。这是一个示例文本，用于演示如何使用Flexbox和CSS来限制文本显示为三行。
+        </div>
+    </div>
+</body>
+</html>
