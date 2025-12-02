@@ -11,10 +11,10 @@ ensureRenderer 返回的对象去创建 app，并且重写了 app.mount 方法�
 
 https://github.com/vuejs/vue-next/blob/master/packages/runtime-dom/src/index.ts#L66
 
-tips: 查看源码的时候，可以先把一些无用的信息删除，方便自己梳理主体的逻辑。看 Vue 代码，和今天主题无关的无用信息有哪些，__COMPAT__ 代码是用来兼容 Vue 2 的，__DEV__ 代码是用来调试的，我们可以把这些代码删除之后，得到下面的简化版 createApp 源码。
+tips: 查看源码的时候，可以先把一些无用的信息删除，方便自己梳理主体的逻辑。看 Vue 代码，和今天主题无关的无用信息有哪些，`__COMPAT__` 代码是用来兼容 Vue 2 的，`__DEV__` 代码是用来调试的，我们可以把这些代码删除之后，得到下面的简化版 createApp 源码。
 
 简化后的代码：
-```
+```js
 export const createApp = ((...args) => {
   const app = ensureRenderer().createApp(...args)
   const { mount } = app
@@ -45,7 +45,7 @@ function normalizeContainer(container){
 }
 ```
 这里 ensureRenderer 函数，内部通过 createRenderer 函数，创建了一个浏览器的渲染器，并且缓存了渲染器 renderer，这种使用闭包做缓存的方式，你在日常开发中也可以借鉴这种思路。
-```
+```js
 // 浏览器dom操作
 import { nodeOps } from './nodeOps'
 // 浏览器dom属性更新
@@ -64,7 +64,7 @@ function ensureRenderer() {
 ```
 createRenderer 函数传递的参数是 nodeOps 和 patchProp 的合并对象。
 通过 ensureRenderer 存储这些操作方法后，createApp 内部就可以脱离具体的渲染平台了，这也是 Vue 3 实现跨端的核心逻辑：
-```
+```js
 export const nodeOps: Omit<RendererOptions<Node, Element>, 'patchProp'> = {
   insert: (child, parent, anchor) => {
     parent.insertBefore(child, anchor || null)
@@ -110,7 +110,7 @@ createRenderer 是调用 baseCreateRenderer 创建的，baseCreateRenderer 函�
 
 平台上所有的 insert、remove 函数，这些函数都是 nodeOps 传递进来的，然后定义了一些列 patch、mount、unmount 函数，通过名字我们不难猜出，
 这就是 Vue 中更新、渲染组件的工具函数，比如 mountElement 就是渲染 DOM 元素、mountComponent 就是渲染组件 updateComponent 就是更新组件。
-```
+```js
 export function createRenderer<
   HostNode = RendererNode,
   HostElement = RendererElement
@@ -174,11 +174,11 @@ function baseCreateRenderer(){
 ```
 
 调用 createApp 方法
-```
+```js
 const app = ensureRenderer().createApp(...args)
 ```
 实际上是 createAPI 的返回值，并且给 createAPI 传递了 render 方法。
-```
+```js
 export function createAppAPI<HostElement>(
   render: RootRenderFunction,
   hydrate?: RootHydrateFunction
@@ -238,7 +238,7 @@ container 就是我们 app.mount 中传递的 DOM 元素，对 DOM 元素进行�
 render -> patch(container._vnode || null, vnode, container, null, null, null, isSVG)
 
 patch 传递的是 container._vnode，也就是上一次渲染缓存的 vnode、本次渲染组件的 vnode，以及容器 container。
-```
+```js
   const patch: PatchFn = (
     n1,
     n2,
@@ -367,11 +367,11 @@ patch 传递的是 container._vnode，也就是上一次渲染缓存的 vnode、
 
 ShapeFlags 可以帮助我们快速判断需要操作的类型，利用了位运算。
 
-<br>
+---
 
 ## processComponent 方法
 首次渲染的 App 是一个组件，所以要执行的就是 processComponent 方法。
-```
+```js
   const processComponent = (
     n1: VNode | null,
     n2: VNode,
@@ -413,7 +413,7 @@ ShapeFlags 可以帮助我们快速判断需要操作的类型，利用了位运
 
 mountComponent 函数内部会对组件的类型进行一系列的判断，还有一些对 Vue 2 的兼容代码，
 核心的渲染逻辑就是 setupComponent 函数和 setupRenderEffect 函数。
-```
+```js
   import {setupComponent} from './component'
   const mountComponent: MountComponentFn = (
   ) => {
@@ -454,7 +454,7 @@ mountComponent 函数内部会对组件的类型进行一系列的判断，还�
 setupComponent，要完成的就是执行我们写的 setup 函数。
 可以看到，内部先初始化了 props 和 slots，并且执行 setupStatefulComponent 创建组件，而这个函数内部从 component 中获取 setup 属性，
 也就是 script setup 内部实现的函数，就进入到我们组件内部的 reactive、ref 等函数实现的逻辑了。
-```
+```js
 export function setupComponent(
   instance: ComponentInternalInstance,
   isSSR = false
@@ -528,14 +528,14 @@ export function callWithErrorHandling(
 
 ### Dom创建
 template
-```
+```js
 <div id="app">
   <p>hello world</p>
   <Rate :value="4"></Rate>
 </div>
 ```
 ->
-```
+```js
 function render(){
   return h('div',{id:"app"},children:[
     h('p',{},'hello world'),
@@ -544,8 +544,7 @@ function render(){
 }
 ```
 createVNode 函数创建项目的虚拟 DOM，可以看到 Vue 内部的虚拟 DOM，也就是 vnode，就是一个对象，通过 type、props、children 等属性描述整个节点。
-```
-
+```js
 const vnode = createVNode(    
   rootComponent as ConcreteComponent,
   rootProps
@@ -610,7 +609,7 @@ createVNode 负责创建 Vue 中的虚拟 DOM，而 mount 函数的核心逻辑�
 
 在 setupRenderEffect 内部的 componentUpdateFn 中，updateComponentPreRenderer 更新了属性和 slots，并且调用 renderComponentRoot 函数创建新的子树对象 nextTree，
 然后内部依然是调用 patch 函数:
-```
+```js
 const componentUpdateFn = ()=>{
   if (!instance.isMounted) {
       //首次渲染
@@ -675,11 +674,11 @@ effect 函数，负责注册组件，这个函数也是 Vue 组件更新的入�
 组件注册了 update 方法，这个方法使用 effect 包裹后，当组件内的 ref、reactive 包裹的响应式数据变化的时候就会执行 update 方法，
 触发组件内部的更新机制。
 
-<br>
+---
 
 ## patch 函数
 在 patch 函数中，会针对不同的组件类型执行不同的函数，组件我们会执行 processComponent，HTML 标签我们会执行 processElement
-```
+```js
   function path(n1, n2, container){
     const { type, shapeFlag } = n2
     switch (type) {
@@ -709,7 +708,7 @@ effect 函数，负责注册组件，这个函数也是 Vue 组件更新的入�
   }
 ```
 由于更新之后不是首次渲染了，patch 函数内部会执行 updateComponent:
-```
+```js
 const instance = (n2.component = n1.component)!
 if (shouldUpdateComponent(n1, n2, optimized)) {
 
