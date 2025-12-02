@@ -60,17 +60,7 @@ View 就是你的**模板（Template）**，也就是组件的 `<template>` 部�
 
 **ViewModel 的工作流程可以用下图清晰地展示：**
 
-```mermaid
-flowchart TD
-    A[Model 数据变更<br>（如 message.value = 'Hi'）] --> B(Vue 响应式系统<br>Proxy 捕获变更)
-    B -- 通知 --> C(调度更新<br>将组件标记为“需要更新”)
-    C --> D[生成虚拟 DOM<br>（执行渲染函数）]
-    D --> E[Diff & Patch<br>计算最小差异]
-    E --> F[更新真实 DOM<br>（视图自动更新）]
-    
-    G[用户操作视图<br>（如在输入框输入文字）] --> H(v-model 等指令)
-    H -- 触发更新 --> A
-```
+![vue-mvvm](./vue-mvvm.png)
 
 下面我们来详细解释图中的每一步。
 

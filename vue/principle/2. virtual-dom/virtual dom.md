@@ -6,17 +6,19 @@
 - 首先渲染引擎会将 node 节点添加到 body 节点之上，然后触发样式计算、布局、绘制、栅格化、合成等任务，我们把这一过程称为重排。
 - 除了重排之外，还有可能引起重绘或者合成操作，形象地理解就是“牵一发而动全身”。
 - 另外，对于 DOM 的不当操作还有可能引发强制同步布局和布局抖动的问题，这些操作都会大大降低渲染效率。因此，对于 DOM 的操作我们时刻都需要非常小心谨慎。
-<br>
+
+---
+
 虚拟dom就是解决上述问题的方案之一。
 
-<br>
+---
 
 ## 虚拟dom做什么
 - 将页面改变的内容应用到虚拟 DOM 上，而不是直接应用到 DOM 上。
 - 变化被应用到虚拟 DOM 上时，虚拟 DOM 并不急着去渲染页面，而仅仅是调整虚拟 DOM 的内部状态，这样操作虚拟 DOM 的代价就变得非常轻了。
 - 在虚拟 DOM 收集到足够的改变时，再把这些变化一次性应用到真实的 DOM 上。
 
-<br>
+---
 
 ## 什么是虚拟dom
 - Virtual DOM(虚拟DOM)，其实就是用普通的JS对象来描述DOM对象。
@@ -35,7 +37,7 @@ export function render(_ctx, _cache, $props, $setup, $data, $options) {
 ```
 实际上 _createElementBlock 函数中才是我们创建的 dom，从它身上我们可以看出，我们创建了一个 span 元素，内容为 “Hello World!”。这就是 Vdom 最基础的形式，在这里我们并不会感觉到Vue3与Vue2有什么区别。
 
-<br>
+---
 
 ## 静态提升
 上面的span, 是完全静态的资源，没有必要在重新渲染时再次创建和比对它们。Vue 编译器自动地会提升这部分 vnode 创建函数到这个模板的渲染函数之外，并在每次渲染时都使用这份相同的 vnode，渲染器知道新旧 vnode 在这部分是完全相同的，所以会完全跳过对它们的差异比对。
@@ -67,7 +69,7 @@ export function render(_ctx, _cache, $props, $setup, $data, $options) {
 可以看到，连续的静态资源，被提取到了render函数外面
 （_createStaticVNode）。
 
-<br>
+---
 
 ## patch flag 优化静态树
 ```
@@ -93,7 +95,7 @@ export function render(_ctx, _cache, $props, $setup, $data, $options) {
 - 一个元素可以有多个patch flag，会被合并成一个数字。运行时渲染器也将会使用位运算来检查这些标记，确定相应的更新操作
 - 尽管JavaScript做 Vdom 的对比已经非常的快，但是 patch flag 的出现还是让 Vue3 的 Vdom 的性能得到了很大的提升，尤其是在针对比较复杂的大组件时。经过测试的 upadte 性能提升1.3到2倍，ssr 提升2到3倍。
 
-<br>
+---
 
 ## 静态绑定
 当我们创建一个有属性的元素：
@@ -109,7 +111,7 @@ export function render(_ctx, _cache, $props, $setup, $data, $options) {
 ```
 让我们观察它的 patch flag，发现并没有对id做特殊的标记。是因为dom元素的静态属性在渲染的时候就已经创建了，并且是不会变动的，在后面进行更新的时候，diff 算法是不会去管它的。
 
-<br>
+---
 
 ## 动态绑定
 当我们创建一个属性是动态绑定的元素：
@@ -128,7 +130,7 @@ export function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 原来，Vue3 在 Vdom 的更新时，只会关注它有变化的部分。这样的优化使 Vue3 既跳出了 Vdom 的性能瓶颈，又依然保留了可以手写 render function 的灵活性。相当于 Vue3 既有 React 的灵活性，又有基于模板的性能保证。
 
-<br>
+---
 
 ## 渲染器(Render)
 有了虚拟dom, 一个<strong>运行时渲染器</strong>将会遍历整个虚拟 DOM 树，并据此构建真实的 DOM 树。这个过程被称为挂载 (mount)。
@@ -145,10 +147,10 @@ Vue 组件挂载后发生了如下这几件事：
 
 - 修补：当一个依赖发生变化后，副作用会重新运行，这时候会创建一个更新后的虚拟 DOM 树。运行时渲染器遍历这棵新树，将它与旧树进行比较，然后将必要的更新应用到真实 DOM 上去。
 
-<img src="../render/render-pipeline.03805016.png" />
+<img src="../4. render/render-pipeline.03805016.png" />
 这里也可以看出，使用render()函数，效率会更高，但是使用template更便于理解和使用。
 
-<br>
+---
 
 ## 名词解释
 ### 1. 响应式副作用:
