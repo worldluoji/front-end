@@ -19,7 +19,7 @@ Node.js 的事件循环基于 Ryan Dahl 自己开发的 libuv ，完成了自己
 libuv 是一个聚焦异步 I/O 的跨平台库。它的 API 也很简单，无非包含文件描述符的监听、读写、连接，以及定时器……以及因为它是个“网络层”，
 自然要做各种网络请求，那么对于 DNS 的查询也是必要能力之一。
 
-<br>
+---
 
 ## 事件循环 ≠ 异步 I/O
 为什么本章的标题不是“事件循环”，也不是“异步 I/O”，而是二者都要？因为这两者并不等价。
@@ -38,7 +38,7 @@ fs.readFile(filename, (err, content) => {
 });
 ```
 
-<img src="./pics/eventloop示意图.awebp">
+<img src="./assets/eventloop示意图.awebp">
 
 如图所示，事件循环那条线可以理解为之前提到的死循环，或者公交路线。
 我们可以看到，除了始发站之外，剩下的站点都必须由某个事件触发，比如 kernel 传过来的 epoll 事件，或者 libuv 自己内部的定时器事件。
@@ -58,7 +58,7 @@ fs.readFile(filename, (err, content) => {
 });
 ```
 
-<br>
+---
 
 ## uv_async_t
 如果要在一个新线程做一件事情，又想在新线程做完事情之后，能回归到主事件循环做之后的事，这时就需要用到 uv_async_t 了。
@@ -71,9 +71,9 @@ Node.js 中 vm 模块执行的超时就借助了 uv_async_t 的能力。
 
 看门狗在其析构函数中，就是通过 uv_async_t 来终止看门狗自身的事件循环。就像这样：
 
-<img src="./pics/watchdog.awebp">
+<img src="./assets/watchdog.awebp">
 
-<br>
+---
 
 ## 主要代码
 NodeJS事件循环的主要代码，是C++实现的
