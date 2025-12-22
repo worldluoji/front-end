@@ -11,7 +11,7 @@ Why Bun?
 - Web-standard APIs. Bun implements standard Web APIs like fetch, WebSocket, and ReadableStream. Bun is powered by the JavaScriptCore engine, which is developed by Apple for Safari, so some APIs like Headers and URL directly use Safari's implementation.
 - Node.js compatibility. In addition to supporting Node-style module resolution, Bun aims for full compatibility with built-in Node.js globals (process, Buffer) and modules (path, fs, http, etc.) This is an ongoing effort that is not complete
 
-<br>
+---
 
 ## insatllation
 for Linux and macOS
@@ -27,7 +27,7 @@ bun <file>
 bun run <file>
 ```
 
-<br>
+---
 
 ## bun apis
 un implements a set of native APIs on the Bun global object and through a number of built-in modules. 
@@ -45,7 +45,7 @@ the best way to know for certain is to try it.
 
 https://bun.sh/docs/runtime/nodejs-apis
 
-<br>
+---
 
 ## Web APIs
 Some Web APIs aren't relevant in the context of a server-first runtime like Bun, such as the DOM API or History API. 
@@ -54,7 +54,7 @@ when possible, Bun implements these Web-standard APIs instead of introducing new
 
 https://bun.sh/docs/runtime/web-apis
 
-<br>
+---
 
 ## configurations
 Bun's behavior can be configured using its configuration file, bunfig.toml.
@@ -78,12 +78,12 @@ registry = { url = "https://registry.npmmirror.com/", token = "123456" }
 registry = "https://username:password@registry.npmmirror.com"
 ```
 
-<br>
+---
 
 ## demos
-- [bun with express](./express/server.ts) 
+- [bun with fastify](./fastify/server.ts) 
 
-<br>
+---
 
 ## reference
 - https://bun.sh/
