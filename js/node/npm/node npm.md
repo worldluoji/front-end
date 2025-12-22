@@ -30,7 +30,7 @@ Node.js 中，如果在 require 或 import 模块时，其标识不以相对路�
 
 例子：npm3为例（npm 由 2 变 3，最大的目的是更好地服务前端包。npm 发展至今日，已经到达 npm 9 了，但它的安装目录结构仍是由 npm 3 演进而来的）
 
-![npm包依赖示意图](./assets/npm包依赖示意图.awebp)
+![npm包依赖示意图](../assets/npm包依赖示意图.awebp)
 
 设我当前是 C@2 中的 index.js，它的目录则是 ./node_modules/A/node_modules/C/index.js，这个时候，它需要去 require('D')，那么寻径的流程为：
 - 在当前目录的 node_modules 下找，即 ./node_modules/A/node_modules/C/node_modules/D，不存在；
