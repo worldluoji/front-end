@@ -1,3 +1,15 @@
+/**
+ * TypeScript 发布了 5.8 版本，其中有一个改动是添加了 --erasableSyntaxOnly 配置选项，
+ * 开启后仅允许使用可擦除语法，否则会报错。
+ * enum 就是一个不可擦除语法，开启 erasableSyntaxOnly 配置后，使用 enum 会报错。
+ * 
+ * 可擦除语法就是可以直接去掉的、仅在编译时存在、不会生成额外运行时代码的语法，
+ * 例如 type，interface。
+ * 不可擦除语法就是不能直接去掉的、需要编译为JS且会生成额外运行时代码的语法，
+ * 例如 enum，namesapce(with runtime code)
+ * 
+ * reference: https://juejin.cn/post/7478980680183169078
+ */
 
 // 1. 数字枚举, developer=2, maintainer=3...
 enum Role {
