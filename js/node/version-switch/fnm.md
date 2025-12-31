@@ -46,6 +46,7 @@ eval "$(fnm env --use-on-cd)"
 ```sh
 source ~/.zshrc  # 或者 source ~/.bashrc
 ```
+注意，`eval "$(fnm env --use-on-cd)"`要放到.zshrc文件后面的位置，防止后面有对$PATH变量重新赋值影响 fnm 切换。
 
 ### 基本使用
 
