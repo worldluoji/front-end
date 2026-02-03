@@ -58,7 +58,7 @@ location @error {
 error_page 404 @error;
 ```
 
-<br>
+---
 
 ## 各字符有效优先级
 = > ^~ > ~/~*
@@ -74,7 +74,7 @@ error_page 404 @error;
 ```
 当(~/~*)中有多个正则匹配时，选择正则表达式最长的配置执行。
 
-<br>
+---
 
 ### 示例1
 
@@ -84,7 +84,7 @@ Nginx在处理location指令时，会按照从上至下、从最具体到最通�
 
 简而言之，请求 `/static/test/1.png` 会匹配到 `location ^~ /static/test/`。
 
-<br>
+---
 
 ### 示例2
 在Nginx配置中，如果同时存在 `location ^~ /static/` 和 `location ~ /static/test/(\d+.png)` 这两个规则，并且尝试访问 `/static/test/1.png`，那么 `location ~ /static/test/(\d+.png)` 这个正则表达式匹配的规则将会被应用。
@@ -92,3 +92,16 @@ Nginx在处理location指令时，会按照从上至下、从最具体到最通�
 尽管 `^~` 修饰符给予了其所在的前缀匹配规则高优先级，避免被其他不带 `^~` 的正则表达式所覆盖，但是当存在另一个同样带有 `^~` 修饰符的更具体（这里是通过正则表达式定义）的location块时，Nginx会按照最精确匹配的原则来选择。在这个例子中，`location ~ /static/test/(\d+.png)` 是一个精确匹配以 `/static/test/` 开头并且以数字加`.png` 结尾的请求，因此它比仅仅是前缀匹配的 `location ^~ /static/` 更具针对性。
 
 总结来说，对于请求 `/static/test/1.png`，将会匹配到 `location ~ /static/test/(\d+.png)` 这个规则，因为它提供了对URL模式的更精确描述。
+
+
+---
+
+## 示例3
+Nginx 的匹配规则是 "最长前缀匹配"：
+```
+请求路径: /api/v3/users
+
+可能的匹配:
+1. location /api          (前缀长度: 4)
+2. location /api/v3       (前缀长度: 7)  ← 更长，优先级更高
+```
