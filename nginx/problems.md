@@ -1,28 +1,29 @@
 # some problems
-
-1. The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*...
+## 1. The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*...
 
 ### 前置知识
-Access-Control-Allow-Credentials 响应头用于在请求要求包含 credentials（Request.credentials 的值为 include）时，
-告知浏览器是否可以将对请求的响应暴露给前端 JavaScript 代码。
+Access-Control-Allow-Credentials 是 CORS 机制中用于控制跨域请求是否可以携带用户凭证（如 Cookie、Authorization 头等）的关键响应头，其值为 true 时表示允许携带凭证，但必须配合明确的 Access-Control-Allow-Origin 域名使用，不能与通配符 * 同时存在，以防止跨站请求伪造（CSRF）攻击。
 
-当请求的 credentials 模式（Request.credentials）为 include 时，表示跨域请求将发送 Cookie，
-浏览器仅在响应标头 Access-Control-Allow-Credentials 的值为 true 的情况下将响应暴露给前端的 JavaScript 代码。
+Access-Control-Allow-Credentials 响应头明确告知浏览器服务器是否允许跨域请求携带用户凭证，包括：
+- Cookie（用户登录状态）
+- Authorization header（如 JWT Token）
+- TLS 客户端证书等敏感认证信息
 
-Credentials 可以是 cookies、authorization headers 或 TLS client certificates。
+默认情况下，跨域请求不会携带这些凭证，这是浏览器同源策略的安全设计，防止恶意网站窃取用户身份
+
 
 Access-Control-Allow-Credentials 标头需要与 XMLHttpRequest.withCredentials 或 Fetch API 的 Request() 构造函数中的 credentials 选项结合使用。
 Credentials 必须在前后端都被配置（即 Access-Control-Allow-Credentials header 和 XHR 或 Fetch request 中都要配置）才能使带 credentials 的 CORS 请求成功。
 
 使用带 credentials 的 XHR：
-```
+```js
 var xhr = new XMLHttpRequest();
 xhr.open('GET', 'http://example.com/', true);
 xhr.withCredentials = true;
 xhr.send(null);
 ```
 使用带 credentials 的 Fetch：
-```
+```js
 fetch(url, {
   credentials: 'include'
 })
