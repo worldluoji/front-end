@@ -64,3 +64,89 @@ try {
 
 ### 效果
 一次构建的产物放到任何环境（测试/生产），只需在远程配置服务器上返回对应环境的配置内容即可，完全去除了构建时的条件编译。
+
+---
+
+## Webpack和Vite差异分析
+在 **Webpack** 和 **Vite** 工程中，`await import('https://...')` 的可行性确实有差异，且存在浏览器版本硬性要求。具体如下：
+
+---
+
+### 1. Vite（开箱即用，最推荐）
+
+**完全支持**，无需任何配置。
+
+- Vite 在开发时基于浏览器原生 ESM，**不会拦截或重写远程 URL 的 `import()`**。
+- 生产构建时，Vite 对静态字符串路径的 `import()` 会做代码分割，但对 **完全 URL 字符串**（如 `'https://...'`）会保留原样，打包后依然是浏览器原生动态导入。
+
+✅ **结论**：Vite 项目可直接使用，与平时写法无异。
+
+---
+
+### 2. Webpack（需注意配置限制）
+
+Webpack **默认会把所有 `import()` 当作代码拆分点处理**，即使是远程 URL。这会导致两个问题：
+
+- **问题 1**：Webpack 试图将远程 URL 解析为模块路径，构建时报错（找不到模块）。
+- **问题 2**：即使强行绕过，Webpack 也会把远程 URL 当作一个 chunk 名称，运行时请求的是打包后的本地文件，而非远程配置。
+
+**正确做法**：需要告知 Webpack **忽略对特定 `import()` 的处理**。
+
+```js
+// 使用魔法注释 /* webpackIgnore: true */
+const envConfig = (await import(/* webpackIgnore: true */ 'https://cdn.example.com/env-config.js')).default;
+```
+
+✅ 加上该注释后，Webpack 会原封不动地将这行代码保留，运行时由浏览器执行真正的动态导入。
+
+⚠️ **额外要求**：若远程 URL 是动态拼接的（如 `` `https://cdn.com/env-${env}.js` ``），Webpack 5 会自动保留为运行时代码，**无需** `webpackIgnore`，但建议始终显式声明以明确意图。
+
+---
+
+### 3. 浏览器版本要求
+
+**动态 `import()`** 和 **顶层 `await`** 是 ES2020 / ES2022 特性，兼容性如下：
+
+| 特性 | Chrome | Edge | Firefox | Safari | iOS Safari |
+|------|--------|------|---------|--------|------------|
+| 动态 `import()` | 63+ | 79+ | 67+ | 11.1+ | 11.3+ |
+| 顶层 `await`（模块中） | 89+ | 89+ | 89+ | 15+ | 15+ |
+
+- **动态 `import()` 支持良好**，基本覆盖 2018 年后的浏览器。
+- **顶层 `await` 稍新**（2021 年后），但在现代工程中已普遍使用。若需兼容更老浏览器（如 iOS 14），可改用 `Promise.then` 写法：
+
+```js
+// 兼容性更好的写法（无需顶层 await）
+let envConfig;
+import('https://...')
+  .then(m => { envConfig = m.default; })
+  .then(() => { /* 启动应用 */ });
+```
+
+对于 **Webpack 5 / Vite 项目**，它们默认会通过 Babel / SWC 将顶层 `await` 向下编译为 Promise 链，**即使目标浏览器不支持也能工作**。
+
+---
+
+### 总结对比表
+
+| 工具 | 是否直接支持远程 `import()` | 必要操作 |
+|------|---------------------------|----------|
+| Vite | ✅ 是 | 无需任何改动 |
+| Webpack 5 | ⚠️ 需注释 | 添加 `/* webpackIgnore: true */` |
+| 旧版 Webpack（4-） | ❌ 不支持 | 建议升级或改用 `fetch` + `eval`（不推荐） |
+
+### 最终最简单方案（跨工具通用）
+
+无论 Webpack 还是 Vite，下面这段代码均有效且无需配置：
+
+```js
+let envConfig;
+try {
+  envConfig = (await import(/* webpackIgnore: true */ 'https://your.cdn/config.js')).default;
+} catch {
+  // 兜底
+  envConfig = { apiBase: '/api' };
+}
+```
+
+> 注：Vite 会忽略 `/* webpackIgnore: true */` 注释，不影响运行。
