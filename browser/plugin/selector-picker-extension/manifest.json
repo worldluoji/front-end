@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "稳定选择器生成器",
+  "version": "1.0",
+  "description": "点击扩展图标，然后点击页面元素，生成稳定的唯一 CSS 选择器",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_title": "点击后选择页面元素",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
