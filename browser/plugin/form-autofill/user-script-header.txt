@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         通用表单自动填充（多页面+快捷键版 · Element Plus）
 // @namespace    http://tampermonkey.net/
-// @version      3.1.0
-// @description  支持多页面配置 + Element UI / Element Plus 组件 + 原生表单，可通过快捷键手动触发填充，含可视化配置页
+// @version      3.1.1
+// @description  支持多页面配置 + Element UI / Element Plus 组件 + 原生表单，含可视化配置页（右下角浮动按钮 / Ctrl+Alt+C）
 // @author       You
 // @match        *://*/*
-// @grant        GM_registerMenuCommand
+// @grant        none
 // @run-at       document-end
 // ==/UserScript==
 

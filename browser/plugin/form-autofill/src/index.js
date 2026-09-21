@@ -12,6 +12,7 @@ if (typeof window !== 'undefined') {
     setupShortcut();
     autoFillIfEnabled();
     mountFloatingButton();
+    setupConfigShortcut();
   };
 
   if (document.readyState === 'loading') {
@@ -20,7 +21,7 @@ if (typeof window !== 'undefined') {
     start();
   }
 
-  // 监听 UI / 油猴菜单发出的事件
+  // 监听 UI 发出的事件
   window.addEventListener('autofill:open-config', () => openConfigUI());
   window.addEventListener('autofill:execute-fill', () => executeFill());
   window.addEventListener('autofill:config-updated', () => {
@@ -34,16 +35,24 @@ if (typeof window !== 'undefined') {
     openConfig: openConfigUI,
     getConfig: resolveConfig,
   };
+}
 
-  // 注册油猴菜单命令（需要 @grant GM_registerMenuCommand）
-  try {
-    if (typeof GM_registerMenuCommand === 'function') {
-      GM_registerMenuCommand('打开自动填充配置', () => openConfigUI());
-      GM_registerMenuCommand('立即填充当前页面', () => executeFill());
+/**
+ * 配置页专用快捷键：Ctrl+Alt+C（与填充快捷键分离）
+ */
+function setupConfigShortcut() {
+  window.addEventListener('keydown', (e) => {
+    if (!e.ctrlKey || !e.altKey) return;
+    if (e.shiftKey || e.metaKey) return;
+    if ((e.key || '').toLowerCase() !== 'c') return;
+    const tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target?.isContentEditable) {
+      return;
     }
-  } catch {
-    // ignore
-  }
+    e.preventDefault();
+    e.stopPropagation();
+    openConfigUI();
+  });
 }
 
 export { setupShortcut, autoFillIfEnabled, executeFill } from './core.js';

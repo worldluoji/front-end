@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         通用表单自动填充（多页面+快捷键版 · Element Plus）
 // @namespace    http://tampermonkey.net/
-// @version      3.1.0
-// @description  支持多页面配置 + Element UI / Element Plus 组件 + 原生表单，可通过快捷键手动触发填充，含可视化配置页
+// @version      3.1.1
+// @description  支持多页面配置 + Element UI / Element Plus 组件 + 原生表单，含可视化配置页（右下角浮动按钮 / Ctrl+Alt+C）
 // @author       You
 // @match        *://*/*
-// @grant        GM_registerMenuCommand
+// @grant        none
 // @run-at       document-end
 // ==/UserScript==
 
@@ -1246,24 +1246,33 @@
     activeHost = host;
   }
   function mountFloatingButton() {
+    if (!document.body) return;
     if (document.querySelector("[data-autofill-fab]")) return;
     const btn = document.createElement("button");
     btn.setAttribute("data-autofill-fab", "");
     btn.textContent = "\u2699 \u81EA\u52A8\u586B\u5145\u914D\u7F6E";
+    btn.title = "Ctrl+Alt+C";
     btn.style.cssText = [
       "position:fixed",
-      "bottom:20px",
-      "right:20px",
-      "z-index:2147483640",
-      "padding:8px 14px",
+      "bottom:24px",
+      "right:24px",
+      "z-index:2147483647",
+      "padding:10px 18px",
       "border:0",
-      "border-radius:20px",
+      "border-radius:24px",
       "background:#409eff",
       "color:#fff",
       "cursor:pointer",
-      "box-shadow:0 2px 12px rgba(0,0,0,.25)",
-      "font:13px/1 -apple-system,BlinkMacSystemFont,sans-serif"
+      "box-shadow:0 4px 16px rgba(64,158,255,.5)",
+      "font:600 13px/1 -apple-system,BlinkMacSystemFont,sans-serif",
+      "transition:transform .15s"
     ].join(";");
+    btn.addEventListener("mouseenter", () => {
+      btn.style.transform = "scale(1.05)";
+    });
+    btn.addEventListener("mouseleave", () => {
+      btn.style.transform = "scale(1)";
+    });
     btn.addEventListener("click", () => openConfigUI());
     document.body.appendChild(btn);
   }
@@ -1274,6 +1283,7 @@
       setupShortcut();
       autoFillIfEnabled();
       mountFloatingButton();
+      setupConfigShortcut();
     };
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", start, { once: true });
@@ -1290,12 +1300,20 @@
       openConfig: openConfigUI,
       getConfig: resolveConfig
     };
-    try {
-      if (typeof GM_registerMenuCommand === "function") {
-        GM_registerMenuCommand("\u6253\u5F00\u81EA\u52A8\u586B\u5145\u914D\u7F6E", () => openConfigUI());
-        GM_registerMenuCommand("\u7ACB\u5373\u586B\u5145\u5F53\u524D\u9875\u9762", () => executeFill());
+  }
+  function setupConfigShortcut() {
+    window.addEventListener("keydown", (e) => {
+      var _a3;
+      if (!e.ctrlKey || !e.altKey) return;
+      if (e.shiftKey || e.metaKey) return;
+      if ((e.key || "").toLowerCase() !== "c") return;
+      const tag = e.target && e.target.tagName || "";
+      if (tag === "INPUT" || tag === "TEXTAREA" || ((_a3 = e.target) == null ? void 0 : _a3.isContentEditable)) {
+        return;
       }
-    } catch (e) {
-    }
+      e.preventDefault();
+      e.stopPropagation();
+      openConfigUI();
+    });
   }
 })();

@@ -2,7 +2,7 @@
 
 通用表单自动填充油猴脚本。支持原生表单（input / textarea / select / checkbox / radio / range）和 Element UI / Element Plus 组件（el-input / el-select / el-cascader / el-date-picker / el-checkbox / el-radio / el-switch / el-slider 等）。
 
-- **可视化配置页** — 浮窗 / 油猴菜单打开，所见即所得编辑，无需手写 JSON
+- **可视化配置页** — 右下角浮动按钮 / `Ctrl+Alt+C` 快捷键打开，所见即所得编辑
 - **快捷键手动触发**（默认 `Cmd/Ctrl + Shift + O`），或开启页面加载自动填充
 - **多页面配置**，按 URL pattern 匹配（支持字符串包含 / 正则）
 - 配置保存到 localStorage，跨设备可导入导出 JSON
@@ -32,8 +32,8 @@ npm run build
 
 两种入口：
 
-- **油猴图标菜单** → "打开自动填充配置" / "立即填充当前页面"
 - **页面右下角浮动按钮** "⚙ 自动填充配置"
+- **快捷键 `Ctrl+Alt+C`**（与填充快捷键分离，专注于打开配置）
 
 打开后是 Shadow DOM 隔离的弹窗，不受页面 CSS 影响。
 
@@ -255,3 +255,12 @@ el-select / el-cascader 因为下拉是异步渲染的面板，没法直接改�
 - el-cascader / el-select 的异步面板依赖渲染时序，偶尔失败时再按一次快捷键即可
 - 正则 urlPattern 无法被 JSON 序列化（配置页会自动转回字符串，需用源码方式保留）
 - 不支持 Ant Design / Naive UI / TDesign 等其他 UI 库（要扩展时，参考 `src/fillers/element-plus.js` 加一个新 filler 即可，core.js 无需改动）
+
+## 故障排查
+
+**看不到右下角的"⚙ 自动填充配置"按钮？**
+
+- 检查浏览器控制台：是否有 `[自动填充] 快捷键已启用：...` 日志
+- 按 `Ctrl+Alt+C`（Mac 也可）打开配置页试试
+- 确认脚本已启用：油猴图标 → 已安装脚本 → 通用表单自动填充（确认开关打开）
+- 极少数站点会把 body 上的元素清掉。可以用 `document.body.appendChild(document.createElement('div'))` 验证 body 还在，然后查 `[data-autofill-fab]`

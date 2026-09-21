@@ -621,25 +621,34 @@ export function openConfigUI() {
  * 创建浮动按钮
  */
 export function mountFloatingButton() {
+  if (!document.body) return;
   if (document.querySelector('[data-autofill-fab]')) return;
 
   const btn = document.createElement('button');
   btn.setAttribute('data-autofill-fab', '');
   btn.textContent = '⚙ 自动填充配置';
+  btn.title = 'Ctrl+Alt+C';
   btn.style.cssText = [
     'position:fixed',
-    'bottom:20px',
-    'right:20px',
-    'z-index:2147483640',
-    'padding:8px 14px',
+    'bottom:24px',
+    'right:24px',
+    'z-index:2147483647',
+    'padding:10px 18px',
     'border:0',
-    'border-radius:20px',
+    'border-radius:24px',
     'background:#409eff',
     'color:#fff',
     'cursor:pointer',
-    'box-shadow:0 2px 12px rgba(0,0,0,.25)',
-    'font:13px/1 -apple-system,BlinkMacSystemFont,sans-serif',
+    'box-shadow:0 4px 16px rgba(64,158,255,.5)',
+    'font:600 13px/1 -apple-system,BlinkMacSystemFont,sans-serif',
+    'transition:transform .15s',
   ].join(';');
+  btn.addEventListener('mouseenter', () => {
+    btn.style.transform = 'scale(1.05)';
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = 'scale(1)';
+  });
   btn.addEventListener('click', () => openConfigUI());
   document.body.appendChild(btn);
 }
