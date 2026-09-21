@@ -15,10 +15,12 @@ import {
 } from '../dom-utils.js';
 
 const SELECTOR = {
+  // 兼容 Element Plus 2.5 及更早（.el-input__inner）与 2.6+（.el-select__input）
   elSelect: '.el-select',
-  elSelectInput: '.el-input__inner',
+  elSelectInput: '.el-input__inner, .el-select__input',
+  elSelectWrapper: '.el-input, .el-select__wrapper',
   elSelectDropdown: '.el-select-dropdown',
-  elSelectItem: '.el-select-dropdown__item',
+  elSelectItem: '.el-select-dropdown__item, .el-select-v2__list-item, li.el-vl__item',
 
   elCascader: '.el-cascader',
   elCascaderPanel: '.el-cascader-panel',
@@ -26,8 +28,9 @@ const SELECTOR = {
   elCascaderNode: '.el-cascader-node',
   elCascaderSuggestionItem: '.el-cascader-suggestion__item',
 
-  elDatePicker: '.el-date-editor, .el-date-editor.el-input',
-  elDatePickerInput: 'input.el-input__inner',
+  // el-date-editor 在 2.6+ 也改为 .el-input 容器，但内部 input 仍然可能是 .el-input__inner
+  elDatePicker: '.el-date-editor, .el-date-editor.el-input, .el-date-editor.el-input__wrapper',
+  elDatePickerInput: 'input.el-input__inner, input.el-date-editor-input, .el-input__inner',
 
   elInputNumber: '.el-input-number',
   elInputNumberInput: 'input.el-input-number__input',
@@ -93,10 +96,12 @@ async function fillElSelect(el, value) {
   const strValue = value == null ? '' : String(value);
   if (input.value === strValue) return true;
 
-  // 打开下拉
-  input.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-  input.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-  input.click();
+  // 打开下拉：Element Plus 2.6+ 的 input 是 readonly，点 wrapper 才能展开；
+  // 旧版本直接点 input 也可以
+  const wrapper = container.querySelector(SELECTOR.elSelectWrapper) || input;
+  wrapper.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+  wrapper.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+  wrapper.click();
   input.dispatchEvent(new Event('focus', { bubbles: true }));
 
   // 等待面板

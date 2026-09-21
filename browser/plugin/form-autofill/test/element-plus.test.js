@@ -3,20 +3,46 @@ import { elementPlusFiller } from '../src/fillers/element-plus.js';
 
 /**
  * 在 happy-dom 里手动构造一个最小可用的 .el-select。
- * 当 input 被 click 时，同步把 dropdown 挂到 body，模拟 Element Plus 的弹层。
+ * 当 wrapper 被 click 时，同步把 dropdown 挂到 body，模拟 Element Plus 的弹层。
+ * @param {'legacy' | 'v26'} version
  */
-function buildMockElSelect({ value, label, withValue = true } = {}) {
+function buildMockElSelect({ value, label, withValue = true, version = 'legacy' } = {}) {
   const select = document.createElement('div');
   select.className = 'el-select';
 
-  const inputWrap = document.createElement('div');
-  inputWrap.className = 'el-input';
+  let wrapper;
+  let input;
+  if (version === 'v26') {
+    wrapper = document.createElement('div');
+    wrapper.className = 'el-select__wrapper';
+    wrapper.tabIndex = -1;
 
-  const input = document.createElement('input');
-  input.className = 'el-input__inner';
-  input.type = 'text';
-  inputWrap.appendChild(input);
-  select.appendChild(inputWrap);
+    const selection = document.createElement('div');
+    selection.className = 'el-select__selection';
+
+    const inputWrap = document.createElement('div');
+    inputWrap.className = 'el-select__selected-item el-select__input-wrapper';
+
+    input = document.createElement('input');
+    input.className = 'el-select__input';
+    input.type = 'text';
+    input.readOnly = true;
+
+    inputWrap.appendChild(input);
+    selection.appendChild(inputWrap);
+    wrapper.appendChild(selection);
+    select.appendChild(wrapper);
+  } else {
+    wrapper = document.createElement('div');
+    wrapper.className = 'el-input';
+
+    input = document.createElement('input');
+    input.className = 'el-input__inner';
+    input.type = 'text';
+
+    wrapper.appendChild(input);
+    select.appendChild(wrapper);
+  }
 
   if (withValue) {
     const dropdown = document.createElement('div');
@@ -29,8 +55,8 @@ function buildMockElSelect({ value, label, withValue = true } = {}) {
     item.textContent = label;
     dropdown.appendChild(item);
 
-    // 模拟 Element Plus 在点击 input 后挂上 dropdown
-    input.addEventListener('click', () => {
+    // 模拟 Element Plus：点 wrapper 挂上 dropdown
+    wrapper.addEventListener('click', () => {
       if (!dropdown.isConnected) document.body.appendChild(dropdown);
     });
 
@@ -41,7 +67,7 @@ function buildMockElSelect({ value, label, withValue = true } = {}) {
     });
   }
 
-  return { select, input, dropdown: null };
+  return { select, wrapper, input, dropdown: null };
 }
 
 beforeEach(() => {
@@ -126,6 +152,46 @@ describe('elementPlusFiller.fill - el-select', () => {
 
   it('找不到匹配选项时返回 false', async () => {
     const { select, input } = buildMockElSelect({ value: 'tech', label: 'tech' });
+    document.body.appendChild(select);
+
+    const ok = await elementPlusFiller.fill(input, 'not-exists', { type: 'select' });
+    expect(ok).toBe(false);
+  });
+});
+
+describe('elementPlusFiller.fill - el-select (Element Plus 2.6+ 新结构)', () => {
+  it('新结构 .el-select__wrapper + .el-select__input 能点击选项', async () => {
+    const { select, input } = buildMockElSelect({
+      value: 'tech',
+      label: '技术部',
+      version: 'v26',
+    });
+    document.body.appendChild(select);
+
+    const ok = await elementPlusFiller.fill(input, '技术部', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('技术部');
+  });
+
+  it('新结构：value 已匹配直接返回 true', async () => {
+    const { select, input } = buildMockElSelect({
+      value: 'tech',
+      label: 'tech',
+      version: 'v26',
+    });
+    document.body.appendChild(select);
+    input.value = 'tech';
+
+    const ok = await elementPlusFiller.fill(input, 'tech', { type: 'select' });
+    expect(ok).toBe(true);
+  });
+
+  it('新结构：找不到选项返回 false', async () => {
+    const { select, input } = buildMockElSelect({
+      value: 'tech',
+      label: 'tech',
+      version: 'v26',
+    });
     document.body.appendChild(select);
 
     const ok = await elementPlusFiller.fill(input, 'not-exists', { type: 'select' });
