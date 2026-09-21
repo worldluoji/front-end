@@ -241,12 +241,13 @@ async function fillElCheckbox(el, value) {
   // Vue / Element Plus 的 @change 监听器能收到。这是 Element Plus 期望的交互路径。
   input.click();
 
-  // 兜底：某些 happy-dom / jsdom 环境下 click() 不会切换 checked，需手动设置并 dispatch
+  // 兜底：
+  // - real browser：click 切 checked + 派 change，幂等
+  // - happy-dom：click 切 checked 但不一定派 change，需手动补
   if (input.checked !== desired) {
     input.checked = desired;
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-    input.dispatchEvent(new Event('input', { bubbles: true }));
   }
+  input.dispatchEvent(new Event('change', { bubbles: true }));
   return input.checked === desired;
 }
 
@@ -273,10 +274,8 @@ async function fillElCheckboxGroup(el, value) {
     if (matched && !input.checked) {
       // 同单 el-checkbox：让浏览器原生 click 触发完整事件链
       input.click();
-      if (input.checked !== true) {
-        input.checked = true;
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-      }
+      if (!input.checked) input.checked = true;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
       any = true;
     } else if (matched) {
       any = true;
@@ -302,10 +301,8 @@ async function fillElRadio(el, value) {
   if (input.checked) return true;
 
   input.click();
-  if (!input.checked) {
-    input.checked = true;
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-  }
+  if (!input.checked) input.checked = true;
+  input.dispatchEvent(new Event('change', { bubbles: true }));
   return input.checked;
 }
 
@@ -330,10 +327,8 @@ async function fillElRadioGroup(el, value) {
         // 用 click() 模拟用户操作：浏览器会切换 checked + 触发 change 事件，
         // Element Plus 的 v-model 会响应
         input.click();
-        if (!input.checked) {
-          input.checked = true;
-          input.dispatchEvent(new Event('change', { bubbles: true }));
-        }
+        if (!input.checked) input.checked = true;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
       }
       return true;
     }
@@ -343,14 +338,27 @@ async function fillElRadioGroup(el, value) {
 
 // ===================== el-switch =====================
 
-function fillElSwitch(el, value) {
+async function fillElSwitch(el, value) {
   const container = el.closest(SELECTOR.elSwitch);
   if (!container) return false;
   const input = container.querySelector(SELECTOR.elSwitchInput);
   if (!input) return false;
-  input.checked = !!value;
-  triggerInputEvents(input);
-  return true;
+
+  const desired = !!value;
+  if (input.checked === desired) return true;
+
+  // 用 click() 模拟用户操作：浏览器会切换 checked + 触发原生 change/input 事件，
+  // Element Plus 的 @change 监听器能收到。这与 el-checkbox 的修复一致。
+  input.click();
+
+  // 兜底：
+  // - real browser：click 切 checked + 派 change，幂等
+  // - happy-dom：click 切 checked 但不一定派 change，需手动补
+  if (input.checked !== desired) {
+    input.checked = desired;
+  }
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+  return input.checked === desired;
 }
 
 // ===================== el-slider =====================

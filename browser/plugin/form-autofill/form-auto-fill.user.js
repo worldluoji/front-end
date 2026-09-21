@@ -80,18 +80,25 @@
   // src/fillers/native.js
   function fillCheckbox(el, value) {
     if (el.type !== "checkbox") return false;
-    el.checked = !!value;
-    triggerInputEvents(el);
-    return true;
+    const desired = !!value;
+    if (el.checked === desired) return true;
+    el.click();
+    if (el.checked !== desired) {
+      el.checked = desired;
+    }
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+    return el.checked === desired;
   }
   function fillRadio(el, value) {
     if (el.type !== "radio") return false;
-    if (value === true || value != null && el.value === String(value)) {
-      el.checked = true;
-      triggerInputEvents(el);
-      return true;
+    if (value !== true && (value == null || el.value !== String(value))) {
+      return false;
     }
-    return false;
+    if (el.checked) return true;
+    el.click();
+    if (!el.checked) el.checked = true;
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+    return el.checked;
   }
   function fillRange(el, value) {
     if (el.type !== "range") return false;
@@ -309,9 +316,8 @@
     input.click();
     if (input.checked !== desired) {
       input.checked = desired;
-      input.dispatchEvent(new Event("change", { bubbles: true }));
-      input.dispatchEvent(new Event("input", { bubbles: true }));
     }
+    input.dispatchEvent(new Event("change", { bubbles: true }));
     return input.checked === desired;
   }
   async function fillElCheckboxGroup(el, value) {
@@ -330,10 +336,8 @@
       const matched = values.includes(nativeValue) || values.includes(labelText);
       if (matched && !input.checked) {
         input.click();
-        if (input.checked !== true) {
-          input.checked = true;
-          input.dispatchEvent(new Event("change", { bubbles: true }));
-        }
+        if (!input.checked) input.checked = true;
+        input.dispatchEvent(new Event("change", { bubbles: true }));
         any = true;
       } else if (matched) {
         any = true;
@@ -348,10 +352,8 @@
     if (input.value !== strValue) return false;
     if (input.checked) return true;
     input.click();
-    if (!input.checked) {
-      input.checked = true;
-      input.dispatchEvent(new Event("change", { bubbles: true }));
-    }
+    if (!input.checked) input.checked = true;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
     return input.checked;
   }
   async function fillElRadioGroup(el, value) {
@@ -368,24 +370,27 @@
       if (input.value === strValue || labelText === strValue) {
         if (!input.checked) {
           input.click();
-          if (!input.checked) {
-            input.checked = true;
-            input.dispatchEvent(new Event("change", { bubbles: true }));
-          }
+          if (!input.checked) input.checked = true;
+          input.dispatchEvent(new Event("change", { bubbles: true }));
         }
         return true;
       }
     }
     return false;
   }
-  function fillElSwitch(el, value) {
+  async function fillElSwitch(el, value) {
     const container = el.closest(SELECTOR.elSwitch);
     if (!container) return false;
     const input = container.querySelector(SELECTOR.elSwitchInput);
     if (!input) return false;
-    input.checked = !!value;
-    triggerInputEvents(input);
-    return true;
+    const desired = !!value;
+    if (input.checked === desired) return true;
+    input.click();
+    if (input.checked !== desired) {
+      input.checked = desired;
+    }
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    return input.checked === desired;
   }
   function fillElSlider(el, value) {
     const container = el.closest(SELECTOR.elSlider);

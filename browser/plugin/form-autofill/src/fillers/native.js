@@ -8,20 +8,38 @@ import { setNativeValue, triggerInputEvents, fillInput } from '../dom-utils.js';
 
 function fillCheckbox(el, value) {
   if (el.type !== 'checkbox') return false;
-  el.checked = !!value;
-  triggerInputEvents(el);
-  return true;
+
+  const desired = !!value;
+  if (el.checked === desired) return true;
+
+  // 用 click() 模拟用户操作：浏览器会切换 checked + 触发原生 change/input 事件，
+  // 这是 Vue 2 / Vue 3 / React v-model 都能感知的标准路径。
+  el.click();
+
+  // 兜底：
+  // - real browser：click 会切 checked + 派 change，幂等
+  // - happy-dom：click 切 checked 但不一定派 change，需手动补
+  if (el.checked !== desired) {
+    el.checked = desired;
+  }
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+  return el.checked === desired;
 }
 
 function fillRadio(el, value) {
   if (el.type !== 'radio') return false;
   // value === true 表示"选中该 radio"，否则按 value 匹配
-  if (value === true || (value != null && el.value === String(value))) {
-    el.checked = true;
-    triggerInputEvents(el);
-    return true;
+  if (value !== true && (value == null || el.value !== String(value))) {
+    return false;
   }
-  return false;
+  if (el.checked) return true;
+
+  el.click();
+
+  // 兜底：click 切 checked（real browser）或不切（happy-dom）都补一次 change
+  if (!el.checked) el.checked = true;
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+  return el.checked;
 }
 
 function fillRange(el, value) {

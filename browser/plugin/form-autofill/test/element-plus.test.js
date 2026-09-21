@@ -217,6 +217,26 @@ describe('elementPlusFiller.fill - el-input-number', () => {
     expect(input.value).toBe('42');
     expect(handler).toHaveBeenCalled();
   });
+
+  it('模拟 Element Plus 内部 clamp：input 事件被监听并解析为数字', () => {
+    // Element Plus el-input-number 监听 input 事件做 parse / clamp / update
+    const wrap = document.createElement('div');
+    wrap.className = 'el-input-number';
+    const input = document.createElement('input');
+    input.className = 'el-input-number__input';
+    input.type = 'text';
+    wrap.appendChild(input);
+    document.body.appendChild(wrap);
+
+    let parsedValue = 0;
+    input.addEventListener('input', () => {
+      const n = Number(input.value);
+      if (!Number.isNaN(n)) parsedValue = n;
+    });
+
+    elementPlusFiller.fill(input, 99, { type: 'input-number' });
+    expect(parsedValue).toBe(99);
+  });
 });
 
 describe('elementPlusFiller.fill - el-checkbox (单个，不在 group 内)', () => {
@@ -514,7 +534,7 @@ describe('elementPlusFiller.fill - el-radio (单个，不在 group 内)', () => 
 });
 
 describe('elementPlusFiller.fill - el-switch', () => {
-  it('开关切换', () => {
+  it('开关切换', async () => {
     const sw = document.createElement('div');
     sw.className = 'el-switch';
     const cb = document.createElement('input');
@@ -522,9 +542,68 @@ describe('elementPlusFiller.fill - el-switch', () => {
     sw.appendChild(cb);
     document.body.appendChild(sw);
 
-    const ok = elementPlusFiller.fill(cb, true, { type: 'switch' });
+    const ok = await elementPlusFiller.fill(cb, true, { type: 'switch' });
     expect(ok).toBe(true);
     expect(cb.checked).toBe(true);
+  });
+
+  it('模拟 Element Plus el-switch：触发 change 以更新 v-model', async () => {
+    const sw = document.createElement('div');
+    sw.className = 'el-switch';
+
+    const inner = document.createElement('span');
+    inner.className = 'el-switch__core';
+
+    const cb = document.createElement('input');
+    cb.className = 'el-switch__input';
+    cb.type = 'checkbox';
+
+    inner.appendChild(cb);
+    sw.appendChild(inner);
+    document.body.appendChild(sw);
+
+    const changeHandler = vi.fn();
+    cb.addEventListener('change', changeHandler);
+
+    const ok = await elementPlusFiller.fill(cb, true, { type: 'switch' });
+    expect(ok).toBe(true);
+    expect(cb.checked).toBe(true);
+    expect(changeHandler).toHaveBeenCalled();
+  });
+
+  it('value=false 关闭开关并触发 change', async () => {
+    const sw = document.createElement('div');
+    sw.className = 'el-switch';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = true;
+    sw.appendChild(cb);
+    document.body.appendChild(sw);
+
+    const handler = vi.fn();
+    cb.addEventListener('change', handler);
+
+    const ok = await elementPlusFiller.fill(cb, false, { type: 'switch' });
+    expect(ok).toBe(true);
+    expect(cb.checked).toBe(false);
+    expect(handler).toHaveBeenCalled();
+  });
+
+  it('已为目标状态时直接返回 true，不重复触发事件', async () => {
+    const sw = document.createElement('div');
+    sw.className = 'el-switch';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = true;
+    sw.appendChild(cb);
+    document.body.appendChild(sw);
+
+    const handler = vi.fn();
+    cb.addEventListener('change', handler);
+
+    const ok = await elementPlusFiller.fill(cb, true, { type: 'switch' });
+    expect(ok).toBe(true);
+    expect(handler).not.toHaveBeenCalled();
   });
 });
 
@@ -544,6 +623,24 @@ describe('elementPlusFiller.fill - el-slider', () => {
     expect(ok).toBe(true);
     expect(range.value).toBe('75');
     expect(handler).toHaveBeenCalled();
+  });
+
+  it('模拟 Element Plus v-model：input 事件应触发更新', () => {
+    // Element Plus el-slider 通过原生 input 事件把 modelValue 同步出去
+    const slider = document.createElement('div');
+    slider.className = 'el-slider';
+    const range = document.createElement('input');
+    range.type = 'range';
+    slider.appendChild(range);
+    document.body.appendChild(slider);
+
+    let modelValue = 0;
+    range.addEventListener('input', () => {
+      modelValue = Number(range.value);
+    });
+
+    elementPlusFiller.fill(range, 80, { type: 'slider' });
+    expect(modelValue).toBe(80);
   });
 });
 
