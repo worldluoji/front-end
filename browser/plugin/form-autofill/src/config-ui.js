@@ -1,0 +1,645 @@
+/**
+ * 配置页 UI
+ * - Shadow DOM 隔离页面样式
+ * - 全局设置（自动填充 / 快捷键）
+ * - 页面配置列表 + 字段编辑
+ * - 导入 / 导出 / 恢复默认 / 保存 / 测试填充
+ */
+
+import {
+  loadStoredConfig,
+  saveStoredConfig,
+  clearStoredConfig,
+  normalizeConfig,
+  exportConfigJson,
+  importConfigJson,
+} from './config-storage.js';
+import { DEFAULT_CONFIG } from './config.js';
+import { FIELD_TYPES, getDefaultValueByType, getFieldTypeLabel } from './config-types.js';
+
+const STYLES = `
+* { box-sizing: border-box; }
+:root, :host { all: initial; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+.backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2147483646;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal {
+  width: 880px; max-width: 95vw; max-height: 90vh;
+  background: #fff; color: #222;
+  border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,.3);
+  display: flex; flex-direction: column; overflow: hidden;
+  font-size: 14px;
+}
+.header {
+  padding: 12px 16px; background: #409eff; color: #fff;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.header h2 { margin: 0; font-size: 16px; font-weight: 600; }
+.header button {
+  background: transparent; color: #fff; border: 0; cursor: pointer;
+  font-size: 20px; line-height: 1;
+}
+.tabs {
+  display: flex; border-bottom: 1px solid #eee; background: #fafafa;
+}
+.tabs button {
+  flex: 1; padding: 10px; border: 0; background: transparent; cursor: pointer;
+  font-size: 14px; color: #606266;
+}
+.tabs button.active { background: #fff; color: #409eff; border-bottom: 2px solid #409eff; }
+.body { flex: 1; overflow: auto; padding: 16px; }
+.footer {
+  padding: 12px 16px; border-top: 1px solid #eee; background: #fafafa;
+  display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;
+}
+.btn {
+  padding: 6px 14px; border: 1px solid #dcdfe6; background: #fff; border-radius: 4px;
+  cursor: pointer; font-size: 13px; color: #606266;
+}
+.btn:hover { border-color: #409eff; color: #409eff; }
+.btn.primary { background: #409eff; color: #fff; border-color: #409eff; }
+.btn.primary:hover { background: #66b1ff; color: #fff; }
+.btn.danger { color: #f56c6c; border-color: #fbc4c4; }
+.btn.danger:hover { background: #f56c6c; color: #fff; }
+.btn.sm { padding: 3px 8px; font-size: 12px; }
+
+.form-row { display: flex; align-items: center; margin-bottom: 12px; gap: 8px; }
+.form-row label { width: 110px; color: #606266; flex-shrink: 0; }
+.form-row input[type=text], .form-row input[type=number], .form-row select, .form-row textarea {
+  flex: 1; padding: 6px 10px; border: 1px solid #dcdfe6; border-radius: 4px;
+  font-size: 13px;
+}
+.form-row textarea { min-height: 60px; resize: vertical; font-family: inherit; }
+.form-row .hint { color: #909399; font-size: 12px; }
+
+.split { display: flex; gap: 16px; height: 100%; }
+.list-pane { width: 240px; border-right: 1px solid #eee; padding-right: 12px; display: flex; flex-direction: column; }
+.list-pane .list { flex: 1; overflow: auto; margin-bottom: 8px; }
+.list-item {
+  padding: 8px 10px; border-radius: 4px; cursor: pointer; margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.list-item:hover { background: #f5f7fa; }
+.list-item.active { background: #ecf5ff; border-color: #b3d8ff; color: #409eff; }
+.list-item .name { font-weight: 500; }
+.list-item .url { font-size: 11px; color: #909399; margin-top: 2px; word-break: break-all; }
+.detail-pane { flex: 1; overflow: auto; }
+
+.fields-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.fields-table th { text-align: left; padding: 6px; background: #f5f7fa; font-size: 12px; color: #606266; font-weight: 600; }
+.fields-table td { padding: 4px; border-bottom: 1px solid #eee; vertical-align: top; }
+.fields-table input, .fields-table select {
+  width: 100%; padding: 4px 6px; border: 1px solid #dcdfe6; border-radius: 3px; font-size: 12px;
+}
+.fields-table .type-col { width: 160px; }
+.fields-table .value-col { width: 220px; }
+.fields-table .act-col { width: 60px; text-align: center; }
+.fields-table .hint { color: #909399; font-size: 11px; margin-top: 2px; }
+
+.empty { color: #909399; text-align: center; padding: 40px 0; font-size: 13px; }
+
+.shortcut-group { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.shortcut-group label { width: auto; display: inline-flex; align-items: center; gap: 4px; }
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,.8); color: #fff; padding: 8px 16px; border-radius: 4px;
+  font-size: 13px; z-index: 2147483647;
+}
+.toast.error { background: #f56c6c; }
+.toast.success { background: #67c23a; }
+`;
+
+/**
+ * 打开配置页（同一时间只允许一个实例）
+ */
+let activeHost = null;
+
+export function openConfigUI() {
+  if (activeHost) {
+    activeHost.remove();
+    activeHost = null;
+  }
+
+  const initial = loadStoredConfig()
+    ? normalizeConfig(loadStoredConfig())
+    : structuredClone(DEFAULT_CONFIG);
+
+  const state = {
+    config: initial,
+    activePageIndex: 0,
+    activeTab: 'global',
+  };
+
+  const host = document.createElement('div');
+  host.setAttribute('data-autofill-config-ui', '');
+  const shadow = host.attachShadow({ mode: 'open' });
+  const style = document.createElement('style');
+  style.textContent = STYLES;
+  shadow.appendChild(style);
+
+  const root = document.createElement('div');
+  root.className = 'backdrop';
+  shadow.appendChild(root);
+
+  function render() {
+    root.innerHTML = `
+      <div class="modal" role="dialog" aria-label="自动填充配置">
+        <div class="header">
+          <h2>⚙ 自动填充配置</h2>
+          <button type="button" data-act="close" aria-label="关闭">×</button>
+        </div>
+        <div class="tabs">
+          <button type="button" data-tab="global">全局设置</button>
+          <button type="button" data-tab="pages">页面配置</button>
+        </div>
+        <div class="body"></div>
+        <div class="footer">
+          <button type="button" class="btn" data-act="import">导入 JSON</button>
+          <button type="button" class="btn" data-act="export">导出 JSON</button>
+          <button type="button" class="btn danger" data-act="reset">恢复默认</button>
+          <span style="flex:1"></span>
+          <button type="button" class="btn" data-act="test">测试填充</button>
+          <button type="button" class="btn" data-act="cancel">取消</button>
+          <button type="button" class="btn primary" data-act="save">保存</button>
+        </div>
+      </div>
+    `;
+    // 恢复 tab 激活态
+    root
+      .querySelectorAll('.tabs button')
+      .forEach((b) =>
+        b.classList.toggle('active', b.dataset.tab === state.activeTab)
+      );
+    const body = root.querySelector('.body');
+    if (state.activeTab === 'global') {
+      body.innerHTML = renderGlobal(state.config);
+    } else {
+      body.innerHTML = renderPages(state.config, state.activePageIndex);
+    }
+  }
+
+  function renderGlobal(cfg) {
+    const s = cfg.SHORTCUT || {};
+    return `
+      <div class="form-row">
+        <label>页面加载自动填充</label>
+        <label style="width:auto"><input type="checkbox" data-bind="AUTO_FILL_ON_LOAD" ${cfg.AUTO_FILL_ON_LOAD ? 'checked' : ''}/> 开启后等待元素出现自动填</label>
+      </div>
+      <div class="form-row">
+        <label>快捷键触发键</label>
+        <input type="text" data-bind="SHORTCUT.key" value="${escapeAttr(s.key || '')}" maxlength="1" style="width:60px;text-transform:uppercase"/>
+        <span class="hint">单个字母（A-Z）</span>
+      </div>
+      <div class="form-row">
+        <label>修饰键</label>
+        <div class="shortcut-group">
+          <label><input type="checkbox" data-bind="SHORTCUT.ctrl" ${s.ctrl ? 'checked' : ''}/> Ctrl</label>
+          <label><input type="checkbox" data-bind="SHORTCUT.alt" ${s.alt ? 'checked' : ''}/> Alt</label>
+          <label><input type="checkbox" data-bind="SHORTCUT.shift" ${s.shift ? 'checked' : ''}/> Shift</label>
+          <label><input type="checkbox" data-bind="SHORTCUT.meta" ${s.meta ? 'checked' : ''}/> Meta (Cmd/Win)</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>说明</label>
+        <span class="hint">快捷键在输入框聚焦时不触发，避免误触。</span>
+      </div>
+    `;
+  }
+
+  function renderPages(cfg, activeIdx) {
+    const pages = cfg.PAGE_CONFIGS || [];
+    const active = pages[activeIdx];
+    return `
+      <div class="split">
+        <div class="list-pane">
+          <div class="list">
+            ${pages.length === 0
+              ? '<div class="empty">还没有配置，点击下方新增</div>'
+              : pages
+                  .map(
+                    (p, i) => `
+                <div class="list-item ${i === activeIdx ? 'active' : ''}" data-page="${i}">
+                  <div class="name">${escapeHtml(p.name || '(未命名)')}</div>
+                  <div class="url">${escapeHtml(String(p.urlPattern ?? ''))}</div>
+                </div>
+              `
+                  )
+                  .join('')}
+          </div>
+          <button type="button" class="btn primary sm" data-act="add-page">+ 新增页面</button>
+        </div>
+        <div class="detail-pane">
+          ${
+            active
+              ? renderPageDetail(active, activeIdx)
+              : '<div class="empty">请选择左侧一个页面进行编辑</div>'
+          }
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPageDetail(page, idx) {
+    const fields = page.fields || [];
+    return `
+      <div class="form-row">
+        <label>页面名称</label>
+        <input type="text" data-page-field="name" data-idx="${idx}" value="${escapeAttr(page.name || '')}"/>
+      </div>
+      <div class="form-row">
+        <label>URL 匹配</label>
+        <input type="text" data-page-field="urlPattern" data-idx="${idx}" value="${escapeAttr(String(page.urlPattern ?? ''))}"/>
+        <span class="hint">字符串包含匹配，或 <code>/regex/</code></span>
+      </div>
+      <div class="form-row" style="align-items:flex-start">
+        <label>字段列表</label>
+        <div style="flex:1">
+          <table class="fields-table">
+            <thead>
+              <tr><th class="type-col">类型</th><th>选择器</th><th class="value-col">值</th><th class="act-col">操作</th></tr>
+            </thead>
+            <tbody>
+              ${fields.map((f, fi) => renderFieldRow(f, idx, fi)).join('')}
+              ${
+                fields.length === 0
+                  ? '<tr><td colspan="4" class="empty" style="padding:16px">还没有字段，点击下方新增</td></tr>'
+                  : ''
+              }
+            </tbody>
+          </table>
+          <button type="button" class="btn sm" data-act="add-field" data-idx="${idx}" style="margin-top:8px">+ 新增字段</button>
+          <button type="button" class="btn danger sm" data-act="del-page" data-idx="${idx}" style="margin-top:8px;float:right">删除此页面</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderFieldRow(field, pageIdx, fieldIdx) {
+    const type = field.type || 'input';
+    const opts = FIELD_TYPES.map(
+      (t) =>
+        `<option value="${t.value}" ${t.value === type ? 'selected' : ''}>${escapeHtml(t.label)}</option>`
+    ).join('');
+    return `
+      <tr data-field-row="${fieldIdx}">
+        <td class="type-col">
+          <select data-field="type" data-pi="${pageIdx}" data-fi="${fieldIdx}">${opts}</select>
+        </td>
+        <td>
+          <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || '')}" placeholder="#id / .class / [name=...]"/>
+          <div class="hint">${escapeHtml(valueHint(type))}</div>
+        </td>
+        <td class="value-col">
+          ${renderValueInput(field, pageIdx, fieldIdx)}
+        </td>
+        <td class="act-col">
+          <button type="button" class="btn danger sm" data-act="del-field" data-pi="${pageIdx}" data-fi="${fieldIdx}">删除</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  function renderValueInput(field, pageIdx, fieldIdx) {
+    const v = field.value;
+    const t = field.type || 'input';
+    const baseAttrs = `data-field="value" data-pi="${pageIdx}" data-fi="${fieldIdx}"`;
+    if (t === 'checkbox' || t === 'switch') {
+      const checked = !!v ? 'checked' : '';
+      return `<label style="display:flex;align-items:center;gap:6px;padding-top:6px"><input type="checkbox" ${baseAttrs} ${checked}/> ${escapeHtml(getFieldTypeLabel(t))}</label>`;
+    }
+    if (t === 'radio') {
+      return `<input type="text" ${baseAttrs} value="${escapeAttr(v === true ? 'true' : String(v ?? ''))}" placeholder="true 或 radio 的 value"/>`;
+    }
+    if (t === 'range' || t === 'slider' || t === 'input-number') {
+      return `<input type="number" ${baseAttrs} value="${escapeAttr(String(v ?? 0))}"/>`;
+    }
+    if (t === 'cascader' || t === 'checkbox-group') {
+      const arrStr = JSON.stringify(v || []);
+      return `<input type="text" ${baseAttrs} value='${escapeAttr(arrStr)}' placeholder='["a","b"]'/><div class="hint">JSON 数组</div>`;
+    }
+    return `<input type="text" ${baseAttrs} value="${escapeAttr(String(v ?? ''))}"/>`;
+  }
+
+  function valueHint(type) {
+    switch (type) {
+      case 'select':
+        return 'value 匹配 data-value 或选项文本';
+      case 'radio':
+        return 'true 表示选中；其他值匹配 input.value';
+      case 'checkbox':
+      case 'switch':
+        return 'true / false';
+      case 'range':
+      case 'slider':
+      case 'input-number':
+        return '数字';
+      case 'cascader':
+        return '字符串（取匹配路径）或 ["level1","level2"]';
+      case 'date':
+      case 'datetime':
+      case 'time':
+        return '字符串，如 2026-09-21 / 12:30:00';
+      case 'checkbox-group':
+        return '["a","b"] 多选';
+      case 'radio-group':
+        return '单个字符串';
+      default:
+        return '';
+    }
+  }
+
+  // ---------- 事件绑定 ----------
+
+  function showToast(text, type = '') {
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.textContent = text;
+    shadow.appendChild(t);
+    setTimeout(() => t.remove(), 2200);
+  }
+
+  function bindGlobal() {
+    shadow.addEventListener('input', (e) => {
+      const t = e.target;
+      const bind = t.dataset.bind;
+      if (!bind) return;
+      if (t.type === 'checkbox') {
+        setPath(state.config, bind, t.checked);
+      } else if (t.type === 'number') {
+        setPath(state.config, bind, Number(t.value));
+      } else {
+        setPath(state.config, bind, t.value);
+      }
+    });
+  }
+
+  function bindTabs() {
+    root.querySelectorAll('.tabs button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.activeTab = btn.dataset.tab;
+        render();
+      });
+    });
+  }
+
+  function bindActions() {
+    shadow.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-act]');
+      if (!btn) return;
+      const act = btn.dataset.act;
+      switch (act) {
+        case 'close':
+        case 'cancel':
+          closeUI();
+          return;
+        case 'save':
+          onSave();
+          return;
+        case 'test':
+          onTest();
+          return;
+        case 'reset':
+          if (confirm('恢复默认配置？当前保存的配置会被覆盖。')) {
+            state.config = structuredClone(DEFAULT_CONFIG);
+            state.activePageIndex = 0;
+            render();
+            showToast('已恢复默认（未保存）', 'success');
+          }
+          return;
+        case 'export':
+          onExport();
+          return;
+        case 'import':
+          onImport();
+          return;
+        case 'add-page':
+          state.config.PAGE_CONFIGS.push({
+            name: `新页面 ${state.config.PAGE_CONFIGS.length + 1}`,
+            urlPattern: '',
+            fields: [],
+          });
+          state.activePageIndex = state.config.PAGE_CONFIGS.length - 1;
+          render();
+          return;
+        case 'del-page': {
+          const idx = Number(btn.dataset.idx);
+          if (confirm('删除此页面？')) {
+            state.config.PAGE_CONFIGS.splice(idx, 1);
+            state.activePageIndex = Math.max(0, idx - 1);
+            render();
+          }
+          return;
+        }
+        case 'add-field': {
+          const idx = Number(btn.dataset.idx);
+          const page = state.config.PAGE_CONFIGS[idx];
+          if (!page) return;
+          page.fields = page.fields || [];
+          page.fields.push({
+            selector: '',
+            value: getDefaultValueByType('input'),
+            type: 'input',
+          });
+          render();
+          return;
+        }
+        case 'del-field': {
+          const pi = Number(btn.dataset.pi);
+          const fi = Number(btn.dataset.fi);
+          const page = state.config.PAGE_CONFIGS[pi];
+          if (!page) return;
+          page.fields.splice(fi, 1);
+          render();
+          return;
+        }
+      }
+    });
+
+    // 切换选中页面
+    shadow.addEventListener('click', (e) => {
+      const item = e.target.closest('[data-page]');
+      if (!item) return;
+      const idx = Number(item.dataset.page);
+      if (Number.isFinite(idx) && idx !== state.activePageIndex) {
+        state.activePageIndex = idx;
+        render();
+      }
+    });
+
+    // 字段编辑：input / change
+    shadow.addEventListener('input', (e) => {
+      const t = e.target;
+      if (t.dataset.pageField) {
+        const idx = Number(t.dataset.idx);
+        const page = state.config.PAGE_CONFIGS[idx];
+        if (!page) return;
+        page[t.dataset.pageField] = t.value;
+        // urlPattern 变化时刷新左侧列表
+        if (t.dataset.pageField === 'urlPattern' || t.dataset.pageField === 'name') {
+          const listItem = root.querySelector(`[data-page="${idx}"] .${t.dataset.pageField === 'name' ? 'name' : 'url'}`);
+          if (listItem) listItem.textContent = t.value;
+        }
+        return;
+      }
+      if (t.dataset.field) {
+        const pi = Number(t.dataset.pi);
+        const fi = Number(t.dataset.fi);
+        const page = state.config.PAGE_CONFIGS[pi];
+        if (!page || !page.fields[fi]) return;
+        const f = page.fields[fi];
+        const key = t.dataset.field;
+        if (key === 'type') {
+          f.type = t.value;
+          // 切换类型时，重置 value 为该类型默认值（保留用户意图：如果旧 value 是该类型的合法值，保留）
+          f.value = getDefaultValueByType(t.value);
+          render();
+          return;
+        }
+        if (key === 'value') {
+          if (t.type === 'checkbox') {
+            f.value = t.checked;
+          } else if (t.type === 'number') {
+            f.value = t.value === '' ? 0 : Number(t.value);
+          } else if (f.type === 'cascader' || f.type === 'checkbox-group') {
+            try {
+              f.value = JSON.parse(t.value);
+            } catch {
+              // 解析中时暂存原值，避免破坏
+              return;
+            }
+          } else {
+            f.value = t.value;
+          }
+          return;
+        }
+        f[key] = t.value;
+      }
+    });
+  }
+
+  function onSave() {
+    if (saveStoredConfig(state.config)) {
+      // 通知页面重新加载配置
+      window.dispatchEvent(new CustomEvent('autofill:config-updated'));
+      showToast('已保存', 'success');
+    } else {
+      showToast('保存失败', 'error');
+    }
+  }
+
+  function onTest() {
+    // 临时把当前 UI 内配置应用到 window，再触发填充
+    window.__AUTOFILL_CONFIG__ = state.config;
+    window.dispatchEvent(new CustomEvent('autofill:execute-fill'));
+  }
+
+  function onExport() {
+    const json = exportConfigJson(state.config);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `autofill-config-${Date.now()}.json`;
+    shadow.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast('已导出', 'success');
+  }
+
+  function onImport() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json,.json';
+    input.addEventListener('change', () => {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = importConfigJson(reader.result);
+          state.config = imported;
+          state.activePageIndex = 0;
+          render();
+          showToast('已导入（未保存）', 'success');
+        } catch (e) {
+          showToast(`导入失败：${e.message}`, 'error');
+        }
+      };
+      reader.readAsText(file);
+    });
+    shadow.appendChild(input);
+    input.click();
+  }
+
+  function closeUI() {
+    host.remove();
+    if (activeHost === host) activeHost = null;
+  }
+
+  // ---------- 工具 ----------
+
+  function setPath(obj, path, value) {
+    const keys = path.split('.');
+    let cur = obj;
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (cur[keys[i]] == null || typeof cur[keys[i]] !== 'object') cur[keys[i]] = {};
+      cur = cur[keys[i]];
+    }
+    cur[keys[keys.length - 1]] = value;
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  function escapeAttr(s) {
+    return escapeHtml(s);
+  }
+
+  // ---------- 启动 ----------
+
+  render();
+  bindTabs();
+  bindGlobal();
+  bindActions();
+
+  document.body.appendChild(host);
+  activeHost = host;
+}
+
+/**
+ * 创建浮动按钮
+ */
+export function mountFloatingButton() {
+  if (document.querySelector('[data-autofill-fab]')) return;
+
+  const btn = document.createElement('button');
+  btn.setAttribute('data-autofill-fab', '');
+  btn.textContent = '⚙ 自动填充配置';
+  btn.style.cssText = [
+    'position:fixed',
+    'bottom:20px',
+    'right:20px',
+    'z-index:2147483640',
+    'padding:8px 14px',
+    'border:0',
+    'border-radius:20px',
+    'background:#409eff',
+    'color:#fff',
+    'cursor:pointer',
+    'box-shadow:0 2px 12px rgba(0,0,0,.25)',
+    'font:13px/1 -apple-system,BlinkMacSystemFont,sans-serif',
+  ].join(';');
+  btn.addEventListener('click', () => openConfigUI());
+  document.body.appendChild(btn);
+}

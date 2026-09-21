@@ -1,0 +1,19 @@
+{
+  "name": "form-autofill",
+  "version": "3.0.0",
+  "description": "通用表单自动填充油猴脚本，支持原生表单和 Element UI / Element Plus 组件",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^2.1.0",
+    "esbuild": "^0.24.0",
+    "happy-dom": "^15.11.0",
+    "vitest": "^2.1.0"
+  }
+}
