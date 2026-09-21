@@ -781,16 +781,23 @@
 .list-item .url { font-size: 11px; color: #909399; margin-top: 2px; word-break: break-all; }
 .detail-pane { flex: 1; overflow: auto; }
 
-.fields-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.fields-table { width: 100%; border-collapse: collapse; margin-top: 8px; table-layout: fixed; }
 .fields-table th { text-align: left; padding: 6px; background: #f5f7fa; font-size: 12px; color: #606266; font-weight: 600; }
 .fields-table td { padding: 4px; border-bottom: 1px solid #eee; vertical-align: top; }
 .fields-table input, .fields-table select {
   width: 100%; padding: 4px 6px; border: 1px solid #dcdfe6; border-radius: 3px; font-size: 12px;
+  box-sizing: border-box; min-width: 0;
 }
-.fields-table .type-col { width: 160px; }
-.fields-table .value-col { width: 220px; }
-.fields-table .act-col { width: 60px; text-align: center; }
-.fields-table .hint { color: #909399; font-size: 11px; margin-top: 2px; }
+.fields-table input[data-field="selector"] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+}
+.fields-table .type-col { width: 140px; }
+.fields-table .selector-col { width: auto; }
+.fields-table .value-col { width: 200px; }
+.fields-table .act-col { width: 70px; text-align: center; }
+.fields-table .hint { color: #909399; font-size: 11px; margin-top: 2px; word-wrap: break-word; }
+.fields-table .value-col .hint { white-space: normal; }
 
 .empty { color: #909399; text-align: center; padding: 40px 0; font-size: 13px; }
 
@@ -930,8 +937,11 @@
         <label>\u5B57\u6BB5\u5217\u8868</label>
         <div style="flex:1">
           <table class="fields-table">
+            <colgroup>
+              <col class="type-col"><col class="selector-col"><col class="value-col"><col class="act-col">
+            </colgroup>
             <thead>
-              <tr><th class="type-col">\u7C7B\u578B</th><th>\u9009\u62E9\u5668</th><th class="value-col">\u503C</th><th class="act-col">\u64CD\u4F5C</th></tr>
+              <tr><th class="type-col">\u7C7B\u578B</th><th class="selector-col">\u9009\u62E9\u5668 (CSS)</th><th class="value-col">\u503C</th><th class="act-col">\u64CD\u4F5C</th></tr>
             </thead>
             <tbody>
               ${fields.map((f, fi) => renderFieldRow(f, idx, fi)).join("")}
@@ -954,7 +964,7 @@
         <td class="type-col">
           <select data-field="type" data-pi="${pageIdx}" data-fi="${fieldIdx}">${opts}</select>
         </td>
-        <td>
+        <td class="selector-col">
           <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || "")}" placeholder="#id / .class / [name=...]"/>
           <div class="hint">${escapeHtml(valueHint(type))}</div>
         </td>
