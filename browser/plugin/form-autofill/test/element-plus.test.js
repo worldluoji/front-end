@@ -219,6 +219,74 @@ describe('elementPlusFiller.fill - el-input-number', () => {
   });
 });
 
+describe('elementPlusFiller.fill - el-checkbox (单个，不在 group 内)', () => {
+  /** 模拟 Element Plus 实际 DOM：label > span.input > input.el-checkbox__original */
+  function buildMockElCheckbox(label = 'Option 2') {
+    const wrap = document.createElement('label');
+    wrap.className = 'el-checkbox el-checkbox--large';
+
+    const inputWrap = document.createElement('span');
+    inputWrap.className = 'el-checkbox__input';
+
+    const input = document.createElement('input');
+    input.className = 'el-checkbox__original';
+    input.type = 'checkbox';
+    input.value = label;
+
+    const inner = document.createElement('span');
+    inner.className = 'el-checkbox__inner';
+
+    inputWrap.appendChild(input);
+    inputWrap.appendChild(inner);
+    wrap.appendChild(inputWrap);
+
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'el-checkbox__label';
+    labelSpan.textContent = label;
+    wrap.appendChild(labelSpan);
+
+    return { wrap, input };
+  }
+
+  it('selector 指向 label 时勾选并触发 change', async () => {
+    const { wrap, input } = buildMockElCheckbox('Option 2');
+    document.body.appendChild(wrap);
+
+    const handler = vi.fn();
+    input.addEventListener('change', handler);
+
+    const ok = await elementPlusFiller.fill(wrap, true, { type: 'checkbox' });
+    expect(ok).toBe(true);
+    expect(input.checked).toBe(true);
+    expect(handler).toHaveBeenCalled();
+  });
+
+  it('selector 指向 input.el-checkbox__original 时也工作', async () => {
+    const { wrap, input } = buildMockElCheckbox('Option 2');
+    document.body.appendChild(wrap);
+
+    const ok = await elementPlusFiller.fill(input, true, { type: 'checkbox' });
+    expect(ok).toBe(true);
+    expect(input.checked).toBe(true);
+  });
+
+  it('value=false 取消勾选', async () => {
+    const { wrap, input } = buildMockElCheckbox('Option 2');
+    input.checked = true;
+    document.body.appendChild(wrap);
+
+    const ok = await elementPlusFiller.fill(wrap, false, { type: 'checkbox' });
+    expect(ok).toBe(true);
+    expect(input.checked).toBe(false);
+  });
+
+  it('match 在 type=checkbox 时对 .el-checkbox 容器返回 true', () => {
+    const { wrap } = buildMockElCheckbox();
+    document.body.appendChild(wrap);
+    expect(elementPlusFiller.match(wrap, { type: 'checkbox' })).toBe(true);
+  });
+});
+
 describe('elementPlusFiller.fill - el-checkbox-group', () => {
   it('勾选匹配 label 的项', async () => {
     const group = document.createElement('div');

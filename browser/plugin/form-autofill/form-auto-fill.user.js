@@ -171,6 +171,7 @@
     elCheckboxGroup: ".el-checkbox-group",
     elCheckbox: ".el-checkbox",
     elCheckboxInput: 'input[type="checkbox"]',
+    elCheckboxOriginal: ".el-checkbox__original",
     elRadioGroup: ".el-radio-group",
     elRadio: ".el-radio",
     elRadioInput: 'input[type="radio"]'
@@ -300,6 +301,13 @@
     if (!input || input.tagName !== "INPUT") return false;
     return fillInput(input, value);
   }
+  async function fillElCheckbox(el, value) {
+    const input = el.tagName === "INPUT" && el.type === "checkbox" ? el : el.querySelector(SELECTOR.elCheckboxInput);
+    if (!input) return false;
+    input.checked = !!value;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    return true;
+  }
   async function fillElCheckboxGroup(el, value) {
     const container = el.closest(SELECTOR.elCheckboxGroup);
     if (!container) return false;
@@ -371,6 +379,7 @@
       const inElSwitch = !!el.closest(SELECTOR.elSwitch);
       const inElSlider = !!el.closest(SELECTOR.elSlider);
       const inElCheckboxGroup = !!el.closest(SELECTOR.elCheckboxGroup);
+      const inElCheckbox = !!el.closest(SELECTOR.elCheckbox);
       const inElRadioGroup = !!el.closest(SELECTOR.elRadioGroup);
       if (type === "select") return inElSelect;
       if (type === "cascader") return inElCascader;
@@ -382,7 +391,10 @@
       if (type === "radio-group") return inElRadioGroup;
       if (type === "switch") return inElSwitch;
       if (type === "slider") return inElSlider;
-      return inElSelect || inElCascader || inElInputNumber || inElDatePicker || inElSwitch || inElSlider || inElCheckboxGroup || inElRadioGroup;
+      if (type === "checkbox") {
+        return inElCheckbox || el.tagName === "INPUT" || el.tagName === "LABEL";
+      }
+      return inElSelect || inElCascader || inElInputNumber || inElDatePicker || inElSwitch || inElSlider || inElCheckboxGroup || inElCheckbox || inElRadioGroup;
     },
     fill(el, value, item) {
       const type = item && item.type || "";
@@ -401,6 +413,9 @@
       if (type === "checkbox-group" && el.closest(SELECTOR.elCheckboxGroup)) {
         return fillElCheckboxGroup(el, value);
       }
+      if (type === "checkbox" && el.closest(SELECTOR.elCheckbox)) {
+        return fillElCheckbox(el, value);
+      }
       if (type === "radio-group" && el.closest(SELECTOR.elRadioGroup)) {
         return fillElRadioGroup(el, value);
       }
@@ -418,6 +433,8 @@
       if (el.closest(SELECTOR.elSlider)) return fillElSlider(el, value);
       if (el.closest(SELECTOR.elCheckboxGroup))
         return fillElCheckboxGroup(el, value);
+      if (el.closest(SELECTOR.elCheckbox))
+        return fillElCheckbox(el, value);
       if (el.closest(SELECTOR.elRadioGroup))
         return fillElRadioGroup(el, value);
       return false;
