@@ -478,6 +478,73 @@ describe('elementPlusFiller.fill - el-radio-group（合并到 type=radio）', ()
     expect(ok).toBe(true);
     expect(group.querySelector('input[value="city-上海"]').checked).toBe(true);
   });
+
+  it('用户场景重现：selector 指向 label（含 Vue fragment 注释）', async () => {
+    // 用户 DOM：
+    // <div class="el-radio-group">
+    //   <label class="el-radio el-radio--large">
+    //     <span class="el-radio__input">
+    //       <input class="el-radio__original" value="1" name="x" type="radio">
+    //     </span>
+    //     <span class="el-radio__label"><!--[-->Option 1<!--]--></span>
+    //   </label>
+    //   ...
+    // </div>
+    //
+    // 用户配置 selector 指向 <label>，type='radio'，value='1'
+    const group = document.createElement('div');
+    group.className = 'el-radio-group';
+    group.setAttribute('role', 'radiogroup');
+
+    function makeLabel(value, checked) {
+      const lbl = document.createElement('label');
+      lbl.className =
+        'el-radio' + (checked ? ' is-checked' : '') + ' el-radio--large';
+
+      const inputSpan = document.createElement('span');
+      inputSpan.className =
+        'el-radio__input' + (checked ? ' is-checked' : '');
+
+      const input = document.createElement('input');
+      input.className = 'el-radio__original';
+      input.type = 'radio';
+      input.value = value;
+      input.name = 'el-id-1024-0';
+      if (checked) input.checked = true;
+
+      const inner = document.createElement('span');
+      inner.className = 'el-radio__inner';
+
+      inputSpan.appendChild(input);
+      inputSpan.appendChild(inner);
+
+      const labelSpan = document.createElement('span');
+      labelSpan.className = 'el-radio__label';
+      // 模拟 Vue 3 fragment 注释 <!--[--> xxx <!--]-->
+      labelSpan.appendChild(document.createComment('['));
+      labelSpan.appendChild(document.createTextNode(`Option ${value}`));
+      labelSpan.appendChild(document.createComment(']'));
+
+      lbl.appendChild(inputSpan);
+      lbl.appendChild(labelSpan);
+      return { lbl, input };
+    }
+
+    const { lbl: l1, input: r1 } = makeLabel('1', false);
+    const { lbl: l2, input: r2 } = makeLabel('2', true);
+    group.appendChild(l1);
+    group.appendChild(l2);
+    document.body.appendChild(group);
+
+    const handler = vi.fn();
+    r1.addEventListener('change', handler);
+
+    // 用户场景：el = label(option 1)，value = '1'
+    const ok = await elementPlusFiller.fill(l1, '1', { type: 'radio' });
+    expect(ok).toBe(true);
+    expect(r1.checked).toBe(true);
+    expect(handler).toHaveBeenCalled();
+  });
 });
 
 describe('elementPlusFiller.fill - el-radio (单个，不在 group 内)', () => {

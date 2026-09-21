@@ -319,9 +319,13 @@ async function fillElRadio(el, value) {
 
   if (input.checked) return true;
 
+  // 与 fillElRadioGroup 一致：focus + click + 兜底 change，等一个 microtask
+  // 让 Element Plus handleChange 的 nextTick emit 跑完
+  input.focus();
   input.click();
   if (!input.checked) input.checked = true;
   input.dispatchEvent(new Event('change', { bubbles: true }));
+  await wait(0);
   return input.checked;
 }
 
@@ -343,11 +347,24 @@ async function fillElRadioGroup(el, value) {
     const labelText = labelEl ? (labelEl.textContent || '').trim() : '';
     if (input.value === strValue || labelText === strValue) {
       if (!input.checked) {
-        // 用 click() 模拟用户操作：浏览器会切换 checked + 触发 change 事件，
-        // Element Plus 的 v-model 会响应
+        // Element Plus 2.x radio:
+        //   <input v-model="modelValue" :checked="modelValue === actualValue"
+        //          @focus="focus=true" @change="handleChange" @click.stop />
+        // handleChange 内用 nextTick(() => emit(CHANGE_EVENT, modelValue.value))
+        // 触发链路：click → browser 切 checked → change → v-model 写回 modelValue
+        //        → handleChange nextTick 派 CHANGE_EVENT → RadioGroup 派
+        //        UPDATE_MODEL_EVENT → 父 v-model 同步。
+        // 我们要保证：
+        //   1) focus 触发，这样 Element Plus 的 focus state 正确（@focus 更新），
+        //      部分校验会读 isFocused
+        //   2) click 让浏览器做真实切 checked + dispatch change
+        //   3) 兜底：hidden input（opacity:0）上某些环境 click 不触发 change
+        //   4) 等下一个 microtask，让 Element Plus handleChange 的 nextTick 跑完
+        input.focus();
         input.click();
         if (!input.checked) input.checked = true;
         input.dispatchEvent(new Event('change', { bubbles: true }));
+        await wait(0);
       }
       return true;
     }

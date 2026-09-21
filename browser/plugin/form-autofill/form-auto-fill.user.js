@@ -363,9 +363,11 @@
     const strValue = value == null ? "" : String(value);
     if (input.value !== strValue) return false;
     if (input.checked) return true;
+    input.focus();
     input.click();
     if (!input.checked) input.checked = true;
     input.dispatchEvent(new Event("change", { bubbles: true }));
+    await wait(0);
     return input.checked;
   }
   async function fillElRadioGroup(el, value) {
@@ -381,9 +383,11 @@
       const labelText = labelEl ? (labelEl.textContent || "").trim() : "";
       if (input.value === strValue || labelText === strValue) {
         if (!input.checked) {
+          input.focus();
           input.click();
           if (!input.checked) input.checked = true;
           input.dispatchEvent(new Event("change", { bubbles: true }));
+          await wait(0);
         }
         return true;
       }
