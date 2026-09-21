@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         通用表单自动填充（多页面+快捷键版 · Element Plus）
+// @name         通用表单自动填充（多页面+快捷键版 · Element UI / Plus）
 // @namespace    http://tampermonkey.net/
-// @version      3.1.1
+// @version      3.1.2
 // @description  支持多页面配置 + Element UI / Element Plus 组件 + 原生表单，含可视化配置页（右下角浮动按钮 / Ctrl+Alt+C）
 // @author       You
 // @match        *://*/*
@@ -166,7 +166,7 @@
     elCascaderSuggestionItem: ".el-cascader-suggestion__item",
     // el-date-editor 在 2.6+ 也改为 .el-input 容器，但内部 input 仍然可能是 .el-input__inner
     elDatePicker: ".el-date-editor, .el-date-editor.el-input, .el-date-editor.el-input__wrapper",
-    elDatePickerInput: "input.el-input__inner, input.el-date-editor-input, .el-input__inner",
+    elDatePickerInput: "input.el-input__inner, input.el-date-editor-input, .el-input__inner, .el-range-input",
     elInputNumber: ".el-input-number",
     elInputNumberInput: "input.el-input-number__input",
     elInputNumberDecrease: ".el-input-number__decrease",
@@ -304,6 +304,18 @@
   }
   function fillElDatePicker(el, value) {
     const container = el.closest(SELECTOR.elDatePicker) || el.parentElement;
+    if (!container) return false;
+    const rangeInputs = Array.from(
+      container.querySelectorAll(".el-range-input")
+    );
+    if (rangeInputs.length >= 2) {
+      if (Array.isArray(value) && value.length >= 2) {
+        const ok1 = fillInput(rangeInputs[0], value[0]);
+        const ok2 = fillInput(rangeInputs[1], value[1]);
+        return ok1 || ok2;
+      }
+      return fillInput(rangeInputs[0], value);
+    }
     const input = container && container.querySelector(SELECTOR.elDatePickerInput) || el;
     if (!input || input.tagName !== "INPUT") return false;
     return fillInput(input, value);

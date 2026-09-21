@@ -30,7 +30,8 @@ const SELECTOR = {
 
   // el-date-editor 在 2.6+ 也改为 .el-input 容器，但内部 input 仍然可能是 .el-input__inner
   elDatePicker: '.el-date-editor, .el-date-editor.el-input, .el-date-editor.el-input__wrapper',
-  elDatePickerInput: 'input.el-input__inner, input.el-date-editor-input, .el-input__inner',
+  elDatePickerInput:
+    'input.el-input__inner, input.el-date-editor-input, .el-input__inner, .el-range-input',
 
   elInputNumber: '.el-input-number',
   elInputNumberInput: 'input.el-input-number__input',
@@ -218,6 +219,24 @@ async function fillElCascader(el, value) {
 
 function fillElDatePicker(el, value) {
   const container = el.closest(SELECTOR.elDatePicker) || el.parentElement;
+  if (!container) return false;
+
+  // daterange / datetimerange / monthrange：容器内有 2 个 .el-range-input
+  // Element UI / Plus 通用（class 名一致）
+  const rangeInputs = Array.from(
+    container.querySelectorAll('.el-range-input')
+  );
+  if (rangeInputs.length >= 2) {
+    if (Array.isArray(value) && value.length >= 2) {
+      const ok1 = fillInput(rangeInputs[0], value[0]);
+      const ok2 = fillInput(rangeInputs[1], value[1]);
+      return ok1 || ok2;
+    }
+    // 单值：默认填开始日期
+    return fillInput(rangeInputs[0], value);
+  }
+
+  // 单日期 / 单时间：原逻辑
   const input =
     (container && container.querySelector(SELECTOR.elDatePickerInput)) || el;
   if (!input || input.tagName !== 'INPUT') return false;

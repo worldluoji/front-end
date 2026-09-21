@@ -685,4 +685,66 @@ describe('elementPlusFiller.fill - el-date-picker', () => {
     expect(ok).toBe(true);
     expect(input.value).toBe('2026-09-21');
   });
+
+  it('daterange：数组 value 分两个 .el-range-input 填', () => {
+    const editor = document.createElement('div');
+    editor.className = 'el-date-editor el-range-editor';
+    const start = document.createElement('input');
+    start.className = 'el-range-input';
+    const sep = document.createElement('span');
+    sep.className = 'el-range-separator';
+    sep.textContent = '至';
+    const end = document.createElement('input');
+    end.className = 'el-range-input';
+    editor.appendChild(start);
+    editor.appendChild(sep);
+    editor.appendChild(end);
+    document.body.appendChild(editor);
+
+    const ok = elementPlusFiller.fill(editor, ['2026-09-01', '2026-09-30'], {
+      type: 'daterange',
+    });
+    // Element Plus 的 type 实际是 'date' / 'datetime'，但用 'daterange' 也只是验证 fill 路径
+    expect(ok).toBe(true);
+    expect(start.value).toBe('2026-09-01');
+    expect(end.value).toBe('2026-09-30');
+  });
+
+  it('daterange：单值字符串默认填开始日期', () => {
+    const editor = document.createElement('div');
+    editor.className = 'el-date-editor el-range-editor';
+    const start = document.createElement('input');
+    start.className = 'el-range-input';
+    const end = document.createElement('input');
+    end.className = 'el-range-input';
+    editor.appendChild(start);
+    editor.appendChild(end);
+    document.body.appendChild(editor);
+
+    const ok = elementPlusFiller.fill(editor, '2026-09-01', { type: 'date' });
+    expect(ok).toBe(true);
+    expect(start.value).toBe('2026-09-01');
+    expect(end.value).toBe('');
+  });
+
+  it('Element UI daterange 同样用 .el-range-input（EU/EP 通用 class）', () => {
+    // Element UI 2.x 的 daterange 与 Element Plus 2.6+ 同样使用 .el-range-input
+    // class 拼写：el-date-editor el-range-editor el-input
+    const editor = document.createElement('div');
+    editor.className = 'el-date-editor el-range-editor el-input';
+    const start = document.createElement('input');
+    start.className = 'el-range-input';
+    const end = document.createElement('input');
+    end.className = 'el-range-input';
+    editor.appendChild(start);
+    editor.appendChild(end);
+    document.body.appendChild(editor);
+
+    const ok = elementPlusFiller.fill(editor, ['2026-09-01', '2026-09-30'], {
+      type: 'date',
+    });
+    expect(ok).toBe(true);
+    expect(start.value).toBe('2026-09-01');
+    expect(end.value).toBe('2026-09-30');
+  });
 });
