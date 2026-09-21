@@ -334,7 +334,7 @@ describe('elementPlusFiller.fill - el-checkbox-group', () => {
 });
 
 describe('elementPlusFiller.fill - el-radio-group', () => {
-  it('选中匹配 label 的项', () => {
+  it('选中匹配 label 的项', async () => {
     const group = document.createElement('div');
     group.className = 'el-radio-group';
     ['男', '女'].forEach((label) => {
@@ -352,10 +352,164 @@ describe('elementPlusFiller.fill - el-radio-group', () => {
     });
     document.body.appendChild(group);
 
-    const ok = elementPlusFiller.fill(group, '女', { type: 'radio-group' });
+    const ok = await elementPlusFiller.fill(group, '女', { type: 'radio-group' });
     expect(ok).toBe(true);
     expect(group.querySelector('input[value="女"]').checked).toBe(true);
     expect(group.querySelector('input[value="男"]').checked).toBe(false);
+  });
+
+  it('模拟 Element Plus 真实 DOM 结构：选中 value=2 触发 change', async () => {
+    const group = document.createElement('div');
+    group.className = 'el-radio-group';
+    group.setAttribute('role', 'radiogroup');
+
+    const makeRadio = (value, checked = false) => {
+      const label = document.createElement('label');
+      label.className = 'el-radio' + (checked ? ' is-checked' : '');
+
+      const inputSpan = document.createElement('span');
+      inputSpan.className = 'el-radio__input' + (checked ? ' is-checked' : '');
+
+      const input = document.createElement('input');
+      input.className = 'el-radio__original';
+      input.type = 'radio';
+      input.value = value;
+      if (checked) input.checked = true;
+
+      const inner = document.createElement('span');
+      inner.className = 'el-radio__inner';
+
+      inputSpan.appendChild(input);
+      inputSpan.appendChild(inner);
+
+      const labelSpan = document.createElement('span');
+      labelSpan.className = 'el-radio__label';
+      labelSpan.textContent = `Option ${value}`;
+
+      label.appendChild(inputSpan);
+      label.appendChild(labelSpan);
+      return { label, input };
+    };
+
+    const { input: r1 } = makeRadio('1', true);
+    const { input: r2 } = makeRadio('2', false);
+    group.appendChild(r1.closest('label'));
+    group.appendChild(r2.closest('label'));
+    document.body.appendChild(group);
+
+    const changeHandler = vi.fn();
+    r2.addEventListener('change', changeHandler);
+
+    const ok = await elementPlusFiller.fill(group, '2', { type: 'radio-group' });
+    expect(ok).toBe(true);
+    expect(r2.checked).toBe(true);
+    expect(changeHandler).toHaveBeenCalled();
+  });
+
+  it('按 input.value 而非 label 文本匹配', async () => {
+    const group = document.createElement('div');
+    group.className = 'el-radio-group';
+    ['北京', '上海', '广州'].forEach((label) => {
+      const wrap = document.createElement('label');
+      wrap.className = 'el-radio';
+      const r = document.createElement('input');
+      r.type = 'radio';
+      r.value = `city-${label}`;
+      const span = document.createElement('span');
+      span.className = 'el-radio__label';
+      span.textContent = label;
+      wrap.appendChild(r);
+      wrap.appendChild(span);
+      group.appendChild(wrap);
+    });
+    document.body.appendChild(group);
+
+    const ok = await elementPlusFiller.fill(group, 'city-上海', {
+      type: 'radio-group',
+    });
+    expect(ok).toBe(true);
+    expect(group.querySelector('input[value="city-上海"]').checked).toBe(true);
+  });
+});
+
+describe('elementPlusFiller.fill - el-radio (单个，不在 group 内)', () => {
+  /** 模拟 Element Plus 真实 DOM：label > span.input > input.el-radio__original */
+  function buildMockElRadio(label = 'Option 1', value = '1', checked = false) {
+    const wrap = document.createElement('label');
+    wrap.className = 'el-radio' + (checked ? ' is-checked' : '');
+
+    const inputSpan = document.createElement('span');
+    inputSpan.className = 'el-radio__input' + (checked ? ' is-checked' : '');
+
+    const input = document.createElement('input');
+    input.className = 'el-radio__original';
+    input.type = 'radio';
+    input.value = value;
+    if (checked) input.checked = true;
+
+    const inner = document.createElement('span');
+    inner.className = 'el-radio__inner';
+
+    inputSpan.appendChild(input);
+    inputSpan.appendChild(inner);
+
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'el-radio__label';
+    labelSpan.textContent = label;
+
+    wrap.appendChild(inputSpan);
+    wrap.appendChild(labelSpan);
+
+    return { wrap, input };
+  }
+
+  it('selector 指向 label 时按 value 匹配并触发 change', async () => {
+    const { wrap, input } = buildMockElRadio('Option 1', '1');
+    document.body.appendChild(wrap);
+
+    const handler = vi.fn();
+    input.addEventListener('change', handler);
+
+    const ok = await elementPlusFiller.fill(wrap, '1', { type: 'radio' });
+    expect(ok).toBe(true);
+    expect(input.checked).toBe(true);
+    expect(handler).toHaveBeenCalled();
+  });
+
+  it('selector 指向 input.el-radio__original 时也工作', async () => {
+    const { wrap, input } = buildMockElRadio('Option 1', '1');
+    document.body.appendChild(wrap);
+
+    const ok = await elementPlusFiller.fill(input, '1', { type: 'radio' });
+    expect(ok).toBe(true);
+    expect(input.checked).toBe(true);
+  });
+
+  it('value 不匹配 input.value 时返回 false（不误操作）', async () => {
+    const { wrap, input } = buildMockElRadio('Option 1', '1');
+    document.body.appendChild(wrap);
+
+    const ok = await elementPlusFiller.fill(wrap, '2', { type: 'radio' });
+    expect(ok).toBe(false);
+    expect(input.checked).toBe(false);
+  });
+
+  it('已勾选时直接返回 true，不重复触发', async () => {
+    const { wrap, input } = buildMockElRadio('Option 1', '1', true);
+    document.body.appendChild(wrap);
+
+    const handler = vi.fn();
+    input.addEventListener('change', handler);
+
+    const ok = await elementPlusFiller.fill(wrap, '1', { type: 'radio' });
+    expect(ok).toBe(true);
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('match 在 type=radio 时对 .el-radio 容器返回 true', () => {
+    const { wrap } = buildMockElRadio();
+    document.body.appendChild(wrap);
+    expect(elementPlusFiller.match(wrap, { type: 'radio' })).toBe(true);
   });
 });
 

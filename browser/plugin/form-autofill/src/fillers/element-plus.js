@@ -285,9 +285,33 @@ async function fillElCheckboxGroup(el, value) {
   return any;
 }
 
+// ===================== el-radio (单个) =====================
+
+async function fillElRadio(el, value) {
+  // 兼容 selector 指向 label / span / input 的情况
+  const input =
+    el.tagName === 'INPUT' && el.type === 'radio'
+      ? el
+      : el.querySelector(SELECTOR.elRadioInput);
+  if (!input) return false;
+
+  const strValue = value == null ? '' : String(value);
+  // 按 input.value 匹配，不匹配不操作
+  if (input.value !== strValue) return false;
+
+  if (input.checked) return true;
+
+  input.click();
+  if (!input.checked) {
+    input.checked = true;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  return input.checked;
+}
+
 // ===================== el-radio-group =====================
 
-function fillElRadioGroup(el, value) {
+async function fillElRadioGroup(el, value) {
   const container = el.closest(SELECTOR.elRadioGroup);
   if (!container) return false;
   const strValue = value == null ? '' : String(value);
@@ -302,8 +326,15 @@ function fillElRadioGroup(el, value) {
       : null;
     const labelText = labelEl ? (labelEl.textContent || '').trim() : '';
     if (input.value === strValue || labelText === strValue) {
-      input.checked = true;
-      triggerInputEvents(input);
+      if (!input.checked) {
+        // 用 click() 模拟用户操作：浏览器会切换 checked + 触发 change 事件，
+        // Element Plus 的 v-model 会响应
+        input.click();
+        if (!input.checked) {
+          input.checked = true;
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
       return true;
     }
   }
@@ -350,6 +381,7 @@ export const elementPlusFiller = {
     const inElCheckboxGroup = !!el.closest(SELECTOR.elCheckboxGroup);
     const inElCheckbox = !!el.closest(SELECTOR.elCheckbox);
     const inElRadioGroup = !!el.closest(SELECTOR.elRadioGroup);
+    const inElRadio = !!el.closest(SELECTOR.elRadio);
 
     if (type === 'select') return inElSelect;
     if (type === 'cascader') return inElCascader;
@@ -365,6 +397,10 @@ export const elementPlusFiller = {
       // 单个 el-checkbox（不在 group 内）或原生 checkbox 都接管
       return inElCheckbox || el.tagName === 'INPUT' || el.tagName === 'LABEL';
     }
+    if (type === 'radio') {
+      // 单个 el-radio（不在 group 内）或原生 radio 都接管
+      return inElRadio || el.tagName === 'INPUT' || el.tagName === 'LABEL';
+    }
 
     // 无 type 时按容器猜
     return (
@@ -376,7 +412,8 @@ export const elementPlusFiller = {
       inElSlider ||
       inElCheckboxGroup ||
       inElCheckbox ||
-      inElRadioGroup
+      inElRadioGroup ||
+      inElRadio
     );
   },
 
@@ -406,6 +443,9 @@ export const elementPlusFiller = {
     if (type === 'checkbox' && el.closest(SELECTOR.elCheckbox)) {
       return fillElCheckbox(el, value);
     }
+    if (type === 'radio' && el.closest(SELECTOR.elRadio)) {
+      return fillElRadio(el, value);
+    }
     if (type === 'radio-group' && el.closest(SELECTOR.elRadioGroup)) {
       return fillElRadioGroup(el, value);
     }
@@ -427,6 +467,8 @@ export const elementPlusFiller = {
       return fillElCheckboxGroup(el, value);
     if (el.closest(SELECTOR.elCheckbox))
       return fillElCheckbox(el, value);
+    if (el.closest(SELECTOR.elRadio))
+      return fillElRadio(el, value);
     if (el.closest(SELECTOR.elRadioGroup))
       return fillElRadioGroup(el, value);
 

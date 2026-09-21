@@ -341,7 +341,20 @@
     }
     return any;
   }
-  function fillElRadioGroup(el, value) {
+  async function fillElRadio(el, value) {
+    const input = el.tagName === "INPUT" && el.type === "radio" ? el : el.querySelector(SELECTOR.elRadioInput);
+    if (!input) return false;
+    const strValue = value == null ? "" : String(value);
+    if (input.value !== strValue) return false;
+    if (input.checked) return true;
+    input.click();
+    if (!input.checked) {
+      input.checked = true;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    return input.checked;
+  }
+  async function fillElRadioGroup(el, value) {
     const container = el.closest(SELECTOR.elRadioGroup);
     if (!container) return false;
     const strValue = value == null ? "" : String(value);
@@ -353,8 +366,13 @@
       const labelEl = wrapper ? wrapper.querySelector(".el-radio__label") : null;
       const labelText = labelEl ? (labelEl.textContent || "").trim() : "";
       if (input.value === strValue || labelText === strValue) {
-        input.checked = true;
-        triggerInputEvents(input);
+        if (!input.checked) {
+          input.click();
+          if (!input.checked) {
+            input.checked = true;
+            input.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+        }
         return true;
       }
     }
@@ -392,6 +410,7 @@
       const inElCheckboxGroup = !!el.closest(SELECTOR.elCheckboxGroup);
       const inElCheckbox = !!el.closest(SELECTOR.elCheckbox);
       const inElRadioGroup = !!el.closest(SELECTOR.elRadioGroup);
+      const inElRadio = !!el.closest(SELECTOR.elRadio);
       if (type === "select") return inElSelect;
       if (type === "cascader") return inElCascader;
       if (type === "input-number" || type === "number-input")
@@ -405,7 +424,10 @@
       if (type === "checkbox") {
         return inElCheckbox || el.tagName === "INPUT" || el.tagName === "LABEL";
       }
-      return inElSelect || inElCascader || inElInputNumber || inElDatePicker || inElSwitch || inElSlider || inElCheckboxGroup || inElCheckbox || inElRadioGroup;
+      if (type === "radio") {
+        return inElRadio || el.tagName === "INPUT" || el.tagName === "LABEL";
+      }
+      return inElSelect || inElCascader || inElInputNumber || inElDatePicker || inElSwitch || inElSlider || inElCheckboxGroup || inElCheckbox || inElRadioGroup || inElRadio;
     },
     fill(el, value, item) {
       const type = item && item.type || "";
@@ -427,6 +449,9 @@
       if (type === "checkbox" && el.closest(SELECTOR.elCheckbox)) {
         return fillElCheckbox(el, value);
       }
+      if (type === "radio" && el.closest(SELECTOR.elRadio)) {
+        return fillElRadio(el, value);
+      }
       if (type === "radio-group" && el.closest(SELECTOR.elRadioGroup)) {
         return fillElRadioGroup(el, value);
       }
@@ -446,6 +471,8 @@
         return fillElCheckboxGroup(el, value);
       if (el.closest(SELECTOR.elCheckbox))
         return fillElCheckbox(el, value);
+      if (el.closest(SELECTOR.elRadio))
+        return fillElRadio(el, value);
       if (el.closest(SELECTOR.elRadioGroup))
         return fillElRadioGroup(el, value);
       return false;
