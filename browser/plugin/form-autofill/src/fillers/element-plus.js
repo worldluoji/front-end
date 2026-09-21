@@ -233,9 +233,21 @@ async function fillElCheckbox(el, value) {
       ? el
       : el.querySelector(SELECTOR.elCheckboxInput);
   if (!input) return false;
-  input.checked = !!value;
-  input.dispatchEvent(new Event('change', { bubbles: true }));
-  return true;
+
+  const desired = !!value;
+  if (input.checked === desired) return true;
+
+  // 用 click() 模拟用户操作：浏览器会切换 checked + 触发原生 change/input 事件，
+  // Vue / Element Plus 的 @change 监听器能收到。这是 Element Plus 期望的交互路径。
+  input.click();
+
+  // 兜底：某些 happy-dom / jsdom 环境下 click() 不会切换 checked，需手动设置并 dispatch
+  if (input.checked !== desired) {
+    input.checked = desired;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  return input.checked === desired;
 }
 
 // ===================== el-checkbox-group =====================
@@ -258,9 +270,15 @@ async function fillElCheckboxGroup(el, value) {
     const nativeValue = input.value;
     const matched =
       values.includes(nativeValue) || values.includes(labelText);
-    if (matched) {
-      input.checked = true;
-      triggerInputEvents(input);
+    if (matched && !input.checked) {
+      // 同单 el-checkbox：让浏览器原生 click 触发完整事件链
+      input.click();
+      if (input.checked !== true) {
+        input.checked = true;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      any = true;
+    } else if (matched) {
       any = true;
     }
   }

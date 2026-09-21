@@ -304,9 +304,15 @@
   async function fillElCheckbox(el, value) {
     const input = el.tagName === "INPUT" && el.type === "checkbox" ? el : el.querySelector(SELECTOR.elCheckboxInput);
     if (!input) return false;
-    input.checked = !!value;
-    input.dispatchEvent(new Event("change", { bubbles: true }));
-    return true;
+    const desired = !!value;
+    if (input.checked === desired) return true;
+    input.click();
+    if (input.checked !== desired) {
+      input.checked = desired;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    return input.checked === desired;
   }
   async function fillElCheckboxGroup(el, value) {
     const container = el.closest(SELECTOR.elCheckboxGroup);
@@ -322,9 +328,14 @@
       const labelText = labelEl ? (labelEl.textContent || "").trim() : "";
       const nativeValue = input.value;
       const matched = values.includes(nativeValue) || values.includes(labelText);
-      if (matched) {
-        input.checked = true;
-        triggerInputEvents(input);
+      if (matched && !input.checked) {
+        input.click();
+        if (input.checked !== true) {
+          input.checked = true;
+          input.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+        any = true;
+      } else if (matched) {
         any = true;
       }
     }
