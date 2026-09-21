@@ -93,13 +93,16 @@ describe('elementPlusFiller.match', () => {
     expect(elementPlusFiller.match(inner, { type: 'cascader' })).toBe(true);
   });
 
-  it('el-checkbox-group + type=checkbox-group 匹配', () => {
+  it('el-checkbox-group + type=checkbox 匹配', () => {
     const group = document.createElement('div');
     group.className = 'el-checkbox-group';
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     group.appendChild(cb);
-    expect(elementPlusFiller.match(cb, { type: 'checkbox-group' })).toBe(true);
+    // 合并后 type='checkbox' 同时匹配单个和组
+    expect(elementPlusFiller.match(cb, { type: 'checkbox' })).toBe(true);
+    // 容器本身也匹配
+    expect(elementPlusFiller.match(group, { type: 'checkbox' })).toBe(true);
   });
 
   it('el-switch + type=switch 匹配', () => {
@@ -307,7 +310,7 @@ describe('elementPlusFiller.fill - el-checkbox (单个，不在 group 内)', () 
   });
 });
 
-describe('elementPlusFiller.fill - el-checkbox-group', () => {
+describe('elementPlusFiller.fill - el-checkbox-group（合并到 type=checkbox）', () => {
   it('勾选匹配 label 的项', async () => {
     const group = document.createElement('div');
     group.className = 'el-checkbox-group';
@@ -327,13 +330,13 @@ describe('elementPlusFiller.fill - el-checkbox-group', () => {
     document.body.appendChild(group);
 
     const ok = await elementPlusFiller.fill(group, ['苹果', '橘子'], {
-      type: 'checkbox-group',
+      type: 'checkbox',
     });
     expect(ok).toBe(true);
     expect(group.querySelectorAll('input[type=checkbox]:checked').length).toBe(2);
   });
 
-  it('按 input.value 匹配', () => {
+  it('按 input.value 匹配', async () => {
     const group = document.createElement('div');
     group.className = 'el-checkbox-group';
     ['1', '2', '3'].forEach((v) => {
@@ -347,13 +350,38 @@ describe('elementPlusFiller.fill - el-checkbox-group', () => {
     });
     document.body.appendChild(group);
 
-    elementPlusFiller.fill(group, '2', { type: 'checkbox-group' });
+    const ok = await elementPlusFiller.fill(group, '2', {
+      type: 'checkbox',
+    });
+    expect(ok).toBe(true);
     const checked = group.querySelector('input[value="2"]');
     expect(checked.checked).toBe(true);
   });
+
+  it('子元素（label）作为 selector 时也走 group 逻辑', async () => {
+    const group = document.createElement('div');
+    group.className = 'el-checkbox-group';
+    ['a', 'b'].forEach((label) => {
+      const wrap = document.createElement('label');
+      wrap.className = 'el-checkbox';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = label;
+      wrap.appendChild(cb);
+      group.appendChild(wrap);
+    });
+    document.body.appendChild(group);
+    const child = group.querySelectorAll('label')[0];
+
+    const ok = await elementPlusFiller.fill(child, ['a', 'b'], {
+      type: 'checkbox',
+    });
+    expect(ok).toBe(true);
+    expect(group.querySelectorAll('input[type=checkbox]:checked').length).toBe(2);
+  });
 });
 
-describe('elementPlusFiller.fill - el-radio-group', () => {
+describe('elementPlusFiller.fill - el-radio-group（合并到 type=radio）', () => {
   it('选中匹配 label 的项', async () => {
     const group = document.createElement('div');
     group.className = 'el-radio-group';
@@ -372,7 +400,7 @@ describe('elementPlusFiller.fill - el-radio-group', () => {
     });
     document.body.appendChild(group);
 
-    const ok = await elementPlusFiller.fill(group, '女', { type: 'radio-group' });
+    const ok = await elementPlusFiller.fill(group, '女', { type: 'radio' });
     expect(ok).toBe(true);
     expect(group.querySelector('input[value="女"]').checked).toBe(true);
     expect(group.querySelector('input[value="男"]').checked).toBe(false);
@@ -420,7 +448,7 @@ describe('elementPlusFiller.fill - el-radio-group', () => {
     const changeHandler = vi.fn();
     r2.addEventListener('change', changeHandler);
 
-    const ok = await elementPlusFiller.fill(group, '2', { type: 'radio-group' });
+    const ok = await elementPlusFiller.fill(group, '2', { type: 'radio' });
     expect(ok).toBe(true);
     expect(r2.checked).toBe(true);
     expect(changeHandler).toHaveBeenCalled();
@@ -445,7 +473,7 @@ describe('elementPlusFiller.fill - el-radio-group', () => {
     document.body.appendChild(group);
 
     const ok = await elementPlusFiller.fill(group, 'city-上海', {
-      type: 'radio-group',
+      type: 'radio',
     });
     expect(ok).toBe(true);
     expect(group.querySelector('input[value="city-上海"]').checked).toBe(true);

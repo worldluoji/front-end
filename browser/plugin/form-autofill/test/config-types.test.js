@@ -22,8 +22,6 @@ describe('FIELD_TYPES', () => {
         'datetime',
         'time',
         'cascader',
-        'checkbox-group',
-        'radio-group',
       ])
     );
   });
@@ -44,7 +42,6 @@ describe('getDefaultValueByType', () => {
     expect(getDefaultValueByType('switch')).toBe(false);
     expect(getDefaultValueByType('range')).toBe(0);
     expect(getDefaultValueByType('cascader')).toEqual([]);
-    expect(getDefaultValueByType('checkbox-group')).toEqual([]);
   });
 
   it('未知 type 返回空字符串', () => {

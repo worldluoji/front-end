@@ -87,6 +87,26 @@ describe('normalizeConfig', () => {
     expect(c.SHORTCUT.meta).toBe(DEFAULT_CONFIG.SHORTCUT.meta);
     expect(c.PAGE_CONFIGS[0].urlPattern).toBeInstanceOf(RegExp);
   });
+
+  it('旧版 type=checkbox-group / radio-group 自动迁移到 checkbox / radio', () => {
+    const c = normalizeConfig({
+      PAGE_CONFIGS: [
+        {
+          name: '老配置',
+          urlPattern: '/old',
+          fields: [
+            { selector: '.g1', value: ['a', 'b'], type: 'checkbox-group' },
+            { selector: '.g2', value: '女', type: 'radio-group' },
+          ],
+        },
+      ],
+    });
+    expect(c.PAGE_CONFIGS[0].fields[0].type).toBe('checkbox');
+    expect(c.PAGE_CONFIGS[0].fields[1].type).toBe('radio');
+    // value 原样保留
+    expect(c.PAGE_CONFIGS[0].fields[0].value).toEqual(['a', 'b']);
+    expect(c.PAGE_CONFIGS[0].fields[1].value).toBe('女');
+  });
 });
 
 describe('import / export', () => {

@@ -318,19 +318,31 @@ export function openConfigUI() {
     const v = field.value;
     const t = field.type || 'input';
     const baseAttrs = `data-field="value" data-pi="${pageIdx}" data-fi="${fieldIdx}"`;
-    if (t === 'checkbox' || t === 'switch') {
+    if (t === 'switch') {
       const checked = !!v ? 'checked' : '';
       return `<label style="display:flex;align-items:center;gap:6px;padding-top:6px"><input type="checkbox" ${baseAttrs} ${checked}/> ${escapeHtml(getFieldTypeLabel(t))}</label>`;
     }
+    if (t === 'checkbox') {
+      // 兼容 bool（单元素）和 数组（组多选）：用文本框 + 占位符提示两种用法
+      let displayValue;
+      if (typeof v === 'boolean') displayValue = v ? 'true' : 'false';
+      else if (Array.isArray(v)) displayValue = JSON.stringify(v);
+      else displayValue = String(v ?? '');
+      return `<input type="text" ${baseAttrs} value="${escapeAttr(displayValue)}" placeholder="true / false  或  [&quot;a&quot;,&quot;b&quot;]"/>`;
+    }
     if (t === 'radio') {
-      return `<input type="text" ${baseAttrs} value="${escapeAttr(v === true ? 'true' : String(v ?? ''))}" placeholder="true 或 radio 的 value"/>`;
+      // 单个 radio 文本框：true 或匹配 value 的字符串；组内也是字符串匹配
+      let displayValue;
+      if (typeof v === 'boolean') displayValue = v ? 'true' : 'false';
+      else displayValue = String(v ?? '');
+      return `<input type="text" ${baseAttrs} value="${escapeAttr(displayValue)}" placeholder="true 或 radio 的 value"/>`;
     }
     if (t === 'range' || t === 'slider' || t === 'input-number') {
       return `<input type="number" ${baseAttrs} value="${escapeAttr(String(v ?? 0))}"/>`;
     }
-    if (t === 'cascader' || t === 'checkbox-group') {
+    if (t === 'cascader') {
       const arrStr = JSON.stringify(v || []);
-      return `<input type="text" ${baseAttrs} value='${escapeAttr(arrStr)}' placeholder='["a","b"]'/><div class="hint">JSON 数组</div>`;
+      return `<input type="text" ${baseAttrs} value='${escapeAttr(arrStr)}' placeholder='["level1","level2"]'/><div class="hint">字符串（单值路径）或 JSON 数组</div>`;
     }
     return `<input type="text" ${baseAttrs} value="${escapeAttr(String(v ?? ''))}"/>`;
   }
@@ -340,8 +352,9 @@ export function openConfigUI() {
       case 'select':
         return 'value 匹配 data-value 或选项文本';
       case 'radio':
-        return 'true 表示选中；其他值匹配 input.value';
+        return 'true 选中该 radio；其他值匹配 input.value；组内按 value/label';
       case 'checkbox':
+        return 'true / false 切换；JSON 数组勾选复选框组';
       case 'switch':
         return 'true / false';
       case 'range':
@@ -354,10 +367,6 @@ export function openConfigUI() {
       case 'datetime':
       case 'time':
         return '字符串，如 2026-09-21 / 12:30:00';
-      case 'checkbox-group':
-        return '["a","b"] 多选';
-      case 'radio-group':
-        return '单个字符串';
       default:
         return '';
     }
@@ -515,12 +524,33 @@ export function openConfigUI() {
             f.value = t.checked;
           } else if (t.type === 'number') {
             f.value = t.value === '' ? 0 : Number(t.value);
-          } else if (f.type === 'cascader' || f.type === 'checkbox-group') {
+          } else if (f.type === 'cascader') {
             try {
               f.value = JSON.parse(t.value);
             } catch {
               // 解析中时暂存原值，避免破坏
               return;
+            }
+          } else if (f.type === 'checkbox') {
+            // 文本框：true / false（单元素）或 ["a","b"]（组多选）
+            const raw = (t.value || '').trim();
+            if (raw === 'true') f.value = true;
+            else if (raw === 'false') f.value = false;
+            else if (raw === '') f.value = false;
+            else if (raw.startsWith('[')) {
+              try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) {
+                  f.value = parsed;
+                } else {
+                  f.value = raw; // 非数组，留作字符串
+                }
+              } catch {
+                f.value = raw; // JSON 未完成，暂存
+              }
+            } else {
+              // 普通字符串：作为 group 内 label/value 匹配用
+              f.value = raw;
             }
           } else {
             f.value = t.value;

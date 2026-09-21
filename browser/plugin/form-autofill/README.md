@@ -116,15 +116,15 @@ window.__AUTOFILL_CONFIG__  >  localStorage(form_autofill_config_v3)  >  DEFAULT
 |---|---|---|
 | `input` | `<input>` / `<textarea>` / el-input | 字符串 |
 | `select` | `<select>` 或 el-select | 选项的 value 或文本 |
-| `checkbox` | `<input type=checkbox>` / el-checkbox | `true` / `false` |
-| `radio` | `<input type=radio>` / el-radio | 该 radio 的 value，或 `true` 表示选中 |
+| `checkbox` | `<input type=checkbox>` / el-checkbox / el-checkbox-group | 单元素：`true`/`false`；组：`true`/`false` 或 JSON 数组（多选） |
+| `radio` | `<input type=radio>` / el-radio / el-radio-group | 单元素：`true` 或匹配 value 的字符串；组：匹配 value/label 的字符串 |
 | `range` / `slider` | `<input type=range>` / el-slider | 数字 |
 | `switch` | el-switch | `true` / `false` |
 | `input-number` | el-input-number | 数字 |
 | `date` / `datetime` / `time` | el-date-picker / el-time-picker | 字符串（如 `'2026-09-21'`） |
 | `cascader` | el-cascader | 字符串（单值）或数组（路径） |
-| `checkbox-group` | el-checkbox-group | 字符串数组（多选），或单个字符串 |
-| `radio-group` | el-radio-group | 单个字符串 |
+
+> `checkbox` / `radio` 自动判定单元素还是组容器：若 selector 指向 `.el-checkbox-group` / `.el-radio-group`（或其子元素），按"按 label/value 匹配 + 可多选"处理；否则按单元素处理。
 
 ### selector 怎么写
 
@@ -137,8 +137,8 @@ CSS 选择器，写到目标元素即可。对于 Element 组件，写**输入�
 // el-select → 也用内部 input，type: 'select' 会自动找 .el-select 容器
 { selector: '.my-select .el-input__inner', type: 'select', value: 'tech' }
 
-// el-checkbox-group → 用容器
-{ selector: '.fruits-group', type: 'checkbox-group', value: ['苹果', '橘子'] }
+// el-checkbox-group → 用容器，type=checkbox 自动按组处理（按 label/value 匹配，可多选）
+{ selector: '.fruits-group', type: 'checkbox', value: ['苹果', '橘子'] }
 
 // el-date-picker → 用内部 input，type: 'date' 自动找 .el-date-editor 容器
 { selector: '.my-date .el-input__inner', type: 'date', value: '2026-09-21' }
@@ -157,8 +157,8 @@ PAGE_CONFIGS: [
       { selector: '#age', type: 'input-number', value: 28 },
       { selector: '.dept-select .el-input__inner', type: 'select', value: 'tech' },
       { selector: '.region-select .el-input__inner', type: 'cascader', value: ['浙江', '杭州'] },
-      { selector: '.skills-group', type: 'checkbox-group', value: ['JS', 'Vue'] },
-      { selector: '.gender-group', type: 'radio-group', value: '女' },
+      { selector: '.skills-group', type: 'checkbox', value: ['JS', 'Vue'] },
+      { selector: '.gender-group', type: 'radio', value: '女' },
       { selector: '.hire-date .el-input__inner', type: 'date', value: '2026-09-21' },
       { selector: '.active-switch', type: 'switch', value: true },
       { selector: '.level-slider', type: 'slider', value: 75 },

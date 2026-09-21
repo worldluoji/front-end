@@ -422,16 +422,14 @@
         return inElInputNumber;
       if (type === "date" || type === "datetime" || type === "time")
         return inElDatePicker;
-      if (type === "checkbox-group") return inElCheckboxGroup;
-      if (type === "radio-group") return inElRadioGroup;
-      if (type === "switch") return inElSwitch;
-      if (type === "slider") return inElSlider;
       if (type === "checkbox") {
-        return inElCheckbox || el.tagName === "INPUT" || el.tagName === "LABEL";
+        return inElCheckbox || inElCheckboxGroup || el.tagName === "INPUT" || el.tagName === "LABEL";
       }
       if (type === "radio") {
-        return inElRadio || el.tagName === "INPUT" || el.tagName === "LABEL";
+        return inElRadio || inElRadioGroup || el.tagName === "INPUT" || el.tagName === "LABEL";
       }
+      if (type === "switch") return inElSwitch;
+      if (type === "slider") return inElSlider;
       return inElSelect || inElCascader || inElInputNumber || inElDatePicker || inElSwitch || inElSlider || inElCheckboxGroup || inElCheckbox || inElRadioGroup || inElRadio;
     },
     fill(el, value, item) {
@@ -448,17 +446,24 @@
       if ((type === "date" || type === "datetime" || type === "time") && el.closest(SELECTOR.elDatePicker)) {
         return fillElDatePicker(el, value);
       }
-      if (type === "checkbox-group" && el.closest(SELECTOR.elCheckboxGroup)) {
-        return fillElCheckboxGroup(el, value);
+      if (type === "checkbox") {
+        const group = el.closest(SELECTOR.elCheckboxGroup);
+        if (Array.isArray(value) || group) {
+          return fillElCheckboxGroup(el, value);
+        }
+        if (el.closest(SELECTOR.elCheckbox) || el.tagName === "INPUT" || el.tagName === "LABEL") {
+          return fillElCheckbox(el, value);
+        }
+        return false;
       }
-      if (type === "checkbox" && el.closest(SELECTOR.elCheckbox)) {
-        return fillElCheckbox(el, value);
-      }
-      if (type === "radio" && el.closest(SELECTOR.elRadio)) {
-        return fillElRadio(el, value);
-      }
-      if (type === "radio-group" && el.closest(SELECTOR.elRadioGroup)) {
-        return fillElRadioGroup(el, value);
+      if (type === "radio") {
+        if (el.closest(SELECTOR.elRadioGroup)) {
+          return fillElRadioGroup(el, value);
+        }
+        if (el.closest(SELECTOR.elRadio) || el.tagName === "INPUT" || el.tagName === "LABEL") {
+          return fillElRadio(el, value);
+        }
+        return false;
       }
       if (type === "switch" && el.closest(SELECTOR.elSwitch)) {
         return fillElSwitch(el, value);
@@ -726,10 +731,13 @@
           urlPattern: (_a3 = p == null ? void 0 : p.urlPattern) != null ? _a3 : "",
           fields: Array.isArray(p == null ? void 0 : p.fields) ? p.fields.map((f) => {
             var _a4;
+            let t = typeof (f == null ? void 0 : f.type) === "string" ? f.type : "input";
+            if (t === "checkbox-group") t = "checkbox";
+            if (t === "radio-group") t = "radio";
             return {
               selector: typeof (f == null ? void 0 : f.selector) === "string" ? f.selector : "",
               value: (_a4 = f == null ? void 0 : f.value) != null ? _a4 : "",
-              type: typeof (f == null ? void 0 : f.type) === "string" ? f.type : "input"
+              type: t
             };
           }) : []
         };
@@ -749,7 +757,7 @@
     { value: "input", label: "input (\u6587\u672C\u8F93\u5165\u6846)", defaultValue: "" },
     { value: "select", label: "select (\u4E0B\u62C9\u9009\u62E9)", defaultValue: "" },
     { value: "checkbox", label: "checkbox (\u590D\u9009\u6846)", defaultValue: false },
-    { value: "radio", label: "radio (\u5355\u9009)", defaultValue: true },
+    { value: "radio", label: "radio (\u5355\u9009)", defaultValue: "" },
     { value: "range", label: "range (\u6ED1\u5757)", defaultValue: 0 },
     { value: "slider", label: "slider (\u6ED1\u5757)", defaultValue: 0 },
     { value: "switch", label: "switch (\u5F00\u5173)", defaultValue: false },
@@ -757,9 +765,7 @@
     { value: "date", label: "date (\u65E5\u671F\u9009\u62E9\u5668)", defaultValue: "" },
     { value: "datetime", label: "datetime (\u65E5\u671F\u65F6\u95F4)", defaultValue: "" },
     { value: "time", label: "time (\u65F6\u95F4\u9009\u62E9\u5668)", defaultValue: "" },
-    { value: "cascader", label: "cascader (\u7EA7\u8054\u9009\u62E9)", defaultValue: [] },
-    { value: "checkbox-group", label: "checkbox-group (\u590D\u9009\u6846\u7EC4)", defaultValue: [] },
-    { value: "radio-group", label: "radio-group (\u5355\u9009\u7EC4)", defaultValue: "" }
+    { value: "cascader", label: "cascader (\u7EA7\u8054\u9009\u62E9)", defaultValue: [] }
   ];
   var DEFAULT_BY_TYPE = Object.fromEntries(
     FIELD_TYPES.map((t) => [t.value, t.defaultValue])
@@ -1045,19 +1051,29 @@
       const v = field.value;
       const t = field.type || "input";
       const baseAttrs = `data-field="value" data-pi="${pageIdx}" data-fi="${fieldIdx}"`;
-      if (t === "checkbox" || t === "switch") {
+      if (t === "switch") {
         const checked = !!v ? "checked" : "";
         return `<label style="display:flex;align-items:center;gap:6px;padding-top:6px"><input type="checkbox" ${baseAttrs} ${checked}/> ${escapeHtml(getFieldTypeLabel(t))}</label>`;
       }
+      if (t === "checkbox") {
+        let displayValue;
+        if (typeof v === "boolean") displayValue = v ? "true" : "false";
+        else if (Array.isArray(v)) displayValue = JSON.stringify(v);
+        else displayValue = String(v != null ? v : "");
+        return `<input type="text" ${baseAttrs} value="${escapeAttr(displayValue)}" placeholder="true / false  \u6216  [&quot;a&quot;,&quot;b&quot;]"/>`;
+      }
       if (t === "radio") {
-        return `<input type="text" ${baseAttrs} value="${escapeAttr(v === true ? "true" : String(v != null ? v : ""))}" placeholder="true \u6216 radio \u7684 value"/>`;
+        let displayValue;
+        if (typeof v === "boolean") displayValue = v ? "true" : "false";
+        else displayValue = String(v != null ? v : "");
+        return `<input type="text" ${baseAttrs} value="${escapeAttr(displayValue)}" placeholder="true \u6216 radio \u7684 value"/>`;
       }
       if (t === "range" || t === "slider" || t === "input-number") {
         return `<input type="number" ${baseAttrs} value="${escapeAttr(String(v != null ? v : 0))}"/>`;
       }
-      if (t === "cascader" || t === "checkbox-group") {
+      if (t === "cascader") {
         const arrStr = JSON.stringify(v || []);
-        return `<input type="text" ${baseAttrs} value='${escapeAttr(arrStr)}' placeholder='["a","b"]'/><div class="hint">JSON \u6570\u7EC4</div>`;
+        return `<input type="text" ${baseAttrs} value='${escapeAttr(arrStr)}' placeholder='["level1","level2"]'/><div class="hint">\u5B57\u7B26\u4E32\uFF08\u5355\u503C\u8DEF\u5F84\uFF09\u6216 JSON \u6570\u7EC4</div>`;
       }
       return `<input type="text" ${baseAttrs} value="${escapeAttr(String(v != null ? v : ""))}"/>`;
     }
@@ -1066,8 +1082,9 @@
         case "select":
           return "value \u5339\u914D data-value \u6216\u9009\u9879\u6587\u672C";
         case "radio":
-          return "true \u8868\u793A\u9009\u4E2D\uFF1B\u5176\u4ED6\u503C\u5339\u914D input.value";
+          return "true \u9009\u4E2D\u8BE5 radio\uFF1B\u5176\u4ED6\u503C\u5339\u914D input.value\uFF1B\u7EC4\u5185\u6309 value/label";
         case "checkbox":
+          return "true / false \u5207\u6362\uFF1BJSON \u6570\u7EC4\u52FE\u9009\u590D\u9009\u6846\u7EC4";
         case "switch":
           return "true / false";
         case "range":
@@ -1080,10 +1097,6 @@
         case "datetime":
         case "time":
           return "\u5B57\u7B26\u4E32\uFF0C\u5982 2026-09-21 / 12:30:00";
-        case "checkbox-group":
-          return '["a","b"] \u591A\u9009';
-        case "radio-group":
-          return "\u5355\u4E2A\u5B57\u7B26\u4E32";
         default:
           return "";
       }
@@ -1229,11 +1242,30 @@
               f.value = t.checked;
             } else if (t.type === "number") {
               f.value = t.value === "" ? 0 : Number(t.value);
-            } else if (f.type === "cascader" || f.type === "checkbox-group") {
+            } else if (f.type === "cascader") {
               try {
                 f.value = JSON.parse(t.value);
               } catch (e2) {
                 return;
+              }
+            } else if (f.type === "checkbox") {
+              const raw = (t.value || "").trim();
+              if (raw === "true") f.value = true;
+              else if (raw === "false") f.value = false;
+              else if (raw === "") f.value = false;
+              else if (raw.startsWith("[")) {
+                try {
+                  const parsed = JSON.parse(raw);
+                  if (Array.isArray(parsed)) {
+                    f.value = parsed;
+                  } else {
+                    f.value = raw;
+                  }
+                } catch (e2) {
+                  f.value = raw;
+                }
+              } else {
+                f.value = raw;
               }
             } else {
               f.value = t.value;

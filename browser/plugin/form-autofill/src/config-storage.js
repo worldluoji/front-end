@@ -78,11 +78,17 @@ export function normalizeConfig(raw) {
           name: typeof p?.name === 'string' ? p.name : '未命名',
           urlPattern: p?.urlPattern ?? '',
           fields: Array.isArray(p?.fields)
-            ? p.fields.map((f) => ({
-                selector: typeof f?.selector === 'string' ? f.selector : '',
-                value: f?.value ?? '',
-                type: typeof f?.type === 'string' ? f.type : 'input',
-              }))
+            ? p.fields.map((f) => {
+                let t = typeof f?.type === 'string' ? f.type : 'input';
+                // 兼容旧版 type：v3.1 之前有 checkbox-group / radio-group，已合并到单 type
+                if (t === 'checkbox-group') t = 'checkbox';
+                if (t === 'radio-group') t = 'radio';
+                return {
+                  selector: typeof f?.selector === 'string' ? f.selector : '',
+                  value: f?.value ?? '',
+                  type: t,
+                };
+              })
             : [],
         }))
       : [],

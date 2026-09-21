@@ -94,9 +94,10 @@ describe('openConfigUI - 字段编辑', () => {
     typeSelect.value = 'checkbox';
     typeSelect.dispatchEvent(new Event('input', { bubbles: true }));
 
-    // 类型变化后 value 应是 checkbox input
-    const valInput = root.querySelector('input[data-field="value"][type="checkbox"]');
+    // checkbox 合并后 value 是文本输入框（接受 true/false 或 JSON 数组）
+    const valInput = root.querySelector('input[data-field="value"]');
     expect(valInput).toBeTruthy();
+    expect(valInput.type).toBe('text');
   });
 });
 

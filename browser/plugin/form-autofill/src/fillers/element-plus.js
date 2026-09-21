@@ -397,18 +397,27 @@ export const elementPlusFiller = {
       return inElInputNumber;
     if (type === 'date' || type === 'datetime' || type === 'time')
       return inElDatePicker;
-    if (type === 'checkbox-group') return inElCheckboxGroup;
-    if (type === 'radio-group') return inElRadioGroup;
-    if (type === 'switch') return inElSwitch;
-    if (type === 'slider') return inElSlider;
     if (type === 'checkbox') {
-      // 单个 el-checkbox（不在 group 内）或原生 checkbox 都接管
-      return inElCheckbox || el.tagName === 'INPUT' || el.tagName === 'LABEL';
+      // checkbox 接管：单个 .el-checkbox / .el-checkbox-group / 原生 checkbox / <label>。
+      // group vs 单元素由 fill 阶段按 closest(.el-checkbox-group) 自动分发。
+      return (
+        inElCheckbox ||
+        inElCheckboxGroup ||
+        el.tagName === 'INPUT' ||
+        el.tagName === 'LABEL'
+      );
     }
     if (type === 'radio') {
-      // 单个 el-radio（不在 group 内）或原生 radio 都接管
-      return inElRadio || el.tagName === 'INPUT' || el.tagName === 'LABEL';
+      // radio 接管：单个 .el-radio / .el-radio-group / 原生 radio / <label>。
+      return (
+        inElRadio ||
+        inElRadioGroup ||
+        el.tagName === 'INPUT' ||
+        el.tagName === 'LABEL'
+      );
     }
+    if (type === 'switch') return inElSwitch;
+    if (type === 'slider') return inElSlider;
 
     // 无 type 时按容器猜
     return (
@@ -445,17 +454,28 @@ export const elementPlusFiller = {
     ) {
       return fillElDatePicker(el, value);
     }
-    if (type === 'checkbox-group' && el.closest(SELECTOR.elCheckboxGroup)) {
-      return fillElCheckboxGroup(el, value);
+    if (type === 'checkbox') {
+      // value 是数组 OR el 在 .el-checkbox-group 容器内 → 走 group 逻辑（可多选）
+      const group = el.closest(SELECTOR.elCheckboxGroup);
+      if (Array.isArray(value) || group) {
+        return fillElCheckboxGroup(el, value);
+      }
+      // 否则单元素
+      if (el.closest(SELECTOR.elCheckbox) || el.tagName === 'INPUT' || el.tagName === 'LABEL') {
+        return fillElCheckbox(el, value);
+      }
+      return false;
     }
-    if (type === 'checkbox' && el.closest(SELECTOR.elCheckbox)) {
-      return fillElCheckbox(el, value);
-    }
-    if (type === 'radio' && el.closest(SELECTOR.elRadio)) {
-      return fillElRadio(el, value);
-    }
-    if (type === 'radio-group' && el.closest(SELECTOR.elRadioGroup)) {
-      return fillElRadioGroup(el, value);
+    if (type === 'radio') {
+      // el 在 .el-radio-group 容器内 → 走 group 逻辑（按 value 匹配）
+      if (el.closest(SELECTOR.elRadioGroup)) {
+        return fillElRadioGroup(el, value);
+      }
+      // 否则单元素（按 value 匹配 / true 直接勾选）
+      if (el.closest(SELECTOR.elRadio) || el.tagName === 'INPUT' || el.tagName === 'LABEL') {
+        return fillElRadio(el, value);
+      }
+      return false;
     }
     if (type === 'switch' && el.closest(SELECTOR.elSwitch)) {
       return fillElSwitch(el, value);
