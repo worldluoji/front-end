@@ -379,6 +379,44 @@ describe('elementPlusFiller.fill - el-checkbox-group（合并到 type=checkbox�
     expect(ok).toBe(true);
     expect(group.querySelectorAll('input[type=checkbox]:checked').length).toBe(2);
   });
+
+  it('value 全不匹配时打印候选（调试模式）', async () => {
+    const group = document.createElement('div');
+    group.className = 'el-checkbox-group';
+    ['北京', '上海'].forEach((label) => {
+      const wrap = document.createElement('label');
+      wrap.className = 'el-checkbox';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = label;
+      const span = document.createElement('span');
+      span.className = 'el-checkbox__label';
+      span.textContent = label;
+      wrap.appendChild(cb);
+      wrap.appendChild(span);
+      group.appendChild(wrap);
+    });
+    document.body.appendChild(group);
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const ok = await elementPlusFiller.fill(group, ['广州'], {
+        type: 'checkbox',
+      });
+      expect(ok).toBe(false);
+      const candidateLog = warnSpy.mock.calls.find(
+        (args) =>
+          typeof args[0] === 'string' &&
+          args[0].includes('el-checkbox-group 未匹配到任何候选')
+      );
+      expect(candidateLog).toBeDefined();
+      expect(candidateLog[0]).toContain('北京');
+      expect(candidateLog[0]).toContain('上海');
+      expect(candidateLog[0]).toContain('广州');
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
 });
 
 describe('elementPlusFiller.fill - el-radio-group（合并到 type=radio）', () => {
@@ -544,6 +582,43 @@ describe('elementPlusFiller.fill - el-radio-group（合并到 type=radio）', ()
     expect(ok).toBe(true);
     expect(r1.checked).toBe(true);
     expect(handler).toHaveBeenCalled();
+  });
+
+  it('value 不匹配时打印候选（调试模式）', async () => {
+    const group = document.createElement('div');
+    group.className = 'el-radio-group';
+    ['北京', '上海'].forEach((label) => {
+      const wrap = document.createElement('label');
+      wrap.className = 'el-radio';
+      const r = document.createElement('input');
+      r.type = 'radio';
+      r.value = label;
+      const span = document.createElement('span');
+      span.className = 'el-radio__label';
+      span.textContent = label;
+      wrap.appendChild(r);
+      wrap.appendChild(span);
+      group.appendChild(wrap);
+    });
+    document.body.appendChild(group);
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const ok = await elementPlusFiller.fill(group, '广州', { type: 'radio' });
+      expect(ok).toBe(false);
+      // 应该打一条包含候选 value/label 的 warning
+      const candidateLog = warnSpy.mock.calls.find(
+        (args) =>
+          typeof args[0] === 'string' &&
+          args[0].includes('el-radio-group 未匹配到任何候选')
+      );
+      expect(candidateLog).toBeDefined();
+      expect(candidateLog[0]).toContain('北京');
+      expect(candidateLog[0]).toContain('上海');
+      expect(candidateLog[0]).toContain('广州');
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 });
 

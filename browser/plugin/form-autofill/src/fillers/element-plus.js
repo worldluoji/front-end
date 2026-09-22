@@ -272,6 +272,24 @@ async function fillElCheckbox(el, value) {
 
 // ===================== el-checkbox-group =====================
 
+function logGroupCandidates(kind, container, inputs, labelSelector, configured) {
+  const candidates = inputs.map((input) => {
+    const wrapper = input.closest(`.el-${kind}`);
+    const labelEl = wrapper ? wrapper.querySelector(labelSelector) : null;
+    return {
+      value: input.value,
+      label: labelEl ? (labelEl.textContent || '').trim() : '',
+    };
+  });
+  // eslint-disable-next-line no-console
+  console.warn(
+    `[自动填充] el-${kind}-group 未匹配到任何候选：\n` +
+      `  配置 value: ${JSON.stringify(configured)}\n` +
+      `  候选 (${candidates.length}):\n` +
+      candidates.map((c, i) => `    [${i}] value=${JSON.stringify(c.value)} label=${JSON.stringify(c.label)}`).join('\n')
+  );
+}
+
 async function fillElCheckboxGroup(el, value) {
   const container = el.closest(SELECTOR.elCheckboxGroup);
   if (!container) return false;
@@ -299,6 +317,9 @@ async function fillElCheckboxGroup(el, value) {
     } else if (matched) {
       any = true;
     }
+  }
+  if (!any) {
+    logGroupCandidates('checkbox', container, inputs, '.el-checkbox__label', values);
   }
   return any;
 }
@@ -369,6 +390,7 @@ async function fillElRadioGroup(el, value) {
       return true;
     }
   }
+  logGroupCandidates('radio', container, inputs, '.el-radio__label', strValue);
   return false;
 }
 

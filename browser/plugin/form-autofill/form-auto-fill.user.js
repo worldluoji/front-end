@@ -332,6 +332,22 @@
     input.dispatchEvent(new Event("change", { bubbles: true }));
     return input.checked === desired;
   }
+  function logGroupCandidates(kind, container, inputs, labelSelector, configured) {
+    const candidates = inputs.map((input) => {
+      const wrapper = input.closest(`.el-${kind}`);
+      const labelEl = wrapper ? wrapper.querySelector(labelSelector) : null;
+      return {
+        value: input.value,
+        label: labelEl ? (labelEl.textContent || "").trim() : ""
+      };
+    });
+    console.warn(
+      `[\u81EA\u52A8\u586B\u5145] el-${kind}-group \u672A\u5339\u914D\u5230\u4EFB\u4F55\u5019\u9009\uFF1A
+  \u914D\u7F6E value: ${JSON.stringify(configured)}
+  \u5019\u9009 (${candidates.length}):
+` + candidates.map((c, i) => `    [${i}] value=${JSON.stringify(c.value)} label=${JSON.stringify(c.label)}`).join("\n")
+    );
+  }
   async function fillElCheckboxGroup(el, value) {
     const container = el.closest(SELECTOR.elCheckboxGroup);
     if (!container) return false;
@@ -354,6 +370,9 @@
       } else if (matched) {
         any = true;
       }
+    }
+    if (!any) {
+      logGroupCandidates("checkbox", container, inputs, ".el-checkbox__label", values);
     }
     return any;
   }
@@ -392,6 +411,7 @@
         return true;
       }
     }
+    logGroupCandidates("radio", container, inputs, ".el-radio__label", strValue);
     return false;
   }
   async function fillElSwitch(el, value) {
