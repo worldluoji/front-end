@@ -276,6 +276,53 @@ describe('openConfigUI - 测试填充', () => {
   });
 });
 
+describe('openConfigUI - profile 切换按钮', () => {
+  it('切到下一激活 profile 写入 localStorage 并移动徽章', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click(); // pages tab
+    const items = root.querySelectorAll('.list-item');
+    items[0].click(); // 选第一个页面（默认配置：用户信息页，单 profile）
+
+    // 给它加一个 demo profile 才能显示切换按钮
+    const addBtn = root.querySelector('[data-act="add-profile"]');
+    addBtn.click();
+    const cycleBtn = root.querySelector('[data-act="cycle-active-profile"]');
+    expect(cycleBtn).toBeTruthy();
+
+    cycleBtn.click();
+    // 当前激活应该从 default 切到新加的 profile2 / profile 等
+    const map = JSON.parse(
+      localStorage.getItem('form_autofill_active_profiles') || '{}'
+    );
+    expect(Object.values(map)).toHaveLength(1);
+    expect(Object.values(map)[0]).not.toBe('default');
+  });
+
+  it('只有 1 个 profile 时不显示切换按钮', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    const items = root.querySelectorAll('.list-item');
+    items[0].click();
+    expect(
+      root.querySelector('[data-act="cycle-active-profile"]')
+    ).toBeNull();
+  });
+});
+
+describe('openConfigUI - 全局设置显示 profile 切换快捷键', () => {
+  it('显示当前 SHORTCUT_PROFILE_SWITCH 组合', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    // 默认在 global tab
+    const body = root.querySelector('.body');
+    expect(body.textContent).toMatch(/切换 profile 快捷键/);
+    // DEFAULT_CONFIG.SHORTCUT_PROFILE_SWITCH 是 shift+meta+P，platform 非 Mac 时显示 "Meta+Shift+P"
+    expect(body.textContent).toMatch(/Shift\+P|Ctrl|Alt|Meta|Cmd/);
+  });
+});
+
 describe('openConfigUI - 重新打开', () => {
   it('同一时间只允许一个实例', () => {
     openConfigUI();

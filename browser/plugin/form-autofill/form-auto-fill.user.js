@@ -1188,6 +1188,16 @@
     function setEditingProfileIndex(pageIdx, idx) {
       state.activeProfileIndexByPage[pageIdx] = idx;
     }
+    function formatShortcutLabel(s) {
+      if (!s || !s.key) return "\uFF08\u672A\u8BBE\u7F6E\uFF09";
+      const parts = [];
+      if (s.ctrl) parts.push("Ctrl");
+      if (s.alt) parts.push("Alt");
+      if (s.shift) parts.push("Shift");
+      if (s.meta) parts.push(navigator.platform.toLowerCase().includes("mac") ? "Cmd" : "Meta");
+      parts.push(String(s.key).toUpperCase());
+      return parts.join("+");
+    }
     const host = document.createElement("div");
     host.setAttribute("data-autofill-config-ui", "");
     const shadow = host.attachShadow({ mode: "open" });
@@ -1232,6 +1242,7 @@
     }
     function renderGlobal(cfg) {
       const s = cfg.SHORTCUT || {};
+      const switchLabel = formatShortcutLabel(cfg.SHORTCUT_PROFILE_SWITCH);
       return `
       <div class="form-row">
         <label>\u9875\u9762\u52A0\u8F7D\u81EA\u52A8\u586B\u5145</label>
@@ -1254,6 +1265,13 @@
       <div class="form-row">
         <label>\u8BF4\u660E</label>
         <span class="hint">\u5FEB\u6377\u952E\u5728\u8F93\u5165\u6846\u805A\u7126\u65F6\u4E0D\u89E6\u53D1\uFF0C\u907F\u514D\u8BEF\u89E6\u3002</span>
+      </div>
+      <div class="form-row" style="align-items:flex-start">
+        <label>\u5207\u6362 profile \u5FEB\u6377\u952E</label>
+        <div style="flex:1">
+          <code style="font-size:13px;padding:4px 8px;background:#f5f7fa;border-radius:4px">${escapeHtml(switchLabel)}</code>
+          <span class="hint" style="display:block;margin-top:4px">\u540C\u4E00\u9875\u9762\u6709 \u22652 \u4E2A profile \u65F6\uFF0C\u6309\u8BE5\u5FEB\u6377\u952E\u5FAA\u73AF\u5207\u5230\u4E0B\u4E00\u4E2A profile\uFF08\u8FD0\u884C\u65F6\u6FC0\u6D3B\u6001\uFF09\u3002\u751F\u6548\u9700\u5728\u6E90\u7801 / <code>window.__AUTOFILL_CONFIG__</code> \u91CC\u4FEE\u6539 <code>SHORTCUT_PROFILE_SWITCH</code>\u3002</span>
+        </div>
       </div>
     `;
     }
@@ -1292,6 +1310,9 @@
       const profile = editingKey ? page.profiles[editingKey] : null;
       const fields = (profile == null ? void 0 : profile.fields) || [];
       const persistedActive = getActiveProfile(page);
+      const shortcutLabel = formatShortcutLabel(
+        state.config.SHORTCUT_PROFILE_SWITCH
+      );
       const tabs = profileKeys.map((k, ki) => {
         const isEditing = ki === editingIdx;
         const isPersisted = k === persistedActive;
@@ -1320,8 +1341,12 @@
           <div class="profile-tabs">
             ${tabs}
             <span class="profile-tab add-btn" data-act="add-profile" data-idx="${idx}" title="\u65B0\u5EFA profile">+ \u65B0\u5EFA</span>
+            ${profileKeys.length >= 2 ? `<span class="profile-tab add-btn" data-act="cycle-active-profile" data-idx="${idx}" title="\u628A\u8FD0\u884C\u65F6\u6FC0\u6D3B\u6001\u5207\u5230\u4E0B\u4E00\u4E2A profile\uFF08\u6A21\u62DF\u5FEB\u6377\u952E ${escapeAttr(shortcutLabel)}\uFF09">\u2935 \u5207\u5230\u4E0B\u4E00\u6FC0\u6D3B</span>` : ""}
           </div>
-          <div class="profile-hint">\u7F16\u8F91\u4E2D\u7684 profile\uFF1A<b>${escapeHtml(editingKey || "")}</b>\u3002\u8FD0\u884C\u65F6\u6FC0\u6D3B\u6001\uFF08\u6301\u4E45\u5316\uFF09\u4EE5 <span style="color:#67c23a">\u6FC0\u6D3B</span> \u6807\u8BB0\u4E3A\u51C6\uFF0C\u53EF\u7531\u5FEB\u6377\u952E\u5FAA\u73AF\u5207\u6362\u3002</div>
+          <div class="profile-hint">
+            \u7F16\u8F91\u4E2D\u7684 profile\uFF1A<b>${escapeHtml(editingKey || "")}</b>\u3002<br>
+            \u8FD0\u884C\u65F6\u6FC0\u6D3B\u6001\uFF08\u6301\u4E45\u5316\uFF09\u4EE5 <span style="color:#67c23a">\u6FC0\u6D3B</span> \u6807\u8BB0\uFF1B\u6309 <code>${escapeHtml(shortcutLabel)}</code> \u6216\u70B9\u4E0A\u9762\u7684"\u5207\u5230\u4E0B\u4E00\u6FC0\u6D3B"\u5FAA\u73AF\u5207\u6362\u3002
+          </div>
           <table class="fields-table">
             <colgroup>
               <col class="type-col"><col class="selector-col"><col class="value-col"><col class="act-col">
@@ -1560,6 +1585,20 @@
             if (cur >= pi) {
               setEditingProfileIndex(idx, Math.max(0, cur - 1));
             }
+            render();
+            return;
+          }
+          case "cycle-active-profile": {
+            const idx = Number(btn.dataset.idx);
+            const page = state.config.PAGE_CONFIGS[idx];
+            if (!page) return;
+            const keys = getPageProfileKeys(page);
+            if (keys.length <= 1) return;
+            const cur = getActiveProfile(page);
+            const curIdx = Math.max(0, keys.indexOf(cur));
+            const next = keys[(curIdx + 1) % keys.length];
+            setActiveProfile(page, next);
+            showToast(`\u5DF2\u5207\u5230\u4E0B\u4E00 profile\uFF1A${next}`, "success");
             render();
             return;
           }

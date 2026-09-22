@@ -14,6 +14,7 @@ import {
   exportConfigJson,
   importConfigJson,
   getActiveProfile,
+  setActiveProfile,
 } from './config-storage.js';
 import { DEFAULT_CONFIG } from './config.js';
 import { FIELD_TYPES, getDefaultValueByType, getFieldTypeLabel } from './config-types.js';
@@ -231,6 +232,17 @@ export function openConfigUI() {
     state.activeProfileIndexByPage[pageIdx] = idx;
   }
 
+  function formatShortcutLabel(s) {
+    if (!s || !s.key) return '（未设置）';
+    const parts = [];
+    if (s.ctrl) parts.push('Ctrl');
+    if (s.alt) parts.push('Alt');
+    if (s.shift) parts.push('Shift');
+    if (s.meta) parts.push(navigator.platform.toLowerCase().includes('mac') ? 'Cmd' : 'Meta');
+    parts.push(String(s.key).toUpperCase());
+    return parts.join('+');
+  }
+
   const host = document.createElement('div');
   host.setAttribute('data-autofill-config-ui', '');
   const shadow = host.attachShadow({ mode: 'open' });
@@ -281,6 +293,7 @@ export function openConfigUI() {
 
   function renderGlobal(cfg) {
     const s = cfg.SHORTCUT || {};
+    const switchLabel = formatShortcutLabel(cfg.SHORTCUT_PROFILE_SWITCH);
     return `
       <div class="form-row">
         <label>页面加载自动填充</label>
@@ -303,6 +316,13 @@ export function openConfigUI() {
       <div class="form-row">
         <label>说明</label>
         <span class="hint">快捷键在输入框聚焦时不触发，避免误触。</span>
+      </div>
+      <div class="form-row" style="align-items:flex-start">
+        <label>切换 profile 快捷键</label>
+        <div style="flex:1">
+          <code style="font-size:13px;padding:4px 8px;background:#f5f7fa;border-radius:4px">${escapeHtml(switchLabel)}</code>
+          <span class="hint" style="display:block;margin-top:4px">同一页面有 ≥2 个 profile 时，按该快捷键循环切到下一个 profile（运行时激活态）。生效需在源码 / <code>window.__AUTOFILL_CONFIG__</code> 里修改 <code>SHORTCUT_PROFILE_SWITCH</code>。</span>
+        </div>
       </div>
     `;
   }
@@ -347,6 +367,9 @@ export function openConfigUI() {
     const profile = editingKey ? page.profiles[editingKey] : null;
     const fields = profile?.fields || [];
     const persistedActive = getActiveProfile(page);
+    const shortcutLabel = formatShortcutLabel(
+      state.config.SHORTCUT_PROFILE_SWITCH
+    );
     const tabs = profileKeys
       .map((k, ki) => {
         const isEditing = ki === editingIdx;
@@ -377,8 +400,16 @@ export function openConfigUI() {
           <div class="profile-tabs">
             ${tabs}
             <span class="profile-tab add-btn" data-act="add-profile" data-idx="${idx}" title="新建 profile">+ 新建</span>
+            ${
+              profileKeys.length >= 2
+                ? `<span class="profile-tab add-btn" data-act="cycle-active-profile" data-idx="${idx}" title="把运行时激活态切到下一个 profile（模拟快捷键 ${escapeAttr(shortcutLabel)}）">⤵ 切到下一激活</span>`
+                : ''
+            }
           </div>
-          <div class="profile-hint">编辑中的 profile：<b>${escapeHtml(editingKey || '')}</b>。运行时激活态（持久化）以 <span style="color:#67c23a">激活</span> 标记为准，可由快捷键循环切换。</div>
+          <div class="profile-hint">
+            编辑中的 profile：<b>${escapeHtml(editingKey || '')}</b>。<br>
+            运行时激活态（持久化）以 <span style="color:#67c23a">激活</span> 标记；按 <code>${escapeHtml(shortcutLabel)}</code> 或点上面的"切到下一激活"循环切换。
+          </div>
           <table class="fields-table">
             <colgroup>
               <col class="type-col"><col class="selector-col"><col class="value-col"><col class="act-col">
@@ -641,6 +672,20 @@ export function openConfigUI() {
           if (cur >= pi) {
             setEditingProfileIndex(idx, Math.max(0, cur - 1));
           }
+          render();
+          return;
+        }
+        case 'cycle-active-profile': {
+          const idx = Number(btn.dataset.idx);
+          const page = state.config.PAGE_CONFIGS[idx];
+          if (!page) return;
+          const keys = getPageProfileKeys(page);
+          if (keys.length <= 1) return;
+          const cur = getActiveProfile(page);
+          const curIdx = Math.max(0, keys.indexOf(cur));
+          const next = keys[(curIdx + 1) % keys.length];
+          setActiveProfile(page, next);
+          showToast(`已切到下一 profile：${next}`, 'success');
           render();
           return;
         }
