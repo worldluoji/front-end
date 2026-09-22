@@ -798,7 +798,7 @@ export function mountFloatingButton() {
   const btn = document.createElement('button');
   btn.setAttribute('data-autofill-fab', '');
   btn.textContent = '⚙ 自动填充配置';
-  btn.title = 'Ctrl+Alt+C';
+  btn.title = 'Cmd+Ctrl+Shift+K (Win: Win+Ctrl+Shift+K)';
   btn.style.cssText = [
     'position:fixed',
     'bottom:24px',

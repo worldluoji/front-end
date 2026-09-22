@@ -1685,7 +1685,7 @@
     const btn = document.createElement("button");
     btn.setAttribute("data-autofill-fab", "");
     btn.textContent = "\u2699 \u81EA\u52A8\u586B\u5145\u914D\u7F6E";
-    btn.title = "Ctrl+Alt+C";
+    btn.title = "Cmd+Ctrl+Shift+K (Win: Win+Ctrl+Shift+K)";
     btn.style.cssText = [
       "position:fixed",
       "bottom:24px",
@@ -1744,9 +1744,9 @@
   function setupConfigShortcut() {
     window.addEventListener("keydown", (e) => {
       var _a3;
-      if (!e.ctrlKey || !e.altKey) return;
-      if (e.shiftKey || e.metaKey) return;
-      if ((e.key || "").toLowerCase() !== "c") return;
+      if (!e.metaKey || !e.ctrlKey || !e.shiftKey) return;
+      if (e.altKey) return;
+      if ((e.key || "").toLowerCase() !== "k") return;
       const tag = e.target && e.target.tagName || "";
       if (tag === "INPUT" || tag === "TEXTAREA" || ((_a3 = e.target) == null ? void 0 : _a3.isContentEditable)) {
         return;

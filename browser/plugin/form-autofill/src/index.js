@@ -47,13 +47,14 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * 配置页专用快捷键：Ctrl+Alt+C（与填充快捷键分离）
+ * 配置页专用快捷键：Meta+Ctrl+Shift+K（Win 上是 Win+Ctrl+Shift+K，Mac 上是 Cmd+Ctrl+Shift+K）
+ * 冷门组合，避免与浏览器/系统快捷键冲突；同时不使用 Alt，兼容 Mac 的 Option 修饰键用法
  */
 function setupConfigShortcut() {
   window.addEventListener('keydown', (e) => {
-    if (!e.ctrlKey || !e.altKey) return;
-    if (e.shiftKey || e.metaKey) return;
-    if ((e.key || '').toLowerCase() !== 'c') return;
+    if (!e.metaKey || !e.ctrlKey || !e.shiftKey) return;
+    if (e.altKey) return;
+    if ((e.key || '').toLowerCase() !== 'k') return;
     const tag = (e.target && e.target.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target?.isContentEditable) {
       return;
