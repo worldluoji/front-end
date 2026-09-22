@@ -137,6 +137,43 @@ const STYLES = `
 }
 .profile-hint { color: #909399; font-size: 11px; margin-bottom: 8px; }
 
+.selector-clickable {
+  cursor: pointer !important;
+  background: #fafbfc;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  font-size: 12px !important;
+}
+.selector-clickable:hover { border-color: #409eff; background: #ecf5ff; }
+
+.selector-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 2147483647;
+  display: flex; align-items: center; justify-content: center;
+}
+.selector-modal {
+  width: 760px; max-width: 92vw;
+  background: #fff; color: #222;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.selector-modal h3 { margin: 0; font-size: 14px; color: #303133; font-weight: 600; }
+.selector-modal textarea {
+  width: 100%; min-height: 140px;
+  padding: 10px 12px;
+  border: 1px solid #dcdfe6; border-radius: 4px;
+  font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.selector-modal textarea:focus { outline: 0; border-color: #409eff; }
+.selector-modal .hint { color: #909399; font-size: 12px; }
+.selector-modal .actions {
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+
 .shortcut-group { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .shortcut-group label { width: auto; display: inline-flex; align-items: center; gap: 4px; }
 
@@ -377,7 +414,7 @@ export function openConfigUI() {
           <select data-field="type" data-pi="${pageIdx}" data-fi="${fieldIdx}">${opts}</select>
         </td>
         <td class="selector-col">
-          <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || '')}" placeholder="#id / .class / [name=...]"/>
+          <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || '')}" placeholder="#id / .class / [name=...]" class="selector-clickable" title="点击展开编辑"/>
           <div class="hint">${escapeHtml(valueHint(type))}</div>
         </td>
         <td class="value-col">
@@ -469,6 +506,21 @@ export function openConfigUI() {
         setPath(state.config, bind, Number(t.value));
       } else {
         setPath(state.config, bind, t.value);
+      }
+    });
+  }
+
+  function bindSelectorEditor() {
+    // 点击 selector 输入框 → 弹出编辑器（用 mousedown 区分拖拽，但拖拽不影响此处）
+    shadow.addEventListener('click', (e) => {
+      const t = e.target;
+      if (
+        t &&
+        t.dataset &&
+        t.dataset.field === 'selector' &&
+        (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')
+      ) {
+        openSelectorEditor(t);
       }
     });
   }
@@ -700,7 +752,68 @@ export function openConfigUI() {
     }
   }
 
-  function onTest() {
+  function openSelectorEditor(triggerInput) {
+  if (!triggerInput) return;
+  const pi = triggerInput.dataset.pi;
+  const fi = triggerInput.dataset.fi;
+  const overlay = document.createElement('div');
+  overlay.className = 'selector-overlay';
+  const initial = triggerInput.value || '';
+  overlay.innerHTML = `
+    <div class="selector-modal" role="dialog" aria-label="编辑 CSS 选择器">
+      <h3>编辑 CSS 选择器</h3>
+      <textarea data-role="selector-textarea" spellcheck="false" autocomplete="off"></textarea>
+      <div class="hint">支持换行；保存后会写回表格行。Cmd/Ctrl+Enter 保存，Esc 取消。</div>
+      <div class="actions">
+        <button type="button" class="btn" data-role="cancel">取消</button>
+        <button type="button" class="btn primary" data-role="save">保存</button>
+      </div>
+    </div>
+  `;
+  const ta = overlay.querySelector('[data-role="selector-textarea"]');
+  ta.value = initial;
+  shadow.appendChild(overlay);
+  requestAnimationFrame(() => {
+    ta.focus();
+    ta.setSelectionRange(initial.length, initial.length);
+  });
+
+  const close = () => {
+    overlay.remove();
+    document.removeEventListener('keydown', onKey, true);
+  };
+  const onSave = () => {
+    const newVal = ta.value;
+    triggerInput.value = newVal;
+    triggerInput.dispatchEvent(new Event('input', { bubbles: true }));
+    close();
+  };
+  const onCancel = () => close();
+
+  const onKey = (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      onCancel();
+    } else if ((e.metaKey || e.ctrlKey) && (e.key || '').toLowerCase() === 'enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      onSave();
+    }
+  };
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) onCancel();
+    const btn = e.target.closest('[data-role]');
+    if (!btn) return;
+    const role = btn.dataset.role;
+    if (role === 'save') onSave();
+    else if (role === 'cancel') onCancel();
+  });
+  document.addEventListener('keydown', onKey, true);
+}
+
+function onTest() {
     // 临时把当前 UI 内配置应用到 window，再触发填充
     window.__AUTOFILL_CONFIG__ = state.config;
     const editingKey = getEditingProfileKey(state.activePageIndex);
@@ -783,6 +896,7 @@ export function openConfigUI() {
   bindTabs();
   bindGlobal();
   bindActions();
+  bindSelectorEditor();
 
   document.body.appendChild(host);
   activeHost = host;

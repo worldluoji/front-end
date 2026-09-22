@@ -164,6 +164,80 @@ describe('openConfigUI - 字段编辑', () => {
   });
 });
 
+describe('openConfigUI - selector 编辑器', () => {
+  it('selector 输入框带 clickable 类和提示', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    const items = root.querySelectorAll('.list-item');
+    items[0].click();
+
+    const sel = root.querySelector('input[data-field="selector"]');
+    expect(sel).toBeTruthy();
+    expect(sel.classList.contains('selector-clickable')).toBe(true);
+    expect(sel.title).toMatch(/点击展开/);
+  });
+
+  it('点击 selector 打开编辑器，写回后触发 input 事件更新 state', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    const items = root.querySelectorAll('.list-item');
+    items[0].click();
+
+    const sel = root.querySelector('input[data-field="selector"]');
+    const original = sel.value;
+    sel.click();
+
+    const selModal = root.querySelector('.selector-modal');
+    expect(selModal).toBeTruthy();
+    const ta = root.querySelector('[data-role="selector-textarea"]');
+    expect(ta).toBeTruthy();
+    expect(ta.value).toBe(original);
+
+    // 改值 → 保存
+    ta.value = '#new-selector';
+    root.querySelector('[data-role="save"]').click();
+
+    // 编辑器关掉 + 表格行新值
+    expect(root.querySelector('.selector-modal')).toBeNull();
+    const selAfter = root.querySelector('input[data-field="selector"]');
+    expect(selAfter.value).toBe('#new-selector');
+  });
+
+  it('取消按钮关闭编辑器但不修改原值', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    const items = root.querySelectorAll('.list-item');
+    items[0].click();
+
+    const sel = root.querySelector('input[data-field="selector"]');
+    const original = sel.value;
+    sel.click();
+    const ta = root.querySelector('[data-role="selector-textarea"]');
+    ta.value = '#different';
+    root.querySelector('[data-role="cancel"]').click();
+
+    expect(root.querySelector('.selector-modal')).toBeNull();
+    expect(root.querySelector('input[data-field="selector"]').value).toBe(original);
+  });
+
+  it('点击遮罩关闭编辑器', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    const items = root.querySelectorAll('.list-item');
+    items[0].click();
+    root.querySelector('input[data-field="selector"]').click();
+    expect(root.querySelector('.selector-modal')).toBeTruthy();
+
+    const overlay = root.querySelector('.selector-overlay');
+    overlay.click(); // 点击遮罩本身
+    expect(root.querySelector('.selector-modal')).toBeNull();
+  });
+});
+
 describe('openConfigUI - 保存', () => {
   it('保存按钮写入 localStorage', () => {
     openConfigUI();

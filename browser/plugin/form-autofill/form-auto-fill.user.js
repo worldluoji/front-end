@@ -1102,6 +1102,43 @@
 }
 .profile-hint { color: #909399; font-size: 11px; margin-bottom: 8px; }
 
+.selector-clickable {
+  cursor: pointer !important;
+  background: #fafbfc;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  font-size: 12px !important;
+}
+.selector-clickable:hover { border-color: #409eff; background: #ecf5ff; }
+
+.selector-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 2147483647;
+  display: flex; align-items: center; justify-content: center;
+}
+.selector-modal {
+  width: 760px; max-width: 92vw;
+  background: #fff; color: #222;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.selector-modal h3 { margin: 0; font-size: 14px; color: #303133; font-weight: 600; }
+.selector-modal textarea {
+  width: 100%; min-height: 140px;
+  padding: 10px 12px;
+  border: 1px solid #dcdfe6; border-radius: 4px;
+  font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.selector-modal textarea:focus { outline: 0; border-color: #409eff; }
+.selector-modal .hint { color: #909399; font-size: 12px; }
+.selector-modal .actions {
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+
 .shortcut-group { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .shortcut-group label { width: auto; display: inline-flex; align-items: center; gap: 4px; }
 
@@ -1309,7 +1346,7 @@
           <select data-field="type" data-pi="${pageIdx}" data-fi="${fieldIdx}">${opts}</select>
         </td>
         <td class="selector-col">
-          <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || "")}" placeholder="#id / .class / [name=...]"/>
+          <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || "")}" placeholder="#id / .class / [name=...]" class="selector-clickable" title="\u70B9\u51FB\u5C55\u5F00\u7F16\u8F91"/>
           <div class="hint">${escapeHtml(valueHint(type))}</div>
         </td>
         <td class="value-col">
@@ -1393,6 +1430,14 @@
           setPath(state.config, bind, Number(t.value));
         } else {
           setPath(state.config, bind, t.value);
+        }
+      });
+    }
+    function bindSelectorEditor() {
+      shadow.addEventListener("click", (e) => {
+        const t = e.target;
+        if (t && t.dataset && t.dataset.field === "selector" && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) {
+          openSelectorEditor(t);
         }
       });
     }
@@ -1609,6 +1654,63 @@
         showToast("\u4FDD\u5B58\u5931\u8D25", "error");
       }
     }
+    function openSelectorEditor(triggerInput) {
+      if (!triggerInput) return;
+      const pi = triggerInput.dataset.pi;
+      const fi = triggerInput.dataset.fi;
+      const overlay = document.createElement("div");
+      overlay.className = "selector-overlay";
+      const initial2 = triggerInput.value || "";
+      overlay.innerHTML = `
+    <div class="selector-modal" role="dialog" aria-label="\u7F16\u8F91 CSS \u9009\u62E9\u5668">
+      <h3>\u7F16\u8F91 CSS \u9009\u62E9\u5668</h3>
+      <textarea data-role="selector-textarea" spellcheck="false" autocomplete="off"></textarea>
+      <div class="hint">\u652F\u6301\u6362\u884C\uFF1B\u4FDD\u5B58\u540E\u4F1A\u5199\u56DE\u8868\u683C\u884C\u3002Cmd/Ctrl+Enter \u4FDD\u5B58\uFF0CEsc \u53D6\u6D88\u3002</div>
+      <div class="actions">
+        <button type="button" class="btn" data-role="cancel">\u53D6\u6D88</button>
+        <button type="button" class="btn primary" data-role="save">\u4FDD\u5B58</button>
+      </div>
+    </div>
+  `;
+      const ta = overlay.querySelector('[data-role="selector-textarea"]');
+      ta.value = initial2;
+      shadow.appendChild(overlay);
+      requestAnimationFrame(() => {
+        ta.focus();
+        ta.setSelectionRange(initial2.length, initial2.length);
+      });
+      const close = () => {
+        overlay.remove();
+        document.removeEventListener("keydown", onKey, true);
+      };
+      const onSave2 = () => {
+        const newVal = ta.value;
+        triggerInput.value = newVal;
+        triggerInput.dispatchEvent(new Event("input", { bubbles: true }));
+        close();
+      };
+      const onCancel = () => close();
+      const onKey = (e) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          e.stopPropagation();
+          onCancel();
+        } else if ((e.metaKey || e.ctrlKey) && (e.key || "").toLowerCase() === "enter") {
+          e.preventDefault();
+          e.stopPropagation();
+          onSave2();
+        }
+      };
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) onCancel();
+        const btn = e.target.closest("[data-role]");
+        if (!btn) return;
+        const role = btn.dataset.role;
+        if (role === "save") onSave2();
+        else if (role === "cancel") onCancel();
+      });
+      document.addEventListener("keydown", onKey, true);
+    }
     function onTest() {
       window.__AUTOFILL_CONFIG__ = state.config;
       const editingKey = getEditingProfileKey(state.activePageIndex);
@@ -1676,6 +1778,7 @@
     bindTabs();
     bindGlobal();
     bindActions();
+    bindSelectorEditor();
     document.body.appendChild(host);
     activeHost = host;
   }
