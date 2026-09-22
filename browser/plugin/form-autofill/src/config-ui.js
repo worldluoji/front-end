@@ -788,8 +788,46 @@ export function openConfigUI() {
   activeHost = host;
 }
 
+const FAB_POSITION_KEY = 'form_autofill_fab_position';
+const FAB_SIZE = 40;
+
+function readFabPosition() {
+  try {
+    const raw = localStorage.getItem(FAB_POSITION_KEY);
+    if (!raw) return null;
+    const p = JSON.parse(raw);
+    if (
+      p &&
+      typeof p.left === 'number' &&
+      typeof p.top === 'number' &&
+      Number.isFinite(p.left) &&
+      Number.isFinite(p.top)
+    ) {
+      return p;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+function writeFabPosition(p) {
+  try {
+    localStorage.setItem(FAB_POSITION_KEY, JSON.stringify(p));
+  } catch {
+    // ignore
+  }
+}
+
+function defaultFabPosition() {
+  return {
+    left: Math.max(8, window.innerWidth - FAB_SIZE - 24),
+    top: Math.max(8, window.innerHeight - FAB_SIZE - 24),
+  };
+}
+
 /**
- * 创建浮动按钮
+ * 创建浮动按钮（可拖动，位置持久化）
  */
 export function mountFloatingButton() {
   if (!document.body) return;
@@ -797,29 +835,113 @@ export function mountFloatingButton() {
 
   const btn = document.createElement('button');
   btn.setAttribute('data-autofill-fab', '');
-  btn.textContent = '⚙ 自动填充配置';
-  btn.title = 'Cmd+Ctrl+Shift+K (Win: Win+Ctrl+Shift+K)';
+  btn.setAttribute('aria-label', '自动填充配置');
+  btn.textContent = '⚙';
+  btn.title = '自动填充配置 · Cmd+Ctrl+Shift+K（可拖动）';
+
+  const saved = readFabPosition();
+  const pos = saved || defaultFabPosition();
   btn.style.cssText = [
     'position:fixed',
-    'bottom:24px',
-    'right:24px',
-    'z-index:2147483647',
-    'padding:10px 18px',
+    `left:${pos.left}px`,
+    `top:${pos.top}px`,
+    `width:${FAB_SIZE}px`,
+    `height:${FAB_SIZE}px`,
+    'padding:0',
+    'margin:0',
+    'display:flex',
+    'align-items:center',
+    'justify-content:center',
     'border:0',
-    'border-radius:24px',
+    'border-radius:50%',
     'background:#409eff',
     'color:#fff',
-    'cursor:pointer',
-    'box-shadow:0 4px 16px rgba(64,158,255,.5)',
-    'font:600 13px/1 -apple-system,BlinkMacSystemFont,sans-serif',
-    'transition:transform .15s',
+    'cursor:grab',
+    'box-shadow:0 2px 8px rgba(64,158,255,.45)',
+    'font:18px/1 -apple-system,BlinkMacSystemFont,sans-serif',
+    'z-index:2147483647',
+    'user-select:none',
+    '-webkit-user-select:none',
+    'touch-action:none',
+    'transition:transform .15s, box-shadow .15s',
   ].join(';');
+
+  let isDragging = false;
+  let didDrag = false;
+  let startX = 0;
+  let startY = 0;
+  let startLeft = 0;
+  let startTop = 0;
+
+  btn.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    isDragging = true;
+    didDrag = false;
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = btn.offsetLeft;
+    startTop = btn.offsetTop;
+    try {
+      btn.setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+    btn.style.cursor = 'grabbing';
+    btn.style.transition = 'none';
+  });
+
+  btn.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didDrag = true;
+    const maxLeft = Math.max(0, window.innerWidth - FAB_SIZE);
+    const maxTop = Math.max(0, window.innerHeight - FAB_SIZE);
+    const newLeft = Math.max(0, Math.min(maxLeft, startLeft + dx));
+    const newTop = Math.max(0, Math.min(maxTop, startTop + dy));
+    btn.style.left = `${newLeft}px`;
+    btn.style.top = `${newTop}px`;
+  });
+
+  const endDrag = (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    try {
+      btn.releasePointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+    btn.style.cursor = 'grab';
+    btn.style.transition = 'transform .15s, box-shadow .15s';
+    if (didDrag) {
+      const left = parseInt(btn.style.left, 10);
+      const top = parseInt(btn.style.top, 10);
+      if (Number.isFinite(left) && Number.isFinite(top)) {
+        writeFabPosition({ left, top });
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+  btn.addEventListener('pointerup', endDrag);
+  btn.addEventListener('pointercancel', endDrag);
+
+  btn.addEventListener('click', (e) => {
+    if (didDrag) {
+      e.stopPropagation();
+      e.preventDefault();
+      didDrag = false;
+      return;
+    }
+    openConfigUI();
+  });
+
   btn.addEventListener('mouseenter', () => {
-    btn.style.transform = 'scale(1.05)';
+    if (!isDragging) btn.style.transform = 'scale(1.08)';
   });
   btn.addEventListener('mouseleave', () => {
     btn.style.transform = 'scale(1)';
   });
-  btn.addEventListener('click', () => openConfigUI());
+
   document.body.appendChild(btn);
 }

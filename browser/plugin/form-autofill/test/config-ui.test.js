@@ -17,13 +17,76 @@ describe('mountFloatingButton', () => {
     mountFloatingButton();
     const btn = document.querySelector('[data-autofill-fab]');
     expect(btn).not.toBeNull();
-    expect(btn.textContent).toMatch(/自动填充/);
+    // 小尺寸 + 拖动：内容只有图标，语义走 aria-label/title
+    expect(btn.getAttribute('aria-label')).toMatch(/自动填充/);
+    expect(btn.title).toMatch(/自动填充/);
+    expect(btn.title).toMatch(/可拖动/);
+  });
+
+  it('默认位置在视口右下角附近', () => {
+    mountFloatingButton();
+    const btn = document.querySelector('[data-autofill-fab]');
+    // happy-dom 默认 viewport 1024x768，按钮 40x40，距右下 24px
+    expect(parseInt(btn.style.left, 10)).toBeGreaterThan(800);
+    expect(parseInt(btn.style.top, 10)).toBeGreaterThan(600);
+    expect(btn.style.borderRadius).toBe('50%');
   });
 
   it('多次调用不会重复添加', () => {
     mountFloatingButton();
     mountFloatingButton();
     expect(document.querySelectorAll('[data-autofill-fab]').length).toBe(1);
+  });
+
+  it('拖动后位置持久化到 localStorage', () => {
+    mountFloatingButton();
+    const btn = document.querySelector('[data-autofill-fab]');
+
+    // 模拟拖动
+    const startX = 500;
+    const startY = 400;
+    btn.dispatchEvent(
+      new PointerEvent('pointerdown', {
+        bubbles: true,
+        clientX: startX,
+        clientY: startY,
+        button: 0,
+        pointerId: 1,
+      })
+    );
+    btn.dispatchEvent(
+      new PointerEvent('pointermove', {
+        bubbles: true,
+        clientX: startX + 100,
+        clientY: startY + 50,
+        pointerId: 1,
+      })
+    );
+    btn.dispatchEvent(
+      new PointerEvent('pointerup', {
+        bubbles: true,
+        clientX: startX + 100,
+        clientY: startY + 50,
+        pointerId: 1,
+      })
+    );
+
+    const raw = localStorage.getItem('form_autofill_fab_position');
+    expect(raw).toBeTruthy();
+    const saved = JSON.parse(raw);
+    expect(saved.left).toBeGreaterThan(0);
+    expect(saved.top).toBeGreaterThan(0);
+  });
+
+  it('读已保存的位置而不是默认位置', () => {
+    localStorage.setItem(
+      'form_autofill_fab_position',
+      JSON.stringify({ left: 100, top: 80 })
+    );
+    mountFloatingButton();
+    const btn = document.querySelector('[data-autofill-fab]');
+    expect(btn.style.left).toBe('100px');
+    expect(btn.style.top).toBe('80px');
   });
 });
 
