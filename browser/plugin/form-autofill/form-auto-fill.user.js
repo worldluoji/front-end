@@ -553,24 +553,39 @@
       shift: true,
       meta: true
     },
+    SHORTCUT_PROFILE_SWITCH: {
+      key: "P",
+      ctrl: false,
+      alt: false,
+      shift: true,
+      meta: true
+    },
     PAGE_CONFIGS: [
       {
         name: "\u7528\u6237\u4FE1\u606F\u9875\uFF08\u793A\u4F8B\uFF09",
         urlPattern: /\/user\/(profile|edit)/,
-        fields: [
-          { selector: "#userid", value: "123456", type: "input" },
-          { selector: "input[name='username']", value: "\u5F20\u4E09", type: "input" },
-          { selector: ".department-select .el-input__inner", value: "tech", type: "select" }
-        ]
+        profiles: {
+          default: {
+            fields: [
+              { selector: "#userid", value: "123456", type: "input" },
+              { selector: "input[name='username']", value: "\u5F20\u4E09", type: "input" },
+              { selector: ".department-select .el-input__inner", value: "tech", type: "select" }
+            ]
+          }
+        }
       },
       {
         name: "\u8BA2\u5355\u7533\u8BF7\u9875\uFF08\u793A\u4F8B\uFF09",
         urlPattern: "/order/apply",
-        fields: [
-          { selector: "#orderId", value: "ORD-2025001", type: "input" },
-          { selector: "input[name='quantity']", value: "10", type: "input" },
-          { selector: "#agreeTerms", value: true, type: "checkbox" }
-        ]
+        profiles: {
+          default: {
+            fields: [
+              { selector: "#orderId", value: "ORD-2025001", type: "input" },
+              { selector: "input[name='quantity']", value: "10", type: "input" },
+              { selector: "#agreeTerms", value: true, type: "checkbox" }
+            ]
+          }
+        }
       }
     ]
   };
@@ -591,8 +606,152 @@
     return {
       AUTO_FILL_ON_LOAD: typeof merged.AUTO_FILL_ON_LOAD === "boolean" ? merged.AUTO_FILL_ON_LOAD : DEFAULT_CONFIG.AUTO_FILL_ON_LOAD,
       SHORTCUT: { ...DEFAULT_CONFIG.SHORTCUT, ...merged.SHORTCUT || {} },
+      SHORTCUT_PROFILE_SWITCH: {
+        ...DEFAULT_CONFIG.SHORTCUT_PROFILE_SWITCH,
+        ...merged.SHORTCUT_PROFILE_SWITCH || {}
+      },
       PAGE_CONFIGS: Array.isArray(merged.PAGE_CONFIGS) ? merged.PAGE_CONFIGS : DEFAULT_CONFIG.PAGE_CONFIGS
     };
+  }
+
+  // src/config-storage.js
+  var STORAGE_KEY = "form_autofill_config_v3";
+  var PROFILE_STORAGE_KEY = "form_autofill_active_profiles";
+  function hasLocalStorage() {
+    try {
+      return typeof localStorage !== "undefined";
+    } catch (e) {
+      return false;
+    }
+  }
+  function readProfileMap() {
+    if (!hasLocalStorage()) return {};
+    try {
+      const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+      if (!raw) return {};
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (e) {
+      return {};
+    }
+  }
+  function writeProfileMap(map) {
+    if (!hasLocalStorage()) return;
+    try {
+      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(map));
+    } catch (e) {
+    }
+  }
+  function loadStoredConfig() {
+    if (!hasLocalStorage()) return null;
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object") return null;
+      return parsed;
+    } catch (e) {
+      console.warn("[\u81EA\u52A8\u586B\u5145] \u8BFB\u53D6\u914D\u7F6E\u5931\u8D25\uFF1A", e);
+      return null;
+    }
+  }
+  function saveStoredConfig(config) {
+    if (!hasLocalStorage()) return false;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+      return true;
+    } catch (e) {
+      console.warn("[\u81EA\u52A8\u586B\u5145] \u4FDD\u5B58\u914D\u7F6E\u5931\u8D25\uFF1A", e);
+      return false;
+    }
+  }
+  function clearStoredConfig() {
+    if (!hasLocalStorage()) return;
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
+    }
+  }
+  function normalizeConfig(raw) {
+    const base = DEFAULT_CONFIG;
+    if (!raw || typeof raw !== "object") return structuredClone(base);
+    return {
+      AUTO_FILL_ON_LOAD: typeof raw.AUTO_FILL_ON_LOAD === "boolean" ? raw.AUTO_FILL_ON_LOAD : base.AUTO_FILL_ON_LOAD,
+      SHORTCUT: { ...base.SHORTCUT, ...raw.SHORTCUT || {} },
+      SHORTCUT_PROFILE_SWITCH: {
+        ...base.SHORTCUT_PROFILE_SWITCH,
+        ...raw.SHORTCUT_PROFILE_SWITCH || {}
+      },
+      PAGE_CONFIGS: Array.isArray(raw.PAGE_CONFIGS) ? raw.PAGE_CONFIGS.map((p) => normalizePage(p)) : []
+    };
+  }
+  function normalizeField(f) {
+    var _a3;
+    let t = typeof (f == null ? void 0 : f.type) === "string" ? f.type : "input";
+    if (t === "checkbox-group") t = "checkbox";
+    if (t === "radio-group") t = "radio";
+    return {
+      selector: typeof (f == null ? void 0 : f.selector) === "string" ? f.selector : "",
+      value: (_a3 = f == null ? void 0 : f.value) != null ? _a3 : "",
+      type: t
+    };
+  }
+  function normalizeProfile(prof) {
+    if (!prof || typeof prof !== "object") return { fields: [] };
+    return {
+      fields: Array.isArray(prof.fields) ? prof.fields.map(normalizeField) : []
+    };
+  }
+  function normalizePage(p) {
+    var _a3;
+    const name = typeof (p == null ? void 0 : p.name) === "string" ? p.name : "\u672A\u547D\u540D";
+    const urlPattern = (_a3 = p == null ? void 0 : p.urlPattern) != null ? _a3 : "";
+    let profiles;
+    if ((p == null ? void 0 : p.profiles) && typeof p.profiles === "object" && Object.keys(p.profiles).length > 0) {
+      profiles = {};
+      for (const [k, v] of Object.entries(p.profiles)) {
+        profiles[k] = normalizeProfile(v);
+      }
+    } else {
+      profiles = {
+        default: {
+          fields: Array.isArray(p == null ? void 0 : p.fields) ? p.fields.map(normalizeField) : []
+        }
+      };
+    }
+    if (Object.keys(profiles).length === 0) {
+      profiles = { default: { fields: [] } };
+    }
+    return { name, urlPattern, profiles };
+  }
+  function getActiveProfile(pageConfig) {
+    if (!pageConfig || !pageConfig.profiles) return null;
+    const keys = Object.keys(pageConfig.profiles);
+    if (keys.length === 0) return null;
+    const map = readProfileMap();
+    const stored = map[pageConfig.name];
+    if (stored && pageConfig.profiles[stored]) return stored;
+    if (pageConfig.profiles.default) return "default";
+    return keys[0];
+  }
+  function setActiveProfile(pageConfig, profileName) {
+    if (!pageConfig || !pageConfig.profiles) return false;
+    if (!pageConfig.profiles[profileName]) return false;
+    const map = readProfileMap();
+    map[pageConfig.name] = profileName;
+    writeProfileMap(map);
+    return true;
+  }
+  function listProfiles(pageConfig) {
+    if (!pageConfig || !pageConfig.profiles) return [];
+    return Object.keys(pageConfig.profiles);
+  }
+  function exportConfigJson(config) {
+    return JSON.stringify(config, null, 2);
+  }
+  function importConfigJson(json) {
+    const parsed = JSON.parse(json);
+    return normalizeConfig(parsed);
   }
 
   // src/core.js
@@ -605,6 +764,22 @@
   }
   function clearFilled(el) {
     filledSet.delete(el);
+  }
+  function ensureProfiles(page) {
+    if (!page) return null;
+    if (!page.profiles || Object.keys(page.profiles).length === 0) {
+      const legacy = Array.isArray(page.fields) ? page.fields : [];
+      page.profiles = { default: { fields: legacy } };
+    }
+    return page;
+  }
+  function getActiveFields(page) {
+    var _a3;
+    if (!page) return [];
+    ensureProfiles(page);
+    const name = getActiveProfile(page);
+    if (!name) return [];
+    return ((_a3 = page.profiles[name]) == null ? void 0 : _a3.fields) || [];
   }
   async function tryFill(item) {
     const el = document.querySelector(item.selector);
@@ -622,11 +797,14 @@
     console.warn(`[\u81EA\u52A8\u586B\u5145] ${item.selector} \u6CA1\u6709\u53EF\u7528\u7684\u586B\u5145\u5668`);
     return false;
   }
-  async function executeFill() {
+  async function executeFill(profileOverride) {
+    var _a3;
     const cfg = resolveConfig();
     const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
     if (!config) return;
-    const fields = config.fields || [];
+    ensureProfiles(config);
+    const profileName = profileOverride && config.profiles[profileOverride] ? profileOverride : getActiveProfile(config);
+    const fields = ((_a3 = config.profiles[profileName]) == null ? void 0 : _a3.fields) || [];
     if (fields.length === 0) return;
     if (!cfg.AUTO_FILL_ON_LOAD) {
       fields.forEach((item) => {
@@ -644,7 +822,8 @@
     const observer = new MutationObserver(() => {
       const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
       if (!config) return;
-      const fields = config.fields || [];
+      ensureProfiles(config);
+      const fields = getActiveFields(config);
       if (fields.length === 0) return;
       let allReady = true;
       for (const item of fields) {
@@ -714,78 +893,67 @@
       shortcutLoggedKey = comboKey;
     }
   }
-
-  // src/config-storage.js
-  var STORAGE_KEY = "form_autofill_config_v3";
-  function hasLocalStorage() {
-    try {
-      return typeof localStorage !== "undefined";
-    } catch (e) {
-      return false;
+  var profileSwitchLoggedKey = null;
+  function setupProfileSwitchShortcut() {
+    const { SHORTCUT_PROFILE_SWITCH } = resolveConfig();
+    if (!SHORTCUT_PROFILE_SWITCH || !SHORTCUT_PROFILE_SWITCH.key) return;
+    const { key, ctrl, alt, shift, meta } = SHORTCUT_PROFILE_SWITCH;
+    const targetKey = (key || "").toUpperCase();
+    const handler = (e) => {
+      var _a3;
+      if ((e.key || "").toUpperCase() !== targetKey) return;
+      if (!!e.ctrlKey !== !!ctrl) return;
+      if (!!e.altKey !== !!alt) return;
+      if (!!e.shiftKey !== !!shift) return;
+      if (!!e.metaKey !== !!meta) return;
+      const tag = e.target && e.target.tagName || "";
+      if (tag === "INPUT" || tag === "TEXTAREA" || ((_a3 = e.target) == null ? void 0 : _a3.isContentEditable)) {
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      cycleProfile();
+    };
+    window.addEventListener("keydown", handler);
+    const comboKey = [
+      ctrl && "Ctrl",
+      alt && "Alt",
+      shift && "Shift",
+      meta && "Meta",
+      targetKey
+    ].filter(Boolean).join("+");
+    if (comboKey !== profileSwitchLoggedKey) {
+      console.log(`[\u81EA\u52A8\u586B\u5145] profile \u5207\u6362\u5FEB\u6377\u952E\u5DF2\u542F\u7528\uFF1A${comboKey}`);
+      profileSwitchLoggedKey = comboKey;
     }
   }
-  function loadStoredConfig() {
-    if (!hasLocalStorage()) return null;
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw);
-      if (!parsed || typeof parsed !== "object") return null;
-      return parsed;
-    } catch (e) {
-      console.warn("[\u81EA\u52A8\u586B\u5145] \u8BFB\u53D6\u914D\u7F6E\u5931\u8D25\uFF1A", e);
+  function cycleProfile() {
+    var _a3;
+    const config = findMatchingConfig(
+      resolveConfig().PAGE_CONFIGS,
+      window.location.href
+    );
+    if (!config) {
+      console.log("[\u81EA\u52A8\u586B\u5145] \u5F53\u524D\u9875\u9762\u6CA1\u6709\u5339\u914D\u7684\u914D\u7F6E\uFF0C\u65E0\u6CD5\u5207\u6362 profile");
       return null;
     }
-  }
-  function saveStoredConfig(config) {
-    if (!hasLocalStorage()) return false;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-      return true;
-    } catch (e) {
-      console.warn("[\u81EA\u52A8\u586B\u5145] \u4FDD\u5B58\u914D\u7F6E\u5931\u8D25\uFF1A", e);
-      return false;
+    ensureProfiles(config);
+    const profiles = listProfiles(config);
+    if (profiles.length <= 1) {
+      console.log(`[\u81EA\u52A8\u586B\u5145] ${config.name} \u53EA\u6709 1 \u4E2A profile\uFF0C\u65E0\u9700\u5207\u6362`);
+      return null;
     }
-  }
-  function clearStoredConfig() {
-    if (!hasLocalStorage()) return;
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch (e) {
-    }
-  }
-  function normalizeConfig(raw) {
-    const base = DEFAULT_CONFIG;
-    if (!raw || typeof raw !== "object") return structuredClone(base);
-    return {
-      AUTO_FILL_ON_LOAD: typeof raw.AUTO_FILL_ON_LOAD === "boolean" ? raw.AUTO_FILL_ON_LOAD : base.AUTO_FILL_ON_LOAD,
-      SHORTCUT: { ...base.SHORTCUT, ...raw.SHORTCUT || {} },
-      PAGE_CONFIGS: Array.isArray(raw.PAGE_CONFIGS) ? raw.PAGE_CONFIGS.map((p) => {
-        var _a3;
-        return {
-          name: typeof (p == null ? void 0 : p.name) === "string" ? p.name : "\u672A\u547D\u540D",
-          urlPattern: (_a3 = p == null ? void 0 : p.urlPattern) != null ? _a3 : "",
-          fields: Array.isArray(p == null ? void 0 : p.fields) ? p.fields.map((f) => {
-            var _a4;
-            let t = typeof (f == null ? void 0 : f.type) === "string" ? f.type : "input";
-            if (t === "checkbox-group") t = "checkbox";
-            if (t === "radio-group") t = "radio";
-            return {
-              selector: typeof (f == null ? void 0 : f.selector) === "string" ? f.selector : "",
-              value: (_a4 = f == null ? void 0 : f.value) != null ? _a4 : "",
-              type: t
-            };
-          }) : []
-        };
-      }) : []
-    };
-  }
-  function exportConfigJson(config) {
-    return JSON.stringify(config, null, 2);
-  }
-  function importConfigJson(json) {
-    const parsed = JSON.parse(json);
-    return normalizeConfig(parsed);
+    const current = getActiveProfile(config);
+    const idx = Math.max(0, profiles.indexOf(current));
+    const next = profiles[(idx + 1) % profiles.length];
+    setActiveProfile(config, next);
+    const nextFields = ((_a3 = config.profiles[next]) == null ? void 0 : _a3.fields) || [];
+    nextFields.forEach((item) => {
+      const el = document.querySelector(item.selector);
+      if (el) clearFilled(el);
+    });
+    console.log(`[\u81EA\u52A8\u586B\u5145] \u5207\u6362 profile: ${config.name} \u2192 ${next}`);
+    return { configName: config.name, profile: next };
   }
 
   // src/config-types.js
@@ -907,6 +1075,33 @@
 
 .empty { color: #909399; text-align: center; padding: 40px 0; font-size: 13px; }
 
+.profile-tabs {
+  display: flex; gap: 6px; align-items: center;
+  margin: 0 0 8px 0; flex-wrap: wrap;
+}
+.profile-tab {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border: 1px solid #dcdfe6; background: #fff; border-radius: 14px;
+  cursor: pointer; font-size: 12px; color: #606266;
+  user-select: none;
+}
+.profile-tab:hover { border-color: #409eff; color: #409eff; }
+.profile-tab.active { background: #409eff; color: #fff; border-color: #409eff; }
+.profile-tab .badge {
+  font-size: 10px; padding: 1px 5px; border-radius: 8px;
+  background: #67c23a; color: #fff;
+}
+.profile-tab.active .badge { background: rgba(255,255,255,.3); }
+.profile-tab .x {
+  margin-left: 2px; color: #f56c6c; font-weight: 700; opacity: 0.6;
+}
+.profile-tab.active .x { color: #fff; opacity: 0.8; }
+.profile-tab .x:hover { opacity: 1; }
+.profile-tabs .add-btn {
+  border-style: dashed; background: transparent;
+}
+.profile-hint { color: #909399; font-size: 11px; margin-bottom: 8px; }
+
 .shortcut-group { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .shortcut-group label { width: auto; display: inline-flex; align-items: center; gap: 4px; }
 
@@ -928,8 +1123,29 @@
     const state = {
       config: initial,
       activePageIndex: 0,
-      activeTab: "global"
+      activeTab: "global",
+      // UI 当前编辑的 profile 索引（按对象 key 顺序），按 pageIdx 缓存
+      activeProfileIndexByPage: {}
     };
+    function getPageProfileKeys(page) {
+      if (!page || !page.profiles) return [];
+      return Object.keys(page.profiles);
+    }
+    function getEditingProfileKey(pageIdx) {
+      const page = state.config.PAGE_CONFIGS[pageIdx];
+      if (!page) return null;
+      const keys = getPageProfileKeys(page);
+      if (keys.length === 0) return null;
+      let idx = state.activeProfileIndexByPage[pageIdx];
+      if (!Number.isInteger(idx) || idx < 0 || idx >= keys.length) {
+        idx = 0;
+        state.activeProfileIndexByPage[pageIdx] = idx;
+      }
+      return keys[idx];
+    }
+    function setEditingProfileIndex(pageIdx, idx) {
+      state.activeProfileIndexByPage[pageIdx] = idx;
+    }
     const host = document.createElement("div");
     host.setAttribute("data-autofill-config-ui", "");
     const shadow = host.attachShadow({ mode: "open" });
@@ -1028,7 +1244,24 @@
     }
     function renderPageDetail(page, idx) {
       var _a3;
-      const fields = page.fields || [];
+      const profileKeys = getPageProfileKeys(page);
+      const editingKey = getEditingProfileKey(idx);
+      const editingIdx = state.activeProfileIndexByPage[idx] || 0;
+      const profile = editingKey ? page.profiles[editingKey] : null;
+      const fields = (profile == null ? void 0 : profile.fields) || [];
+      const persistedActive = getActiveProfile(page);
+      const tabs = profileKeys.map((k, ki) => {
+        const isEditing = ki === editingIdx;
+        const isPersisted = k === persistedActive;
+        const canDel = profileKeys.length > 1;
+        return `
+          <span class="profile-tab ${isEditing ? "active" : ""}" data-act="select-profile" data-idx="${idx}" data-pi="${ki}" title="${escapeAttr(k)}${isPersisted ? "\uFF08\u8FD0\u884C\u65F6\u6FC0\u6D3B\uFF09" : ""}">
+            <span class="name">${escapeHtml(k)}</span>
+            ${isPersisted ? '<span class="badge">\u6FC0\u6D3B</span>' : ""}
+            ${canDel ? `<span class="x" data-act="del-profile" data-idx="${idx}" data-pi="${ki}" title="\u5220\u9664\u6B64 profile">\xD7</span>` : ""}
+          </span>
+        `;
+      }).join("");
       return `
       <div class="form-row">
         <label>\u9875\u9762\u540D\u79F0</label>
@@ -1040,8 +1273,13 @@
         <span class="hint">\u5B57\u7B26\u4E32\u5305\u542B\u5339\u914D\uFF0C\u6216 <code>/regex/</code></span>
       </div>
       <div class="form-row" style="align-items:flex-start">
-        <label>\u5B57\u6BB5\u5217\u8868</label>
+        <label>Profiles</label>
         <div style="flex:1">
+          <div class="profile-tabs">
+            ${tabs}
+            <span class="profile-tab add-btn" data-act="add-profile" data-idx="${idx}" title="\u65B0\u5EFA profile">+ \u65B0\u5EFA</span>
+          </div>
+          <div class="profile-hint">\u7F16\u8F91\u4E2D\u7684 profile\uFF1A<b>${escapeHtml(editingKey || "")}</b>\u3002\u8FD0\u884C\u65F6\u6FC0\u6D3B\u6001\uFF08\u6301\u4E45\u5316\uFF09\u4EE5 <span style="color:#67c23a">\u6FC0\u6D3B</span> \u6807\u8BB0\u4E3A\u51C6\uFF0C\u53EF\u7531\u5FEB\u6377\u952E\u5FAA\u73AF\u5207\u6362\u3002</div>
           <table class="fields-table">
             <colgroup>
               <col class="type-col"><col class="selector-col"><col class="value-col"><col class="act-col">
@@ -1051,7 +1289,7 @@
             </thead>
             <tbody>
               ${fields.map((f, fi) => renderFieldRow(f, idx, fi)).join("")}
-              ${fields.length === 0 ? '<tr><td colspan="4" class="empty" style="padding:16px">\u8FD8\u6CA1\u6709\u5B57\u6BB5\uFF0C\u70B9\u51FB\u4E0B\u65B9\u65B0\u589E</td></tr>' : ""}
+              ${fields.length === 0 ? '<tr><td colspan="4" class="empty" style="padding:16px">\u5F53\u524D profile \u8FD8\u6CA1\u6709\u5B57\u6BB5\uFF0C\u70B9\u51FB\u4E0B\u65B9\u65B0\u589E</td></tr>' : ""}
             </tbody>
           </table>
           <button type="button" class="btn sm" data-act="add-field" data-idx="${idx}" style="margin-top:8px">+ \u65B0\u589E\u5B57\u6BB5</button>
@@ -1218,8 +1456,10 @@
             const idx = Number(btn.dataset.idx);
             const page = state.config.PAGE_CONFIGS[idx];
             if (!page) return;
-            page.fields = page.fields || [];
-            page.fields.push({
+            const k = getEditingProfileKey(idx);
+            if (!k) return;
+            page.profiles[k].fields = page.profiles[k].fields || [];
+            page.profiles[k].fields.push({
               selector: "",
               value: getDefaultValueByType("input"),
               type: "input"
@@ -1232,7 +1472,44 @@
             const fi = Number(btn.dataset.fi);
             const page = state.config.PAGE_CONFIGS[pi];
             if (!page) return;
-            page.fields.splice(fi, 1);
+            const k = getEditingProfileKey(pi);
+            if (!k || !page.profiles[k].fields) return;
+            page.profiles[k].fields.splice(fi, 1);
+            render();
+            return;
+          }
+          case "add-profile": {
+            const idx = Number(btn.dataset.idx);
+            const page = state.config.PAGE_CONFIGS[idx];
+            if (!page) return;
+            const baseName = "profile";
+            let name = baseName;
+            let i = 1;
+            while (page.profiles[name]) {
+              i += 1;
+              name = `${baseName}${i}`;
+            }
+            page.profiles[name] = { fields: [] };
+            const keys = getPageProfileKeys(page);
+            setEditingProfileIndex(idx, keys.length - 1);
+            render();
+            return;
+          }
+          case "del-profile": {
+            e.stopPropagation();
+            const idx = Number(btn.dataset.idx);
+            const pi = Number(btn.dataset.pi);
+            const page = state.config.PAGE_CONFIGS[idx];
+            if (!page) return;
+            const keys = getPageProfileKeys(page);
+            if (keys.length <= 1) return;
+            const removeKey = keys[pi];
+            if (!confirm(`\u5220\u9664 profile \u201C${removeKey}\u201D\uFF1F\u5176\u6240\u6709\u5B57\u6BB5\u4F1A\u4E22\u5931\u3002`)) return;
+            delete page.profiles[removeKey];
+            const cur = state.activeProfileIndexByPage[idx] || 0;
+            if (cur >= pi) {
+              setEditingProfileIndex(idx, Math.max(0, cur - 1));
+            }
             render();
             return;
           }
@@ -1240,11 +1517,21 @@
       });
       shadow.addEventListener("click", (e) => {
         const item = e.target.closest("[data-page]");
-        if (!item) return;
-        const idx = Number(item.dataset.page);
-        if (Number.isFinite(idx) && idx !== state.activePageIndex) {
-          state.activePageIndex = idx;
-          render();
+        if (item && !e.target.closest('[data-act="select-profile"]') && !e.target.closest('[data-act="del-profile"]')) {
+          const idx = Number(item.dataset.page);
+          if (Number.isFinite(idx) && idx !== state.activePageIndex) {
+            state.activePageIndex = idx;
+            render();
+          }
+        }
+        const selectTab = e.target.closest('[data-act="select-profile"]');
+        if (selectTab) {
+          const idx = Number(selectTab.dataset.idx);
+          const pi = Number(selectTab.dataset.pi);
+          if (Number.isFinite(idx) && Number.isFinite(pi)) {
+            setEditingProfileIndex(idx, pi);
+            render();
+          }
         }
       });
       shadow.addEventListener("input", (e) => {
@@ -1264,8 +1551,10 @@
           const pi = Number(t.dataset.pi);
           const fi = Number(t.dataset.fi);
           const page = state.config.PAGE_CONFIGS[pi];
-          if (!page || !page.fields[fi]) return;
-          const f = page.fields[fi];
+          if (!page) return;
+          const k = getEditingProfileKey(pi);
+          if (!k || !page.profiles[k] || !page.profiles[k].fields[fi]) return;
+          const f = page.profiles[k].fields[fi];
           const key = t.dataset.field;
           if (key === "type") {
             f.type = t.value;
@@ -1322,7 +1611,10 @@
     }
     function onTest() {
       window.__AUTOFILL_CONFIG__ = state.config;
-      window.dispatchEvent(new CustomEvent("autofill:execute-fill"));
+      const editingKey = getEditingProfileKey(state.activePageIndex);
+      window.dispatchEvent(
+        new CustomEvent("autofill:execute-fill", { detail: { profile: editingKey } })
+      );
     }
     function onExport() {
       const json = exportConfigJson(state.config);
@@ -1423,6 +1715,7 @@
   if (typeof window !== "undefined") {
     const start = () => {
       setupShortcut();
+      setupProfileSwitchShortcut();
       autoFillIfEnabled();
       mountFloatingButton();
       setupConfigShortcut();
@@ -1433,12 +1726,17 @@
       start();
     }
     window.addEventListener("autofill:open-config", () => openConfigUI());
-    window.addEventListener("autofill:execute-fill", () => executeFill());
+    window.addEventListener("autofill:execute-fill", (e) => {
+      var _a3;
+      return executeFill((_a3 = e == null ? void 0 : e.detail) == null ? void 0 : _a3.profile);
+    });
     window.addEventListener("autofill:config-updated", () => {
       setupShortcut();
+      setupProfileSwitchShortcut();
     });
     window.__AUTOFILL__ = {
       executeFill,
+      cycleProfile,
       openConfig: openConfigUI,
       getConfig: resolveConfig
     };

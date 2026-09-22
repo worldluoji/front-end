@@ -5,6 +5,11 @@
 import { fillers } from './fillers/index.js';
 import { findMatchingConfig } from './matchers.js';
 import { resolveConfig } from './config.js';
+import {
+  getActiveProfile,
+  setActiveProfile,
+  listProfiles,
+} from './config-storage.js';
 
 // 不污染 DOM 的填充标记
 const filledSet = new WeakSet();
@@ -19,6 +24,30 @@ function markFilled(el) {
 
 function clearFilled(el) {
   filledSet.delete(el);
+}
+
+/**
+ * 兼容旧 fields 写法：没有 profiles 就把旧 fields 归一为 profiles.default
+ * 不引入 storage 的 normalize 以避免循环依赖
+ */
+function ensureProfiles(page) {
+  if (!page) return null;
+  if (!page.profiles || Object.keys(page.profiles).length === 0) {
+    const legacy = Array.isArray(page.fields) ? page.fields : [];
+    page.profiles = { default: { fields: legacy } };
+  }
+  return page;
+}
+
+/**
+ * 取当前激活 profile 的 fields；profile 不存在返回空数组
+ */
+function getActiveFields(page) {
+  if (!page) return [];
+  ensureProfiles(page);
+  const name = getActiveProfile(page);
+  if (!name) return [];
+  return page.profiles[name]?.fields || [];
 }
 
 /**
@@ -54,8 +83,10 @@ export function getCurrentConfig() {
   const cfg = resolveConfig();
   const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
   if (config) {
+    ensureProfiles(config);
+    const profile = getActiveProfile(config);
     // eslint-disable-next-line no-console
-    console.log(`[自动填充] 匹配到页面配置：${config.name}`);
+    console.log(`[自动填充] 匹配到页面配置：${config.name}（profile: ${profile || '?'}）`);
   } else {
     // eslint-disable-next-line no-console
     console.log('[自动填充] 未匹配到任何页面配置');
@@ -65,13 +96,19 @@ export function getCurrentConfig() {
 
 /**
  * 执行一次完整填充（手动触发或自动模式首次）
+ * @param {string} [profileOverride] - 临时用指定 profile 的 fields 填充（不修改持久化的 active profile）
  */
-export async function executeFill() {
+export async function executeFill(profileOverride) {
   const cfg = resolveConfig();
   const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
   if (!config) return;
 
-  const fields = config.fields || [];
+  ensureProfiles(config);
+  const profileName =
+    profileOverride && config.profiles[profileOverride]
+      ? profileOverride
+      : getActiveProfile(config);
+  const fields = config.profiles[profileName]?.fields || [];
   if (fields.length === 0) return;
 
   // 手动触发时，先清标记允许重新填充
@@ -98,7 +135,8 @@ export function autoFillIfEnabled() {
     const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
     if (!config) return;
 
-    const fields = config.fields || [];
+    ensureProfiles(config);
+    const fields = getActiveFields(config);
     if (fields.length === 0) return;
 
     let allReady = true;
@@ -192,4 +230,90 @@ export function setupShortcut() {
 export function _resetForTest() {
   // WeakSet 没有 clear，只能重新创建
   // 这里仅暴露 API 给单测
+}
+
+/**
+ * profile 切换快捷键：循环切到下一个 profile
+ * 复用填充快捷键的输入框忽略规则，避免输入时误触
+ */
+let profileSwitchLoggedKey = null;
+
+export function setupProfileSwitchShortcut() {
+  const { SHORTCUT_PROFILE_SWITCH } = resolveConfig();
+  if (!SHORTCUT_PROFILE_SWITCH || !SHORTCUT_PROFILE_SWITCH.key) return;
+  const { key, ctrl, alt, shift, meta } = SHORTCUT_PROFILE_SWITCH;
+  const targetKey = (key || '').toUpperCase();
+
+  const handler = (e) => {
+    if ((e.key || '').toUpperCase() !== targetKey) return;
+    if (!!e.ctrlKey !== !!ctrl) return;
+    if (!!e.altKey !== !!alt) return;
+    if (!!e.shiftKey !== !!shift) return;
+    if (!!e.metaKey !== !!meta) return;
+
+    const tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target?.isContentEditable) {
+      return;
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+    cycleProfile();
+  };
+  window.addEventListener('keydown', handler);
+
+  const comboKey = [
+    ctrl && 'Ctrl',
+    alt && 'Alt',
+    shift && 'Shift',
+    meta && 'Meta',
+    targetKey,
+  ]
+    .filter(Boolean)
+    .join('+');
+  if (comboKey !== profileSwitchLoggedKey) {
+    // eslint-disable-next-line no-console
+    console.log(`[自动填充] profile 切换快捷键已启用：${comboKey}`);
+    profileSwitchLoggedKey = comboKey;
+  }
+}
+
+/**
+ * 把当前匹配页面的 profile 切到下一个（按对象 key 顺序循环）
+ * 同时清掉当前 profile 字段的填充标记，使新 profile 立即可填
+ * @returns {{ configName: string, profile: string }|null}
+ */
+export function cycleProfile() {
+  const config = findMatchingConfig(
+    resolveConfig().PAGE_CONFIGS,
+    window.location.href
+  );
+  if (!config) {
+    // eslint-disable-next-line no-console
+    console.log('[自动填充] 当前页面没有匹配的配置，无法切换 profile');
+    return null;
+  }
+  ensureProfiles(config);
+  const profiles = listProfiles(config);
+  if (profiles.length <= 1) {
+    // eslint-disable-next-line no-console
+    console.log(`[自动填充] ${config.name} 只有 1 个 profile，无需切换`);
+    return null;
+  }
+
+  const current = getActiveProfile(config);
+  const idx = Math.max(0, profiles.indexOf(current));
+  const next = profiles[(idx + 1) % profiles.length];
+  setActiveProfile(config, next);
+
+  // 清掉下一个 profile 各字段的填充标记，确保下次填充能应用新值
+  const nextFields = config.profiles[next]?.fields || [];
+  nextFields.forEach((item) => {
+    const el = document.querySelector(item.selector);
+    if (el) clearFilled(el);
+  });
+
+  // eslint-disable-next-line no-console
+  console.log(`[自动填充] 切换 profile: ${config.name} → ${next}`);
+  return { configName: config.name, profile: next };
 }

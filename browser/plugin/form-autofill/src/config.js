@@ -8,14 +8,19 @@
  * @property {*} value
  * @property {string} [type] - input|select|checkbox|radio|switch|slider|...
  *
+ * @typedef {Object} ProfileConfig
+ * @property {FieldConfig[]} fields
+ *
  * @typedef {Object} PageConfig
  * @property {string} name
  * @property {string|RegExp} urlPattern
- * @property {FieldConfig[]} fields
+ * @property {FieldConfig[]} [fields] - 旧写法，自动归一为 profiles.default.fields
+ * @property {Object<string, ProfileConfig>} [profiles] - 多套数据 profile，循环切换
  *
  * @typedef {Object} RuntimeConfig
  * @property {boolean} AUTO_FILL_ON_LOAD
  * @property {{ key: string, ctrl: boolean, alt: boolean, shift: boolean, meta: boolean }} SHORTCUT
+ * @property {{ key: string, ctrl: boolean, alt: boolean, shift: boolean, meta: boolean }} SHORTCUT_PROFILE_SWITCH
  * @property {PageConfig[]} PAGE_CONFIGS
  */
 
@@ -28,24 +33,39 @@ export const DEFAULT_CONFIG = {
     shift: true,
     meta: true,
   },
+  SHORTCUT_PROFILE_SWITCH: {
+    key: 'P',
+    ctrl: false,
+    alt: false,
+    shift: true,
+    meta: true,
+  },
   PAGE_CONFIGS: [
     {
       name: '用户信息页（示例）',
       urlPattern: /\/user\/(profile|edit)/,
-      fields: [
-        { selector: '#userid', value: '123456', type: 'input' },
-        { selector: "input[name='username']", value: '张三', type: 'input' },
-        { selector: '.department-select .el-input__inner', value: 'tech', type: 'select' },
-      ],
+      profiles: {
+        default: {
+          fields: [
+            { selector: '#userid', value: '123456', type: 'input' },
+            { selector: "input[name='username']", value: '张三', type: 'input' },
+            { selector: '.department-select .el-input__inner', value: 'tech', type: 'select' },
+          ],
+        },
+      },
     },
     {
       name: '订单申请页（示例）',
       urlPattern: '/order/apply',
-      fields: [
-        { selector: '#orderId', value: 'ORD-2025001', type: 'input' },
-        { selector: "input[name='quantity']", value: '10', type: 'input' },
-        { selector: '#agreeTerms', value: true, type: 'checkbox' },
-      ],
+      profiles: {
+        default: {
+          fields: [
+            { selector: '#orderId', value: 'ORD-2025001', type: 'input' },
+            { selector: "input[name='quantity']", value: '10', type: 'input' },
+            { selector: '#agreeTerms', value: true, type: 'checkbox' },
+          ],
+        },
+      },
     },
   ],
 };
@@ -77,6 +97,10 @@ export function resolveConfig() {
         ? merged.AUTO_FILL_ON_LOAD
         : DEFAULT_CONFIG.AUTO_FILL_ON_LOAD,
     SHORTCUT: { ...DEFAULT_CONFIG.SHORTCUT, ...(merged.SHORTCUT || {}) },
+    SHORTCUT_PROFILE_SWITCH: {
+      ...DEFAULT_CONFIG.SHORTCUT_PROFILE_SWITCH,
+      ...(merged.SHORTCUT_PROFILE_SWITCH || {}),
+    },
     PAGE_CONFIGS: Array.isArray(merged.PAGE_CONFIGS)
       ? merged.PAGE_CONFIGS
       : DEFAULT_CONFIG.PAGE_CONFIGS,

@@ -212,3 +212,195 @@ describe('快捷键 keydown', () => {
     expect(input.value).toBe('A');
   });
 });
+
+describe('executeFill - profile', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('旧 fields 写法自动归一为 profiles.default', async () => {
+    window.history.replaceState({}, '', '/');
+    const input = document.createElement('input');
+    input.id = 'a';
+    document.body.appendChild(input);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '测试',
+          urlPattern: '/',
+          fields: [{ selector: '#a', value: 'A', type: 'input' }],
+        },
+      ],
+    };
+    await executeFill();
+    expect(input.value).toBe('A');
+  });
+
+  it('有 profiles 时使用 default profile 的 fields', async () => {
+    window.history.replaceState({}, '', '/');
+    const input = document.createElement('input');
+    input.id = 'a';
+    document.body.appendChild(input);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '测试',
+          urlPattern: '/',
+          profiles: {
+            default: { fields: [{ selector: '#a', value: 'DEFAULT_VAL', type: 'input' }] },
+            demo:    { fields: [{ selector: '#a', value: 'DEMO_VAL',    type: 'input' }] },
+          },
+        },
+      ],
+    };
+    await executeFill();
+    expect(input.value).toBe('DEFAULT_VAL');
+  });
+
+  it('持久化的 active profile 优先于 default', async () => {
+    window.history.replaceState({}, '', '/');
+    const input = document.createElement('input');
+    input.id = 'a';
+    document.body.appendChild(input);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '测试',
+          urlPattern: '/',
+          profiles: {
+            default: { fields: [{ selector: '#a', value: 'DEFAULT_VAL', type: 'input' }] },
+            demo:    { fields: [{ selector: '#a', value: 'DEMO_VAL',    type: 'input' }] },
+          },
+        },
+      ],
+    };
+    localStorage.setItem(
+      'form_autofill_active_profiles',
+      JSON.stringify({ 测试: 'demo' })
+    );
+    await executeFill();
+    expect(input.value).toBe('DEMO_VAL');
+  });
+
+  it('executeFill(profileOverride) 用指定 profile，不动持久化', async () => {
+    window.history.replaceState({}, '', '/');
+    const input = document.createElement('input');
+    input.id = 'a';
+    document.body.appendChild(input);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '测试',
+          urlPattern: '/',
+          profiles: {
+            default: { fields: [{ selector: '#a', value: 'DEFAULT_VAL', type: 'input' }] },
+            demo:    { fields: [{ selector: '#a', value: 'DEMO_VAL',    type: 'input' }] },
+          },
+        },
+      ],
+    };
+    localStorage.setItem(
+      'form_autofill_active_profiles',
+      JSON.stringify({ 测试: 'default' })
+    );
+    await executeFill('demo');
+    expect(input.value).toBe('DEMO_VAL');
+    // 持久化的 active 不应被覆盖
+    expect(JSON.parse(localStorage.getItem('form_autofill_active_profiles'))).toEqual({
+      测试: 'default',
+    });
+  });
+});
+
+describe('cycleProfile', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('循环切到下一个 profile 并持久化', async () => {
+    const { cycleProfile } = await import('../src/core.js');
+    window.history.replaceState({}, '', '/');
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '测试',
+          urlPattern: '/',
+          profiles: {
+            default: { fields: [] },
+            demo: { fields: [] },
+            prod: { fields: [] },
+          },
+        },
+      ],
+    };
+
+    expect(cycleProfile()).toEqual({ configName: '测试', profile: 'demo' });
+    expect(cycleProfile()).toEqual({ configName: '测试', profile: 'prod' });
+    expect(cycleProfile()).toEqual({ configName: '测试', profile: 'default' });
+    expect(
+      JSON.parse(localStorage.getItem('form_autofill_active_profiles'))
+    ).toEqual({ 测试: 'default' });
+  });
+
+  it('只有 1 个 profile 时不切换，返回 null', async () => {
+    const { cycleProfile } = await import('../src/core.js');
+    window.history.replaceState({}, '', '/');
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '单',
+          urlPattern: '/',
+          profiles: { default: { fields: [] } },
+        },
+      ],
+    };
+    expect(cycleProfile()).toBeNull();
+  });
+
+  it('URL 不匹配时返回 null', async () => {
+    const { cycleProfile } = await import('../src/core.js');
+    window.history.replaceState({}, '', '/other');
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '测试',
+          urlPattern: '/test',
+          profiles: { default: { fields: [] }, demo: { fields: [] } },
+        },
+      ],
+    };
+    expect(cycleProfile()).toBeNull();
+  });
+
+  it('切换后会清掉新 profile 各字段的填充标记', async () => {
+    const { cycleProfile, executeFill } = await import('../src/core.js');
+    window.history.replaceState({}, '', '/');
+    const input = document.createElement('input');
+    input.id = 'a';
+    document.body.appendChild(input);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '测试',
+          urlPattern: '/',
+          profiles: {
+            default: { fields: [{ selector: '#a', value: 'DEFAULT_VAL', type: 'input' }] },
+            demo:    { fields: [{ selector: '#a', value: 'DEMO_VAL',    type: 'input' }] },
+          },
+        },
+      ],
+    };
+    // 手动模式：用 default profile 填
+    await executeFill();
+    expect(input.value).toBe('DEFAULT_VAL');
+    // 切到 demo 后再填，应该用 demo 的值
+    cycleProfile();
+    await executeFill();
+    expect(input.value).toBe('DEMO_VAL');
+  });
+});

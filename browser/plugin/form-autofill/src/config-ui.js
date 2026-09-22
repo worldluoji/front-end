@@ -13,6 +13,7 @@ import {
   normalizeConfig,
   exportConfigJson,
   importConfigJson,
+  getActiveProfile,
 } from './config-storage.js';
 import { DEFAULT_CONFIG } from './config.js';
 import { FIELD_TYPES, getDefaultValueByType, getFieldTypeLabel } from './config-types.js';
@@ -109,6 +110,33 @@ const STYLES = `
 
 .empty { color: #909399; text-align: center; padding: 40px 0; font-size: 13px; }
 
+.profile-tabs {
+  display: flex; gap: 6px; align-items: center;
+  margin: 0 0 8px 0; flex-wrap: wrap;
+}
+.profile-tab {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border: 1px solid #dcdfe6; background: #fff; border-radius: 14px;
+  cursor: pointer; font-size: 12px; color: #606266;
+  user-select: none;
+}
+.profile-tab:hover { border-color: #409eff; color: #409eff; }
+.profile-tab.active { background: #409eff; color: #fff; border-color: #409eff; }
+.profile-tab .badge {
+  font-size: 10px; padding: 1px 5px; border-radius: 8px;
+  background: #67c23a; color: #fff;
+}
+.profile-tab.active .badge { background: rgba(255,255,255,.3); }
+.profile-tab .x {
+  margin-left: 2px; color: #f56c6c; font-weight: 700; opacity: 0.6;
+}
+.profile-tab.active .x { color: #fff; opacity: 0.8; }
+.profile-tab .x:hover { opacity: 1; }
+.profile-tabs .add-btn {
+  border-style: dashed; background: transparent;
+}
+.profile-hint { color: #909399; font-size: 11px; margin-bottom: 8px; }
+
 .shortcut-group { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .shortcut-group label { width: auto; display: inline-flex; align-items: center; gap: 4px; }
 
@@ -140,7 +168,31 @@ export function openConfigUI() {
     config: initial,
     activePageIndex: 0,
     activeTab: 'global',
+    // UI 当前编辑的 profile 索引（按对象 key 顺序），按 pageIdx 缓存
+    activeProfileIndexByPage: {},
   };
+
+  function getPageProfileKeys(page) {
+    if (!page || !page.profiles) return [];
+    return Object.keys(page.profiles);
+  }
+
+  function getEditingProfileKey(pageIdx) {
+    const page = state.config.PAGE_CONFIGS[pageIdx];
+    if (!page) return null;
+    const keys = getPageProfileKeys(page);
+    if (keys.length === 0) return null;
+    let idx = state.activeProfileIndexByPage[pageIdx];
+    if (!Number.isInteger(idx) || idx < 0 || idx >= keys.length) {
+      idx = 0;
+      state.activeProfileIndexByPage[pageIdx] = idx;
+    }
+    return keys[idx];
+  }
+
+  function setEditingProfileIndex(pageIdx, idx) {
+    state.activeProfileIndexByPage[pageIdx] = idx;
+  }
 
   const host = document.createElement('div');
   host.setAttribute('data-autofill-config-ui', '');
@@ -252,7 +304,26 @@ export function openConfigUI() {
   }
 
   function renderPageDetail(page, idx) {
-    const fields = page.fields || [];
+    const profileKeys = getPageProfileKeys(page);
+    const editingKey = getEditingProfileKey(idx);
+    const editingIdx = state.activeProfileIndexByPage[idx] || 0;
+    const profile = editingKey ? page.profiles[editingKey] : null;
+    const fields = profile?.fields || [];
+    const persistedActive = getActiveProfile(page);
+    const tabs = profileKeys
+      .map((k, ki) => {
+        const isEditing = ki === editingIdx;
+        const isPersisted = k === persistedActive;
+        const canDel = profileKeys.length > 1;
+        return `
+          <span class="profile-tab ${isEditing ? 'active' : ''}" data-act="select-profile" data-idx="${idx}" data-pi="${ki}" title="${escapeAttr(k)}${isPersisted ? '（运行时激活）' : ''}">
+            <span class="name">${escapeHtml(k)}</span>
+            ${isPersisted ? '<span class="badge">激活</span>' : ''}
+            ${canDel ? `<span class="x" data-act="del-profile" data-idx="${idx}" data-pi="${ki}" title="删除此 profile">×</span>` : ''}
+          </span>
+        `;
+      })
+      .join('');
     return `
       <div class="form-row">
         <label>页面名称</label>
@@ -264,8 +335,13 @@ export function openConfigUI() {
         <span class="hint">字符串包含匹配，或 <code>/regex/</code></span>
       </div>
       <div class="form-row" style="align-items:flex-start">
-        <label>字段列表</label>
+        <label>Profiles</label>
         <div style="flex:1">
+          <div class="profile-tabs">
+            ${tabs}
+            <span class="profile-tab add-btn" data-act="add-profile" data-idx="${idx}" title="新建 profile">+ 新建</span>
+          </div>
+          <div class="profile-hint">编辑中的 profile：<b>${escapeHtml(editingKey || '')}</b>。运行时激活态（持久化）以 <span style="color:#67c23a">激活</span> 标记为准，可由快捷键循环切换。</div>
           <table class="fields-table">
             <colgroup>
               <col class="type-col"><col class="selector-col"><col class="value-col"><col class="act-col">
@@ -277,7 +353,7 @@ export function openConfigUI() {
               ${fields.map((f, fi) => renderFieldRow(f, idx, fi)).join('')}
               ${
                 fields.length === 0
-                  ? '<tr><td colspan="4" class="empty" style="padding:16px">还没有字段，点击下方新增</td></tr>'
+                  ? '<tr><td colspan="4" class="empty" style="padding:16px">当前 profile 还没有字段，点击下方新增</td></tr>'
                   : ''
               }
             </tbody>
@@ -458,8 +534,10 @@ export function openConfigUI() {
           const idx = Number(btn.dataset.idx);
           const page = state.config.PAGE_CONFIGS[idx];
           if (!page) return;
-          page.fields = page.fields || [];
-          page.fields.push({
+          const k = getEditingProfileKey(idx);
+          if (!k) return;
+          page.profiles[k].fields = page.profiles[k].fields || [];
+          page.profiles[k].fields.push({
             selector: '',
             value: getDefaultValueByType('input'),
             type: 'input',
@@ -472,21 +550,69 @@ export function openConfigUI() {
           const fi = Number(btn.dataset.fi);
           const page = state.config.PAGE_CONFIGS[pi];
           if (!page) return;
-          page.fields.splice(fi, 1);
+          const k = getEditingProfileKey(pi);
+          if (!k || !page.profiles[k].fields) return;
+          page.profiles[k].fields.splice(fi, 1);
+          render();
+          return;
+        }
+        case 'add-profile': {
+          const idx = Number(btn.dataset.idx);
+          const page = state.config.PAGE_CONFIGS[idx];
+          if (!page) return;
+          const baseName = 'profile';
+          let name = baseName;
+          let i = 1;
+          while (page.profiles[name]) {
+            i += 1;
+            name = `${baseName}${i}`;
+          }
+          page.profiles[name] = { fields: [] };
+          const keys = getPageProfileKeys(page);
+          setEditingProfileIndex(idx, keys.length - 1);
+          render();
+          return;
+        }
+        case 'del-profile': {
+          e.stopPropagation();
+          const idx = Number(btn.dataset.idx);
+          const pi = Number(btn.dataset.pi);
+          const page = state.config.PAGE_CONFIGS[idx];
+          if (!page) return;
+          const keys = getPageProfileKeys(page);
+          if (keys.length <= 1) return;
+          const removeKey = keys[pi];
+          if (!confirm(`删除 profile “${removeKey}”？其所有字段会丢失。`)) return;
+          delete page.profiles[removeKey];
+          // 编辑索引回退
+          const cur = state.activeProfileIndexByPage[idx] || 0;
+          if (cur >= pi) {
+            setEditingProfileIndex(idx, Math.max(0, cur - 1));
+          }
           render();
           return;
         }
       }
     });
 
-    // 切换选中页面
+    // 切换选中页面 / 选中 profile
     shadow.addEventListener('click', (e) => {
       const item = e.target.closest('[data-page]');
-      if (!item) return;
-      const idx = Number(item.dataset.page);
-      if (Number.isFinite(idx) && idx !== state.activePageIndex) {
-        state.activePageIndex = idx;
-        render();
+      if (item && !e.target.closest('[data-act="select-profile"]') && !e.target.closest('[data-act="del-profile"]')) {
+        const idx = Number(item.dataset.page);
+        if (Number.isFinite(idx) && idx !== state.activePageIndex) {
+          state.activePageIndex = idx;
+          render();
+        }
+      }
+      const selectTab = e.target.closest('[data-act="select-profile"]');
+      if (selectTab) {
+        const idx = Number(selectTab.dataset.idx);
+        const pi = Number(selectTab.dataset.pi);
+        if (Number.isFinite(idx) && Number.isFinite(pi)) {
+          setEditingProfileIndex(idx, pi);
+          render();
+        }
       }
     });
 
@@ -509,8 +635,10 @@ export function openConfigUI() {
         const pi = Number(t.dataset.pi);
         const fi = Number(t.dataset.fi);
         const page = state.config.PAGE_CONFIGS[pi];
-        if (!page || !page.fields[fi]) return;
-        const f = page.fields[fi];
+        if (!page) return;
+        const k = getEditingProfileKey(pi);
+        if (!k || !page.profiles[k] || !page.profiles[k].fields[fi]) return;
+        const f = page.profiles[k].fields[fi];
         const key = t.dataset.field;
         if (key === 'type') {
           f.type = t.value;
@@ -575,7 +703,10 @@ export function openConfigUI() {
   function onTest() {
     // 临时把当前 UI 内配置应用到 window，再触发填充
     window.__AUTOFILL_CONFIG__ = state.config;
-    window.dispatchEvent(new CustomEvent('autofill:execute-fill'));
+    const editingKey = getEditingProfileKey(state.activePageIndex);
+    window.dispatchEvent(
+      new CustomEvent('autofill:execute-fill', { detail: { profile: editingKey } })
+    );
   }
 
   function onExport() {

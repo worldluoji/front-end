@@ -2,7 +2,13 @@
  * 入口：注册所有填充器、初始化快捷键与自动观察、挂载浮动按钮
  */
 
-import { setupShortcut, autoFillIfEnabled, executeFill } from './core.js';
+import {
+  setupShortcut,
+  setupProfileSwitchShortcut,
+  autoFillIfEnabled,
+  executeFill,
+  cycleProfile,
+} from './core.js';
 import { resolveConfig } from './config.js';
 import { openConfigUI, mountFloatingButton } from './config-ui.js';
 
@@ -10,6 +16,7 @@ import { openConfigUI, mountFloatingButton } from './config-ui.js';
 if (typeof window !== 'undefined') {
   const start = () => {
     setupShortcut();
+    setupProfileSwitchShortcut();
     autoFillIfEnabled();
     mountFloatingButton();
     setupConfigShortcut();
@@ -23,15 +30,17 @@ if (typeof window !== 'undefined') {
 
   // 监听 UI 发出的事件
   window.addEventListener('autofill:open-config', () => openConfigUI());
-  window.addEventListener('autofill:execute-fill', () => executeFill());
+  window.addEventListener('autofill:execute-fill', (e) => executeFill(e?.detail?.profile));
   window.addEventListener('autofill:config-updated', () => {
     // 配置已更新，重新注册快捷键
     setupShortcut();
+    setupProfileSwitchShortcut();
   });
 
   // 暴露给外部（如测试或用户控制台手动触发）
   window.__AUTOFILL__ = {
     executeFill,
+    cycleProfile,
     openConfig: openConfigUI,
     getConfig: resolveConfig,
   };
@@ -55,7 +64,13 @@ function setupConfigShortcut() {
   });
 }
 
-export { setupShortcut, autoFillIfEnabled, executeFill } from './core.js';
+export {
+  setupShortcut,
+  setupProfileSwitchShortcut,
+  autoFillIfEnabled,
+  executeFill,
+  cycleProfile,
+} from './core.js';
 export { resolveConfig } from './config.js';
 export { isUrlMatch, findMatchingConfig } from './matchers.js';
 export { fillers, nativeFiller, elementPlusFiller } from './fillers/index.js';
