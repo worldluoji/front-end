@@ -235,16 +235,22 @@ export function _resetForTest() {
 /**
  * profile 切换快捷键：循环切到下一个 profile
  * 复用填充快捷键的输入框忽略规则，避免输入时误触
+ * 多次调用会替换旧的 handler（避免和配置更新后的累加触发冲突）
  */
+let profileSwitchHandler = null;
 let profileSwitchLoggedKey = null;
 
 export function setupProfileSwitchShortcut() {
+  if (profileSwitchHandler) {
+    window.removeEventListener('keydown', profileSwitchHandler);
+    profileSwitchHandler = null;
+  }
   const { SHORTCUT_PROFILE_SWITCH } = resolveConfig();
   if (!SHORTCUT_PROFILE_SWITCH || !SHORTCUT_PROFILE_SWITCH.key) return;
   const { key, ctrl, alt, shift, meta } = SHORTCUT_PROFILE_SWITCH;
   const targetKey = (key || '').toUpperCase();
 
-  const handler = (e) => {
+  profileSwitchHandler = (e) => {
     if ((e.key || '').toUpperCase() !== targetKey) return;
     if (!!e.ctrlKey !== !!ctrl) return;
     if (!!e.altKey !== !!alt) return;
@@ -260,7 +266,7 @@ export function setupProfileSwitchShortcut() {
     e.stopPropagation();
     cycleProfile();
   };
-  window.addEventListener('keydown', handler);
+  window.addEventListener('keydown', profileSwitchHandler);
 
   const comboKey = [
     ctrl && 'Ctrl',

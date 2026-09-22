@@ -893,13 +893,18 @@
       shortcutLoggedKey = comboKey;
     }
   }
+  var profileSwitchHandler = null;
   var profileSwitchLoggedKey = null;
   function setupProfileSwitchShortcut() {
+    if (profileSwitchHandler) {
+      window.removeEventListener("keydown", profileSwitchHandler);
+      profileSwitchHandler = null;
+    }
     const { SHORTCUT_PROFILE_SWITCH } = resolveConfig();
     if (!SHORTCUT_PROFILE_SWITCH || !SHORTCUT_PROFILE_SWITCH.key) return;
     const { key, ctrl, alt, shift, meta } = SHORTCUT_PROFILE_SWITCH;
     const targetKey = (key || "").toUpperCase();
-    const handler = (e) => {
+    profileSwitchHandler = (e) => {
       var _a3;
       if ((e.key || "").toUpperCase() !== targetKey) return;
       if (!!e.ctrlKey !== !!ctrl) return;
@@ -914,7 +919,7 @@
       e.stopPropagation();
       cycleProfile();
     };
-    window.addEventListener("keydown", handler);
+    window.addEventListener("keydown", profileSwitchHandler);
     const comboKey = [
       ctrl && "Ctrl",
       alt && "Alt",

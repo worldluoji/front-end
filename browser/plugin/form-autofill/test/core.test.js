@@ -403,4 +403,37 @@ describe('cycleProfile', () => {
     await executeFill();
     expect(input.value).toBe('DEMO_VAL');
   });
+
+  it('重复调用 setupProfileSwitchShortcut 不会累加 listener（避免按一次切换两次）', async () => {
+    const { setupProfileSwitchShortcut } = await import('../src/core.js');
+    window.history.replaceState({}, '', '/');
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '测试',
+          urlPattern: '/',
+          profiles: {
+            default: { fields: [] },
+            demo: { fields: [] },
+          },
+        },
+      ],
+    };
+    // 模拟配置更新后再次注册（修复前 bug：重复注册会按一次走两次 cycleProfile → 抵消）
+    setupProfileSwitchShortcut();
+    setupProfileSwitchShortcut();
+    setupProfileSwitchShortcut();
+
+    const event = new KeyboardEvent('keydown', {
+      key: 'P',
+      shiftKey: true,
+      metaKey: true,
+      bubbles: true,
+    });
+    window.dispatchEvent(event);
+    // 只该切一次：default → demo；若累加会切到 prod / 再到 demo，expect 'demo'
+    expect(
+      JSON.parse(localStorage.getItem('form_autofill_active_profiles') || '{}')
+    ).toEqual({ 测试: 'demo' });
+  });
 });
