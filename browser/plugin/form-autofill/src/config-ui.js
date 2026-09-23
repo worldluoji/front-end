@@ -30,7 +30,7 @@ const STYLES = `
   display: flex; align-items: center; justify-content: center;
 }
 .modal {
-  width: 880px; max-width: 95vw; max-height: 90vh;
+  width: min(1100px, 95vw); max-height: 90vh;
   background: #fff; color: #222;
   border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,.3);
   display: flex; flex-direction: column; overflow: hidden;
@@ -102,11 +102,11 @@ const STYLES = `
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
 }
-.fields-table .type-col { width: 140px; }
+.fields-table .type-col { width: 120px; }
 .fields-table .selector-col { width: auto; }
-.fields-table .group-col { width: 110px; }
-.fields-table .value-col { width: 200px; }
-.fields-table .act-col { width: 70px; text-align: center; }
+.fields-table .group-col { width: 90px; }
+.fields-table .value-col { width: 180px; }
+.fields-table .act-col { width: 60px; text-align: center; }
 .fields-table .hint { color: #909399; font-size: 11px; margin-top: 2px; word-wrap: break-word; }
 .fields-table .value-col .hint { white-space: normal; }
 
@@ -448,18 +448,19 @@ export function openConfigUI() {
       (t) =>
         `<option value="${t.value}" ${t.value === type ? 'selected' : ''}>${escapeHtml(t.label)}</option>`
     ).join('');
+    // selector 的 title：优先用 type 的用法提示（hover 看完整说明），
+    // 没提示时回退到 "点击展开编辑"。行内的 hint div 已去掉以释放列宽。
+    const selectorTitle = valueHint(type) || '点击展开编辑';
     return `
       <tr data-field-row="${fieldIdx}">
         <td class="type-col">
           <select data-field="type" data-pi="${pageIdx}" data-fi="${fieldIdx}">${opts}</select>
         </td>
         <td class="selector-col">
-          <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || '')}" placeholder="#id / .class / [name=...]" class="selector-clickable" title="点击展开编辑"/>
-          <div class="hint">${escapeHtml(valueHint(type))}</div>
+          <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || '')}" placeholder="#id / .class / [name=...]" class="selector-clickable" title="${escapeAttr(selectorTitle)}"/>
         </td>
         <td class="group-col">
           <input type="text" data-field="parallelGroup" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.parallelGroup || '')}" placeholder="(顺序)" title="同名字段并行填充；空 = 按顺序"/>
-          <div class="hint">同名 = 并行</div>
         </td>
         <td class="value-col">
           ${renderValueInput(field, pageIdx, fieldIdx)}
@@ -499,7 +500,7 @@ export function openConfigUI() {
     }
     if (t === 'cascader') {
       const arrStr = JSON.stringify(v || []);
-      return `<input type="text" ${baseAttrs} value='${escapeAttr(arrStr)}' placeholder='["level1","level2"]'/><div class="hint">字符串（单值路径）或 JSON 数组</div>`;
+      return `<input type="text" ${baseAttrs} value='${escapeAttr(arrStr)}' placeholder='["level1","level2"]' title="字符串（单值路径）或 JSON 数组"/>`;
     }
     return `<input type="text" ${baseAttrs} value="${escapeAttr(String(v ?? ''))}"/>`;
   }

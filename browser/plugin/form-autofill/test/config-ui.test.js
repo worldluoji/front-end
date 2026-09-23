@@ -502,3 +502,106 @@ describe('openConfigUI - 并行组列', () => {
     expect(inputs[1].value).toBe('');
   });
 });
+
+describe('openConfigUI - 行内 hint 搬到 title', () => {
+  // 上一轮加并行组后，5 列表格挤压了 selector 列；.hint 行内 div 多行换行又挤
+  // 掉 selector 高度。修复方案：去掉行内 .hint div，把信息搬到 input 的 title 属性
+  // （hover 显示浏览器原生 tooltip），行高恢复正常。
+
+  it('selector 单元格内不再渲染 .hint div', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    // 选 td.selector-col，跳过 colgroup 里的 <col class="selector-col">
+    const selectorCell = root.querySelector('td.selector-col');
+    expect(selectorCell).not.toBeNull();
+    expect(selectorCell.querySelector('.hint')).toBeNull();
+    // 仅剩 input 本身
+    expect(selectorCell.querySelectorAll('input[data-field="selector"]').length).toBe(1);
+  });
+
+  it('selector input 的 title 属性携带 type 提示（如 type=select）', () => {
+    // 准备：select 类型字段
+    localStorage.setItem(
+      'form_autofill_config_v3',
+      JSON.stringify({
+        AUTO_FILL_ON_LOAD: false,
+        SHORTCUT: { key: 'O', ctrl: false, alt: false, shift: true, meta: true },
+        PAGE_CONFIGS: [
+          {
+            name: 'S',
+            urlPattern: '/',
+            profiles: {
+              default: {
+                fields: [{ selector: '#s', value: 'tech', type: 'select' }],
+              },
+            },
+          },
+        ],
+      })
+    );
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    const sel = root.querySelector('input[data-field="selector"]');
+    expect(sel.title).toMatch(/data-value/);
+  });
+
+  it('type=input（无特殊 hint）时 selector title 回退到 "点击展开编辑"', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    const sel = root.querySelector('input[data-field="selector"]');
+    // input 类型 valueHint 返回 '' → 回退默认文案
+    expect(sel.title).toBe('点击展开编辑');
+  });
+
+  it('group 单元格内不再渲染 .hint div（"同名 = 并行" 已搬走）', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    const groupCell = root.querySelector('td.group-col');
+    expect(groupCell).not.toBeNull();
+    expect(groupCell.querySelector('.hint')).toBeNull();
+  });
+
+  it('cascader value input 的 title 携带 "JSON 数组" 提示', () => {
+    localStorage.setItem(
+      'form_autofill_config_v3',
+      JSON.stringify({
+        AUTO_FILL_ON_LOAD: false,
+        SHORTCUT: { key: 'O', ctrl: false, alt: false, shift: true, meta: true },
+        PAGE_CONFIGS: [
+          {
+            name: 'C',
+            urlPattern: '/',
+            profiles: {
+              default: {
+                fields: [{ selector: '#c', value: [], type: 'cascader' }],
+              },
+            },
+          },
+        ],
+      })
+    );
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    const valueInput = root.querySelector('input[data-field="value"]');
+    expect(valueInput.title).toMatch(/JSON 数组/);
+    // cascader value cell 内也不再有 .hint
+    const valueCell = root.querySelector('td.value-col');
+    expect(valueCell).not.toBeNull();
+    expect(valueCell.querySelector('.hint')).toBeNull();
+  });
+});
