@@ -88,6 +88,49 @@ function findOption(dropdown, value) {
   return null;
 }
 
+/**
+ * 关闭所有可见的 el-select-dropdown。
+ * 通过在 body 上派 mousedown + click 触发 Element Plus clickoutside 关闭逻辑。
+ * 用于：
+ *   1) 上一个 select 失败（找不到选项 / 找不到 dropdown）后面板未关，会让后续 select 的 getVisibleDropdown 拿到错的 panel
+ *   2) 并行组里多个 select 同时打开时的清理
+ * 返回是否真的派了事件（用于测试 / 决定要不要 await）。
+ */
+export function closeOpenSelectDropdowns() {
+  const dropdowns = document.querySelectorAll(SELECTOR.elSelectDropdown);
+  for (const d of dropdowns) {
+    if (d.style.display === 'none') continue;
+    if (d.classList.contains('is-hidden')) continue;
+    document.body.dispatchEvent(
+      new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    );
+    document.body.dispatchEvent(
+      new MouseEvent('mouseup', { bubbles: true, cancelable: true })
+    );
+    document.body.click();
+    return true;
+  }
+  return false;
+}
+
+/**
+ * 关闭所有可见的 el-cascader-panel。
+ * 同 closeOpenSelectDropdowns 的目的。
+ */
+export function closeOpenCascaderPanels() {
+  const panels = document.querySelectorAll(SELECTOR.elCascaderPanel);
+  for (const p of panels) {
+    if (p.style.display === 'none') continue;
+    if (p.classList.contains('is-hidden')) continue;
+    document.body.dispatchEvent(
+      new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    );
+    document.body.click();
+    return true;
+  }
+  return false;
+}
+
 async function fillElSelect(el, value) {
   const container = findElSelectContainer(el);
   if (!container) return false;
@@ -97,6 +140,11 @@ async function fillElSelect(el, value) {
 
   const strValue = value == null ? '' : String(value);
   if (input.value === strValue) return true;
+
+  // 清理：上一个失败留下的面板 / 并行组里别的 select 的面板
+  if (closeOpenSelectDropdowns()) {
+    await wait(10);
+  }
 
   // 打开下拉：Element Plus 2.6+ 的 input 是 readonly，点 wrapper 才能展开；
   // 旧版本直接点 input 也可以
@@ -109,6 +157,7 @@ async function fillElSelect(el, value) {
   // 等待面板
   const dropdown = await observeUntil(getVisibleDropdown, 2000);
   if (!dropdown) {
+    closeOpenSelectDropdowns();
     input.dispatchEvent(new Event('blur', { bubbles: true }));
     return false;
   }
@@ -116,6 +165,7 @@ async function fillElSelect(el, value) {
 
   const option = findOption(dropdown, value);
   if (!option) {
+    closeOpenSelectDropdowns();
     input.dispatchEvent(new Event('blur', { bubbles: true }));
     return false;
   }
@@ -171,6 +221,11 @@ async function fillElCascader(el, value) {
     ? value.map(String)
     : [String(value)];
 
+  // 清理：上一个失败 / 并行组里别的 cascader 留下的面板
+  if (closeOpenCascaderPanels()) {
+    await wait(10);
+  }
+
   // 打开面板
   input.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
   input.click();
@@ -178,6 +233,7 @@ async function fillElCascader(el, value) {
 
   const panel = await observeUntil(() => getCascaderPanel(container), 2000);
   if (!panel) {
+    closeOpenCascaderPanels();
     input.dispatchEvent(new Event('blur', { bubbles: true }));
     return false;
   }
@@ -189,6 +245,7 @@ async function fillElCascader(el, value) {
     const menus = getCascaderMenus(container);
     const menu = menus[i];
     if (!menu) {
+      closeOpenCascaderPanels();
       input.dispatchEvent(new Event('blur', { bubbles: true }));
       return false;
     }
@@ -203,6 +260,7 @@ async function fillElCascader(el, value) {
       }
     }
     if (!matched) {
+      closeOpenCascaderPanels();
       input.dispatchEvent(new Event('blur', { bubbles: true }));
       return false;
     }

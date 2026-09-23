@@ -175,6 +175,8 @@ fields: [
 
 **写在 UI：** 字段表格的"并行组"列，文本输入框。空 = 顺序；填名字（如 `c`）即加入同名并行组。空值会从配置中删除（不会留下空字符串字段）。
 
+**⚠️ 不建议把多个 el-select / el-cascader 放进同一并行组。** Element Plus 在同一 tick 多次点击不同 select 的 wrapper 时只有一个能正常打开，另一个 wrapper 的 click 可能被 EP 内部吞掉 / 干扰 panel 互斥逻辑，导致看起来"填不上"。本工具已对每个 el-select / el-cascader 在打开新面板前主动派一次 outside-click 清理残留，但并行组里多个 select 仍属高风险场景，建议保持顺序。
+
 ### type 类型一览
 
 | type | 适用组件 | value 格式 |

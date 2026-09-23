@@ -210,6 +210,35 @@
     }
     return null;
   }
+  function closeOpenSelectDropdowns() {
+    const dropdowns = document.querySelectorAll(SELECTOR.elSelectDropdown);
+    for (const d of dropdowns) {
+      if (d.style.display === "none") continue;
+      if (d.classList.contains("is-hidden")) continue;
+      document.body.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true, cancelable: true })
+      );
+      document.body.dispatchEvent(
+        new MouseEvent("mouseup", { bubbles: true, cancelable: true })
+      );
+      document.body.click();
+      return true;
+    }
+    return false;
+  }
+  function closeOpenCascaderPanels() {
+    const panels = document.querySelectorAll(SELECTOR.elCascaderPanel);
+    for (const p of panels) {
+      if (p.style.display === "none") continue;
+      if (p.classList.contains("is-hidden")) continue;
+      document.body.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true, cancelable: true })
+      );
+      document.body.click();
+      return true;
+    }
+    return false;
+  }
   async function fillElSelect(el, value) {
     const container = findElSelectContainer(el);
     if (!container) return false;
@@ -217,6 +246,9 @@
     if (!input) return false;
     const strValue = value == null ? "" : String(value);
     if (input.value === strValue) return true;
+    if (closeOpenSelectDropdowns()) {
+      await wait(10);
+    }
     const wrapper = container.querySelector(SELECTOR.elSelectWrapper) || input;
     wrapper.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     wrapper.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
@@ -224,12 +256,14 @@
     input.dispatchEvent(new Event("focus", { bubbles: true }));
     const dropdown = await observeUntil(getVisibleDropdown, 2e3);
     if (!dropdown) {
+      closeOpenSelectDropdowns();
       input.dispatchEvent(new Event("blur", { bubbles: true }));
       return false;
     }
     await wait(30);
     const option = findOption(dropdown, value);
     if (!option) {
+      closeOpenSelectDropdowns();
       input.dispatchEvent(new Event("blur", { bubbles: true }));
       return false;
     }
@@ -264,11 +298,15 @@
     const input = container.querySelector(SELECTOR.elSelectInput);
     if (!input) return false;
     const path = Array.isArray(value) ? value.map(String) : [String(value)];
+    if (closeOpenCascaderPanels()) {
+      await wait(10);
+    }
     input.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     input.click();
     input.dispatchEvent(new Event("focus", { bubbles: true }));
     const panel = await observeUntil(() => getCascaderPanel(container), 2e3);
     if (!panel) {
+      closeOpenCascaderPanels();
       input.dispatchEvent(new Event("blur", { bubbles: true }));
       return false;
     }
@@ -278,6 +316,7 @@
       const menus = getCascaderMenus(container);
       const menu = menus[i];
       if (!menu) {
+        closeOpenCascaderPanels();
         input.dispatchEvent(new Event("blur", { bubbles: true }));
         return false;
       }
@@ -292,6 +331,7 @@
         }
       }
       if (!matched) {
+        closeOpenCascaderPanels();
         input.dispatchEvent(new Event("blur", { bubbles: true }));
         return false;
       }

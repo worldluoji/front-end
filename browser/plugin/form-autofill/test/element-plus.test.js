@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { elementPlusFiller } from '../src/fillers/element-plus.js';
+import {
+  elementPlusFiller,
+  closeOpenSelectDropdowns,
+  closeOpenCascaderPanels,
+} from '../src/fillers/element-plus.js';
 
 /**
  * 在 happy-dom 里手动构造一个最小可用的 .el-select。
@@ -159,6 +163,235 @@ describe('elementPlusFiller.fill - el-select', () => {
 
     const ok = await elementPlusFiller.fill(input, 'not-exists', { type: 'select' });
     expect(ok).toBe(false);
+  });
+});
+
+describe('closeOpenSelectDropdowns', () => {
+  it('没有可见 dropdown 时返回 false', () => {
+    expect(closeOpenSelectDropdowns()).toBe(false);
+  });
+
+  it('有可见 dropdown 时派 body mousedown + click + 返回 true', () => {
+    const dropdown = document.createElement('div');
+    dropdown.className = 'el-select-dropdown';
+    document.body.appendChild(dropdown);
+
+    let mouseDown = 0;
+    let mouseUp = 0;
+    let click = 0;
+    document.body.addEventListener('mousedown', () => mouseDown++);
+    document.body.addEventListener('mouseup', () => mouseUp++);
+    document.body.addEventListener('click', () => click++);
+
+    expect(closeOpenSelectDropdowns()).toBe(true);
+    expect(mouseDown).toBeGreaterThan(0);
+    expect(mouseUp).toBeGreaterThan(0);
+    expect(click).toBeGreaterThan(0);
+  });
+
+  it('display:none 的 dropdown 跳过', () => {
+    const dropdown = document.createElement('div');
+    dropdown.className = 'el-select-dropdown';
+    dropdown.style.display = 'none';
+    document.body.appendChild(dropdown);
+
+    expect(closeOpenSelectDropdowns()).toBe(false);
+  });
+
+  it('is-hidden class 的 dropdown 跳过', () => {
+    const dropdown = document.createElement('div');
+    dropdown.className = 'el-select-dropdown is-hidden';
+    document.body.appendChild(dropdown);
+
+    expect(closeOpenSelectDropdowns()).toBe(false);
+  });
+
+  it('第一个可见 dropdown 触发后即停（一次外部点击应该能关掉所有）', () => {
+    for (let i = 0; i < 3; i++) {
+      const d = document.createElement('div');
+      d.className = 'el-select-dropdown';
+      document.body.appendChild(d);
+    }
+    let calls = 0;
+    document.body.addEventListener('click', () => calls++);
+    closeOpenSelectDropdowns();
+    expect(calls).toBe(1);
+  });
+});
+
+describe('closeOpenCascaderPanels', () => {
+  it('没有可见 panel 时返回 false', () => {
+    expect(closeOpenCascaderPanels()).toBe(false);
+  });
+
+  it('有可见 panel 时派 body 事件 + 返回 true', () => {
+    const panel = document.createElement('div');
+    panel.className = 'el-cascader-panel';
+    document.body.appendChild(panel);
+
+    let mouseDown = 0;
+    document.body.addEventListener('mousedown', () => mouseDown++);
+    expect(closeOpenCascaderPanels()).toBe(true);
+    expect(mouseDown).toBeGreaterThan(0);
+  });
+});
+
+describe('fillElSelect - 清理残留', () => {
+  // 跟踪 close helper 的副作用：dispatch body mousedown + click
+  function trackBodyEvents() {
+    const counter = { mousedown: 0, click: 0 };
+    document.body.addEventListener('mousedown', () => counter.mousedown++);
+    document.body.addEventListener('click', () => counter.click++);
+    return counter;
+  }
+
+it('找不到选项的失败路径会派 body 事件清理', async () => {
+    const counter = trackBodyEvents();
+    const { select, input } = buildMockElSelect({ value: 'tech', label: 'tech' });
+    document.body.appendChild(select);
+    await elementPlusFiller.fill(input, 'not-exists', { type: 'select' });
+
+    // 失败路径里 closeOpenSelectDropdowns 派 mousedown + click
+    expect(counter.mousedown).toBeGreaterThanOrEqual(1);
+    expect(counter.click).toBeGreaterThanOrEqual(1);
+  });
+
+  it('上一个 dropdown 残留时填下一个 select，cleanup 后能找到正确的面板', async () => {
+    // "智能 mock"：点 wrapper 时挂 dropdown 到 body；body mousedown 时自动隐藏（模拟 EP clickoutside）
+    function buildSmartMockElSelect({ value, label }) {
+      const select = document.createElement('div');
+      select.className = 'el-select';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'el-input';
+      const input = document.createElement('input');
+      input.className = 'el-input__inner';
+      input.type = 'text';
+      wrapper.appendChild(input);
+      select.appendChild(wrapper);
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'el-select-dropdown';
+      const item = document.createElement('li');
+      item.className = 'el-select-dropdown__item';
+      item.setAttribute('data-value', value);
+      item.textContent = label;
+      dropdown.appendChild(item);
+
+      wrapper.addEventListener('click', () => {
+        dropdown.style.display = '';
+        if (!dropdown.isConnected) document.body.appendChild(dropdown);
+      });
+      item.addEventListener('click', () => {
+        input.value = label;
+        dropdown.style.display = 'none';
+      });
+
+      // 模拟 EP clickoutside：body mousedown 时，若 target 不在 dropdown 内就隐藏
+      const handler = (e) => {
+        if (!dropdown.isConnected) return;
+        if (!dropdown.contains(e.target)) {
+          dropdown.style.display = 'none';
+        }
+      };
+      document.body.addEventListener('mousedown', handler);
+
+      return {
+        select,
+        wrapper,
+        input,
+        cleanup: () => document.body.removeEventListener('mousedown', handler),
+      };
+    }
+
+    const aMock = buildSmartMockElSelect({ value: 'a', label: 'A' });
+    document.body.appendChild(aMock.select);
+    aMock.wrapper.click();
+    expect(aMock.input.value).toBe(''); // select-A 还开着没填
+
+    const bMock = buildSmartMockElSelect({ value: 'b', label: 'B' });
+    document.body.appendChild(bMock.select);
+
+    const ok = await elementPlusFiller.fill(bMock.input, 'B', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(bMock.input.value).toBe('B');
+    // select-A 不应被错误填上
+    expect(aMock.input.value).toBe('');
+
+    aMock.cleanup();
+    bMock.cleanup();
+  });
+});
+
+describe('fillElCascader - 清理残留', () => {
+  // panel 放在 container 内部（与 fillElCascader 中 getCascaderPanel 一致）
+  function buildMockElCascader({ levels }) {
+    const container = document.createElement('div');
+    container.className = 'el-cascader';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'el-input';
+    const input = document.createElement('input');
+    input.className = 'el-input__inner';
+    wrap.appendChild(input);
+    container.appendChild(wrap);
+
+    const panel = document.createElement('div');
+    panel.className = 'el-cascader-panel';
+    levels.forEach((nodes) => {
+      const menu = document.createElement('div');
+      menu.className = 'el-cascader-menu';
+      nodes.forEach((n) => {
+        const node = document.createElement('div');
+        node.className = 'el-cascader-node';
+        node.setAttribute('data-value', n.value);
+        node.textContent = n.label;
+        node.addEventListener('click', () => {
+          input.value = (input.value ? input.value + '/' : '') + n.label;
+        });
+        menu.appendChild(node);
+      });
+      panel.appendChild(menu);
+    });
+    container.appendChild(panel);
+
+    return { container, input, panel };
+  }
+
+  function trackBodyEvents() {
+    const counter = { mousedown: 0, click: 0 };
+    document.body.addEventListener('mousedown', () => counter.mousedown++);
+    document.body.addEventListener('click', () => counter.click++);
+    return counter;
+  }
+
+  it('找不到节点的失败路径会派 body 事件清理', async () => {
+    const counter = trackBodyEvents();
+    const { container, input } = buildMockElCascader({
+      levels: [[{ value: 'a', label: 'A' }]],
+    });
+    document.body.appendChild(container);
+    await elementPlusFiller.fill(input, 'not-exists', { type: 'cascader' });
+
+    expect(counter.mousedown).toBeGreaterThanOrEqual(1);
+    expect(counter.click).toBeGreaterThanOrEqual(1);
+  });
+
+  it('前一个 cascader 失败后填下一个 cascader 仍能正确点选', async () => {
+    const aMock = buildMockElCascader({
+      levels: [[{ value: 'a', label: 'A' }]],
+    });
+    document.body.appendChild(aMock.container);
+    await elementPlusFiller.fill(aMock.input, 'wrong', { type: 'cascader' });
+    expect(aMock.input.value).toBe(''); // 失败没填上
+
+    const bMock = buildMockElCascader({
+      levels: [[{ value: 'b', label: 'B' }]],
+    });
+    document.body.appendChild(bMock.container);
+
+    const ok = await elementPlusFiller.fill(bMock.input, 'b', { type: 'cascader' });
+    expect(ok).toBe(true);
+    expect(bMock.input.value).toBe('B');
   });
 });
 
