@@ -171,22 +171,21 @@ describe('closeOpenSelectDropdowns', () => {
     expect(closeOpenSelectDropdowns()).toBe(false);
   });
 
-  it('有可见 dropdown 时派 body mousedown + click + 返回 true', () => {
+  it('有可见 dropdown 时在 document 上派 mousedown + 返回 true', () => {
     const dropdown = document.createElement('div');
     dropdown.className = 'el-select-dropdown';
     document.body.appendChild(dropdown);
 
-    let mouseDown = 0;
-    let mouseUp = 0;
-    let click = 0;
-    document.body.addEventListener('mousedown', () => mouseDown++);
-    document.body.addEventListener('mouseup', () => mouseUp++);
-    document.body.addEventListener('click', () => click++);
+    let mouseDownDoc = 0;
+    let mouseDownBody = 0;
+    document.addEventListener('mousedown', () => mouseDownDoc++);
+    document.body.addEventListener('mousedown', () => mouseDownBody++);
 
     expect(closeOpenSelectDropdowns()).toBe(true);
-    expect(mouseDown).toBeGreaterThan(0);
-    expect(mouseUp).toBeGreaterThan(0);
-    expect(click).toBeGreaterThan(0);
+    // Element Plus 的 clickoutside 在 document 上监听，所以必须派到 document
+    expect(mouseDownDoc).toBeGreaterThan(0);
+    // 不应在 body 上派 —— EP 内部 listener 看不到
+    expect(mouseDownBody).toBe(0);
   });
 
   it('display:none 的 dropdown 跳过', () => {
@@ -206,14 +205,14 @@ describe('closeOpenSelectDropdowns', () => {
     expect(closeOpenSelectDropdowns()).toBe(false);
   });
 
-  it('第一个可见 dropdown 触发后即停（一次外部点击应该能关掉所有）', () => {
+  it('第一个可见 dropdown 触发后即停（一次外部 mousedown 应该能关掉所有）', () => {
     for (let i = 0; i < 3; i++) {
       const d = document.createElement('div');
       d.className = 'el-select-dropdown';
       document.body.appendChild(d);
     }
     let calls = 0;
-    document.body.addEventListener('click', () => calls++);
+    document.addEventListener('mousedown', () => calls++);
     closeOpenSelectDropdowns();
     expect(calls).toBe(1);
   });
@@ -224,40 +223,42 @@ describe('closeOpenCascaderPanels', () => {
     expect(closeOpenCascaderPanels()).toBe(false);
   });
 
-  it('有可见 panel 时派 body 事件 + 返回 true', () => {
+  it('有可见 panel 时在 document 上派 mousedown + 返回 true', () => {
     const panel = document.createElement('div');
     panel.className = 'el-cascader-panel';
     document.body.appendChild(panel);
 
-    let mouseDown = 0;
-    document.body.addEventListener('mousedown', () => mouseDown++);
+    let mouseDownDoc = 0;
+    let mouseDownBody = 0;
+    document.addEventListener('mousedown', () => mouseDownDoc++);
+    document.body.addEventListener('mousedown', () => mouseDownBody++);
+
     expect(closeOpenCascaderPanels()).toBe(true);
-    expect(mouseDown).toBeGreaterThan(0);
+    expect(mouseDownDoc).toBeGreaterThan(0);
+    expect(mouseDownBody).toBe(0);
   });
 });
 
 describe('fillElSelect - 清理残留', () => {
-  // 跟踪 close helper 的副作用：dispatch body mousedown + click
+  // 跟踪 close helper 的副作用：closeOpenSelectDropdowns 现在在 document 上派 mousedown
   function trackBodyEvents() {
-    const counter = { mousedown: 0, click: 0 };
-    document.body.addEventListener('mousedown', () => counter.mousedown++);
-    document.body.addEventListener('click', () => counter.click++);
+    const counter = { mousedown: 0 };
+    document.addEventListener('mousedown', () => counter.mousedown++);
     return counter;
   }
 
-it('找不到选项的失败路径会派 body 事件清理', async () => {
+it('找不到选项的失败路径会派 document 事件清理', async () => {
     const counter = trackBodyEvents();
     const { select, input } = buildMockElSelect({ value: 'tech', label: 'tech' });
     document.body.appendChild(select);
     await elementPlusFiller.fill(input, 'not-exists', { type: 'select' });
 
-    // 失败路径里 closeOpenSelectDropdowns 派 mousedown + click
+    // 失败路径里 closeOpenSelectDropdowns 派 document.mousedown
     expect(counter.mousedown).toBeGreaterThanOrEqual(1);
-    expect(counter.click).toBeGreaterThanOrEqual(1);
   });
 
   it('上一个 dropdown 残留时填下一个 select，cleanup 后能找到正确的面板', async () => {
-    // "智能 mock"：点 wrapper 时挂 dropdown 到 body；body mousedown 时自动隐藏（模拟 EP clickoutside）
+    // "智能 mock"：点 wrapper 时挂 dropdown 到 body；document mousedown 时自动隐藏（模拟 EP clickoutside）
     function buildSmartMockElSelect({ value, label }) {
       const select = document.createElement('div');
       select.className = 'el-select';
@@ -293,13 +294,14 @@ it('找不到选项的失败路径会派 body 事件清理', async () => {
           dropdown.style.display = 'none';
         }
       };
-      document.body.addEventListener('mousedown', handler);
+      // 与 EP 真实行为一致：clickoutside 在 document 上监听
+      document.addEventListener('mousedown', handler);
 
       return {
         select,
         wrapper,
         input,
-        cleanup: () => document.body.removeEventListener('mousedown', handler),
+        cleanup: () => document.removeEventListener('mousedown', handler),
       };
     }
 
@@ -358,13 +360,12 @@ describe('fillElCascader - 清理残留', () => {
   }
 
   function trackBodyEvents() {
-    const counter = { mousedown: 0, click: 0 };
-    document.body.addEventListener('mousedown', () => counter.mousedown++);
-    document.body.addEventListener('click', () => counter.click++);
+    const counter = { mousedown: 0 };
+    document.addEventListener('mousedown', () => counter.mousedown++);
     return counter;
   }
 
-  it('找不到节点的失败路径会派 body 事件清理', async () => {
+  it('找不到节点的失败路径会派 document 事件清理', async () => {
     const counter = trackBodyEvents();
     const { container, input } = buildMockElCascader({
       levels: [[{ value: 'a', label: 'A' }]],
@@ -373,7 +374,6 @@ describe('fillElCascader - 清理残留', () => {
     await elementPlusFiller.fill(input, 'not-exists', { type: 'cascader' });
 
     expect(counter.mousedown).toBeGreaterThanOrEqual(1);
-    expect(counter.click).toBeGreaterThanOrEqual(1);
   });
 
   it('前一个 cascader 失败后填下一个 cascader 仍能正确点选', async () => {

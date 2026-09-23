@@ -157,13 +157,12 @@ export async function executeFill(profileOverride) {
   const fields = config.profiles[profileName]?.fields || [];
   if (fields.length === 0) return;
 
-  // 手动触发时，先清标记允许重新填充
-  if (!cfg.AUTO_FILL_ON_LOAD) {
-    fields.forEach((item) => {
-      const el = document.querySelector(item.selector);
-      if (el) clearFilled(el);
-    });
-  }
+  // 手动触发时，先清标记允许重新填充（不管 AUTO_FILL_ON_LOAD 是否开启 —— 手动按快捷键
+  // 的目的就是再填一次当前 profile 的字段）
+  fields.forEach((item) => {
+    const el = document.querySelector(item.selector);
+    if (el) clearFilled(el);
+  });
 
   await runSchedule(buildSchedule(fields));
 }
@@ -264,14 +263,6 @@ export function setupShortcut() {
     console.log(`[自动填充] 快捷键已启用：${comboKey}`);
     shortcutLoggedKey = comboKey;
   }
-}
-
-/**
- * 暴露给测试：清理当前所有标记（慎用）
- */
-export function _resetForTest() {
-  // WeakSet 没有 clear，只能重新创建
-  // 这里仅暴露 API 给单测
 }
 
 /**

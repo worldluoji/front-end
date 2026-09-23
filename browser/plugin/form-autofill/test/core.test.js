@@ -121,6 +121,20 @@ describe('executeFill - 标记管理', () => {
     await executeFill();
     expect(input.value).toBe('second');
   });
+
+  it('AUTO_FILL_ON_LOAD=true 时手动 executeFill 也会清标记重新填充', async () => {
+    // 修复：之前条件写反了，开了 auto-fill 的页面手动按快捷键会被 isFilled 拦下
+    window.history.replaceState({}, '', '/');
+    window.__AUTOFILL_CONFIG__.AUTO_FILL_ON_LOAD = true;
+
+    await executeFill();
+    const input = document.querySelector('#a');
+    expect(input.value).toBe('first');
+
+    window.__AUTOFILL_CONFIG__.PAGE_CONFIGS[0].fields[0].value = 'second';
+    await executeFill();
+    expect(input.value).toBe('second');
+  });
 });
 
 describe('executeFill - 多字段按顺序', () => {

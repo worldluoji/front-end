@@ -90,7 +90,9 @@ function findOption(dropdown, value) {
 
 /**
  * 关闭所有可见的 el-select-dropdown。
- * 通过在 body 上派 mousedown + click 触发 Element Plus clickoutside 关闭逻辑。
+ * 通过在 document 上派 mousedown 触发 Element Plus clickoutside 关闭逻辑（EP 在
+ * document 上挂监听，不是 body；body 上的 dispatchEvent 在真实浏览器里不会被
+ * document 上的监听器看到）。
  * 用于：
  *   1) 上一个 select 失败（找不到选项 / 找不到 dropdown）后面板未关，会让后续 select 的 getVisibleDropdown 拿到错的 panel
  *   2) 并行组里多个 select 同时打开时的清理
@@ -101,13 +103,9 @@ export function closeOpenSelectDropdowns() {
   for (const d of dropdowns) {
     if (d.style.display === 'none') continue;
     if (d.classList.contains('is-hidden')) continue;
-    document.body.dispatchEvent(
+    document.dispatchEvent(
       new MouseEvent('mousedown', { bubbles: true, cancelable: true })
     );
-    document.body.dispatchEvent(
-      new MouseEvent('mouseup', { bubbles: true, cancelable: true })
-    );
-    document.body.click();
     return true;
   }
   return false;
@@ -122,10 +120,9 @@ export function closeOpenCascaderPanels() {
   for (const p of panels) {
     if (p.style.display === 'none') continue;
     if (p.classList.contains('is-hidden')) continue;
-    document.body.dispatchEvent(
+    document.dispatchEvent(
       new MouseEvent('mousedown', { bubbles: true, cancelable: true })
     );
-    document.body.click();
     return true;
   }
   return false;
