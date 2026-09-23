@@ -21,6 +21,8 @@ const SELECTOR = {
   elSelectWrapper: '.el-input, .el-select__wrapper',
   elSelectDropdown: '.el-select-dropdown',
   elSelectItem: '.el-select-dropdown__item, .el-select-v2__list-item, li.el-vl__item',
+  // 可过滤 select：EP 在容器上加 is-filterable class（或 input 上有 el-select__input 而非 readonly）
+  elSelectFilterable: '.el-select.is-filterable, .el-select.is-searchable',
 
   elCascader: '.el-cascader',
   elCascaderPanel: '.el-cascader-panel',
@@ -144,6 +146,18 @@ async function fillElSelect(el, value) {
     await wait(10);
   }
 
+  // 可过滤 select（is-filterable / is-searchable）：input 是真实可输入文本框，
+  // EP 会根据输入实时过滤 options。这里走"输入文本 + 等过滤 + 点第一个匹配"的路径，
+  // 比 click wrapper + 整列表找匹配更鲁棒（特别是 options 多且 value 是中文长文本时）。
+  // querySelector 只查后代，而 is-filterable / is-searchable 加在容器本身，
+  // 所以也要 matches 一下容器自身
+  const isFilterable =
+    container.matches(SELECTOR.elSelectFilterable)
+    || !!container.querySelector(SELECTOR.elSelectFilterable);
+  if (isFilterable && !input.readOnly) {
+    return fillElSelectFilterable(container, input, value, strValue);
+  }
+
   // 打开下拉：Element Plus 2.6+ 的 input 是 readonly，点 wrapper 才能展开；
   // 旧版本直接点 input 也可以
   const wrapper = container.querySelector(SELECTOR.elSelectWrapper) || input;
@@ -174,6 +188,46 @@ async function fillElSelect(el, value) {
 
   await wait(30);
   // 兜底：有些业务监听 input.change
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+  return true;
+}
+
+/**
+ * 可过滤 el-select 的填充：focus → input 输入 value → 等 EP 过滤 → 点第一个匹配项
+ * EP 在容器加 is-filterable（或 is-searchable）class 且 input 非 readonly 时走此路径。
+ */
+async function fillElSelectFilterable(container, input, value, strValue) {
+  input.focus();
+  // 清掉 input 已有内容（否则 EP 会在旧内容后追加）
+  setNativeValue(input, '');
+  triggerInputEvents(input);
+
+  // 用原生 setter 写入 value + 派 input，让 EP 的 filterMethod / remoteMethod 跑
+  setNativeValue(input, strValue);
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+
+  // 等 EP 完成过滤 + 重渲染 dropdown
+  const dropdown = await observeUntil(getVisibleDropdown, 2000);
+  if (!dropdown) {
+    closeOpenSelectDropdowns();
+    input.dispatchEvent(new Event('blur', { bubbles: true }));
+    return false;
+  }
+  // 给 filterMethod 一个完整 tick（EP 用 nextTick + 可能的防抖）
+  await wait(80);
+
+  const option = findOption(dropdown, value);
+  if (!option) {
+    closeOpenSelectDropdowns();
+    input.dispatchEvent(new Event('blur', { bubbles: true }));
+    return false;
+  }
+
+  option.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+  option.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+  option.click();
+
+  await wait(30);
   input.dispatchEvent(new Event('change', { bubbles: true }));
   return true;
 }

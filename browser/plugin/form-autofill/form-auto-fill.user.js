@@ -170,6 +170,8 @@
     elSelectWrapper: ".el-input, .el-select__wrapper",
     elSelectDropdown: ".el-select-dropdown",
     elSelectItem: ".el-select-dropdown__item, .el-select-v2__list-item, li.el-vl__item",
+    // 可过滤 select：EP 在容器上加 is-filterable class（或 input 上有 el-select__input 而非 readonly）
+    elSelectFilterable: ".el-select.is-filterable, .el-select.is-searchable",
     elCascader: ".el-cascader",
     elCascaderPanel: ".el-cascader-panel",
     elCascaderMenu: ".el-cascader-menu",
@@ -256,6 +258,10 @@
     if (closeOpenSelectDropdowns()) {
       await wait(10);
     }
+    const isFilterable = container.matches(SELECTOR.elSelectFilterable) || !!container.querySelector(SELECTOR.elSelectFilterable);
+    if (isFilterable && !input.readOnly) {
+      return fillElSelectFilterable(container, input, value, strValue);
+    }
     const wrapper = container.querySelector(SELECTOR.elSelectWrapper) || input;
     wrapper.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     wrapper.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
@@ -268,6 +274,32 @@
       return false;
     }
     await wait(30);
+    const option = findOption(dropdown, value);
+    if (!option) {
+      closeOpenSelectDropdowns();
+      input.dispatchEvent(new Event("blur", { bubbles: true }));
+      return false;
+    }
+    option.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    option.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
+    option.click();
+    await wait(30);
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    return true;
+  }
+  async function fillElSelectFilterable(container, input, value, strValue) {
+    input.focus();
+    setNativeValue(input, "");
+    triggerInputEvents(input);
+    setNativeValue(input, strValue);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    const dropdown = await observeUntil(getVisibleDropdown, 2e3);
+    if (!dropdown) {
+      closeOpenSelectDropdowns();
+      input.dispatchEvent(new Event("blur", { bubbles: true }));
+      return false;
+    }
+    await wait(80);
     const option = findOption(dropdown, value);
     if (!option) {
       closeOpenSelectDropdowns();

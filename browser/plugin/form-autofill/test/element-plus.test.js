@@ -74,6 +74,81 @@ function buildMockElSelect({ value, label, withValue = true, version = 'legacy' 
   return { select, wrapper, input, dropdown: null };
 }
 
+/**
+ * 可过滤 el-select（2.6+，is-filterable）：input 是真实可输入框，
+ * 模拟 EP 的 filterMethod 行为 —— input.input 事件触发后，按 input.value
+ * 过滤 options 列表（hidden class 隐藏不匹配的），点击匹配项后把
+ * input.value 设为选项 label 并隐藏 dropdown。
+ */
+function buildMockElSelectFilterable({ options, selected }) {
+  const select = document.createElement('div');
+  select.className = 'el-select is-filterable';
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'el-select__wrapper';
+  wrapper.tabIndex = -1;
+
+  const selection = document.createElement('div');
+  selection.className = 'el-select__selection';
+
+  const inputWrap = document.createElement('div');
+  inputWrap.className = 'el-select__selected-item el-select__input-wrapper';
+
+  const input = document.createElement('input');
+  input.className = 'el-select__input';
+  input.type = 'text';
+  // 不设 readOnly —— 可过滤 select 的 input 真实可输入
+  input.tabIndex = 0;
+  inputWrap.appendChild(input);
+  selection.appendChild(inputWrap);
+  wrapper.appendChild(selection);
+  select.appendChild(wrapper);
+
+  const dropdown = document.createElement('div');
+  dropdown.className = 'el-select-dropdown';
+  dropdown.style.display = 'none';
+
+  const items = options.map((o) => {
+    const li = document.createElement('li');
+    li.className = 'el-select-dropdown__item';
+    li.setAttribute('data-value', String(o.value));
+    li.textContent = o.label;
+    dropdown.appendChild(li);
+    return li;
+  });
+
+  // 模拟 EP 的 filterMethod：input 事件后按输入文本过滤
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    items.forEach((li) => {
+      const label = (li.textContent || '').trim().toLowerCase();
+      li.style.display = q === '' || label.includes(q) ? '' : 'none';
+    });
+    if (!dropdown.isConnected) document.body.appendChild(dropdown);
+    dropdown.style.display = '';
+  });
+
+  // 模拟 EP：focus input 时挂 dropdown
+  input.addEventListener('focus', () => {
+    if (!dropdown.isConnected) document.body.appendChild(dropdown);
+    dropdown.style.display = '';
+  });
+
+  // 模拟 EP：点 option 后更新 input.value 并隐藏 dropdown
+  items.forEach((li) => {
+    li.addEventListener('click', () => {
+      input.value = li.textContent || '';
+      dropdown.style.display = 'none';
+    });
+  });
+
+  if (selected) {
+    input.value = selected;
+  }
+
+  return { select, wrapper, input, dropdown, items };
+}
+
 beforeEach(() => {
   document.body.innerHTML = '';
 });
@@ -178,6 +253,54 @@ describe('elementPlusFiller.fill - el-select', () => {
     expect(ok).toBe(true);
     expect(input.value).toBe('张三 (销售)');
   });
+
+  it('可过滤 select（is-filterable）：input 输入 value，EP 过滤后点匹配项', async () => {
+    // 模拟真实场景：标签多选下拉，输入 "Vue" 过滤出包含 Vue 的项
+    const { select, input, items } = buildMockElSelectFilterable({
+      options: [
+        { value: 'js', label: 'JavaScript' },
+        { value: 'ts', label: 'TypeScript' },
+        { value: 'vue', label: 'Vue' },
+        { value: 'react', label: 'React' },
+      ],
+    });
+    document.body.appendChild(select);
+
+    const ok = await elementPlusFiller.fill(input, 'Vue', { type: 'select' });
+    expect(ok).toBe(true);
+    // 点中 Vue 项后，input.value 应为选中项的 label
+    expect(input.value).toBe('Vue');
+    // 不匹配的项被 mock 设为 display:none
+    expect(items[0].style.display).toBe('none'); // JavaScript
+    expect(items[2].style.display).toBe(''); // Vue
+  });
+
+  it('可过滤 select：filter 后无匹配时返回 false', async () => {
+    const { select, input } = buildMockElSelectFilterable({
+      options: [
+        { value: 'a', label: 'Apple' },
+        { value: 'b', label: 'Banana' },
+      ],
+    });
+    document.body.appendChild(select);
+
+    const ok = await elementPlusFiller.fill(input, 'zzz', { type: 'select' });
+    expect(ok).toBe(false);
+  });
+
+  it('可过滤 select：input 已匹配时直接返回 true', async () => {
+    const { select, input } = buildMockElSelectFilterable({
+      options: [{ value: 'vue', label: 'Vue' }],
+      selected: 'Vue',
+    });
+    document.body.appendChild(select);
+
+    const ok = await elementPlusFiller.fill(input, 'Vue', { type: 'select' });
+    expect(ok).toBe(true);
+    // 没动 input
+    expect(input.value).toBe('Vue');
+  });
+
 });
 describe('closeOpenSelectDropdowns', () => {
   it('没有可见 dropdown 时返回 false', () => {
