@@ -203,10 +203,11 @@
       const dv = opt.getAttribute("data-value");
       if (dv != null && dv === strValue) return opt;
     }
+    const normalize = (s) => (s || "").replace(/\s+/g, " ").replace(/ /g, " ").trim();
+    const target = normalize(strValue);
     for (const opt of items) {
       if (opt.getAttribute("disabled") !== null) continue;
-      const txt = (opt.textContent || "").trim();
-      if (txt === strValue) return opt;
+      if (normalize(opt.textContent) === target) return opt;
     }
     return null;
   }
@@ -215,13 +216,9 @@
     for (const d of dropdowns) {
       if (d.style.display === "none") continue;
       if (d.classList.contains("is-hidden")) continue;
-      document.body.dispatchEvent(
+      document.dispatchEvent(
         new MouseEvent("mousedown", { bubbles: true, cancelable: true })
       );
-      document.body.dispatchEvent(
-        new MouseEvent("mouseup", { bubbles: true, cancelable: true })
-      );
-      document.body.click();
       return true;
     }
     return false;
@@ -231,10 +228,9 @@
     for (const p of panels) {
       if (p.style.display === "none") continue;
       if (p.classList.contains("is-hidden")) continue;
-      document.body.dispatchEvent(
+      document.dispatchEvent(
         new MouseEvent("mousedown", { bubbles: true, cancelable: true })
       );
-      document.body.click();
       return true;
     }
     return false;
@@ -880,12 +876,10 @@
     const profileName = profileOverride && config.profiles[profileOverride] ? profileOverride : getActiveProfile(config);
     const fields = ((_a3 = config.profiles[profileName]) == null ? void 0 : _a3.fields) || [];
     if (fields.length === 0) return;
-    if (!cfg.AUTO_FILL_ON_LOAD) {
-      fields.forEach((item) => {
-        const el = document.querySelector(item.selector);
-        if (el) clearFilled(el);
-      });
-    }
+    fields.forEach((item) => {
+      const el = document.querySelector(item.selector);
+      if (el) clearFilled(el);
+    });
     await runSchedule(buildSchedule(fields));
   }
   function autoFillIfEnabled() {
@@ -1259,13 +1253,20 @@
     function setEditingProfileIndex(pageIdx, idx) {
       state.activeProfileIndexByPage[pageIdx] = idx;
     }
+    function isMacPlatform() {
+      var _a3;
+      const uaDataPlatform = (_a3 = navigator.userAgentData) == null ? void 0 : _a3.platform;
+      if (uaDataPlatform) return uaDataPlatform.toLowerCase().includes("mac");
+      const ua = navigator.userAgent || "";
+      return /macintosh|mac os x/i.test(ua);
+    }
     function formatShortcutLabel(s) {
       if (!s || !s.key) return "\uFF08\u672A\u8BBE\u7F6E\uFF09";
       const parts = [];
       if (s.ctrl) parts.push("Ctrl");
       if (s.alt) parts.push("Alt");
       if (s.shift) parts.push("Shift");
-      if (s.meta) parts.push(navigator.platform.toLowerCase().includes("mac") ? "Cmd" : "Meta");
+      if (s.meta) parts.push(isMacPlatform() ? "Cmd" : "Meta");
       parts.push(String(s.key).toUpperCase());
       return parts.join("+");
     }
@@ -1517,6 +1518,11 @@
           return "";
       }
     }
+    const registeredListeners = [];
+    function on(target, type, handler, opts) {
+      target.addEventListener(type, handler, opts);
+      registeredListeners.push({ target, type, handler, opts });
+    }
     function showToast(text, type = "") {
       const t = document.createElement("div");
       t.className = `toast ${type}`;
@@ -1525,7 +1531,7 @@
       setTimeout(() => t.remove(), 2200);
     }
     function bindGlobal() {
-      shadow.addEventListener("input", (e) => {
+      on(shadow, "input", (e) => {
         const t = e.target;
         const bind = t.dataset.bind;
         if (!bind) return;
@@ -1539,7 +1545,7 @@
       });
     }
     function bindSelectorEditor() {
-      shadow.addEventListener("click", (e) => {
+      on(shadow, "click", (e) => {
         const t = e.target;
         if (t && t.dataset && t.dataset.field === "selector" && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) {
           openSelectorEditor(t);
@@ -1547,15 +1553,15 @@
       });
     }
     function bindTabs() {
-      root.querySelectorAll(".tabs button").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          state.activeTab = btn.dataset.tab;
-          render();
-        });
+      on(root, "click", (e) => {
+        const btn = e.target.closest(".tabs button");
+        if (!btn) return;
+        state.activeTab = btn.dataset.tab;
+        render();
       });
     }
     function bindActions() {
-      shadow.addEventListener("click", (e) => {
+      on(shadow, "click", (e) => {
         const btn = e.target.closest("[data-act]");
         if (!btn) return;
         const act = btn.dataset.act;
@@ -1679,7 +1685,7 @@
           }
         }
       });
-      shadow.addEventListener("click", (e) => {
+      on(shadow, "click", (e) => {
         const item = e.target.closest("[data-page]");
         if (item && !e.target.closest('[data-act="select-profile"]') && !e.target.closest('[data-act="del-profile"]')) {
           const idx = Number(item.dataset.page);
@@ -1698,7 +1704,7 @@
           }
         }
       });
-      shadow.addEventListener("input", (e) => {
+      on(shadow, "input", (e) => {
         const t = e.target;
         if (t.dataset.pageField) {
           const idx = Number(t.dataset.idx);
@@ -1815,15 +1821,23 @@
         close();
       };
       const onCancel = () => close();
+      const focusables = () => Array.from(
+        overlay.querySelectorAll(
+          'textarea, button, [href], input, select, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !el.hasAttribute("disabled"));
       const onKey = (e) => {
-        if (e.key === "Escape") {
+        if (e.key !== "Tab") return;
+        const items = focusables();
+        if (items.length === 0) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && e.target === first) {
           e.preventDefault();
-          e.stopPropagation();
-          onCancel();
-        } else if ((e.metaKey || e.ctrlKey) && (e.key || "").toLowerCase() === "enter") {
+          last.focus();
+        } else if (!e.shiftKey && e.target === last) {
           e.preventDefault();
-          e.stopPropagation();
-          onSave2();
+          first.focus();
         }
       };
       overlay.addEventListener("click", (e) => {
@@ -1834,7 +1848,18 @@
         if (role === "save") onSave2();
         else if (role === "cancel") onCancel();
       });
-      document.addEventListener("keydown", onKey, true);
+      on(shadow, "keydown", onKey, true);
+      on(document, "keydown", (e) => {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          e.stopPropagation();
+          onCancel();
+        } else if ((e.metaKey || e.ctrlKey) && (e.key || "").toLowerCase() === "enter") {
+          e.preventDefault();
+          e.stopPropagation();
+          onSave2();
+        }
+      }, true);
     }
     function onTest() {
       window.__AUTOFILL_CONFIG__ = state.config;
@@ -1881,6 +1906,10 @@
       input.click();
     }
     function closeUI() {
+      while (registeredListeners.length > 0) {
+        const { target, type, handler, opts } = registeredListeners.pop();
+        target.removeEventListener(type, handler, opts);
+      }
       host.remove();
       if (activeHost === host) activeHost = null;
     }
@@ -1896,9 +1925,7 @@
     function escapeHtml(s) {
       return String(s != null ? s : "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
-    function escapeAttr(s) {
-      return escapeHtml(s);
-    }
+    const escapeAttr = escapeHtml;
     render();
     bindTabs();
     bindGlobal();
