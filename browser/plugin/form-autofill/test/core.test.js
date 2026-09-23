@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { tryFill, executeFill } from '../src/core.js';
+import { tryFill, executeFill, buildSchedule, runSchedule } from '../src/core.js';
 
 beforeEach(() => {
   document.body.innerHTML = '';
@@ -176,6 +176,172 @@ describe('executeFill - 部分元素未就绪', () => {
 
     await executeFill();
     expect(a.value).toBe('A');
+  });
+});
+
+describe('buildSchedule / runSchedule', () => {
+  it('无 parallelGroup 时全部按 single', () => {
+    const fields = [
+      { selector: '#a' },
+      { selector: '#b' },
+      { selector: '#c' },
+    ];
+    const schedule = buildSchedule(fields);
+    expect(schedule).toHaveLength(3);
+    expect(schedule.every((s) => s.kind === 'single')).toBe(true);
+  });
+
+  it('同名连续项合并为一个 group', () => {
+    const fields = [
+      { selector: '#a' },
+      { selector: '#b', parallelGroup: 'g' },
+      { selector: '#c', parallelGroup: 'g' },
+      { selector: '#d' },
+    ];
+    const schedule = buildSchedule(fields);
+    expect(schedule).toEqual([
+      { kind: 'single', item: fields[0] },
+      { kind: 'group', group: 'g', items: [fields[1], fields[2]] },
+      { kind: 'single', item: fields[3] },
+    ]);
+  });
+
+  it('同名被隔开时按位置拆为多个 group', () => {
+    const fields = [
+      { selector: '#a', parallelGroup: 'g' },
+      { selector: '#b' },
+      { selector: '#c', parallelGroup: 'g' },
+    ];
+    const schedule = buildSchedule(fields);
+    expect(schedule).toEqual([
+      { kind: 'group', group: 'g', items: [fields[0]] },
+      { kind: 'single', item: fields[1] },
+      { kind: 'group', group: 'g', items: [fields[2]] },
+    ]);
+  });
+
+  it('空字符串 / 空白 / 非字符串 parallelGroup 视为未分组', () => {
+    const fields = [
+      { selector: '#a', parallelGroup: '' },
+      { selector: '#b', parallelGroup: '   ' },
+      { selector: '#c', parallelGroup: 42 },
+      { selector: '#d', parallelGroup: null },
+    ];
+    const schedule = buildSchedule(fields);
+    expect(schedule.every((s) => s.kind === 'single')).toBe(true);
+  });
+});
+
+describe('executeFill - parallelGroup', () => {
+  it('同组字段都被填上', async () => {
+    const a = document.createElement('input'); a.id = 'a'; document.body.appendChild(a);
+    const b = document.createElement('input'); b.id = 'b'; document.body.appendChild(b);
+    const c = document.createElement('input'); c.id = 'c'; document.body.appendChild(c);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '组',
+          urlPattern: '/',
+          fields: [
+            { selector: '#a', value: 'A', type: 'input' },
+            { selector: '#b', value: 'B', type: 'input', parallelGroup: 'g' },
+            { selector: '#c', value: 'C', type: 'input', parallelGroup: 'g' },
+          ],
+        },
+      ],
+    };
+    await executeFill();
+    expect(a.value).toBe('A');
+    expect(b.value).toBe('B');
+    expect(c.value).toBe('C');
+  });
+
+  it('组内缺失元素不阻塞其他组员', async () => {
+    const a = document.createElement('input'); a.id = 'a'; document.body.appendChild(a);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '组',
+          urlPattern: '/',
+          fields: [
+            { selector: '#missing', value: 'X', type: 'input', parallelGroup: 'g' },
+            { selector: '#a', value: 'A', type: 'input', parallelGroup: 'g' },
+          ],
+        },
+      ],
+    };
+    await executeFill();
+    expect(a.value).toBe('A');
+  });
+
+  it('未分组的字段仍按数组顺序串行', async () => {
+    const order = [];
+    const origQuery = document.querySelector.bind(document);
+    document.querySelector = (sel) => {
+      const el = origQuery(sel);
+      if (el) order.push(sel);
+      return el;
+    };
+
+    const a = document.createElement('input'); a.id = 'a'; document.body.appendChild(a);
+    const b = document.createElement('input'); b.id = 'b'; document.body.appendChild(b);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '顺',
+          urlPattern: '/',
+          fields: [
+            { selector: '#a', value: 'A', type: 'input' },
+            { selector: '#b', value: 'B', type: 'input' },
+          ],
+        },
+      ],
+    };
+    await executeFill();
+
+    // #a 必须在 #b 之前被访问
+    expect(order.indexOf('#a')).toBeLessThan(order.indexOf('#b'));
+
+    document.querySelector = origQuery;
+  });
+
+  it('未分组的字段后于分组（同组完成后才进下一步）', async () => {
+    const order = [];
+    const origQuery = document.querySelector.bind(document);
+    document.querySelector = (sel) => {
+      const el = origQuery(sel);
+      if (el) order.push(sel);
+      return el;
+    };
+
+    const a = document.createElement('input'); a.id = 'a'; document.body.appendChild(a);
+    const b = document.createElement('input'); b.id = 'b'; document.body.appendChild(b);
+    const c = document.createElement('input'); c.id = 'c'; document.body.appendChild(c);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '混合',
+          urlPattern: '/',
+          fields: [
+            { selector: '#a', value: 'A', type: 'input', parallelGroup: 'g' },
+            { selector: '#b', value: 'B', type: 'input', parallelGroup: 'g' },
+            { selector: '#c', value: 'C', type: 'input' },
+          ],
+        },
+      ],
+    };
+    await executeFill();
+
+    // #c 必须在 #a 和 #b 之后
+    const idxC = order.indexOf('#c');
+    expect(idxC).toBeGreaterThan(order.indexOf('#a'));
+    expect(idxC).toBeGreaterThan(order.indexOf('#b'));
+
+    document.querySelector = origQuery;
   });
 });
 

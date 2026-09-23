@@ -690,11 +690,16 @@
     let t = typeof (f == null ? void 0 : f.type) === "string" ? f.type : "input";
     if (t === "checkbox-group") t = "checkbox";
     if (t === "radio-group") t = "radio";
-    return {
+    const result = {
       selector: typeof (f == null ? void 0 : f.selector) === "string" ? f.selector : "",
       value: (_a3 = f == null ? void 0 : f.value) != null ? _a3 : "",
       type: t
     };
+    if (typeof (f == null ? void 0 : f.parallelGroup) === "string") {
+      const trimmed = f.parallelGroup.trim();
+      if (trimmed) result.parallelGroup = trimmed;
+    }
+    return result;
   }
   function normalizeProfile(prof) {
     if (!prof || typeof prof !== "object") return { fields: [] };
@@ -797,6 +802,35 @@
     console.warn(`[\u81EA\u52A8\u586B\u5145] ${item.selector} \u6CA1\u6709\u53EF\u7528\u7684\u586B\u5145\u5668`);
     return false;
   }
+  function buildSchedule(fields) {
+    const schedule2 = [];
+    let i = 0;
+    while (i < fields.length) {
+      const cur = fields[i];
+      const group = cur && typeof cur.parallelGroup === "string" ? cur.parallelGroup.trim() : "";
+      if (!group) {
+        schedule2.push({ kind: "single", item: cur });
+        i += 1;
+        continue;
+      }
+      const members = [];
+      while (i < fields.length && fields[i] && typeof fields[i].parallelGroup === "string" && fields[i].parallelGroup.trim() === group) {
+        members.push(fields[i]);
+        i += 1;
+      }
+      schedule2.push({ kind: "group", group, items: members });
+    }
+    return schedule2;
+  }
+  async function runSchedule(schedule) {
+    for (const step of schedule) {
+      if (step.kind === "single") {
+        await tryFill(step.item);
+      } else {
+        await Promise.all(step.items.map((it) => tryFill(it)));
+      }
+    }
+  }
   async function executeFill(profileOverride) {
     var _a3;
     const cfg = resolveConfig();
@@ -812,9 +846,7 @@
         if (el) clearFilled(el);
       });
     }
-    for (const item of fields) {
-      await tryFill(item);
-    }
+    await runSchedule(buildSchedule(fields));
   }
   function autoFillIfEnabled() {
     const cfg = resolveConfig();
@@ -839,9 +871,7 @@
         return;
       }
       (async () => {
-        for (const item of fields) {
-          await tryFill(item);
-        }
+        await runSchedule(buildSchedule(fields));
       })();
     });
     if (document.body) {
@@ -1073,6 +1103,7 @@
 }
 .fields-table .type-col { width: 140px; }
 .fields-table .selector-col { width: auto; }
+.fields-table .group-col { width: 110px; }
 .fields-table .value-col { width: 200px; }
 .fields-table .act-col { width: 70px; text-align: center; }
 .fields-table .hint { color: #909399; font-size: 11px; margin-top: 2px; word-wrap: break-word; }
@@ -1349,14 +1380,14 @@
           </div>
           <table class="fields-table">
             <colgroup>
-              <col class="type-col"><col class="selector-col"><col class="value-col"><col class="act-col">
+              <col class="type-col"><col class="selector-col"><col class="group-col"><col class="value-col"><col class="act-col">
             </colgroup>
             <thead>
-              <tr><th class="type-col">\u7C7B\u578B</th><th class="selector-col">\u9009\u62E9\u5668 (CSS)</th><th class="value-col">\u503C</th><th class="act-col">\u64CD\u4F5C</th></tr>
+              <tr><th class="type-col">\u7C7B\u578B</th><th class="selector-col">\u9009\u62E9\u5668 (CSS)</th><th class="group-col">\u5E76\u884C\u7EC4</th><th class="value-col">\u503C</th><th class="act-col">\u64CD\u4F5C</th></tr>
             </thead>
             <tbody>
               ${fields.map((f, fi) => renderFieldRow(f, idx, fi)).join("")}
-              ${fields.length === 0 ? '<tr><td colspan="4" class="empty" style="padding:16px">\u5F53\u524D profile \u8FD8\u6CA1\u6709\u5B57\u6BB5\uFF0C\u70B9\u51FB\u4E0B\u65B9\u65B0\u589E</td></tr>' : ""}
+              ${fields.length === 0 ? '<tr><td colspan="5" class="empty" style="padding:16px">\u5F53\u524D profile \u8FD8\u6CA1\u6709\u5B57\u6BB5\uFF0C\u70B9\u51FB\u4E0B\u65B9\u65B0\u589E</td></tr>' : ""}
             </tbody>
           </table>
           <button type="button" class="btn sm" data-act="add-field" data-idx="${idx}" style="margin-top:8px">+ \u65B0\u589E\u5B57\u6BB5</button>
@@ -1378,6 +1409,10 @@
         <td class="selector-col">
           <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || "")}" placeholder="#id / .class / [name=...]" class="selector-clickable" title="\u70B9\u51FB\u5C55\u5F00\u7F16\u8F91"/>
           <div class="hint">${escapeHtml(valueHint(type))}</div>
+        </td>
+        <td class="group-col">
+          <input type="text" data-field="parallelGroup" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.parallelGroup || "")}" placeholder="(\u987A\u5E8F)" title="\u540C\u540D\u5B57\u6BB5\u5E76\u884C\u586B\u5145\uFF1B\u7A7A = \u6309\u987A\u5E8F"/>
+          <div class="hint">\u540C\u540D = \u5E76\u884C</div>
         </td>
         <td class="value-col">
           ${renderValueInput(field, pageIdx, fieldIdx)}
@@ -1684,6 +1719,12 @@
             } else {
               f.value = t.value;
             }
+            return;
+          }
+          if (key === "parallelGroup") {
+            const raw = (t.value || "").trim();
+            if (raw) f.parallelGroup = raw;
+            else delete f.parallelGroup;
             return;
           }
           f[key] = t.value;

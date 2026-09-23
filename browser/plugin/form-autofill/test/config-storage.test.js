@@ -156,6 +156,69 @@ describe('normalizeConfig', () => {
     const c = normalizeConfig({});
     expect(c.SHORTCUT_PROFILE_SWITCH).toEqual(DEFAULT_CONFIG.SHORTCUT_PROFILE_SWITCH);
   });
+
+  it('保留 parallelGroup 字段', () => {
+    const c = normalizeConfig({
+      PAGE_CONFIGS: [
+        {
+          name: 'PG',
+          urlPattern: '/',
+          fields: [
+            { selector: '#a', value: 'A', type: 'input', parallelGroup: 'g1' },
+            { selector: '#b', value: 'B', type: 'input' },
+          ],
+        },
+      ],
+    });
+    const fields = c.PAGE_CONFIGS[0].profiles.default.fields;
+    expect(fields[0].parallelGroup).toBe('g1');
+    expect(fields[1].parallelGroup).toBeUndefined();
+  });
+
+  it('parallelGroup 自动 trim 前后空白', () => {
+    const c = normalizeConfig({
+      PAGE_CONFIGS: [
+        {
+          name: 'PG',
+          urlPattern: '/',
+          fields: [{ selector: '#a', value: 'A', type: 'input', parallelGroup: '  g1  ' }],
+        },
+      ],
+    });
+    expect(c.PAGE_CONFIGS[0].profiles.default.fields[0].parallelGroup).toBe('g1');
+  });
+
+  it('parallelGroup 空字符串 / 非字符串归一为未设', () => {
+    const c = normalizeConfig({
+      PAGE_CONFIGS: [
+        {
+          name: 'PG',
+          urlPattern: '/',
+          fields: [
+            { selector: '#a', value: 'A', type: 'input', parallelGroup: '' },
+            { selector: '#b', value: 'B', type: 'input', parallelGroup: '   ' },
+            { selector: '#c', value: 'C', type: 'input', parallelGroup: 42 },
+            { selector: '#d', value: 'D', type: 'input', parallelGroup: null },
+          ],
+        },
+      ],
+    });
+    const fields = c.PAGE_CONFIGS[0].profiles.default.fields;
+    expect(fields[0].parallelGroup).toBeUndefined();
+    expect(fields[1].parallelGroup).toBeUndefined();
+    expect(fields[2].parallelGroup).toBeUndefined();
+    expect(fields[3].parallelGroup).toBeUndefined();
+  });
+
+  it('旧配置（无 parallelGroup）行为不变', () => {
+    const c = normalizeConfig({
+      PAGE_CONFIGS: [
+        { name: 'X', urlPattern: '/', fields: [{ selector: '#a', value: 'A', type: 'input' }] },
+      ],
+    });
+    const f = c.PAGE_CONFIGS[0].profiles.default.fields[0];
+    expect('parallelGroup' in f).toBe(false);
+  });
 });
 
 describe('import / export', () => {

@@ -110,11 +110,17 @@ function normalizeField(f) {
   // 兼容旧版 type：v3.1 之前有 checkbox-group / radio-group，已合并到单 type
   if (t === 'checkbox-group') t = 'checkbox';
   if (t === 'radio-group') t = 'radio';
-  return {
+  const result = {
     selector: typeof f?.selector === 'string' ? f.selector : '',
     value: f?.value ?? '',
     type: t,
   };
+  // 可选：并行组名（同名字段并发填充；空串视为未分组）
+  if (typeof f?.parallelGroup === 'string') {
+    const trimmed = f.parallelGroup.trim();
+    if (trimmed) result.parallelGroup = trimmed;
+  }
+  return result;
 }
 
 function normalizeProfile(prof) {

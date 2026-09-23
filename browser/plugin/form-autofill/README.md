@@ -7,6 +7,7 @@
 - **快捷键手动触发**（默认 `Cmd/Ctrl + Shift + O`），或开启页面加载自动填充
 - **profile 切换快捷键**（默认 `Cmd/Ctrl + Shift + P`）
 - **多页面配置**，按 URL pattern 匹配（支持字符串包含 / 正则）
+- **并行组**（可选）— 显式声明同名字段并发填充，默认保持顺序以保护 select 级联 / 输入框联动等依赖
 - 配置保存到 localStorage，跨设备可导入导出 JSON
 - 走"原生 setter + 触发 input 事件"机制，Vue 2 / Vue 3 / React 的 v-model 都能感知
 
@@ -48,7 +49,7 @@ npm run build
 - 左侧：页面列表（含 name / urlPattern 预览），可增删
 - 右侧：当前页面的 name / urlPattern / profile tabs / 字段表格
   - **profile tabs**：每个页面可保存多套数据（`default` + 自定义名）。当前编辑的 profile 高亮；运行时激活的 profile 标记为「激活」（与持久化的 localStorage 同步）。至少保留一个 profile
-  - 每行字段：type 下拉（14 种）/ selector / value / 删除按钮
+  - 每行字段：type 下拉（14 种）/ selector / **并行组** / value / 删除按钮
   - **selector 输入框可点击展开**为编辑弹窗（支持多行 / 等宽字体 / Cmd+Enter 保存）
   - value 输入框按 type 自动切换（checkbox 切换、数字 input、JSON 数组等）
   - 切换 type 自动重置 value 为该类型默认值
@@ -147,7 +148,32 @@ window.__AUTOFILL_CONFIG__  >  localStorage(form_autofill_config_v3)  >  DEFAULT
 
 ## 字段配置
 
-每条 field 由 `selector` + `value` + `type` 组成。
+每条 field 由 `selector` + `value` + `type` 组成，**可选** `parallelGroup` 控制是否与其他字段并行。
+
+### 并行组（同名字段并发填充）
+
+默认所有字段按数组顺序**串行**填充 —— 这是有意为之，避免破坏 select 级联（A 选了才出 B 的 options）和输入框联动（A 的 input 事件跑完才推算 B）。
+
+如果某些字段互相独立、可以同时填，给它们同一个 `parallelGroup`：
+
+```js
+fields: [
+  { selector: '#city',      value: '北京',     type: 'select' },                       // 顺序
+  { selector: '#district',  value: '朝阳区',   type: 'select' },                       // 等 city
+  { selector: '#contact1',  value: '138...',   type: 'input',  parallelGroup: 'c' },  // 并行
+  { selector: '#contact2',  value: '139...',   type: 'input',  parallelGroup: 'c' },  // 并行
+  { selector: '#note',      value: '...',      type: 'input' },                        // 等 c 完成
+],
+```
+
+**规则：**
+- 无 `parallelGroup` / 空字符串 / 纯空白 → 视为未分组
+- 同名字段在数组中**连续**出现时合并为一个并行组，组内 `Promise.all` 同时启动；**整组完成**后才执行下一段
+- 同名字段被其他字段隔开时，按位置拆为多次独立的并行组（方便用户精确控制执行时机）
+
+例：`[A("c"), B, C("c")]` 拆为 `c1=[A]` → `B` → `c2=[C]`，而非合并为 `c=[A,C]`。
+
+**写在 UI：** 字段表格的"并行组"列，文本输入框。空 = 顺序；填名字（如 `c`）即加入同名并行组。空值会从配置中删除（不会留下空字符串字段）。
 
 ### type 类型一览
 
@@ -282,7 +308,7 @@ src/
     index.js               注册表（按顺序匹配）
   core.js                  tryFill / executeFill / autoFillIfEnabled / setupShortcut / cycleProfile / setupProfileSwitchShortcut
   index.js                 入口：装配、浮动按钮、油猴菜单命令、window.__AUTOFILL__
-test/                      Vitest 单测（147 个）
+test/                      Vitest 单测（168 个）
 build.js                   esbuild 打包脚本
 form-auto-fill.user.js     打包产物（直接给油猴用）
 user-script-header.txt     油猴 metadata header

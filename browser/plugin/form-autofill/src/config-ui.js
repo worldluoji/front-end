@@ -104,6 +104,7 @@ const STYLES = `
 }
 .fields-table .type-col { width: 140px; }
 .fields-table .selector-col { width: auto; }
+.fields-table .group-col { width: 110px; }
 .fields-table .value-col { width: 200px; }
 .fields-table .act-col { width: 70px; text-align: center; }
 .fields-table .hint { color: #909399; font-size: 11px; margin-top: 2px; word-wrap: break-word; }
@@ -412,16 +413,16 @@ export function openConfigUI() {
           </div>
           <table class="fields-table">
             <colgroup>
-              <col class="type-col"><col class="selector-col"><col class="value-col"><col class="act-col">
+              <col class="type-col"><col class="selector-col"><col class="group-col"><col class="value-col"><col class="act-col">
             </colgroup>
             <thead>
-              <tr><th class="type-col">类型</th><th class="selector-col">选择器 (CSS)</th><th class="value-col">值</th><th class="act-col">操作</th></tr>
+              <tr><th class="type-col">类型</th><th class="selector-col">选择器 (CSS)</th><th class="group-col">并行组</th><th class="value-col">值</th><th class="act-col">操作</th></tr>
             </thead>
             <tbody>
               ${fields.map((f, fi) => renderFieldRow(f, idx, fi)).join('')}
               ${
                 fields.length === 0
-                  ? '<tr><td colspan="4" class="empty" style="padding:16px">当前 profile 还没有字段，点击下方新增</td></tr>'
+                  ? '<tr><td colspan="5" class="empty" style="padding:16px">当前 profile 还没有字段，点击下方新增</td></tr>'
                   : ''
               }
             </tbody>
@@ -447,6 +448,10 @@ export function openConfigUI() {
         <td class="selector-col">
           <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || '')}" placeholder="#id / .class / [name=...]" class="selector-clickable" title="点击展开编辑"/>
           <div class="hint">${escapeHtml(valueHint(type))}</div>
+        </td>
+        <td class="group-col">
+          <input type="text" data-field="parallelGroup" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.parallelGroup || '')}" placeholder="(顺序)" title="同名字段并行填充；空 = 按顺序"/>
+          <div class="hint">同名 = 并行</div>
         </td>
         <td class="value-col">
           ${renderValueInput(field, pageIdx, fieldIdx)}
@@ -780,6 +785,13 @@ export function openConfigUI() {
           } else {
             f.value = t.value;
           }
+          return;
+        }
+        if (key === 'parallelGroup') {
+          // 空串视为未分组：删除属性，避免 export JSON 里出现 ""
+          const raw = (t.value || '').trim();
+          if (raw) f.parallelGroup = raw;
+          else delete f.parallelGroup;
           return;
         }
         f[key] = t.value;

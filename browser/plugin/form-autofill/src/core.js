@@ -77,6 +77,52 @@ export async function tryFill(item) {
 }
 
 /**
+ * 把 fields 拆成执行计划：单字段串行；同名 parallelGroup 的连续项作为一个原子单元，组内并行
+ * 同名组若被其他字段隔开，按位置拆为多次执行
+ * @param {Array<object>} fields
+ * @returns {Array<{kind:'single',item:object}|{kind:'group',group:string,items:object[]}>}
+ */
+export function buildSchedule(fields) {
+  const schedule2 = [];
+  let i = 0;
+  while (i < fields.length) {
+    const cur = fields[i];
+    const group = (cur && typeof cur.parallelGroup === 'string') ? cur.parallelGroup.trim() : '';
+    if (!group) {
+      schedule2.push({ kind: 'single', item: cur });
+      i += 1;
+      continue;
+    }
+    const members = [];
+    while (
+      i < fields.length
+      && fields[i]
+      && typeof fields[i].parallelGroup === 'string'
+      && fields[i].parallelGroup.trim() === group
+    ) {
+      members.push(fields[i]);
+      i += 1;
+    }
+    schedule2.push({ kind: 'group', group, items: members });
+  }
+  return schedule2;
+}
+
+/**
+ * 按 plan 执行填充：single 顺序、group 内并行；整组完成才进下一步
+ * @param {ReturnType<typeof buildSchedule>} schedule
+ */
+export async function runSchedule(schedule) {
+  for (const step of schedule) {
+    if (step.kind === 'single') {
+      await tryFill(step.item);
+    } else {
+      await Promise.all(step.items.map((it) => tryFill(it)));
+    }
+  }
+}
+
+/**
  * 根据当前 URL 找到的页面配置；找不到则 null
  */
 export function getCurrentConfig() {
@@ -119,9 +165,7 @@ export async function executeFill(profileOverride) {
     });
   }
 
-  for (const item of fields) {
-    await tryFill(item);
-  }
+  await runSchedule(buildSchedule(fields));
 }
 
 /**
@@ -155,9 +199,7 @@ export function autoFillIfEnabled() {
     }
 
     (async () => {
-      for (const item of fields) {
-        await tryFill(item);
-      }
+      await runSchedule(buildSchedule(fields));
     })();
   });
 

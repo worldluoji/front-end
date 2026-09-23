@@ -330,3 +330,113 @@ describe('openConfigUI - 重新打开', () => {
     expect(document.querySelectorAll('[data-autofill-config-ui]').length).toBe(1);
   });
 });
+
+describe('openConfigUI - 并行组列', () => {
+  it('表头包含 "并行组" 列', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    const ths = root.querySelectorAll('.fields-table thead th');
+    const labels = Array.from(ths).map((t) => t.textContent.trim());
+    expect(labels).toContain('并行组');
+  });
+
+  it('每行有 parallelGroup 输入框，默认空值', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    const inputs = root.querySelectorAll('input[data-field="parallelGroup"]');
+    expect(inputs.length).toBeGreaterThan(0);
+    inputs.forEach((inp) => {
+      expect(inp.value).toBe('');
+      expect(inp.placeholder).toBe('(顺序)');
+    });
+  });
+
+  it('编辑 parallelGroup 输入后，保存到 localStorage 时被保留', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    // 给第一个 page 新增一个字段，编辑它的 parallelGroup
+    const addBtn = root.querySelector('[data-act="add-field"]');
+    addBtn.click();
+
+    const pgInput = root.querySelectorAll('input[data-field="parallelGroup"]');
+    const last = pgInput[pgInput.length - 1];
+    expect(last).toBeTruthy();
+    last.value = 'contacts';
+    last.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // 保存
+    root.querySelector('[data-act="save"]').click();
+    const saved = JSON.parse(localStorage.getItem('form_autofill_config_v3'));
+    const pageFields =
+      saved.PAGE_CONFIGS[0].profiles[saved.PAGE_CONFIGS[0].profiles.default ? 'default' : Object.keys(saved.PAGE_CONFIGS[0].profiles)[0]].fields;
+    const lastSaved = pageFields[pageFields.length - 1];
+    expect(lastSaved.parallelGroup).toBe('contacts');
+  });
+
+  it('清空 parallelGroup 输入后，导出 JSON 中不出现空字符串字段', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    // 新增字段，先填一个值再清空
+    root.querySelector('[data-act="add-field"]').click();
+    const inputs = root.querySelectorAll('input[data-field="parallelGroup"]');
+    const last = inputs[inputs.length - 1];
+    last.value = 'g';
+    last.dispatchEvent(new Event('input', { bubbles: true }));
+    last.value = '';
+    last.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // 导出 JSON
+    root.querySelector('[data-act="export"]').click();
+    // 直接读 state 不行；从保存路径读
+    root.querySelector('[data-act="save"]').click();
+    const saved = JSON.parse(localStorage.getItem('form_autofill_config_v3'));
+    const profile = saved.PAGE_CONFIGS[0].profiles.default || saved.PAGE_CONFIGS[0].profiles[Object.keys(saved.PAGE_CONFIGS[0].profiles)[0]];
+    const lastSaved = profile.fields[profile.fields.length - 1];
+    expect('parallelGroup' in lastSaved).toBe(false);
+  });
+
+  it('已有 parallelGroup 的 field 在渲染时正确显示', () => {
+    // 准备一个带 parallelGroup 的配置
+    localStorage.setItem(
+      'form_autofill_config_v3',
+      JSON.stringify({
+        AUTO_FILL_ON_LOAD: false,
+        SHORTCUT: { key: 'O', ctrl: false, alt: false, shift: true, meta: true },
+        PAGE_CONFIGS: [
+          {
+            name: 'PG',
+            urlPattern: '/',
+            profiles: {
+              default: {
+                fields: [
+                  { selector: '#a', value: 'A', type: 'input', parallelGroup: 'g1' },
+                  { selector: '#b', value: 'B', type: 'input' },
+                ],
+              },
+            },
+          },
+        ],
+      })
+    );
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+
+    const inputs = root.querySelectorAll('input[data-field="parallelGroup"]');
+    expect(inputs[0].value).toBe('g1');
+    expect(inputs[1].value).toBe('');
+  });
+});
