@@ -165,13 +165,17 @@
   // src/fillers/element-plus.js
   var SELECTOR = {
     // 兼容 Element Plus 2.5 及更早（.el-input__inner）与 2.6+（.el-select__input）
-    elSelect: ".el-select",
-    elSelectInput: ".el-input__inner, .el-select__input",
-    elSelectWrapper: ".el-input, .el-select__wrapper",
-    elSelectDropdown: ".el-select-dropdown",
+    // 同时兼容 .el-select-v2（虚拟列表 select）/ .el-tree-select —— 用户可能选中
+    // placeholder / suffix / dropdown-item 等非输入元素，只要祖先里有 EP select 容器就算
+    elSelect: ".el-select, .el-select-v2, .el-tree-select",
+    elSelectInput: ".el-input__inner, .el-select__input, .el-select-v2__input, .el-tree-select__input",
+    elSelectWrapper: ".el-input, .el-select__wrapper, .el-select-v2__wrapper, .el-tree-select__wrapper",
+    elSelectDropdown: ".el-select-dropdown, .el-select-v2__popper, .el-tree-select__popper",
     elSelectItem: ".el-select-dropdown__item, .el-select-v2__list-item, li.el-vl__item",
     // 可过滤 select：EP 在容器上加 is-filterable class（或 input 上有 el-select__input 而非 readonly）
     elSelectFilterable: ".el-select.is-filterable, .el-select.is-searchable",
+    // 任意 EP select 容器内的 selection 区域（用户拿这个当 selector 也算）
+    elSelectSelection: ".el-select__selection, .el-select-v2__selection, .el-tree-select__selection",
     elCascader: ".el-cascader",
     elCascaderPanel: ".el-cascader-panel",
     elCascaderMenu: ".el-cascader-menu",
@@ -197,7 +201,9 @@
     elRadioInput: 'input[type="radio"]'
   };
   function findElSelectContainer(el) {
-    return el.closest(SELECTOR.elSelect);
+    const container = el.closest(SELECTOR.elSelect);
+    if (container) return container;
+    return el.closest(SELECTOR.elSelectSelection);
   }
   function getVisibleDropdown() {
     const dropdowns = document.querySelectorAll(SELECTOR.elSelectDropdown);

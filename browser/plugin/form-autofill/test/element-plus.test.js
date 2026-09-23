@@ -301,6 +301,138 @@ describe('elementPlusFiller.fill - el-select', () => {
     expect(input.value).toBe('Vue');
   });
 
+  it('普通非可过滤 select（含 el-tooltip__trigger / placeholder）：走 wrapper.click 路径', async () => {
+    // 复刻用户实际 HTML：container class="el-select"，wrapper 多个 el-tooltip__trigger，
+    // input readonly=""，含 placeholder 兄弟节点。dropdown 由 teleport 挂到 body。
+    const select = document.createElement('div');
+    select.className = 'el-select';
+    select.style.width = '240px';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'el-select__wrapper el-tooltip__trigger el-tooltip__trigger';
+    wrapper.tabIndex = -1;
+
+    const selection = document.createElement('div');
+    selection.className = 'el-select__selection';
+
+    const inputWrap = document.createElement('div');
+    inputWrap.className = 'el-select__selected-item el-select__input-wrapper is-hidden';
+    const input = document.createElement('input');
+    input.className = 'el-select__input';
+    input.type = 'text';
+    input.tabIndex = 0;
+    input.setAttribute('readonly', '');
+    inputWrap.appendChild(input);
+    selection.appendChild(inputWrap);
+
+    const placeholder = document.createElement('div');
+    placeholder.className = 'el-select__selected-item el-select__placeholder';
+    const placeholderSpan = document.createElement('span');
+    placeholderSpan.textContent = 'Option C';
+    placeholder.appendChild(placeholderSpan);
+    selection.appendChild(placeholder);
+
+    wrapper.appendChild(selection);
+    select.appendChild(wrapper);
+
+    // dropdown 在 body 上（teleport 出来的）
+    const dropdown = document.createElement('div');
+    dropdown.className = 'el-select-dropdown';
+    dropdown.style.display = 'none';
+    const items = [
+      { value: 'a', label: 'Option A' },
+      { value: 'b', label: 'Option B' },
+      { value: 'c', label: 'Option C' },
+    ].map((o) => {
+      const li = document.createElement('li');
+      li.className = 'el-select-dropdown__item';
+      li.setAttribute('data-value', o.value);
+      li.textContent = o.label;
+      dropdown.appendChild(li);
+      return li;
+    });
+    document.body.appendChild(select);
+
+    // 模拟 EP：点 wrapper 挂 dropdown
+    wrapper.addEventListener('click', () => {
+      if (!dropdown.isConnected) document.body.appendChild(dropdown);
+      dropdown.style.display = '';
+    });
+    // 模拟 EP：点 option 后更新 input.value
+    items.forEach((li) => {
+      li.addEventListener('click', () => {
+        input.value = li.textContent || '';
+        dropdown.style.display = 'none';
+      });
+    });
+
+    const ok = await elementPlusFiller.fill(placeholder, 'Option B', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('Option B');
+  });
+
+  it('选中 .el-select__placeholder（不在 .el-select 内）也能填充', async () => {
+    // 模拟 element-plus.org 实际 DOM：用户的 DevTools 路径显示
+    // `.el-select__placeholder` 不在 .el-select 容器内（可能是 docs 站非标准结构，
+    // 或 .el-select 被替换渲染）。但 .el-select__selection 在，所以兜底匹配。
+    const select = document.createElement('div');
+    select.className = 'el-select-v2';
+    select.style.width = '240px';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'el-select-v2__wrapper';
+    wrapper.tabIndex = -1;
+
+    const selection = document.createElement('div');
+    selection.className = 'el-select-v2__selection';
+
+    const inputWrap = document.createElement('div');
+    inputWrap.className = 'el-select-v2__input-wrapper';
+    const input = document.createElement('input');
+    input.className = 'el-select-v2__input';
+    input.type = 'text';
+    inputWrap.appendChild(input);
+    selection.appendChild(inputWrap);
+
+    const placeholder = document.createElement('div');
+    placeholder.className = 'el-select-v2__placeholder';
+    const span = document.createElement('span');
+    span.textContent = '请选择';
+    placeholder.appendChild(span);
+    selection.appendChild(placeholder);
+
+    wrapper.appendChild(selection);
+    select.appendChild(wrapper);
+    document.body.appendChild(select);
+
+    // 模拟 EP：点 wrapper 打开下拉（这里用 popper）
+    const popper = document.createElement('div');
+    popper.className = 'el-select-v2__popper';
+    popper.style.display = 'none';
+    const items = ['A', 'B', 'C'].map((v) => {
+      const li = document.createElement('li');
+      li.className = 'el-select-v2__list-item';
+      li.setAttribute('data-value', v);
+      li.textContent = v;
+      popper.appendChild(li);
+      return li;
+    });
+    wrapper.addEventListener('click', () => {
+      if (!popper.isConnected) document.body.appendChild(popper);
+      popper.style.display = '';
+    });
+    items.forEach((li) => {
+      li.addEventListener('click', () => {
+        input.value = li.textContent || '';
+        popper.style.display = 'none';
+      });
+    });
+
+    const ok = await elementPlusFiller.fill(placeholder, 'B', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('B');
+  });
+
 });
 describe('closeOpenSelectDropdowns', () => {
   it('没有可见 dropdown 时返回 false', () => {
