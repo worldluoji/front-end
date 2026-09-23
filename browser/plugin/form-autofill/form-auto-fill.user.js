@@ -76,6 +76,17 @@
       setTimeout(() => finish(visibleCheck()), timeout);
     });
   }
+  function querySelectorSafe(root, selector) {
+    if (!root || typeof selector !== "string" || selector.trim() === "") return null;
+    try {
+      return root.querySelector(selector);
+    } catch (e) {
+      console.warn(
+        `[\u81EA\u52A8\u586B\u5145] \u65E0\u6548\u7684 CSS selector\uFF0C\u5DF2\u8DF3\u8FC7\uFF1A${selector.slice(0, 80)}${selector.length > 80 ? "..." : ""}`
+      );
+      return null;
+    }
+  }
 
   // src/fillers/native.js
   function fillCheckbox(el, value) {
@@ -823,7 +834,7 @@
     return ((_a3 = page.profiles[name]) == null ? void 0 : _a3.fields) || [];
   }
   async function tryFill(item) {
-    const el = document.querySelector(item.selector);
+    const el = querySelectorSafe(document, item.selector);
     if (!el) return false;
     if (isFilled(el)) return false;
     for (const filler of fillers) {
@@ -877,7 +888,7 @@
     const fields = ((_a3 = config.profiles[profileName]) == null ? void 0 : _a3.fields) || [];
     if (fields.length === 0) return;
     fields.forEach((item) => {
-      const el = document.querySelector(item.selector);
+      const el = querySelectorSafe(document, item.selector);
       if (el) clearFilled(el);
     });
     await runSchedule(buildSchedule(fields));
@@ -893,7 +904,7 @@
       if (fields.length === 0) return;
       let allReady = true;
       for (const item of fields) {
-        const el = document.querySelector(item.selector);
+        const el = querySelectorSafe(document, item.selector);
         if (!el || !isFilled(el)) {
           allReady = false;
           break;
@@ -1018,7 +1029,7 @@
     setActiveProfile(config, next);
     const nextFields = ((_a3 = config.profiles[next]) == null ? void 0 : _a3.fields) || [];
     nextFields.forEach((item) => {
-      const el = document.querySelector(item.selector);
+      const el = querySelectorSafe(document, item.selector);
       if (el) clearFilled(el);
     });
     console.log(`[\u81EA\u52A8\u586B\u5145] \u5207\u6362 profile: ${config.name} \u2192 ${next}`);
@@ -1063,7 +1074,7 @@
   display: flex; align-items: center; justify-content: center;
 }
 .modal {
-  width: 880px; max-width: 95vw; max-height: 90vh;
+  width: min(1100px, 95vw); max-height: 90vh;
   background: #fff; color: #222;
   border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,.3);
   display: flex; flex-direction: column; overflow: hidden;
@@ -1135,11 +1146,11 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
 }
-.fields-table .type-col { width: 140px; }
+.fields-table .type-col { width: 120px; }
 .fields-table .selector-col { width: auto; }
-.fields-table .group-col { width: 110px; }
-.fields-table .value-col { width: 200px; }
-.fields-table .act-col { width: 70px; text-align: center; }
+.fields-table .group-col { width: 90px; }
+.fields-table .value-col { width: 180px; }
+.fields-table .act-col { width: 60px; text-align: center; }
 .fields-table .hint { color: #909399; font-size: 11px; margin-top: 2px; word-wrap: break-word; }
 .fields-table .value-col .hint { white-space: normal; }
 
@@ -1442,18 +1453,17 @@
       const opts = FIELD_TYPES.map(
         (t) => `<option value="${t.value}" ${t.value === type ? "selected" : ""}>${escapeHtml(t.label)}</option>`
       ).join("");
+      const selectorTitle = valueHint(type) || "\u70B9\u51FB\u5C55\u5F00\u7F16\u8F91";
       return `
       <tr data-field-row="${fieldIdx}">
         <td class="type-col">
           <select data-field="type" data-pi="${pageIdx}" data-fi="${fieldIdx}">${opts}</select>
         </td>
         <td class="selector-col">
-          <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || "")}" placeholder="#id / .class / [name=...]" class="selector-clickable" title="\u70B9\u51FB\u5C55\u5F00\u7F16\u8F91"/>
-          <div class="hint">${escapeHtml(valueHint(type))}</div>
+          <input type="text" data-field="selector" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.selector || "")}" placeholder="#id / .class / [name=...]" class="selector-clickable" title="${escapeAttr(selectorTitle)}"/>
         </td>
         <td class="group-col">
           <input type="text" data-field="parallelGroup" data-pi="${pageIdx}" data-fi="${fieldIdx}" value="${escapeAttr(field.parallelGroup || "")}" placeholder="(\u987A\u5E8F)" title="\u540C\u540D\u5B57\u6BB5\u5E76\u884C\u586B\u5145\uFF1B\u7A7A = \u6309\u987A\u5E8F"/>
-          <div class="hint">\u540C\u540D = \u5E76\u884C</div>
         </td>
         <td class="value-col">
           ${renderValueInput(field, pageIdx, fieldIdx)}
@@ -1490,7 +1500,7 @@
       }
       if (t === "cascader") {
         const arrStr = JSON.stringify(v || []);
-        return `<input type="text" ${baseAttrs} value='${escapeAttr(arrStr)}' placeholder='["level1","level2"]'/><div class="hint">\u5B57\u7B26\u4E32\uFF08\u5355\u503C\u8DEF\u5F84\uFF09\u6216 JSON \u6570\u7EC4</div>`;
+        return `<input type="text" ${baseAttrs} value='${escapeAttr(arrStr)}' placeholder='["level1","level2"]' title="\u5B57\u7B26\u4E32\uFF08\u5355\u503C\u8DEF\u5F84\uFF09\u6216 JSON \u6570\u7EC4"/>`;
       }
       return `<input type="text" ${baseAttrs} value="${escapeAttr(String(v != null ? v : ""))}"/>`;
     }

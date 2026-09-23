@@ -102,3 +102,25 @@ export function observeUntil(visibleCheck, timeout = 2000) {
     setTimeout(() => finish(visibleCheck()), timeout);
   });
 }
+
+/**
+ * 安全的 querySelector：捕获无效选择器（如用户从 DevTools 复制 outerHTML
+ * 当成 selector 填进来）抛出的 SyntaxError，返回 null + 打 warning。
+ * 整个填充链路 tryFill / executeFill / cycleProfile 都用这个，避免一个
+ * 错选择器把整批字段都阻塞掉。
+ * @param {Document|Element} root
+ * @param {string} selector
+ * @returns {Element|null}
+ */
+export function querySelectorSafe(root, selector) {
+  if (!root || typeof selector !== 'string' || selector.trim() === '') return null;
+  try {
+    return root.querySelector(selector);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[自动填充] 无效的 CSS selector，已跳过：${selector.slice(0, 80)}${selector.length > 80 ? '...' : ''}`
+    );
+    return null;
+  }
+}

@@ -5,6 +5,7 @@
 import { fillers } from './fillers/index.js';
 import { findMatchingConfig } from './matchers.js';
 import { resolveConfig } from './config.js';
+import { querySelectorSafe } from './dom-utils.js';
 import {
   getActiveProfile,
   setActiveProfile,
@@ -56,7 +57,7 @@ function getActiveFields(page) {
  * @returns {Promise<boolean>}
  */
 export async function tryFill(item) {
-  const el = document.querySelector(item.selector);
+  const el = querySelectorSafe(document, item.selector);
   if (!el) return false;
   if (isFilled(el)) return false;
 
@@ -160,7 +161,7 @@ export async function executeFill(profileOverride) {
   // 手动触发时，先清标记允许重新填充（不管 AUTO_FILL_ON_LOAD 是否开启 —— 手动按快捷键
   // 的目的就是再填一次当前 profile 的字段）
   fields.forEach((item) => {
-    const el = document.querySelector(item.selector);
+    const el = querySelectorSafe(document, item.selector);
     if (el) clearFilled(el);
   });
 
@@ -184,7 +185,7 @@ export function autoFillIfEnabled() {
 
     let allReady = true;
     for (const item of fields) {
-      const el = document.querySelector(item.selector);
+      const el = querySelectorSafe(document, item.selector);
       if (!el || !isFilled(el)) {
         allReady = false;
         break;
@@ -348,7 +349,7 @@ export function cycleProfile() {
   // 清掉下一个 profile 各字段的填充标记，确保下次填充能应用新值
   const nextFields = config.profiles[next]?.fields || [];
   nextFields.forEach((item) => {
-    const el = document.querySelector(item.selector);
+    const el = querySelectorSafe(document, item.selector);
     if (el) clearFilled(el);
   });
 

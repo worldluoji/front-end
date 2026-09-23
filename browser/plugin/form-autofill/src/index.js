@@ -82,6 +82,7 @@ export {
   wait,
   waitFor,
   observeUntil,
+  querySelectorSafe,
 } from './dom-utils.js';
 export {
   openConfigUI,

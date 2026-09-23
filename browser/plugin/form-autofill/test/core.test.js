@@ -617,3 +617,76 @@ describe('cycleProfile', () => {
     ).toEqual({ 测试: 'demo' });
   });
 });
+
+describe('无效 CSS selector 的容错', () => {
+  // 用户从 DevTools 复制 outerHTML 当 selector 填进来时，document.querySelector
+  // 会抛 SyntaxError，导致整批 executeFill 中断。这里验证核心链路用
+  // querySelectorSafe 兜底 —— 单条无效选择器只让该字段失败，不阻塞其他字段。
+
+  beforeEach(() => {
+    window.history.replaceState({}, '', '/');
+    const input = document.createElement('input');
+    input.id = 'valid';
+    document.body.appendChild(input);
+  });
+
+  it('tryFill：selector 是 HTML 字符串时返回 false，不抛错', async () => {
+    const htmlLikeSelector =
+      '<input value="" type="text" class="el-select__input" id="x">';
+    const ok = await tryFill({ selector: htmlLikeSelector, value: 'v', type: 'input' });
+    expect(ok).toBe(false);
+  });
+
+  it('executeFill：含一个无效 selector 的字段不阻塞其他字段', async () => {
+    window.__AUTOFILL_CONFIG__ = {
+      AUTO_FILL_ON_LOAD: false,
+      PAGE_CONFIGS: [
+        {
+          name: 'T',
+          urlPattern: '/',
+          fields: [
+            { selector: '#valid', value: 'ok', type: 'input' },
+            // 无效：从 DevTools 复制的 outerHTML
+            { selector: '<input value="" type="text" id="bad">', value: 'x', type: 'input' },
+          ],
+        },
+      ],
+    };
+
+    // 关键断言：executeFill 不抛错（之前会抛 SyntaxError）
+    await expect(executeFill()).resolves.toBeUndefined();
+
+    // 有效字段被填上了
+    expect(document.querySelector('#valid').value).toBe('ok');
+  });
+
+  it('executeFill：clear-filled 循环里遇到无效 selector 不抛错', async () => {
+    // 第一次 fill（清标记）—— 在修复前 line 880 forEach 内的 querySelector 会抛错
+    window.__AUTOFILL_CONFIG__ = {
+      AUTO_FILL_ON_LOAD: false,
+      PAGE_CONFIGS: [
+        {
+          name: 'T',
+          urlPattern: '/',
+          fields: [
+            { selector: '<input id="bad">', value: 'x', type: 'input' },
+            { selector: '#valid', value: 'ok', type: 'input' },
+          ],
+        },
+      ],
+    };
+
+    await expect(executeFill()).resolves.toBeUndefined();
+    expect(document.querySelector('#valid').value).toBe('ok');
+  });
+
+  it('空 selector 不抛错', async () => {
+    const ok = await tryFill({ selector: '', value: 'v', type: 'input' });
+    expect(ok).toBe(false);
+  });
+
+  it('非字符串 selector 不抛错', async () => {
+    const ok = await tryFill({ selector: null, value: 'v', type: 'input' });
+    expect(ok).toBe(false);
+  });
+});
