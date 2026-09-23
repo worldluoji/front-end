@@ -174,8 +174,6 @@
     elSelectItem: ".el-select-dropdown__item, .el-select-v2__list-item, li.el-vl__item",
     // 可过滤 select：EP 在容器上加 is-filterable class（或 input 上有 el-select__input 而非 readonly）
     elSelectFilterable: ".el-select.is-filterable, .el-select.is-searchable",
-    // 任意 EP select 容器内的 selection 区域（用户拿这个当 selector 也算）
-    elSelectSelection: ".el-select__selection, .el-select-v2__selection, .el-tree-select__selection",
     elCascader: ".el-cascader",
     elCascaderPanel: ".el-cascader-panel",
     elCascaderMenu: ".el-cascader-menu",
@@ -203,7 +201,14 @@
   function findElSelectContainer(el) {
     const container = el.closest(SELECTOR.elSelect);
     if (container) return container;
-    return el.closest(SELECTOR.elSelectSelection);
+    let p = el.parentElement;
+    while (p) {
+      if (p.matches('[class*="el-select__"], [class*="el-select-v2__"], [class*="el-tree-select__"]')) {
+        return p;
+      }
+      p = p.parentElement;
+    }
+    return null;
   }
   function getVisibleDropdown() {
     const dropdowns = document.querySelectorAll(SELECTOR.elSelectDropdown);

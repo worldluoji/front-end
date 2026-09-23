@@ -433,6 +433,60 @@ describe('elementPlusFiller.fill - el-select', () => {
     expect(input.value).toBe('B');
   });
 
+  it('无 .el-select 容器但祖先有 el-select__* 类（element-plus.org 实际 DOM）', async () => {
+    // 模拟 element-plus.org docs 站实际 DOM：选中 placeholder 时 DevTools 路径
+    // 不含 .el-select 容器（结构可能是 fragment / portal / 替换渲染），但祖先链
+    // 有 .el-select__selection 等带 el-select__ 前缀的类。兜底通过类名前缀匹配。
+    const wrapper = document.createElement('div');
+    wrapper.className = 'el-select__wrapper';
+    wrapper.tabIndex = -1;
+
+    const selection = document.createElement('div');
+    selection.className = 'el-select__selection';
+
+    const inputWrap = document.createElement('div');
+    inputWrap.className = 'el-select__input-wrapper is-hidden';
+    const input = document.createElement('input');
+    input.className = 'el-select__input';
+    input.type = 'text';
+    input.tabIndex = 0;
+    input.setAttribute('readonly', '');
+    inputWrap.appendChild(input);
+    selection.appendChild(inputWrap);
+
+    const placeholder = document.createElement('div');
+    placeholder.className = 'el-select__placeholder';
+    placeholder.textContent = 'Option C';
+    selection.appendChild(placeholder);
+
+    wrapper.appendChild(selection);
+    document.body.appendChild(wrapper);
+
+    // dropdown
+    const dropdown = document.createElement('div');
+    dropdown.className = 'el-select-dropdown';
+    dropdown.style.display = 'none';
+    ['A', 'B', 'C'].forEach((v) => {
+      const li = document.createElement('li');
+      li.className = 'el-select-dropdown__item';
+      li.setAttribute('data-value', v);
+      li.textContent = v;
+      dropdown.appendChild(li);
+      li.addEventListener('click', () => {
+        input.value = v;
+        dropdown.style.display = 'none';
+      });
+    });
+    wrapper.addEventListener('click', () => {
+      if (!dropdown.isConnected) document.body.appendChild(dropdown);
+      dropdown.style.display = '';
+    });
+
+    const ok = await elementPlusFiller.fill(placeholder, 'B', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('B');
+  });
+
 });
 describe('closeOpenSelectDropdowns', () => {
   it('没有可见 dropdown 时返回 false', () => {

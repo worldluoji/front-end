@@ -25,8 +25,6 @@ const SELECTOR = {
   elSelectItem: '.el-select-dropdown__item, .el-select-v2__list-item, li.el-vl__item',
   // 可过滤 select：EP 在容器上加 is-filterable class（或 input 上有 el-select__input 而非 readonly）
   elSelectFilterable: '.el-select.is-filterable, .el-select.is-searchable',
-  // 任意 EP select 容器内的 selection 区域（用户拿这个当 selector 也算）
-  elSelectSelection: '.el-select__selection, .el-select-v2__selection, .el-tree-select__selection',
 
   elCascader: '.el-cascader',
   elCascaderPanel: '.el-cascader-panel',
@@ -66,12 +64,17 @@ function findElSelectContainer(el) {
   // 优先查 .el-select / .el-select-v2 / .el-tree-select（标准容器）
   const container = el.closest(SELECTOR.elSelect);
   if (container) return container;
-  // 兜底：用户可能选中了 .el-select__selection / .el-select__wrapper /
-  // .el-select__placeholder / .el-select__suffix 等内部元素；这些一定在
-  // EP select 容器里，但 .closest 找不到容器时（罕见但确实出现 —— 比如
-  // 容器被替换渲染、或选中 element-plus docs 站非标准结构），返回
-  // .el-select__selection 作为锚点，让 fill 阶段从它再往上找 input
-  return el.closest(SELECTOR.elSelectSelection);
+  // 兜底：closest 包含自身，所以 el 自己带 el-select__ 前缀时（如
+  // .el-select__placeholder / .el-select__suffix）会匹配到自己；
+  // 必须跳过 self，从 parentElement 开始查祖先中第一个带 el-select__ 前缀的元素
+  let p = el.parentElement;
+  while (p) {
+    if (p.matches('[class*="el-select__"], [class*="el-select-v2__"], [class*="el-tree-select__"]')) {
+      return p;
+    }
+    p = p.parentElement;
+  }
+  return null;
 }
 
 function getVisibleDropdown() {
