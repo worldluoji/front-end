@@ -269,11 +269,11 @@
     if (closeOpenSelectDropdowns()) {
       await wait(10);
     }
-    const isFilterable = container.matches(SELECTOR.elSelectFilterable) || !!container.querySelector(SELECTOR.elSelectFilterable);
+    const isFilterable = container.matches(SELECTOR.elSelectFilterable) || !!container.querySelector(SELECTOR.elSelectFilterable) || !!container.closest(SELECTOR.elSelectFilterable);
     if (isFilterable && !input.readOnly) {
       return fillElSelectFilterable(container, input, value, strValue);
     }
-    const wrapper = container.querySelector(SELECTOR.elSelectWrapper) || input;
+    const wrapper = container.querySelector(SELECTOR.elSelectWrapper) || container.closest(SELECTOR.elSelectWrapper) || input;
     wrapper.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     wrapper.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
     wrapper.click();

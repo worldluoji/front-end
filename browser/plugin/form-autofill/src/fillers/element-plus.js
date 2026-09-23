@@ -165,17 +165,24 @@ async function fillElSelect(el, value) {
   // EP 会根据输入实时过滤 options。这里走"输入文本 + 等过滤 + 点第一个匹配"的路径，
   // 比 click wrapper + 整列表找匹配更鲁棒（特别是 options 多且 value 是中文长文本时）。
   // querySelector 只查后代，而 is-filterable / is-searchable 加在容器本身，
-  // 所以也要 matches 一下容器自身
+  // 所以也要 matches 容器自身；兜底时 container 可能只是 .el-select__selection，
+  // 这种情况下用 closest 查祖先中带 is-filterable 的元素
   const isFilterable =
     container.matches(SELECTOR.elSelectFilterable)
-    || !!container.querySelector(SELECTOR.elSelectFilterable);
+    || !!container.querySelector(SELECTOR.elSelectFilterable)
+    || !!container.closest(SELECTOR.elSelectFilterable);
   if (isFilterable && !input.readOnly) {
     return fillElSelectFilterable(container, input, value, strValue);
   }
 
   // 打开下拉：Element Plus 2.6+ 的 input 是 readonly，点 wrapper 才能展开；
   // 旧版本直接点 input 也可以
-  const wrapper = container.querySelector(SELECTOR.elSelectWrapper) || input;
+  // container 可能是 .el-select 也可能是 .el-select__selection 锚点（兜底）
+  // —— 后者的话 querySelector 找不到 wrapper（wrapper 是父），所以也查一下祖先
+  const wrapper =
+    container.querySelector(SELECTOR.elSelectWrapper)
+    || container.closest(SELECTOR.elSelectWrapper)
+    || input;
   wrapper.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
   wrapper.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
   wrapper.click();
