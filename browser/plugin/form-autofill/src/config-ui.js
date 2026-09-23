@@ -233,13 +233,21 @@ export function openConfigUI() {
     state.activeProfileIndexByPage[pageIdx] = idx;
   }
 
+  function isMacPlatform() {
+    // navigator.platform 已废弃；优先用 User-Agent Client Hints，回退到 UA 字符串
+    const uaDataPlatform = navigator.userAgentData?.platform;
+    if (uaDataPlatform) return uaDataPlatform.toLowerCase().includes('mac');
+    const ua = navigator.userAgent || '';
+    return /macintosh|mac os x/i.test(ua);
+  }
+
   function formatShortcutLabel(s) {
     if (!s || !s.key) return '（未设置）';
     const parts = [];
     if (s.ctrl) parts.push('Ctrl');
     if (s.alt) parts.push('Alt');
     if (s.shift) parts.push('Shift');
-    if (s.meta) parts.push(navigator.platform.toLowerCase().includes('mac') ? 'Cmd' : 'Meta');
+    if (s.meta) parts.push(isMacPlatform() ? 'Cmd' : 'Meta');
     parts.push(String(s.key).toUpperCase());
     return parts.join('+');
   }
@@ -523,6 +531,16 @@ export function openConfigUI() {
 
   // ---------- 事件绑定 ----------
 
+  // 保存所有在 shadow / document / window 上注册的 listener 句柄，
+  // closeUI 时统一解绑，避免 listener 在已分离的 shadow root 上累计
+  // （GC 最终会回收，但显式解绑让释放更及时、语义更清晰）
+  const registeredListeners = [];
+
+  function on(target, type, handler, opts) {
+    target.addEventListener(type, handler, opts);
+    registeredListeners.push({ target, type, handler, opts });
+  }
+
   function showToast(text, type = '') {
     const t = document.createElement('div');
     t.className = `toast ${type}`;
@@ -532,7 +550,7 @@ export function openConfigUI() {
   }
 
   function bindGlobal() {
-    shadow.addEventListener('input', (e) => {
+    on(shadow, 'input', (e) => {
       const t = e.target;
       const bind = t.dataset.bind;
       if (!bind) return;
@@ -548,7 +566,7 @@ export function openConfigUI() {
 
   function bindSelectorEditor() {
     // 点击 selector 输入框 → 弹出编辑器（用 mousedown 区分拖拽，但拖拽不影响此处）
-    shadow.addEventListener('click', (e) => {
+    on(shadow, 'click', (e) => {
       const t = e.target;
       if (
         t &&
@@ -562,16 +580,17 @@ export function openConfigUI() {
   }
 
   function bindTabs() {
-    root.querySelectorAll('.tabs button').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        state.activeTab = btn.dataset.tab;
-        render();
-      });
+    // 委托到 root：每次 render() 会重置 innerHTML，逐按钮绑定会失效
+    on(root, 'click', (e) => {
+      const btn = e.target.closest('.tabs button');
+      if (!btn) return;
+      state.activeTab = btn.dataset.tab;
+      render();
     });
   }
 
   function bindActions() {
-    shadow.addEventListener('click', (e) => {
+    on(shadow, 'click', (e) => {
       const btn = e.target.closest('[data-act]');
       if (!btn) return;
       const act = btn.dataset.act;
@@ -698,7 +717,7 @@ export function openConfigUI() {
     });
 
     // 切换选中页面 / 选中 profile
-    shadow.addEventListener('click', (e) => {
+    on(shadow, 'click', (e) => {
       const item = e.target.closest('[data-page]');
       if (item && !e.target.closest('[data-act="select-profile"]') && !e.target.closest('[data-act="del-profile"]')) {
         const idx = Number(item.dataset.page);
@@ -719,7 +738,7 @@ export function openConfigUI() {
     });
 
     // 字段编辑：input / change
-    shadow.addEventListener('input', (e) => {
+    on(shadow, 'input', (e) => {
       const t = e.target;
       if (t.dataset.pageField) {
         const idx = Number(t.dataset.idx);
@@ -837,6 +856,7 @@ export function openConfigUI() {
 
   const close = () => {
     overlay.remove();
+    // 同步移除 keydown 监听（外层 closeUI 也会再清一次 registeredListeners，幂等）
     document.removeEventListener('keydown', onKey, true);
   };
   const onSave = () => {
@@ -847,15 +867,27 @@ export function openConfigUI() {
   };
   const onCancel = () => close();
 
+  const focusables = () => Array.from(
+    overlay.querySelectorAll(
+      'textarea, button, [href], input, select, [tabindex]:not([tabindex="-1"])'
+    )
+  ).filter((el) => !el.hasAttribute('disabled'));
+
   const onKey = (e) => {
-    if (e.key === 'Escape') {
+    if (e.key !== 'Tab') return;
+    // 焦点陷阱：把 Tab 圈在 modal 内
+    // 用 e.target 比 activeElement 更可靠：shadow DOM 里 document.activeElement
+    // 返回的是 shadow host，不是 host 内部的元素
+    const items = focusables();
+    if (items.length === 0) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (e.shiftKey && e.target === first) {
       e.preventDefault();
-      e.stopPropagation();
-      onCancel();
-    } else if ((e.metaKey || e.ctrlKey) && (e.key || '').toLowerCase() === 'enter') {
+      last.focus();
+    } else if (!e.shiftKey && e.target === last) {
       e.preventDefault();
-      e.stopPropagation();
-      onSave();
+      first.focus();
     }
   };
 
@@ -867,7 +899,24 @@ export function openConfigUI() {
     if (role === 'save') onSave();
     else if (role === 'cancel') onCancel();
   });
-  document.addEventListener('keydown', onKey, true);
+  // 监听器挂在 shadow root 而非 document：shadow 内部元素的 keydown 在真实浏览器
+  // 会冒泡到 document，但 happy-dom 不模拟该行为（composed path），挂 document 会
+  // 导致测试里 dispatch 不到。在真实浏览器里 shadow 内部的 keydown 仍能被 document
+  // 上的 cmd+enter / esc 监听器兜底（外层拦截 main UI 的快捷键），shadow root
+  // 上的监听器只处理 modal 内的 Tab 陷阱 —— 互不冲突。
+  on(shadow, 'keydown', onKey, true);
+  // Esc/Cmd+Enter 保留在 document 上，避免与外层快捷键冲突
+  on(document, 'keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      onCancel();
+    } else if ((e.metaKey || e.ctrlKey) && (e.key || '').toLowerCase() === 'enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      onSave();
+    }
+  }, true);
 }
 
 function onTest() {
@@ -919,6 +968,11 @@ function onTest() {
   }
 
   function closeUI() {
+    // 解绑所有已注册的 listener（包括 selector-modal 在 document 上挂的 keydown）
+    while (registeredListeners.length > 0) {
+      const { target, type, handler, opts } = registeredListeners.pop();
+      target.removeEventListener(type, handler, opts);
+    }
     host.remove();
     if (activeHost === host) activeHost = null;
   }
@@ -943,9 +997,7 @@ function onTest() {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
   }
-  function escapeAttr(s) {
-    return escapeHtml(s);
-  }
+  const escapeAttr = escapeHtml;
 
   // ---------- 启动 ----------
 

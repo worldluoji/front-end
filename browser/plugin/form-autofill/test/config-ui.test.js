@@ -124,6 +124,20 @@ describe('openConfigUI', () => {
     expect(body.textContent).toMatch(/页面名称|列表/);
   });
 
+  it('re-render 后 tab 按钮仍能切换（修复逐按钮绑定的 bug）', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    // 先切到 pages tab，才能触发 add-page 按钮
+    root.querySelectorAll('.tabs button')[1].click();
+    // 触发一次 re-render（add-page 会调用 render()，重置 innerHTML）
+    root.querySelector('[data-act="add-page"]').click();
+    // 旧实现：tab 按钮 innerHTML 被替换，新按钮无 click 监听 → 点击无效
+    const tabs = root.querySelectorAll('.tabs button');
+    tabs[0].click(); // 切回 global
+    const body = root.querySelector('.body');
+    expect(body.textContent).toMatch(/页面加载自动填充/);
+  });
+
   it('close 按钮移除 host', () => {
     openConfigUI();
     const root = getUiRoot();
@@ -235,6 +249,54 @@ describe('openConfigUI - selector 编辑器', () => {
     const overlay = root.querySelector('.selector-overlay');
     overlay.click(); // 点击遮罩本身
     expect(root.querySelector('.selector-modal')).toBeNull();
+  });
+
+  it('Tab 焦点陷阱：从最后一个按钮按 Tab 应 preventDefault', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+    root.querySelector('input[data-field="selector"]').click();
+
+    const saveBtn = root.querySelector('[data-role="save"]');
+    saveBtn.focus();
+
+    // 在最后一个按钮上按 Tab（不按 Shift）应被 preventDefault 阻止默认焦点切换
+    const ev = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    saveBtn.dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(true);
+  });
+
+  it('Shift+Tab 焦点陷阱：从第一个按 Shift+Tab 应 preventDefault', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+    root.querySelector('input[data-field="selector"]').click();
+
+    const ta = root.querySelector('[data-role="selector-textarea"]');
+    ta.focus();
+
+    // 在第一个 focusable（textarea）按 Shift+Tab 应被拦截
+    const ev = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true });
+    ta.dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(true);
+  });
+
+  it('焦点在中间元素（cancel 按钮）按 Tab 不应被陷阱拦截', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    root.querySelectorAll('.list-item')[0].click();
+    root.querySelector('input[data-field="selector"]').click();
+
+    const cancelBtn = root.querySelector('[data-role="cancel"]');
+    cancelBtn.focus();
+
+    // cancel 不是首尾焦点，Tab 不应被陷阱拦截 —— 浏览器正常切换
+    const ev = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    cancelBtn.dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(false);
   });
 });
 

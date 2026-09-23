@@ -79,11 +79,12 @@ function findOption(dropdown, value) {
     const dv = opt.getAttribute('data-value');
     if (dv != null && dv === strValue) return opt;
   }
-  // 2) 按 label（slot 文本）匹配
+  // 2) 按 label（slot 文本）匹配 —— 折叠空白与 &nbsp;，对嵌套 span/i 图标宽容
+  const normalize = (s) => (s || '').replace(/\s+/g, ' ').replace(/ /g, ' ').trim();
+  const target = normalize(strValue);
   for (const opt of items) {
     if (opt.getAttribute('disabled') !== null) continue;
-    const txt = (opt.textContent || '').trim();
-    if (txt === strValue) return opt;
+    if (normalize(opt.textContent) === target) return opt;
   }
   return null;
 }

@@ -164,8 +164,21 @@ describe('elementPlusFiller.fill - el-select', () => {
     const ok = await elementPlusFiller.fill(input, 'not-exists', { type: 'select' });
     expect(ok).toBe(false);
   });
-});
 
+  it('选项文本含 NBSP（折叠空白）时，按规范化文本匹配', async () => {
+    // 选项 label 含 NBSP（U+00A0），配置 value 是普通空格 —— 旧实现会因
+    // textContent 严格不等匹配失败；新实现折叠所有空白后相等 → 匹配
+    const { select, input } = buildMockElSelect({
+      value: 'zhangsan',
+      label: '张三 (销售)',
+    });
+    document.body.appendChild(select);
+
+    const ok = await elementPlusFiller.fill(input, '张三 (销售)', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('张三 (销售)');
+  });
+});
 describe('closeOpenSelectDropdowns', () => {
   it('没有可见 dropdown 时返回 false', () => {
     expect(closeOpenSelectDropdowns()).toBe(false);
