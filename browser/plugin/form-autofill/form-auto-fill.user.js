@@ -291,11 +291,8 @@
       input.dispatchEvent(new Event("blur", { bubbles: true }));
       return false;
     }
-    option.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
-    option.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
-    option.click();
+    option.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     await wait(30);
-    input.dispatchEvent(new Event("change", { bubbles: true }));
     return true;
   }
   async function fillElSelectFilterable(container, input, value, strValue) {

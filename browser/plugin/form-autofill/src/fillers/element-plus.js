@@ -204,13 +204,13 @@ async function fillElSelect(el, value) {
     return false;
   }
 
-  option.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-  option.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-  option.click();
+  // 直接派 click：EP <el-option> 是 @click 触发 selectOptionClick，
+  // 不要再派 mousedown —— 之前的 mousedown 派到 document 可能触发 EP 的
+  // clickoutside（即便点在 dropdown 内，EP 在 hover/select 期间也可能
+  // 因 mousedown 重置内部 selected state，导致 v-model 不更新）。
+  option.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
   await wait(30);
-  // 兜底：有些业务监听 input.change
-  input.dispatchEvent(new Event('change', { bubbles: true }));
   return true;
 }
 
