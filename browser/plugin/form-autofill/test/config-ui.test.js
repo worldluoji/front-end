@@ -237,6 +237,38 @@ describe('openConfigUI - selector 编辑器', () => {
     expect(root.querySelector('input[data-field="selector"]').value).toBe(original);
   });
 
+  it('粘贴 HTML 片段时显示警告 toast + 输入框标红', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    const items = root.querySelectorAll('.list-item');
+    items[0].click();
+
+    const sel = root.querySelector('input[data-field="selector"]');
+    // 模拟用户粘贴 outerHTML 进来
+    sel.value = '<div class="el-select" style="width:240px;"><!--[-->...</div>';
+    sel.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(sel.classList.contains('field-invalid')).toBe(true);
+    expect(root.querySelector('.toast.warn')).toBeTruthy();
+    expect(root.querySelector('.toast.warn').textContent).toMatch(/HTML/);
+  });
+
+  it('合法 CSS selector 输入不触发警告 / 不标红', () => {
+    openConfigUI();
+    const root = getUiRoot();
+    root.querySelectorAll('.tabs button')[1].click();
+    const items = root.querySelectorAll('.list-item');
+    items[0].click();
+
+    const sel = root.querySelector('input[data-field="selector"]');
+    sel.value = 'div.el-select__selection > div.el-select__placeholder';
+    sel.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(sel.classList.contains('field-invalid')).toBe(false);
+    expect(root.querySelector('.toast.warn')).toBeFalsy();
+  });
+
   it('点击遮罩关闭编辑器', () => {
     openConfigUI();
     const root = getUiRoot();

@@ -1230,6 +1230,7 @@
   font-size: 12px !important;
 }
 .selector-clickable:hover { border-color: #409eff; background: #ecf5ff; }
+.fields-table input.field-invalid { color: #f56c6c; border-color: #f56c6c; background: #fef0f0; }
 
 .selector-overlay {
   position: fixed; inset: 0;
@@ -1580,6 +1581,11 @@
       shadow.appendChild(t);
       setTimeout(() => t.remove(), 2200);
     }
+    function looksLikeHtml(s) {
+      if (!s) return false;
+      const trimmed = s.trim();
+      return /^<[a-zA-Z!]/.test(trimmed) || /^<\/[a-zA-Z]/.test(trimmed);
+    }
     function bindGlobal() {
       on(shadow, "input", (e) => {
         const t = e.target;
@@ -1821,6 +1827,17 @@
             const raw = (t.value || "").trim();
             if (raw) f.parallelGroup = raw;
             else delete f.parallelGroup;
+            return;
+          }
+          if (key === "selector") {
+            const raw = t.value || "";
+            if (looksLikeHtml(raw)) {
+              showToast("\u770B\u8D77\u6765\u662F HTML \u7247\u6BB5\uFF1Bselector \u5E94\u8BE5\u662F CSS \u9009\u62E9\u5668\uFF08#id / .class / [name=...]\uFF09", "warn");
+              t.classList.add("field-invalid");
+            } else {
+              t.classList.remove("field-invalid");
+            }
+            f.selector = raw;
             return;
           }
           f[key] = t.value;

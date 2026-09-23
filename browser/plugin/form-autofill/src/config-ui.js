@@ -146,6 +146,7 @@ const STYLES = `
   font-size: 12px !important;
 }
 .selector-clickable:hover { border-color: #409eff; background: #ecf5ff; }
+.fields-table input.field-invalid { color: #f56c6c; border-color: #f56c6c; background: #fef0f0; }
 
 .selector-overlay {
   position: fixed; inset: 0;
@@ -550,6 +551,17 @@ export function openConfigUI() {
     setTimeout(() => t.remove(), 2200);
   }
 
+  /**
+   * 简单嗅探：用户经常从 DevTools 复制 outerHTML 当 selector 粘贴进来。
+   * 真实场景里的 CSS selector 几乎不会以 "<" 或 "</" 开头。
+   * （不能 100% 准 —— 比如组合符 [data-x="<"] 是合法 CSS 不过极度罕见）
+   */
+  function looksLikeHtml(s) {
+    if (!s) return false;
+    const trimmed = s.trim();
+    return /^<[a-zA-Z!]/.test(trimmed) || /^<\/[a-zA-Z]/.test(trimmed);
+  }
+
   function bindGlobal() {
     on(shadow, 'input', (e) => {
       const t = e.target;
@@ -812,6 +824,19 @@ export function openConfigUI() {
           const raw = (t.value || '').trim();
           if (raw) f.parallelGroup = raw;
           else delete f.parallelGroup;
+          return;
+        }
+        if (key === 'selector') {
+          const raw = t.value || '';
+          // 用户经常粘贴 HTML 片段（从 DevTools "Copy outerHTML"）当 selector 用。
+          // 提示一下，并把可见输入框标红。
+          if (looksLikeHtml(raw)) {
+            showToast('看起来是 HTML 片段；selector 应该是 CSS 选择器（#id / .class / [name=...]）', 'warn');
+            t.classList.add('field-invalid');
+          } else {
+            t.classList.remove('field-invalid');
+          }
+          f.selector = raw;
           return;
         }
         f[key] = t.value;
