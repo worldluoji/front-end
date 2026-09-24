@@ -10,6 +10,7 @@ import {
   setNativeValue,
   triggerInputEvents,
   wait,
+  waitFor,
   observeUntil,
   fillInput,
 } from '../dom-utils.js';
@@ -77,14 +78,40 @@ function findElSelectContainer(el) {
   return null;
 }
 
+/**
+ * 面板是否真的可见。
+ * 关键：EP select/cascader 的 tooltip 默认 persistent=true，面板打开过一次后
+ * 即使关闭也留在 DOM 里，隐藏方式是 v-show 给祖先 .el-popper 设 display:none
+ * —— .el-select-dropdown 自身没有任何 display 标记。只查自身会把残留的
+ * 已关闭面板误判为可见（多 select 页面会拿错面板）。
+ */
+function isDropdownVisible(d) {
+  if (d.style.display === 'none') return false;
+  if (d.classList.contains('is-hidden')) return false;
+  const popper = d.closest('.el-popper');
+  if (popper && popper.style.display === 'none') return false;
+  return true;
+}
+
 function getVisibleDropdown() {
   const dropdowns = document.querySelectorAll(SELECTOR.elSelectDropdown);
   for (const d of dropdowns) {
-    if (d.style.display === 'none') continue;
-    if (d.classList.contains('is-hidden')) continue;
-    return d;
+    if (isDropdownVisible(d)) return d;
   }
   return null;
+}
+
+/**
+ * EP 2.6+：input 的 aria-controls 指向本 select 的 listbox id，直接定位
+ * "自己的"面板 —— 多个 select 同时有可见面板时不会拿错。
+ * 无 aria-controls（旧版本）返回 null，调用方回退到扫描可见面板。
+ */
+function findOwnDropdown(input) {
+  const listId = input.getAttribute('aria-controls');
+  if (!listId) return null;
+  const list = document.getElementById(listId);
+  const own = list ? list.closest(SELECTOR.elSelectDropdown) : null;
+  return own && isDropdownVisible(own) ? own : null;
 }
 
 function findOption(dropdown, value) {
@@ -119,8 +146,7 @@ function findOption(dropdown, value) {
 export function closeOpenSelectDropdowns() {
   const dropdowns = document.querySelectorAll(SELECTOR.elSelectDropdown);
   for (const d of dropdowns) {
-    if (d.style.display === 'none') continue;
-    if (d.classList.contains('is-hidden')) continue;
+    if (!isDropdownVisible(d)) continue;
     document.dispatchEvent(
       new MouseEvent('mousedown', { bubbles: true, cancelable: true })
     );
@@ -136,8 +162,7 @@ export function closeOpenSelectDropdowns() {
 export function closeOpenCascaderPanels() {
   const panels = document.querySelectorAll(SELECTOR.elCascaderPanel);
   for (const p of panels) {
-    if (p.style.display === 'none') continue;
-    if (p.classList.contains('is-hidden')) continue;
+    if (!isDropdownVisible(p)) continue;
     document.dispatchEvent(
       new MouseEvent('mousedown', { bubbles: true, cancelable: true })
     );
@@ -146,19 +171,27 @@ export function closeOpenCascaderPanels() {
   return false;
 }
 
+function logSelectFailure(reason, details) {
+  // eslint-disable-next-line no-console
+  console.warn(`[自动填充] el-select 填充失败: ${reason}`, details == null ? '' : details);
+  return false;
+}
+
 async function fillElSelect(el, value) {
   const container = findElSelectContainer(el);
-  if (!container) return false;
+  if (!container) return logSelectFailure('未找到 el-select 容器', el.className);
 
   const input = container.querySelector(SELECTOR.elSelectInput);
-  if (!input) return false;
+  if (!input) return logSelectFailure('容器内未找到 input', container.className);
 
   const strValue = value == null ? '' : String(value);
   if (input.value === strValue) return true;
 
-  // 清理：上一个失败留下的面板 / 并行组里别的 select 的面板
+  // 清理：上一个失败留下的面板 / 并行组里别的 select 的面板。
+  // 必须等旧面板真正隐藏：v-show 的 display:none 要等 leave 过渡（~300ms）
+  // 结束才落到 .el-popper 上，只 wait(10) 的话旧面板会被当成"可见"抢走。
   if (closeOpenSelectDropdowns()) {
-    await wait(10);
+    await waitFor(() => !getVisibleDropdown(), 500, 20);
   }
 
   // 可过滤 select（is-filterable / is-searchable）：input 是真实可输入文本框，
@@ -188,20 +221,56 @@ async function fillElSelect(el, value) {
   wrapper.click();
   input.dispatchEvent(new Event('focus', { bubbles: true }));
 
-  // 等待面板
-  const dropdown = await observeUntil(getVisibleDropdown, 2000);
+  // 等待面板。有 aria-controls（EP 2.6+）时只认自己的面板：wrapper click 后
+  // Vue 要等一个异步渲染才把自己的面板打开，这期间若回退到 getVisibleDropdown，
+  // 会拿到别的 select 正在关闭（leave 过渡中、display 尚未置 none）的面板。
+  // 用 waitFor 轮询而非 observeUntil —— 面板从关闭到打开往往只是 style 变化，
+  // MutationObserver 只听 childList 会漏。
+  const hasOwnRef = input.hasAttribute('aria-controls');
+  const dropdown = await waitFor(
+    () => findOwnDropdown(input) || (!hasOwnRef ? getVisibleDropdown() : null),
+    2000,
+    25
+  );
   if (!dropdown) {
+    const panels = Array.from(document.querySelectorAll(SELECTOR.elSelectDropdown));
+    const own = findOwnDropdown(input);
     closeOpenSelectDropdowns();
     input.dispatchEvent(new Event('blur', { bubbles: true }));
-    return false;
+    return logSelectFailure('2s 内未等到可见的下拉面板', {
+      ariaControls: input.getAttribute('aria-controls'),
+      ownPanelFound: !!document.getElementById(
+        input.getAttribute('aria-controls') || '__none__'
+      ),
+      ownPanelVisible: !!own,
+      panels: panels.map((d) => {
+        const popper = d.closest('.el-popper');
+        return {
+          cls: d.className,
+          own: own === d,
+          display: d.style.display || '(inline空)',
+          popperDisplay: popper ? popper.style.display || '(inline空)' : '(无popper祖先)',
+        };
+      }),
+    });
   }
   await wait(30); // 等渲染稳定
 
   const option = findOption(dropdown, value);
   if (!option) {
+    const candidates = Array.from(
+      dropdown.querySelectorAll(SELECTOR.elSelectItem)
+    ).map((li) => ({
+      text: (li.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40),
+      disabled: li.classList.contains('is-disabled'),
+    }));
     closeOpenSelectDropdowns();
     input.dispatchEvent(new Event('blur', { bubbles: true }));
-    return false;
+    return logSelectFailure('面板里找不到匹配选项', {
+      value: strValue,
+      isOwnPanel: findOwnDropdown(input) === dropdown,
+      candidates,
+    });
   }
 
   // 直接派 click：EP <el-option> 是 @click 触发 selectOptionClick，
@@ -211,6 +280,18 @@ async function fillElSelect(el, value) {
   option.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
   await wait(30);
+  // 校验 EP 真的选中了（is-selected / aria-selected 由 itemSelected 响应式驱动）。
+  // 不阻断返回，只提示 —— 部分自定义场景 EP 不加这些 class。
+  if (
+    !option.classList.contains('is-selected') &&
+    option.getAttribute('aria-selected') !== 'true'
+  ) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      '[自动填充] el-select: 已点击选项，但 30ms 内未见 is-selected/aria-selected，' +
+        'v-model 可能没有更新（若页面上选中值不对请检查配置的 value 与选项 label 是否一致）'
+    );
+  }
   return true;
 }
 
@@ -228,8 +309,13 @@ async function fillElSelectFilterable(container, input, value, strValue) {
   setNativeValue(input, strValue);
   input.dispatchEvent(new Event('input', { bubbles: true }));
 
-  // 等 EP 完成过滤 + 重渲染 dropdown
-  const dropdown = await observeUntil(getVisibleDropdown, 2000);
+  // 等 EP 完成过滤 + 重渲染 dropdown（同 fillElSelect：只认自己的面板 + 轮询）
+  const hasOwnRef = input.hasAttribute('aria-controls');
+  const dropdown = await waitFor(
+    () => findOwnDropdown(input) || (!hasOwnRef ? getVisibleDropdown() : null),
+    2000,
+    25
+  );
   if (!dropdown) {
     closeOpenSelectDropdowns();
     input.dispatchEvent(new Event('blur', { bubbles: true }));

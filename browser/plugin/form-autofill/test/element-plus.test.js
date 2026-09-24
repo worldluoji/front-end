@@ -604,6 +604,147 @@ describe('elementPlusFiller.fill - el-select', () => {
     expect(input.value).toBe('B');
   });
 
+  it('persistent 残留面板（.el-popper display:none）不能被当成可见面板', async () => {
+    // 复现 element-plus.org docs 场景：页面上排在前面的示例 select 打开过一次后，
+    // 面板留在 DOM 里（persistent tooltip），关闭方式是祖先 .el-popper 设
+    // display:none —— .el-select-dropdown 自身没有任何隐藏标记。
+    // 旧版 getVisibleDropdown 会先拿到这个 stale 面板，找不到目标选项 → 填充失败。
+    const stalePopper = document.createElement('div');
+    stalePopper.className = 'el-popper is-pure el-select__popper';
+    stalePopper.style.display = 'none';
+    const staleDropdown = document.createElement('div');
+    staleDropdown.className = 'el-select-dropdown';
+    const staleLi = document.createElement('li');
+    staleLi.className = 'el-select-dropdown__item';
+    staleLi.textContent = 'Option X';
+    staleLi.addEventListener('click', () => {
+      throw new Error('不应点击 stale 面板里的选项');
+    });
+    staleDropdown.appendChild(staleLi);
+    stalePopper.appendChild(staleDropdown);
+    document.body.appendChild(stalePopper);
+
+    // 当前 select：用户实际 DOM（含 aria-controls → list id）
+    const select = document.createElement('div');
+    select.className = 'el-select';
+    const wrapper = document.createElement('div');
+    wrapper.className = 'el-select__wrapper el-tooltip__trigger';
+    wrapper.tabIndex = -1;
+    const selection = document.createElement('div');
+    selection.className = 'el-select__selection';
+    const inputWrap = document.createElement('div');
+    inputWrap.className = 'el-select__selected-item el-select__input-wrapper is-hidden';
+    const input = document.createElement('input');
+    input.className = 'el-select__input';
+    input.type = 'text';
+    input.readOnly = true;
+    input.setAttribute('aria-controls', 'list-own');
+    inputWrap.appendChild(input);
+    selection.appendChild(inputWrap);
+    const placeholder = document.createElement('div');
+    placeholder.className = 'el-select__selected-item el-select__placeholder is-transparent';
+    placeholder.textContent = 'Select';
+    selection.appendChild(placeholder);
+    wrapper.appendChild(selection);
+    select.appendChild(wrapper);
+    document.body.appendChild(select);
+
+    // 本 select 的面板（也走 persistent：已在 DOM，popper display:none）
+    const ownPopper = document.createElement('div');
+    ownPopper.className = 'el-popper is-pure el-select__popper';
+    ownPopper.style.display = 'none';
+    const ownDropdown = document.createElement('div');
+    ownDropdown.className = 'el-select-dropdown';
+    const ownList = document.createElement('ul');
+    ownList.className = 'el-select-dropdown__list';
+    ownList.id = 'list-own';
+    let ownClicked = null;
+    ['Option A', 'Option B'].forEach((v) => {
+      const li = document.createElement('li');
+      li.className = 'el-select-dropdown__item';
+      li.textContent = v;
+      li.addEventListener('click', () => {
+        ownClicked = v;
+        input.value = v;
+        ownPopper.style.display = 'none';
+      });
+      ownList.appendChild(li);
+    });
+    ownDropdown.appendChild(ownList);
+    ownPopper.appendChild(ownDropdown);
+    document.body.appendChild(ownPopper);
+
+    wrapper.addEventListener('click', () => {
+      ownPopper.style.display = '';
+    });
+
+    const ok = await elementPlusFiller.fill(placeholder, 'Option A', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(ownClicked).toBe('Option A');
+    expect(input.value).toBe('Option A');
+  });
+
+  it('aria-controls 定位自己的面板：别的 select 面板可见时也不拿错', async () => {
+    // 页面上另一个 select 的面板可见且 document 顺序在前，且它正在关闭 ——
+    // 模拟 v-show + leave 过渡：document mousedown 后延迟 30ms 才 display:none。
+    // 同时本 select 的面板要等 wrapper click 后 15ms 才打开（Vue 异步渲染）。
+    // 旧实现（立即检查 findOwn||getVisible）会抓到别的 select 的面板。
+    const otherDropdown = document.createElement('div');
+    otherDropdown.className = 'el-select-dropdown';
+    const otherLi = document.createElement('li');
+    otherLi.className = 'el-select-dropdown__item';
+    otherLi.textContent = 'Option A';
+    otherLi.addEventListener('click', () => {
+      throw new Error('不应点击其他 select 的面板选项');
+    });
+    otherDropdown.appendChild(otherLi);
+    document.body.appendChild(otherDropdown);
+    document.addEventListener(
+      'mousedown',
+      () => setTimeout(() => { otherDropdown.style.display = 'none'; }, 30),
+      { once: true }
+    );
+
+    // 当前 select（v2.6+ 结构 + aria-controls）
+    const select = document.createElement('div');
+    select.className = 'el-select';
+    const wrapper = document.createElement('div');
+    wrapper.className = 'el-select__wrapper';
+    wrapper.tabIndex = -1;
+    const input = document.createElement('input');
+    input.className = 'el-select__input';
+    input.setAttribute('aria-controls', 'list-mine');
+    wrapper.appendChild(input);
+    select.appendChild(wrapper);
+    document.body.appendChild(select);
+
+    const ownDropdown = document.createElement('div');
+    ownDropdown.className = 'el-select-dropdown';
+    ownDropdown.style.display = 'none';
+    const ownList = document.createElement('ul');
+    ownList.id = 'list-mine';
+    const ownLi = document.createElement('li');
+    ownLi.className = 'el-select-dropdown__item';
+    ownLi.textContent = 'Option A';
+    let ownClicked = false;
+    ownLi.addEventListener('click', () => {
+      ownClicked = true;
+      input.value = 'Option A';
+      ownDropdown.style.display = 'none';
+    });
+    ownList.appendChild(ownLi);
+    ownDropdown.appendChild(ownList);
+    document.body.appendChild(ownDropdown);
+
+    wrapper.addEventListener('click', () => {
+      setTimeout(() => { ownDropdown.style.display = ''; }, 15);
+    });
+
+    const ok = await elementPlusFiller.fill(select, 'Option A', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(ownClicked).toBe(true);
+  });
+
 });
 describe('closeOpenSelectDropdowns', () => {
   it('没有可见 dropdown 时返回 false', () => {

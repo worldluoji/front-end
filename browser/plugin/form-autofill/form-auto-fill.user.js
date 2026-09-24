@@ -210,14 +210,26 @@
     }
     return null;
   }
+  function isDropdownVisible(d) {
+    if (d.style.display === "none") return false;
+    if (d.classList.contains("is-hidden")) return false;
+    const popper = d.closest(".el-popper");
+    if (popper && popper.style.display === "none") return false;
+    return true;
+  }
   function getVisibleDropdown() {
     const dropdowns = document.querySelectorAll(SELECTOR.elSelectDropdown);
     for (const d of dropdowns) {
-      if (d.style.display === "none") continue;
-      if (d.classList.contains("is-hidden")) continue;
-      return d;
+      if (isDropdownVisible(d)) return d;
     }
     return null;
+  }
+  function findOwnDropdown(input) {
+    const listId = input.getAttribute("aria-controls");
+    if (!listId) return null;
+    const list = document.getElementById(listId);
+    const own = list ? list.closest(SELECTOR.elSelectDropdown) : null;
+    return own && isDropdownVisible(own) ? own : null;
   }
   function findOption(dropdown, value) {
     const strValue = value == null ? "" : String(value);
@@ -238,8 +250,7 @@
   function closeOpenSelectDropdowns() {
     const dropdowns = document.querySelectorAll(SELECTOR.elSelectDropdown);
     for (const d of dropdowns) {
-      if (d.style.display === "none") continue;
-      if (d.classList.contains("is-hidden")) continue;
+      if (!isDropdownVisible(d)) continue;
       document.dispatchEvent(
         new MouseEvent("mousedown", { bubbles: true, cancelable: true })
       );
@@ -250,8 +261,7 @@
   function closeOpenCascaderPanels() {
     const panels = document.querySelectorAll(SELECTOR.elCascaderPanel);
     for (const p of panels) {
-      if (p.style.display === "none") continue;
-      if (p.classList.contains("is-hidden")) continue;
+      if (!isDropdownVisible(p)) continue;
       document.dispatchEvent(
         new MouseEvent("mousedown", { bubbles: true, cancelable: true })
       );
@@ -259,15 +269,19 @@
     }
     return false;
   }
+  function logSelectFailure(reason, details) {
+    console.warn(`[\u81EA\u52A8\u586B\u5145] el-select \u586B\u5145\u5931\u8D25: ${reason}`, details == null ? "" : details);
+    return false;
+  }
   async function fillElSelect(el, value) {
     const container = findElSelectContainer(el);
-    if (!container) return false;
+    if (!container) return logSelectFailure("\u672A\u627E\u5230 el-select \u5BB9\u5668", el.className);
     const input = container.querySelector(SELECTOR.elSelectInput);
-    if (!input) return false;
+    if (!input) return logSelectFailure("\u5BB9\u5668\u5185\u672A\u627E\u5230 input", container.className);
     const strValue = value == null ? "" : String(value);
     if (input.value === strValue) return true;
     if (closeOpenSelectDropdowns()) {
-      await wait(10);
+      await waitFor(() => !getVisibleDropdown(), 500, 20);
     }
     const isFilterable = container.matches(SELECTOR.elSelectFilterable) || !!container.querySelector(SELECTOR.elSelectFilterable) || !!container.closest(SELECTOR.elSelectFilterable);
     if (isFilterable && !input.readOnly) {
@@ -278,21 +292,58 @@
     wrapper.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
     wrapper.click();
     input.dispatchEvent(new Event("focus", { bubbles: true }));
-    const dropdown = await observeUntil(getVisibleDropdown, 2e3);
+    const hasOwnRef = input.hasAttribute("aria-controls");
+    const dropdown = await waitFor(
+      () => findOwnDropdown(input) || (!hasOwnRef ? getVisibleDropdown() : null),
+      2e3,
+      25
+    );
     if (!dropdown) {
+      const panels = Array.from(document.querySelectorAll(SELECTOR.elSelectDropdown));
+      const own = findOwnDropdown(input);
       closeOpenSelectDropdowns();
       input.dispatchEvent(new Event("blur", { bubbles: true }));
-      return false;
+      return logSelectFailure("2s \u5185\u672A\u7B49\u5230\u53EF\u89C1\u7684\u4E0B\u62C9\u9762\u677F", {
+        ariaControls: input.getAttribute("aria-controls"),
+        ownPanelFound: !!document.getElementById(
+          input.getAttribute("aria-controls") || "__none__"
+        ),
+        ownPanelVisible: !!own,
+        panels: panels.map((d) => {
+          const popper = d.closest(".el-popper");
+          return {
+            cls: d.className,
+            own: own === d,
+            display: d.style.display || "(inline\u7A7A)",
+            popperDisplay: popper ? popper.style.display || "(inline\u7A7A)" : "(\u65E0popper\u7956\u5148)"
+          };
+        })
+      });
     }
     await wait(30);
     const option = findOption(dropdown, value);
     if (!option) {
+      const candidates = Array.from(
+        dropdown.querySelectorAll(SELECTOR.elSelectItem)
+      ).map((li) => ({
+        text: (li.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40),
+        disabled: li.classList.contains("is-disabled")
+      }));
       closeOpenSelectDropdowns();
       input.dispatchEvent(new Event("blur", { bubbles: true }));
-      return false;
+      return logSelectFailure("\u9762\u677F\u91CC\u627E\u4E0D\u5230\u5339\u914D\u9009\u9879", {
+        value: strValue,
+        isOwnPanel: findOwnDropdown(input) === dropdown,
+        candidates
+      });
     }
     option.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     await wait(30);
+    if (!option.classList.contains("is-selected") && option.getAttribute("aria-selected") !== "true") {
+      console.warn(
+        "[\u81EA\u52A8\u586B\u5145] el-select: \u5DF2\u70B9\u51FB\u9009\u9879\uFF0C\u4F46 30ms \u5185\u672A\u89C1 is-selected/aria-selected\uFF0Cv-model \u53EF\u80FD\u6CA1\u6709\u66F4\u65B0\uFF08\u82E5\u9875\u9762\u4E0A\u9009\u4E2D\u503C\u4E0D\u5BF9\u8BF7\u68C0\u67E5\u914D\u7F6E\u7684 value \u4E0E\u9009\u9879 label \u662F\u5426\u4E00\u81F4\uFF09"
+      );
+    }
     return true;
   }
   async function fillElSelectFilterable(container, input, value, strValue) {
@@ -301,7 +352,12 @@
     triggerInputEvents(input);
     setNativeValue(input, strValue);
     input.dispatchEvent(new Event("input", { bubbles: true }));
-    const dropdown = await observeUntil(getVisibleDropdown, 2e3);
+    const hasOwnRef = input.hasAttribute("aria-controls");
+    const dropdown = await waitFor(
+      () => findOwnDropdown(input) || (!hasOwnRef ? getVisibleDropdown() : null),
+      2e3,
+      25
+    );
     if (!dropdown) {
       closeOpenSelectDropdowns();
       input.dispatchEvent(new Event("blur", { bubbles: true }));
