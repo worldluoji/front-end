@@ -814,6 +814,108 @@ describe('elementPlusFiller.fill - el-select', () => {
   });
 
 });
+describe('elementPlusFiller.fill - el-select 按序号 #N 选择', () => {
+  // options: [{ label, hidden }] —— hidden 模拟 v-show 过滤（inline display:none）
+  function buildIndexSelect(options, { filterable = false } = {}) {
+    const select = document.createElement('div');
+    select.className = filterable ? 'el-select is-filterable' : 'el-select';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'el-input';
+
+    const input = document.createElement('input');
+    input.className = 'el-input__inner';
+    input.type = 'text';
+    if (!filterable) input.readOnly = true;
+    wrapper.appendChild(input);
+    select.appendChild(wrapper);
+    document.body.appendChild(select);
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'el-select-dropdown';
+    dropdown.style.display = 'none';
+    const items = options.map(({ label, hidden }) => {
+      const li = document.createElement('li');
+      li.className = 'el-select-dropdown__item';
+      li.textContent = label;
+      if (hidden) li.style.display = 'none';
+      li.addEventListener('click', () => {
+        input.value = label;
+        dropdown.style.display = 'none';
+      });
+      dropdown.appendChild(li);
+      return li;
+    });
+    document.body.appendChild(dropdown);
+    wrapper.addEventListener('click', () => {
+      dropdown.style.display = '';
+    });
+
+    return { select, wrapper, input, dropdown, items };
+  }
+
+  it('#1 选中第一个可见项', async () => {
+    const { input } = buildIndexSelect([
+      { label: 'A' },
+      { label: 'B' },
+      { label: 'C' },
+    ]);
+    const ok = await elementPlusFiller.fill(input, '#1', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('A');
+  });
+
+  it('#2 跳过被过滤（display:none）的项，按可见序号计数', async () => {
+    const { input } = buildIndexSelect([
+      { label: 'A' },
+      { label: 'B', hidden: true },
+      { label: 'C' },
+      { label: 'D' },
+    ]);
+    const ok = await elementPlusFiller.fill(input, '#2', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('C');
+  });
+
+  it('label 恰好是 "#9" 的选项优先按文本匹配，不被当成序号', async () => {
+    // '#9' 按序号会越界（只有 2 项），按 label 精确匹配命中第 1 项
+    const { input } = buildIndexSelect([
+      { label: '#9' },
+      { label: 'other' },
+    ]);
+    const ok = await elementPlusFiller.fill(input, '#9', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('#9');
+  });
+
+  it('#N 越界返回 false', async () => {
+    const { input } = buildIndexSelect([{ label: 'A' }, { label: 'B' }]);
+    const ok = await elementPlusFiller.fill(input, '#7', { type: 'select' });
+    expect(ok).toBe(false);
+    expect(input.value).toBe('');
+  });
+
+  it('#0 非法，返回 false', async () => {
+    const { input } = buildIndexSelect([{ label: 'A' }]);
+    const ok = await elementPlusFiller.fill(input, '#0', { type: 'select' });
+    expect(ok).toBe(false);
+  });
+
+  it('可过滤 select + #N：不走输入过滤路径，直接按序号点', async () => {
+    const { input } = buildIndexSelect(
+      [{ label: 'A' }, { label: 'B' }],
+      { filterable: true }
+    );
+    const seenInputEvents = [];
+    input.addEventListener('input', (e) => seenInputEvents.push(e.target.value));
+
+    const ok = await elementPlusFiller.fill(input, '#2', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('B');
+    // 没有把 "#2" 当过滤关键词输入过
+    expect(seenInputEvents).not.toContain('#2');
+  });
+});
 describe('closeOpenSelectDropdowns', () => {
   it('没有可见 dropdown 时返回 false', () => {
     expect(closeOpenSelectDropdowns()).toBe(false);

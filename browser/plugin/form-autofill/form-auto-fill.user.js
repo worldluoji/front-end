@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         通用表单自动填充（多页面+快捷键版 · Element UI / Plus）
 // @namespace    http://tampermonkey.net/
-// @version      3.1.3
+// @version      3.2.0
 // @description  支持多页面配置 + Element UI / Element Plus 组件 + 原生表单，含可视化配置页（右下角浮动按钮 / Ctrl+Alt+C）
 // @author       You
 // @match        *://*/*
@@ -245,6 +245,19 @@
       if (opt.getAttribute("disabled") !== null) continue;
       if (normalize(opt.textContent) === target) return opt;
     }
+    const m = /^#(\d+)$/.exec(strValue);
+    if (m) {
+      const n = Number(m[1]);
+      if (n >= 1) {
+        let count = 0;
+        for (const opt of items) {
+          if (opt.style.display === "none") continue;
+          count++;
+          if (count === n) return opt;
+        }
+      }
+      return null;
+    }
     return null;
   }
   function closeOpenSelectDropdowns() {
@@ -284,7 +297,8 @@
       await waitFor(() => !getVisibleDropdown(), 500, 20);
     }
     const isFilterable = container.matches(SELECTOR.elSelectFilterable) || !!container.querySelector(SELECTOR.elSelectFilterable) || !!container.closest(SELECTOR.elSelectFilterable);
-    if (isFilterable && !input.readOnly) {
+    const isIndexValue = /^#\d+$/.test(strValue);
+    if (isFilterable && !input.readOnly && !isIndexValue) {
       return fillElSelectFilterable(container, input, value, strValue);
     }
     const wrapper = container.querySelector(SELECTOR.elSelectWrapper) || container.closest(SELECTOR.elSelectWrapper) || input;

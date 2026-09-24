@@ -150,6 +150,13 @@ window.__AUTOFILL_CONFIG__  >  localStorage(form_autofill_config_v3)  >  DEFAULT
 
 每条 field 由 `selector` + `value` + `type` 组成，**可选** `parallelGroup` 控制是否与其他字段并行。
 
+### select 的 value：按文本匹配，或按序号 `#N`
+
+- 默认按选项的 `data-value` / 文本（label）精确匹配
+- value 写成 `#N`（N 从 1 起）则直接选中面板中从上往下第 N 个**可见**选项，被 v-show 过滤掉的项不计数 —— 适合选项多、label 难抄的场景
+- 若某个选项的文本恰好就是 `#2`，仍优先按文本匹配（序号只在文本都匹配不上时生效）
+- 可过滤（filterable）的下拉用 `#N` 时不会把 `#2` 输进过滤框，仍是直接展开面板按序号点
+
 ### 并行组（同名字段并发填充）
 
 默认所有字段按数组顺序**串行**填充 —— 这是有意为之，避免破坏 select 级联（A 选了才出 B 的 options）和输入框联动（A 的 input 事件跑完才推算 B）。

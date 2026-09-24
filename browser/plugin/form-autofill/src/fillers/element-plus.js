@@ -130,6 +130,22 @@ function findOption(dropdown, value) {
     if (opt.getAttribute('disabled') !== null) continue;
     if (normalize(opt.textContent) === target) return opt;
   }
+  // 3) #N 按序号取面板中第 N 个"可见"选项（1 起）—— data-value/label 都不匹配
+  //    时才走这里，所以选项文本恰好是 "#2" 时仍按 label 匹配。v-show 过滤掉的
+  //    项（inline display:none）不计数，用户看到第几个就填第几个
+  const m = /^#(\d+)$/.exec(strValue);
+  if (m) {
+    const n = Number(m[1]);
+    if (n >= 1) {
+      let count = 0;
+      for (const opt of items) {
+        if (opt.style.display === 'none') continue;
+        count++;
+        if (count === n) return opt;
+      }
+    }
+    return null;
+  }
   return null;
 }
 
@@ -204,7 +220,9 @@ async function fillElSelect(el, value) {
     container.matches(SELECTOR.elSelectFilterable)
     || !!container.querySelector(SELECTOR.elSelectFilterable)
     || !!container.closest(SELECTOR.elSelectFilterable);
-  if (isFilterable && !input.readOnly) {
+  // #N 按序号选择时不走输入过滤路径（否则会把 "#2" 当关键词输进过滤框）
+  const isIndexValue = /^#\d+$/.test(strValue);
+  if (isFilterable && !input.readOnly && !isIndexValue) {
     return fillElSelectFilterable(container, input, value, strValue);
   }
 
