@@ -282,8 +282,11 @@ async function fillElSelect(el, value) {
   await wait(30);
   // 校验 EP 真的选中了（is-selected / aria-selected 由 itemSelected 响应式驱动）。
   // 不阻断返回，只提示 —— 部分自定义场景 EP 不加这些 class。
+  // Element UI 2（Vue2）的选中 class 是 selected，且无 aria-selected —— 一并接受，
+  // 否则每次 EU2 填充都会误报"v-model 可能没有更新"。
   if (
     !option.classList.contains('is-selected') &&
+    !option.classList.contains('selected') &&
     option.getAttribute('aria-selected') !== 'true'
   ) {
     // eslint-disable-next-line no-console

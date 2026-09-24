@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         通用表单自动填充（多页面+快捷键版 · Element UI / Plus）
 // @namespace    http://tampermonkey.net/
-// @version      3.1.2
+// @version      3.1.3
 // @description  支持多页面配置 + Element UI / Element Plus 组件 + 原生表单，含可视化配置页（右下角浮动按钮 / Ctrl+Alt+C）
 // @author       You
 // @match        *://*/*
@@ -339,7 +339,7 @@
     }
     option.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     await wait(30);
-    if (!option.classList.contains("is-selected") && option.getAttribute("aria-selected") !== "true") {
+    if (!option.classList.contains("is-selected") && !option.classList.contains("selected") && option.getAttribute("aria-selected") !== "true") {
       console.warn(
         "[\u81EA\u52A8\u586B\u5145] el-select: \u5DF2\u70B9\u51FB\u9009\u9879\uFF0C\u4F46 30ms \u5185\u672A\u89C1 is-selected/aria-selected\uFF0Cv-model \u53EF\u80FD\u6CA1\u6709\u66F4\u65B0\uFF08\u82E5\u9875\u9762\u4E0A\u9009\u4E2D\u503C\u4E0D\u5BF9\u8BF7\u68C0\u67E5\u914D\u7F6E\u7684 value \u4E0E\u9009\u9879 label \u662F\u5426\u4E00\u81F4\uFF09"
       );

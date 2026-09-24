@@ -745,6 +745,74 @@ describe('elementPlusFiller.fill - el-select', () => {
     expect(ownClicked).toBe(true);
   });
 
+  it('Element UI 2 (Vue2)：readonly el-input__inner + append-to-body 持久化 dropdown', async () => {
+    // 忠实复刻 Element UI 2.15 真实 DOM + 事件行为（与 EP 2.6 的差异）：
+    //   - 触发器是 .el-input 根 div（@click.native="toggleMenu"），input 是 readonly
+    //   - dropdown 持久挂在 body：.el-select-dropdown.el-popper，开合是 v-show 改
+    //     自身 style.display（不是 childList 增删）
+    //   - option 选中态 class 是 selected（EP 是 is-selected），无 aria-controls
+    const select = document.createElement('div');
+    select.className = 'el-select';
+    const elInput = document.createElement('div');
+    elInput.className = 'el-input el-input--suffix';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.readOnly = true;
+    input.autocomplete = 'off';
+    input.placeholder = '请选择';
+    input.className = 'el-input__inner';
+    elInput.appendChild(input);
+    select.appendChild(elInput);
+    document.body.appendChild(select);
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'el-select-dropdown el-popper';
+    dropdown.style.display = 'none';
+    const list = document.createElement('ul');
+    list.className = 'el-select-dropdown__list';
+    const labels = ['技术部', '市场部'];
+    const items = labels.map((label) => {
+      const li = document.createElement('li');
+      li.className = 'el-select-dropdown__item';
+      const span = document.createElement('span');
+      span.textContent = label;
+      li.appendChild(span);
+      list.appendChild(li);
+      return li;
+    });
+    dropdown.appendChild(list);
+    document.body.appendChild(dropdown);
+
+    // @click.native="toggleMenu" + v-show（Vue 异步渲染）
+    let open = false;
+    elInput.addEventListener('click', () => {
+      open = !open;
+      setTimeout(() => {
+        dropdown.style.display = open ? '' : 'none';
+      }, 0);
+    });
+
+    // el-option @click.stop="selectOptionClick" → handleOptionClick：
+    // 写 selectedLabel + 加 selected class + 关面板（leave 过渡后 display:none）
+    items.forEach((li, idx) => {
+      li.addEventListener('click', (e) => {
+        e.stopPropagation();
+        input.value = labels[idx];
+        items.forEach((o) => o.classList.remove('selected'));
+        li.classList.add('selected');
+        open = false;
+        setTimeout(() => {
+          dropdown.style.display = 'none';
+        }, 100);
+      });
+    });
+
+    const ok = await elementPlusFiller.fill(input, '技术部', { type: 'select' });
+    expect(ok).toBe(true);
+    expect(input.value).toBe('技术部');
+    expect(items[0].classList.contains('selected')).toBe(true);
+  });
+
 });
 describe('closeOpenSelectDropdowns', () => {
   it('没有可见 dropdown 时返回 false', () => {
