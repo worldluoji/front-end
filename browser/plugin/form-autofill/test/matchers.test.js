@@ -14,6 +14,13 @@ describe('isUrlMatch', () => {
     expect(isUrlMatch(/\/admin\//, 'https://x.com/order/apply')).toBe(false);
   });
 
+  it('带 /g 的正则复用同一对象多次匹配结果稳定（lastIndex 归零）', () => {
+    const re = /\/test\/\d+/g;
+    expect(isUrlMatch(re, 'https://x.com/test/1')).toBe(true);
+    expect(isUrlMatch(re, 'https://x.com/test/2')).toBe(true);
+    expect(isUrlMatch(re, 'https://x.com/test/3')).toBe(true);
+  });
+
   it('null / undefined 返回 false', () => {
     expect(isUrlMatch(null, 'https://x.com')).toBe(false);
     expect(isUrlMatch(undefined, 'https://x.com')).toBe(false);

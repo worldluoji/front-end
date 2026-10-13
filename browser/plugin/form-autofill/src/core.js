@@ -124,6 +124,76 @@ export async function runSchedule(schedule) {
 }
 
 /**
+ * 填充串行化：同一时刻只跑一个调度。运行中收到的新请求合并成最新一个，
+ * 当前调度结束后尾随执行一次。
+ * 不加锁时，填充引起的 DOM 变动（下拉面板挂载/卸载）会再触发 MutationObserver
+ * 开启新一轮 runSchedule，多轮并发导致同一字段重复填、el-select 面板互相关闭，
+ * 表现为"多个字段时有时能填有时不能"。
+ */
+let fillRunning = false;
+let fillQueued = null; // { task, manual }
+
+/**
+ * @param {() => Promise<void>} task
+ * @param {{ manual?: boolean }} [opts] - manual=true 表示重填请求（清标记），
+ *   合并时优先保留：它清标记 + 填全部字段，是 auto 请求（跳过已填）的超集
+ */
+function enqueueFill(task, opts = {}) {
+  const req = { task, manual: !!opts.manual };
+  if (fillRunning) {
+    if (!fillQueued || req.manual || !fillQueued.manual) fillQueued = req;
+    return;
+  }
+  return drainFill(req);
+}
+
+async function drainFill(req) {
+  fillRunning = true;
+  let current = req;
+  while (current) {
+    try {
+      await current.task();
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('[自动填充] 填充执行异常：', e);
+    }
+    current = fillQueued;
+    fillQueued = null;
+  }
+  fillRunning = false;
+}
+
+/**
+ * 用最新配置执行一轮填充（配置在任务执行时才解析，排队的尾随执行不会用过期配置）
+ * @param {string} [profileOverride] - 临时指定 profile
+ * @param {boolean} clearMarks - 填充前清除已填充标记（手动触发需要重填）
+ */
+async function fillOnce(profileOverride, clearMarks) {
+  const cfg = resolveConfig();
+  const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
+  if (!config) return;
+
+  ensureProfiles(config);
+  const profileName =
+    profileOverride && config.profiles[profileOverride]
+      ? profileOverride
+      : getActiveProfile(config);
+  const fields = config.profiles[profileName]?.fields || [];
+  if (fields.length === 0) return;
+
+  // 手动触发时，先清标记允许重新填充（不管 AUTO_FILL_ON_LOAD 是否开启 —— 手动按快捷键
+  // 的目的就是再填一次当前 profile 的字段）
+  if (clearMarks) {
+    fields.forEach((item) => {
+      const el = querySelectorSafe(document, item.selector);
+      if (el) clearFilled(el);
+    });
+  }
+
+  await runSchedule(buildSchedule(fields));
+}
+
+/**
  * 根据当前 URL 找到的页面配置；找不到则 null
  */
 export function getCurrentConfig() {
@@ -143,29 +213,11 @@ export function getCurrentConfig() {
 
 /**
  * 执行一次完整填充（手动触发或自动模式首次）
+ * 并发调用时自动排队：当前调度结束后用最新配置再跑一次
  * @param {string} [profileOverride] - 临时用指定 profile 的 fields 填充（不修改持久化的 active profile）
  */
-export async function executeFill(profileOverride) {
-  const cfg = resolveConfig();
-  const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
-  if (!config) return;
-
-  ensureProfiles(config);
-  const profileName =
-    profileOverride && config.profiles[profileOverride]
-      ? profileOverride
-      : getActiveProfile(config);
-  const fields = config.profiles[profileName]?.fields || [];
-  if (fields.length === 0) return;
-
-  // 手动触发时，先清标记允许重新填充（不管 AUTO_FILL_ON_LOAD 是否开启 —— 手动按快捷键
-  // 的目的就是再填一次当前 profile 的字段）
-  fields.forEach((item) => {
-    const el = querySelectorSafe(document, item.selector);
-    if (el) clearFilled(el);
-  });
-
-  await runSchedule(buildSchedule(fields));
+export function executeFill(profileOverride) {
+  return enqueueFill(() => fillOnce(profileOverride, true), { manual: true });
 }
 
 /**
@@ -175,32 +227,46 @@ export function autoFillIfEnabled() {
   const cfg = resolveConfig();
   if (!cfg.AUTO_FILL_ON_LOAD) return;
 
-  const observer = new MutationObserver(() => {
-    const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
-    if (!config) return;
-
+  const getFields = () => {
+    // 每次回调重新解析配置，避免闭包持有过期的 PAGE_CONFIGS（配置更新事件不会重建 observer）
+    const config = findMatchingConfig(resolveConfig().PAGE_CONFIGS, window.location.href);
+    if (!config) return null;
     ensureProfiles(config);
-    const fields = getActiveFields(config);
-    if (fields.length === 0) return;
+    return getActiveFields(config);
+  };
 
-    let allReady = true;
-    for (const item of fields) {
+  const isAllFilled = (fields) =>
+    fields.length > 0 &&
+    fields.every((item) => {
       const el = querySelectorSafe(document, item.selector);
-      if (!el || !isFilled(el)) {
-        allReady = false;
-        break;
-      }
-    }
-    if (allReady) {
-      observer.disconnect();
-      // eslint-disable-next-line no-console
-      console.log('[自动填充] 所有表单项已填充完毕');
+      return !!el && isFilled(el);
+    });
+
+  let done = false;
+  const finish = (observer) => {
+    if (done) return;
+    done = true;
+    observer.disconnect();
+    // eslint-disable-next-line no-console
+    console.log('[自动填充] 所有表单项已填充完毕');
+  };
+
+  const observer = new MutationObserver(() => {
+    if (done) return;
+
+    const fields = getFields();
+    if (!fields || fields.length === 0) return;
+
+    if (isAllFilled(fields)) {
+      finish(observer);
       return;
     }
 
-    (async () => {
-      await runSchedule(buildSchedule(fields));
-    })();
+    enqueueFill(async () => {
+      await fillOnce(undefined, false);
+      const latest = getFields();
+      if (latest && isAllFilled(latest)) finish(observer);
+    });
   });
 
   if (document.body) {

@@ -688,7 +688,10 @@
   // src/matchers.js
   function isUrlMatch(pattern, currentUrl) {
     if (pattern == null) return false;
-    if (pattern instanceof RegExp) return pattern.test(currentUrl);
+    if (pattern instanceof RegExp) {
+      pattern.lastIndex = 0;
+      return pattern.test(currentUrl);
+    }
     if (typeof pattern === "string") return currentUrl.includes(pattern);
     return false;
   }
@@ -988,7 +991,31 @@
       }
     }
   }
-  async function executeFill(profileOverride) {
+  var fillRunning = false;
+  var fillQueued = null;
+  function enqueueFill(task, opts = {}) {
+    const req = { task, manual: !!opts.manual };
+    if (fillRunning) {
+      if (!fillQueued || req.manual || !fillQueued.manual) fillQueued = req;
+      return;
+    }
+    return drainFill(req);
+  }
+  async function drainFill(req) {
+    fillRunning = true;
+    let current = req;
+    while (current) {
+      try {
+        await current.task();
+      } catch (e) {
+        console.error("[\u81EA\u52A8\u586B\u5145] \u586B\u5145\u6267\u884C\u5F02\u5E38\uFF1A", e);
+      }
+      current = fillQueued;
+      fillQueued = null;
+    }
+    fillRunning = false;
+  }
+  async function fillOnce(profileOverride, clearMarks) {
     var _a3;
     const cfg = resolveConfig();
     const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
@@ -997,37 +1024,50 @@
     const profileName = profileOverride && config.profiles[profileOverride] ? profileOverride : getActiveProfile(config);
     const fields = ((_a3 = config.profiles[profileName]) == null ? void 0 : _a3.fields) || [];
     if (fields.length === 0) return;
-    fields.forEach((item) => {
-      const el = querySelectorSafe(document, item.selector);
-      if (el) clearFilled(el);
-    });
+    if (clearMarks) {
+      fields.forEach((item) => {
+        const el = querySelectorSafe(document, item.selector);
+        if (el) clearFilled(el);
+      });
+    }
     await runSchedule(buildSchedule(fields));
+  }
+  function executeFill(profileOverride) {
+    return enqueueFill(() => fillOnce(profileOverride, true), { manual: true });
   }
   function autoFillIfEnabled() {
     const cfg = resolveConfig();
     if (!cfg.AUTO_FILL_ON_LOAD) return;
-    const observer = new MutationObserver(() => {
-      const config = findMatchingConfig(cfg.PAGE_CONFIGS, window.location.href);
-      if (!config) return;
+    const getFields = () => {
+      const config = findMatchingConfig(resolveConfig().PAGE_CONFIGS, window.location.href);
+      if (!config) return null;
       ensureProfiles(config);
-      const fields = getActiveFields(config);
-      if (fields.length === 0) return;
-      let allReady = true;
-      for (const item of fields) {
-        const el = querySelectorSafe(document, item.selector);
-        if (!el || !isFilled(el)) {
-          allReady = false;
-          break;
-        }
-      }
-      if (allReady) {
-        observer.disconnect();
-        console.log("[\u81EA\u52A8\u586B\u5145] \u6240\u6709\u8868\u5355\u9879\u5DF2\u586B\u5145\u5B8C\u6BD5");
+      return getActiveFields(config);
+    };
+    const isAllFilled = (fields) => fields.length > 0 && fields.every((item) => {
+      const el = querySelectorSafe(document, item.selector);
+      return !!el && isFilled(el);
+    });
+    let done = false;
+    const finish = (observer2) => {
+      if (done) return;
+      done = true;
+      observer2.disconnect();
+      console.log("[\u81EA\u52A8\u586B\u5145] \u6240\u6709\u8868\u5355\u9879\u5DF2\u586B\u5145\u5B8C\u6BD5");
+    };
+    const observer = new MutationObserver(() => {
+      if (done) return;
+      const fields = getFields();
+      if (!fields || fields.length === 0) return;
+      if (isAllFilled(fields)) {
+        finish(observer);
         return;
       }
-      (async () => {
-        await runSchedule(buildSchedule(fields));
-      })();
+      enqueueFill(async () => {
+        await fillOnce(void 0, false);
+        const latest = getFields();
+        if (latest && isAllFilled(latest)) finish(observer);
+      });
     });
     if (document.body) {
       observer.observe(document.body, { childList: true, subtree: true });

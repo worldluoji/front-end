@@ -10,7 +10,11 @@
  */
 export function isUrlMatch(pattern, currentUrl) {
   if (pattern == null) return false;
-  if (pattern instanceof RegExp) return pattern.test(currentUrl);
+  if (pattern instanceof RegExp) {
+    // 带 /g 的正则 .test() 依赖 lastIndex，同一对象复用时会交替返回 true/false
+    pattern.lastIndex = 0;
+    return pattern.test(currentUrl);
+  }
   if (typeof pattern === 'string') return currentUrl.includes(pattern);
   return false;
 }

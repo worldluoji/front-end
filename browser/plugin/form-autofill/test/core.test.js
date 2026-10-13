@@ -1,5 +1,13 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { tryFill, executeFill, buildSchedule, runSchedule } from '../src/core.js';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import {
+  tryFill,
+  executeFill,
+  buildSchedule,
+  runSchedule,
+  autoFillIfEnabled,
+} from '../src/core.js';
+import { fillers } from '../src/fillers/index.js';
+import { waitFor } from '../src/dom-utils.js';
 
 beforeEach(() => {
   document.body.innerHTML = '';
@@ -688,5 +696,178 @@ describe('无效 CSS selector 的容错', () => {
   it('非字符串 selector 不抛错', async () => {
     const ok = await tryFill({ selector: null, value: 'v', type: 'input' });
     expect(ok).toBe(false);
+  });
+});
+
+describe('填充串行化（防并发踩踏）', () => {
+  let fakeFiller;
+
+  beforeEach(() => {
+    window.history.replaceState({}, '', '/');
+    fakeFiller = {
+      name: 'slow-test',
+      active: 0,
+      maxActive: 0,
+      calls: 0,
+      match(el) {
+        return el.id === 'slow';
+      },
+      async fill(el, value) {
+        this.active += 1;
+        this.maxActive = Math.max(this.maxActive, this.active);
+        this.calls += 1;
+        el.value = value;
+        await new Promise((r) => setTimeout(r, 30));
+        this.active -= 1;
+        return true;
+      },
+    };
+    fillers.unshift(fakeFiller);
+  });
+
+  afterEach(() => {
+    const idx = fillers.indexOf(fakeFiller);
+    if (idx !== -1) fillers.splice(idx, 1);
+  });
+
+  it('重叠的 executeFill 不并发执行，且尾随执行用最新配置', async () => {
+    const slow = document.createElement('input');
+    slow.id = 'slow';
+    document.body.appendChild(slow);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '串行化',
+          urlPattern: '/',
+          fields: [{ selector: '#slow', value: 'first', type: 'input' }],
+        },
+      ],
+    };
+
+    const p1 = executeFill();
+    // p1 已开始执行（配置已解析为 first），此时改配置再触发第二次
+    window.__AUTOFILL_CONFIG__.PAGE_CONFIGS[0].fields[0].value = 'second';
+    const p2 = executeFill(); // 排队
+
+    await Promise.all([p1, p2]);
+    await waitFor(() => fakeFiller.calls >= 2, 1000, 20);
+
+    expect(fakeFiller.maxActive).toBe(1); // 从不并发
+    expect(fakeFiller.calls).toBe(2); // 尾随执行重填了一次
+    expect(slow.value).toBe('second'); // 尾随执行解析的是最新配置
+  });
+
+  it('大量并发请求合并为一次尾随执行', async () => {
+    const slow = document.createElement('input');
+    slow.id = 'slow';
+    document.body.appendChild(slow);
+
+    window.__AUTOFILL_CONFIG__ = {
+      PAGE_CONFIGS: [
+        {
+          name: '合并',
+          urlPattern: '/',
+          fields: [{ selector: '#slow', value: 'v', type: 'input' }],
+        },
+      ],
+    };
+
+    const running = [executeFill()];
+    for (let i = 0; i < 5; i += 1) running.push(executeFill());
+    await Promise.all(running);
+    await new Promise((r) => setTimeout(r, 250));
+
+    expect(fakeFiller.maxActive).toBe(1);
+    // 1 次首发 + 合并后的 1 次尾随 = 2，而不是 6
+    expect(fakeFiller.calls).toBe(2);
+  });
+
+  it('排队期间收到 auto 请求不会顶掉已排队的手动请求', async () => {
+    const slow = document.createElement('input');
+    slow.id = 'slow';
+    document.body.appendChild(slow);
+
+    window.__AUTOFILL_CONFIG__ = {
+      AUTO_FILL_ON_LOAD: true,
+      PAGE_CONFIGS: [
+        {
+          name: '顶替',
+          urlPattern: '/',
+          fields: [{ selector: '#slow', value: 'v', type: 'input' }],
+        },
+      ],
+    };
+    autoFillIfEnabled(); // 注册一个会发 auto 请求的 observer
+
+    executeFill(); // p1 开始运行
+    executeFill(); // p2 排队（manual）
+    const probe = document.createElement('div');
+    document.body.appendChild(probe); // mutation → observer 发 auto 请求，不应顶掉 p2
+
+    await new Promise((r) => setTimeout(r, 300));
+    // p1 + p2 共 2 次；若 auto 顶掉 p2，p2 不跑且 p1 已把字段标记 filled，只会是 1 次
+    expect(fakeFiller.calls).toBe(2);
+    expect(fakeFiller.maxActive).toBe(1);
+
+    // 清理：再触发一次变动，observer 发现全部已填会自行 disconnect，不泄漏到后续测试
+    const probe2 = document.createElement('div');
+    document.body.appendChild(probe2);
+    await new Promise((r) => setTimeout(r, 50));
+  });
+});
+
+describe('autoFillIfEnabled', () => {
+  beforeEach(() => {
+    window.history.replaceState({}, '', '/auto');
+    window.__AUTOFILL_CONFIG__ = {
+      AUTO_FILL_ON_LOAD: true,
+      PAGE_CONFIGS: [
+        {
+          name: '自动',
+          urlPattern: '/auto',
+          fields: [
+            { selector: '#f1', value: 'a', type: 'input' },
+            { selector: '#f2', value: 'b', type: 'input' },
+          ],
+        },
+      ],
+    };
+  });
+
+  it('元素出现后自动填充，填充完毕后断开 observer', async () => {
+    autoFillIfEnabled();
+
+    const i1 = document.createElement('input');
+    i1.id = 'f1';
+    const i2 = document.createElement('input');
+    i2.id = 'f2';
+    document.body.append(i1, i2);
+
+    await waitFor(() => i1.value === 'a' && i2.value === 'b', 1000, 20);
+    expect(i1.value).toBe('a');
+    expect(i2.value).toBe('b');
+
+    // 再触发一次 DOM 变动：全部已填充 → observer 应断开，不留泄漏
+    const probe = document.createElement('div');
+    document.body.appendChild(probe);
+    await new Promise((r) => setTimeout(r, 50));
+    const probe2 = document.createElement('div');
+    document.body.appendChild(probe2);
+    await new Promise((r) => setTimeout(r, 50));
+    // observer 断开后不再重填（已填充标记不会被清）
+    expect(i1.value).toBe('a');
+  });
+
+  it('AUTO_FILL_ON_LOAD=false 时不观察不填充', async () => {
+    window.__AUTOFILL_CONFIG__.AUTO_FILL_ON_LOAD = false;
+    autoFillIfEnabled();
+
+    const i1 = document.createElement('input');
+    i1.id = 'f1';
+    document.body.appendChild(i1);
+    await new Promise((r) => setTimeout(r, 50));
+
+    expect(i1.value).toBe('');
   });
 });
